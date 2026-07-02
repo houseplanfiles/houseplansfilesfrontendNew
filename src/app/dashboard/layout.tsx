@@ -1,0 +1,10 @@
+import type { Metadata } from "next";
+import UserDashLayoutShell from "@/components/Userdashboard/UserDashLayoutShell";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
+
+export default function DashboardRootLayout({ children }: { children: React.ReactNode }) {
+  return <UserDashLayoutShell>{children}</UserDashLayoutShell>;
+}

@@ -1,0 +1,44 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /*?*
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /professional/
+Disallow: /seller/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password/
+Disallow: /order-success/
+Disallow: /api/
+Disallow: /thank-you
+Disallow: /download/
+Disallow: /apply/
+Disallow: /booking-form
+Disallow: /premium-booking-form
+Disallow: /corporate-inquiry/
+
+# Googlebot
+User-agent: Googlebot
+Allow: /
+Disallow: /*?*
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /professional/
+Disallow: /seller/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /download/
+
+# Googlebot-Image
+User-agent: Googlebot-Image
+Allow: /
+
+# Host
+Host: https://www.houseplanfiles.com
+
+# Sitemaps
+Sitemap: https://www.houseplanfiles.com/sitemap.xml

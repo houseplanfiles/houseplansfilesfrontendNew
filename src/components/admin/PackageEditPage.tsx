@@ -1,0 +1,260 @@
+"use client";
+import { useParams, useRouter } from "next/navigation";
+
+import React, { useState, useEffect } from "react";
+
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/lib/store";
+import {
+  createPackage,
+  updatePackage,
+  resetActionStatus,
+  fetchAllPackages,
+} from "@/lib/features/packages/packageSlice";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
+
+const defaultFormData = {
+  title: "",
+  price: "",
+  unit: "Per sq.ft.",
+  areaType: "",
+  packageType: "standard",
+  isPopular: false,
+  features: "",
+  includes: "",
+  note: "",
+};
+
+const PackageEditPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const dispatch: AppDispatch = useDispatch();
+  const { toast } = useToast();
+
+  const { packages, actionStatus, error } = useSelector(
+    (state: RootState) => state.packages
+  );
+
+  const [formData, setFormData] = useState(defaultFormData);
+  const isEditMode = Boolean(id);
+
+  useEffect(() => {
+    if (isEditMode && packages.length === 0) {
+      dispatch(fetchAllPackages());
+    }
+  }, [isEditMode, packages.length, dispatch]);
+
+  useEffect(() => {
+    if (actionStatus === "succeeded") {
+      toast({
+        title: `Package ${isEditMode ? "updated" : "created"} successfully!`,
+      });
+      router.push("/admin/packages");
+    }
+    if (actionStatus === "failed") {
+      toast({ title: "Error", description: error, variant: "destructive" });
+    }
+    return () => {
+      dispatch(resetActionStatus());
+    };
+  }, [actionStatus, error, router, dispatch, isEditMode, toast]);
+
+  useEffect(() => {
+    if (isEditMode && packages.length > 0) {
+      const existingPackage = packages.find((p) => p._id === id);
+      if (existingPackage) {
+        setFormData({
+          title: existingPackage.title,
+          price: String(existingPackage.price),
+          unit: existingPackage.unit,
+          areaType: existingPackage.areaType || "",
+          packageType: existingPackage.packageType,
+          isPopular: existingPackage.isPopular,
+          note: existingPackage.note || "",
+          features: existingPackage.features.join(", "),
+          includes: existingPackage.includes?.join(", ") || "",
+        });
+      }
+    } else {
+      setFormData(defaultFormData);
+    }
+  }, [id, packages, isEditMode]);
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value, type } = e.target;
+    const isCheckbox = type === "checkbox";
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: isCheckbox ? (e.target as HTMLInputElement).checked : value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const packageData = {
+      ...formData,
+      features: formData.features
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
+      includes: formData.includes
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
+    };
+    if (isEditMode) {
+      // @ts-ignore
+      dispatch(updatePackage({ ...packageData, _id: id! }));
+    } else {
+      // @ts-ignore
+      dispatch(createPackage(packageData));
+    }
+  };
+
+  return (
+    <div className="container mx-auto p-4 max-w-3xl">
+      <h1 className="text-3xl font-bold mb-6">
+        {isEditMode ? "Edit Package" : "Add New Package"}
+      </h1>
+
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 bg-white p-8 rounded-lg shadow"
+      >
+        <div>
+          <Label htmlFor="title">Title</Label>
+          <Input
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+            placeholder="e.g. Floor Plan or Gold Partner"
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <Label htmlFor="price">Price</Label>
+            <Input
+              id="price"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+              placeholder="Enter price here"
+            />
+          </div>
+          <div>
+            <Label htmlFor="unit">Unit (e.g., Per sq.ft. or Lifetime)</Label>
+            <Input
+              id="unit"
+              name="unit"
+              value={formData.unit}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+        <div>
+          <Label htmlFor="areaType">Area Type (Optional)</Label>
+          <Input
+            id="areaType"
+            name="areaType"
+            value={formData.areaType}
+            onChange={handleChange}
+            placeholder="e.g. Residential, District, etc."
+          />
+        </div>
+        <div>
+          <Label htmlFor="packageType">Package Type</Label>
+          <select
+            name="packageType"
+            id="packageType"
+            value={formData.packageType}
+            onChange={handleChange}
+            className="w-full mt-1 p-2 border rounded-md bg-background"
+          >
+            <option value="standard">Standard</option>
+            <option value="premium">Premium</option>
+            <option value="marketplace">Marketplace</option>
+            <option value="city_partner">City Partner</option>
+            <option value="construction">Construction</option>
+          </select>
+        </div>
+        <div>
+          <Label htmlFor="features">Features (comma separated)</Label>
+          <Textarea
+            id="features"
+            name="features"
+            value={formData.features}
+            onChange={handleChange}
+            placeholder="Feature 1, Feature 2, Feature 3"
+          />
+        </div>
+        <div>
+          <Label htmlFor="includes">Includes (comma separated)</Label>
+          <Textarea
+            id="includes"
+            name="includes"
+            value={formData.includes}
+            onChange={handleChange}
+            placeholder="Extra items included in the package"
+          />
+        </div>
+        <div>
+          <Label htmlFor="note">Note (Optional)</Label>
+          <Input
+            id="note"
+            name="note"
+            value={formData.note}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex items-center gap-3 pt-2">
+          <input
+            type="checkbox"
+            id="isPopular"
+            name="isPopular"
+            checked={formData.isPopular}
+            onChange={handleChange}
+            className="h-4 w-4"
+          />
+          <Label htmlFor="isPopular" className="font-medium">
+            Mark as Popular Package
+          </Label>
+        </div>
+
+        <div className="pt-4">
+          <Button
+            type="submit"
+            disabled={actionStatus === "loading"}
+            className="w-full"
+          >
+            {actionStatus === "loading" ? (
+              <>
+                <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                Saving...
+              </>
+            ) : isEditMode ? (
+              "Update Package"
+            ) : (
+              "Create Package"
+            )}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default PackageEditPage;
