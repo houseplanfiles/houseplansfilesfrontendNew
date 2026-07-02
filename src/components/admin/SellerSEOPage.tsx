@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, ArrowLeft, Search, Save, Globe } from "lucide-react";
-import AdminSidebar from "@/components/admin/AdminSidebar";
 
 const SellerSEOPage = () => {
   const { id } = useParams();
@@ -16,7 +15,6 @@ const SellerSEOPage = () => {
   const [seller, setSeller] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [seoForm, setSeoForm] = useState({
     seoTitle: "",
@@ -84,9 +82,7 @@ const SellerSEOPage = () => {
   const storeUrl = `${process.env.NEXT_PUBLIC_FRONTEND_URL || "https://www.houseplanfiles.com"}/seller-shop/${id}`;
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-      <div className="flex-1 lg:ml-64 p-8">
+    <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button
@@ -235,7 +231,6 @@ const SellerSEOPage = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 };

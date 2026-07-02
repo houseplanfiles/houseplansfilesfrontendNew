@@ -6,14 +6,12 @@ import { toast } from "sonner";
 import { Loader2, Globe, Search, CheckCircle, XCircle, Store } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import AdminSidebar from "@/components/admin/AdminSidebar";
 
 const SellerSEOListPage = () => {
   const router = useRouter();
   const [sellers, setSellers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchSellers();
@@ -47,9 +45,7 @@ const SellerSEOListPage = () => {
   const seoConfigured = filtered.filter((s) => s.seoTitle).length;
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-      <div className="flex-1 lg:ml-64 p-6 md:p-8">
+    <div className="space-y-6">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3">
@@ -176,7 +172,6 @@ const SellerSEOListPage = () => {
             </table>
           </div>
         )}
-      </div>
     </div>
   );
 };
