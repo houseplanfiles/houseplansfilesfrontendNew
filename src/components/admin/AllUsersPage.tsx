@@ -46,7 +46,6 @@ import {
   FileText,
   MapPin,
   CreditCard,
-  Download,
   Globe,
 } from "lucide-react";
 

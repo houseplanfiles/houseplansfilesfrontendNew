@@ -577,8 +577,15 @@ const MarketplacePage: FC = () => {
 
       {/* --- Banner --- */}
       <div className="relative h-[300px] md:h-[450px] bg-gray-900 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-gray-800" />
-        <div className="absolute inset-0 opacity-30 bg-[url('https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80')] bg-cover bg-center" />
+        <div className="absolute inset-0">
+          <img
+            src="/marketplace.webp"
+            alt="Marketplace"
+            className="w-full h-full object-cover"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-gray-900/20" />
+        </div>
         <div className="relative z-10 h-full max-w-7xl mx-auto px-4 flex flex-col justify-center items-center text-center">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
