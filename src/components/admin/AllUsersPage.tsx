@@ -627,12 +627,12 @@ const AllUsersPage = () => {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          {user.role?.toLowerCase() === "seller" && (
+                          {["seller", "professional", "contractor"].includes(user.role?.toLowerCase()) && (
                             <Link href={`/admin/seller-seo/${user._id}`}>
                               <Button
                                 variant="outline"
                                 size="icon"
-                                title="Manage Store SEO"
+                                title="Manage Profile/Store SEO"
                                 className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200"
                               >
                                 <Globe className="h-4 w-4" />

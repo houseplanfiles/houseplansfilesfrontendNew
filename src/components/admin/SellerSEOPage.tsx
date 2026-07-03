@@ -79,7 +79,25 @@ const SellerSEOPage = () => {
     );
   }
 
-  const storeUrl = `${process.env.NEXT_PUBLIC_FRONTEND_URL || "https://www.houseplanfiles.com"}/seller-shop/${id}`;
+  const isSeller = seller?.role?.toLowerCase() === "seller";
+  const isContractor = seller?.role?.toLowerCase() === "contractor";
+  const isProfessional = seller?.role?.toLowerCase() === "professional";
+
+  const pageTitle = isSeller
+    ? "Seller Store SEO"
+    : isProfessional
+    ? `${seller?.profession || "Architect"} Profile SEO`
+    : isContractor
+    ? "Contractor Profile SEO"
+    : "Profile SEO";
+
+  const profileUrl = isSeller
+    ? `${process.env.NEXT_PUBLIC_FRONTEND_URL || "https://www.houseplanfiles.com"}/seller-shop/${id}`
+    : isProfessional
+    ? `${process.env.NEXT_PUBLIC_FRONTEND_URL || "https://www.houseplanfiles.com"}/architects/${id}`
+    : `${process.env.NEXT_PUBLIC_FRONTEND_URL || "https://www.houseplanfiles.com"}/contractors/${id}`;
+
+  const displayName = seller?.businessName || seller?.companyName || seller?.name || "User";
 
   return (
     <div className="space-y-6">
@@ -94,10 +112,10 @@ const SellerSEOPage = () => {
           </Button>
           <div>
             <h1 className="text-3xl font-black text-gray-900 tracking-tight">
-              Seller Store SEO
+              {pageTitle}
             </h1>
             <p className="text-gray-500 font-bold uppercase text-xs tracking-widest mt-1">
-              {seller?.businessName || seller?.name || "Seller"}
+              {displayName}
             </p>
           </div>
         </div>
@@ -130,12 +148,12 @@ const SellerSEOPage = () => {
                   </span>
                 </div>
                 <a
-                  href={storeUrl}
+                  href={profileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs text-orange-600 hover:underline break-all"
                 >
-                  {storeUrl}
+                  {profileUrl}
                 </a>
               </div>
 
@@ -156,7 +174,7 @@ const SellerSEOPage = () => {
                 <h2 className="text-2xl font-black text-gray-900">
                   SEO Configuration for{" "}
                   <span className="text-orange-600 italic">
-                    "{seller?.businessName}"
+                    "{displayName}"
                   </span>
                 </h2>
               </div>
@@ -170,7 +188,7 @@ const SellerSEOPage = () => {
                   onChange={(e) =>
                     setSeoForm({ ...seoForm, seoTitle: e.target.value })
                   }
-                  placeholder={`e.g., ${seller?.businessName} – Building Materials in ${seller?.city} | HousePlanFiles`}
+                  placeholder={`e.g., ${displayName} – ${isSeller ? seller?.category + " in " + seller?.city : (seller?.city || "India")} | HousePlanFiles`}
                   className="h-14 rounded-2xl border-gray-100 focus:ring-orange-600"
                   maxLength={70}
                 />
@@ -188,7 +206,7 @@ const SellerSEOPage = () => {
                   onChange={(e) =>
                     setSeoForm({ ...seoForm, seoDescription: e.target.value })
                   }
-                  placeholder={`e.g., Buy ${seller?.category || "building materials"} from ${seller?.businessName} in ${seller?.city}. Verified seller on HousePlanFiles. Get bulk quotes.`}
+                  placeholder={`e.g., ${isSeller ? "Buy " + (seller?.category || "building materials") + " from " + displayName : displayName + " – Expert " + (seller?.profession || "Professional")} in ${seller?.city || "India"}. Verified on HousePlanFiles.`}
                   className="min-h-[120px] rounded-[2rem] border-gray-100 focus:ring-orange-600 p-6 resize-none"
                   maxLength={180}
                 />

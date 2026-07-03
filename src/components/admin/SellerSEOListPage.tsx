@@ -21,7 +21,7 @@ const SellerSEOListPage = () => {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users?role=seller&limit=1000`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users?role=seller,contractor,professional,Architect&limit=1000`,
         {
           headers: {
             Authorization: `Bearer ${JSON.parse(localStorage.getItem("userInfo") || "{}").token}`,
@@ -38,7 +38,7 @@ const SellerSEOListPage = () => {
   };
 
   const filtered = sellers.filter((s) =>
-    (s.businessName || s.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (s.businessName || s.name || s.companyName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
     (s.city || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -50,17 +50,17 @@ const SellerSEOListPage = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3">
             <Globe className="w-8 h-8 text-orange-600" />
-            Seller Store SEO Management
+            Profile & Store SEO Management
           </h1>
           <p className="text-gray-500 mt-1 text-sm">
-            Manage SEO for each seller's store page. Click the SEO button to configure.
+            Manage SEO for Architect/Contractor profiles and Seller store pages.
           </p>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Total Sellers</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Total Users</p>
             <p className="text-4xl font-black text-gray-900 mt-1">{sellers.length}</p>
           </div>
           <div className="bg-white rounded-2xl p-5 shadow-sm border border-green-100">
@@ -78,7 +78,7 @@ const SellerSEOListPage = () => {
           <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
           <Input
             className="pl-10"
-            placeholder="Search by store name or city..."
+            placeholder="Search by name, store, or city..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -94,9 +94,9 @@ const SellerSEOListPage = () => {
             <table className="w-full text-left">
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
-                  <th className="p-4 text-sm font-semibold text-gray-600">Store</th>
+                  <th className="p-4 text-sm font-semibold text-gray-600">User / Store</th>
+                  <th className="p-4 text-sm font-semibold text-gray-600">Role</th>
                   <th className="p-4 text-sm font-semibold text-gray-600">City</th>
-                  <th className="p-4 text-sm font-semibold text-gray-600">Category</th>
                   <th className="p-4 text-sm font-semibold text-gray-600">Status</th>
                   <th className="p-4 text-sm font-semibold text-gray-600">SEO Status</th>
                   <th className="p-4 text-sm font-semibold text-gray-600 text-center">Action</th>
@@ -106,7 +106,7 @@ const SellerSEOListPage = () => {
                 {filtered.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="p-12 text-center text-gray-400">
-                      No sellers found.
+                      No profiles or stores found.
                     </td>
                   </tr>
                 ) : (
@@ -126,13 +126,15 @@ const SellerSEOListPage = () => {
                             </div>
                           )}
                           <div>
-                            <p className="font-semibold text-gray-900 text-sm">{seller.businessName || seller.name}</p>
+                            <p className="font-semibold text-gray-900 text-sm">{seller.businessName || seller.companyName || seller.name}</p>
                             <p className="text-xs text-gray-400">{seller.email}</p>
                           </div>
                         </div>
                       </td>
+                      <td className="p-4 text-sm text-gray-600 capitalize">
+                        {seller.role === "professional" ? seller.profession : seller.role}
+                      </td>
                       <td className="p-4 text-sm text-gray-600">{seller.city || "-"}</td>
-                      <td className="p-4 text-sm text-gray-600">{seller.category || "-"}</td>
                       <td className="p-4">
                         <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
                           seller.status === "Approved" ? "bg-green-100 text-green-700" :
