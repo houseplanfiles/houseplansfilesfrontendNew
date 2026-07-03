@@ -224,8 +224,18 @@ const PartnersPage: FC = () => {
       const matchesCity = !cityFilter || c.city?.toLowerCase().includes(cityFilter.toLowerCase());
       const lowerCaseProfession = c.profession?.toLowerCase() || "";
       const matchesProfession = professionFilter === "All" ||
-        (professionFilter === "Building" && (lowerCaseProfession.includes("civil") || lowerCaseProfession.includes("general") || lowerCaseProfession.includes("building") || lowerCaseProfession.includes("labour") || lowerCaseProfession.includes("turnkey"))) ||
-        (professionFilter === "Interior" && lowerCaseProfession.includes("interior"));
+        (professionFilter === "Building" && (
+          lowerCaseProfession.includes("civil") || 
+          lowerCaseProfession.includes("general") || 
+          lowerCaseProfession.includes("building") || 
+          lowerCaseProfession.includes("labour") || 
+          lowerCaseProfession.includes("turnkey")
+        )) ||
+        (professionFilter === "Interior" && lowerCaseProfession.includes("interior")) ||
+        (professionFilter === "Electrical" && lowerCaseProfession.includes("electrical")) ||
+        (professionFilter === "Plumbing" && lowerCaseProfession.includes("plumbing")) ||
+        (professionFilter === "Painting" && lowerCaseProfession.includes("painting")) ||
+        (professionFilter === "Tile & granite" && (lowerCaseProfession.includes("tile") || lowerCaseProfession.includes("granite")));
       return isApproved && matchesCity && matchesProfession;
     });
   }, [contractors, cityFilter, professionFilter]);
@@ -288,12 +298,12 @@ const PartnersPage: FC = () => {
                       <SlidersHorizontal className="w-4 h-4" />
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="bottom" className="rounded-t-3xl h-[50vh]">
+                  <SheetContent side="bottom" className="rounded-t-3xl h-[60vh] overflow-y-auto">
                     <SheetHeader><SheetTitle>Select Profession</SheetTitle></SheetHeader>
-                    <div className="grid grid-cols-1 gap-2 mt-4">
-                      {["All", "Building", "Interior"].map((cat) => (
+                    <div className="grid grid-cols-1 gap-2 mt-4 pb-6">
+                      {["All", "Building", "Interior", "Electrical", "Plumbing", "Painting", "Tile & granite"].map((cat) => (
                         <button key={cat} onClick={() => setProfessionFilter(cat)} className={`p-4 rounded-xl text-left border ${professionFilter === cat ? "bg-orange-50 border-orange-200 text-orange-600" : "bg-white"}`}>
-                          {cat} Contractor
+                          {cat} {cat !== "All" ? "Contractor" : ""}
                         </button>
                       ))}
                     </div>
@@ -303,9 +313,9 @@ const PartnersPage: FC = () => {
 
               {/* Desktop Filter */}
               <div className="hidden lg:block w-full">
-                <div className="grid grid-cols-3 gap-2">
-                  {["All", "Building", "Interior"].map((cat) => (
-                    <button key={cat} onClick={() => setProfessionFilter(cat)} className={`h-11 rounded-lg text-sm font-medium border transition-all ${professionFilter === cat ? "bg-gray-900 text-white" : "bg-white hover:bg-gray-50"}`}>
+                <div className="grid grid-cols-4 gap-2">
+                  {["All", "Building", "Interior", "Electrical", "Plumbing", "Painting", "Tile & granite"].map((cat) => (
+                    <button key={cat} onClick={() => setProfessionFilter(cat)} className={`h-11 rounded-lg text-[13px] font-medium border transition-all ${professionFilter === cat ? "bg-gray-900 text-white" : "bg-white hover:bg-gray-50"}`}>
                       {cat}
                     </button>
                   ))}

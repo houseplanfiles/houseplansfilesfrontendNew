@@ -816,11 +816,14 @@ const AllUsersPage = () => {
                     <SelectContent>
                       {role === "Contractor" ? (
                         [
-                          "General Contractor",
-                          "Civil Contractor",
+                          "Building Contractor",
                           "Interior Contractor",
                           "Electrical Contractor",
                           "Plumbing Contractor",
+                          "Painting Contractor",
+                          "Tile & granite Contractor",
+                          "General Contractor",
+                          "Civil Contractor",
                         ].map((type) => (
                           <SelectItem key={type} value={type}>
                             {type}

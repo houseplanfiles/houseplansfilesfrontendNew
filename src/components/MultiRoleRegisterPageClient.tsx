@@ -46,6 +46,12 @@ const professionalSubRoles = [
 ];
 
 const contractorProfessions = [
+  "Building Contractor",
+  "Interior Contractor",
+  "Electrical Contractor",
+  "Plumbing Contractor",
+  "Painting Contractor",
+  "Tile & granite Contractor",
   "Labour Contractor",
   "Turnkey Contractor",
 ];

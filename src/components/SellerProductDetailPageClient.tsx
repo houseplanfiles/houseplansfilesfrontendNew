@@ -432,10 +432,21 @@ const SellerProductDetailPage: FC = () => {
               <div>
                 <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Sold By</p>
                 <h4 className="text-xl font-bold text-gray-900">{product.seller.businessName}</h4>
-                {product.seller.natureOfBusiness && product.seller.natureOfBusiness.length > 0 && (
+                {((product.seller.natureOfBusiness && product.seller.natureOfBusiness.length > 0) || product.seller.businessType) && (
                   <p className="text-xs font-semibold text-orange-600 mt-1">
-                    {product.seller.natureOfBusiness.join(" • ")}
-                    {product.seller.businessType && ` • (${product.seller.businessType})`}
+                    {product.seller.natureOfBusiness && product.seller.natureOfBusiness.length > 0 && product.seller.natureOfBusiness.join(" • ")}
+                    {product.seller.businessType && (
+                      <>
+                        {product.seller.natureOfBusiness && product.seller.natureOfBusiness.length > 0 && " • "}
+                        ({
+                          product.seller.businessType === "Manufacturer" ? "🏭 Manufacturer" :
+                          product.seller.businessType === "Supplier" ? "🚛 Supplier" :
+                          product.seller.businessType === "Both" ? "🏭 Manufacturer & Supplier" :
+                          product.seller.businessType === "Retail" ? "🏪 Retail Shop" :
+                          product.seller.businessType
+                        })
+                      </>
+                    )}
                   </p>
                 )}
                 {product.seller.gstNumber && (
