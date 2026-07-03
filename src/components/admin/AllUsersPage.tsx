@@ -543,7 +543,7 @@ const AllUsersPage = () => {
                       <td className="p-4 text-gray-600">{user.city || "-"}</td>
                       <td className="p-4">
                         <span
-                          className={`capitalize px-2 py-1 text-xs font-semibold rounded-full ${getRoleClass(user.role)}`}
+                          className={`capitalize px-2 py-1 text-xs font-semibold rounded-full ${getRoleClass(user.role || "")}`}
                         >
                           {user.role === "Contractor" && user.profession ? user.profession : user.role}
                         </span>
@@ -592,14 +592,14 @@ const AllUsersPage = () => {
                       </td>
                       <td className="p-4">
                         <span
-                          className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusClass(user.status)}`}
+                          className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusClass(user.status || "")}`}
                         >
                           {user.status}
                         </span>
                       </td>
                       <td className="p-4 text-xs text-gray-500">
                         {user.role === "professional" && user.profession}
-                        {["Contractor", "Architect", "seller"].includes(user.role) && (
+                        {["Contractor", "Architect", "seller"].includes(user.role || "") && (
                           <div className="flex flex-col gap-0.5">
                             <span className={`font-semibold ${
                               user.contractorType === "Premium" ? "text-orange-600" :
@@ -626,7 +626,7 @@ const AllUsersPage = () => {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          {["seller", "professional", "contractor"].includes(user.role?.toLowerCase()) && (
+                          {["seller", "professional", "contractor"].includes(user.role?.toLowerCase() || "") && (
                             <Link href={`/admin/seller-seo/${user._id}`}>
                               <Button
                                 variant="outline"
