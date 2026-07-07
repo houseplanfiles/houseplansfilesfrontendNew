@@ -27,6 +27,9 @@ import {
   registerUser,
   resetActionStatus,
 } from "@/lib/features/users/userSlice";
+import axios from "axios";
+import useExternalScripts from "@/hooks/usePaymentGateway";
+import { generateInvoicePDF } from "@/lib/invoiceGenerator";
 
 const userRoles = [
   { id: "user", label: "Register as a Customer" },
@@ -73,8 +76,15 @@ const experienceLevels = ["0-2 Years", "2-5 Years", "5-10 Years", "10+ Years"];
 const MultiRoleRegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState("user");
+  const [selectedPlan, setSelectedPlanState] = useState<string>("Basic");
+  const [profileCreation, setProfileCreation] = useState<boolean>(false);
+  const [profileStoreManagement, setProfileStoreManagement] = useState<string>("None");
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const { loaded: isRazorpayLoaded } = useExternalScripts([
+    "https://checkout.razorpay.com/v1/checkout.js",
+  ]);
 
   const { userInfo, actionStatus, error } = useSelector(
     (state: RootState) => state.user
@@ -115,6 +125,138 @@ const MultiRoleRegisterPage = () => {
 
   const isLoading = actionStatus === "loading";
 
+  const initiatePayment = async (registeredUser: any) => {
+    if (!isRazorpayLoaded) {
+      toast.error("Payment Gateway is loading. Please wait a moment.");
+      return;
+    }
+    
+    // Calculate prices
+    let planPrice = 999;
+    let planName = "Basic Listing";
+
+    switch (selectedPlan) {
+      case "Standard":
+        planPrice = 1499;
+        planName = "Standard Listing";
+        break;
+      case "Premium":
+        planPrice = 1999;
+        planName = "Premium Listing (6 Month)";
+        break;
+      case "Premium+":
+        planPrice = 2999;
+        planName = "Premium+ Listing (12 Month)";
+        break;
+      default:
+        planPrice = 999;
+        planName = "Basic Listing";
+    }
+
+    const items = [{ name: planName, price: planPrice }];
+
+    if (profileCreation) {
+      items.push({ name: "Profile Creation Addon", price: 499 });
+    }
+
+    if (profileStoreManagement === "6_Month") {
+      items.push({ name: "6-Month Profile & Store Management", price: 999 });
+    } else if (profileStoreManagement === "1_Year") {
+      items.push({ name: "1-Year Profile & Store Management", price: 1499 });
+    }
+
+    const subtotal = items.reduce((acc, curr) => acc + curr.price, 0);
+    const taxPrice = Math.round(subtotal * 0.18 * 100) / 100;
+    const totalPrice = subtotal + taxPrice;
+
+    try {
+      const orderData = {
+        userId: registeredUser._id,
+        orderItems: items,
+        shippingAddress: {
+          name: formData.name || formData.businessName || registeredUser.name || "",
+          email: formData.email || registeredUser.email,
+          phone: formData.phone || registeredUser.phone || "",
+          location: "",
+        },
+        paymentMethod: "Razorpay",
+        itemsPrice: subtotal,
+        taxPrice: taxPrice,
+        shippingPrice: 0,
+        totalPrice: totalPrice,
+        orderType: "subscription",
+      };
+
+      const { data: createdOrder } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders`,
+        orderData
+      );
+
+      if (!createdOrder || !createdOrder._id) {
+        throw new Error("Could not create listing subscription order");
+      }
+
+      // Create Razorpay Order
+      const { data: razorpayOrderData } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/${createdOrder._id}/create-razorpay-order`,
+        {}
+      );
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: razorpayOrderData.amount,
+        currency: razorpayOrderData.currency,
+        name: "Houseplanfiles",
+        order_id: razorpayOrderData.orderId,
+        handler: async (response: any) => {
+          try {
+            const { data: verifiedOrder } = await axios.post(
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/${createdOrder._id}/verify-payment`,
+              response
+            );
+            toast.success("Payment successful! Your listing is now active.");
+            
+            // Auto download invoice
+            try {
+              generateInvoicePDF(verifiedOrder, {
+                name: formData.name || formData.businessName || registeredUser.name || "",
+                email: formData.email || registeredUser.email,
+                phone: formData.phone || registeredUser.phone || "",
+              });
+            } catch (pdfErr) {
+              console.error("Failed to auto-download invoice:", pdfErr);
+            }
+
+            // Redirect based on role
+            const role = registeredUser.role?.toLowerCase();
+            if (role === "seller") {
+              router.push("/seller");
+            } else if (role === "professional" || role === "contractor") {
+              router.push("/professional");
+            } else {
+              router.push("/dashboard");
+            }
+          } catch (err) {
+            toast.error("Payment verification failed. Please contact support.");
+          }
+        },
+        prefill: {
+          name: formData.name || formData.businessName || registeredUser.name || "",
+          email: formData.email || registeredUser.email,
+          contact: formData.phone || registeredUser.phone || "",
+        },
+        theme: {
+          color: "#ea580c",
+        },
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.open();
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to initiate payment gateway.");
+    }
+  };
+
   useEffect(() => {
     if (actionStatus === "failed" && error) {
       toast.error(String(error));
@@ -122,30 +264,18 @@ const MultiRoleRegisterPage = () => {
     }
     if (actionStatus === "succeeded" && userInfo) {
       dispatch(resetActionStatus());
-      switch (userInfo.role) {
-        case "admin":
-          toast.success("Admin registration successful! Redirecting...");
-          setTimeout(() => router.push("/admin"), 1000);
-          break;
-        case "professional":
-          toast.success(
-            "Professional registration successful! Your account is under review."
-          );
-          setTimeout(() => router.push("/login"), 2000);
-          break;
-        case "seller":
-          toast.success(
-            "Material Seller registration successful! Your account is registered and under review."
-          );
-          setTimeout(() => router.push("/login"), 2000);
-          break;
-        case "user":
-        default:
-          toast.success("Registration successful! Redirecting...");
-          setTimeout(() => router.push("/login"), 1000);
+      if (userInfo.role === "admin") {
+        toast.success("Admin registration successful! Redirecting...");
+        setTimeout(() => router.push("/admin"), 1000);
+      } else if (userInfo.role === "user") {
+        toast.success("Registration successful! Redirecting...");
+        setTimeout(() => router.push("/login"), 1000);
+      } else {
+        toast.success("Registration successful! Initiating payment...");
+        initiatePayment(userInfo);
       }
     }
-  }, [actionStatus, userInfo, error, router, dispatch]);
+  }, [actionStatus, userInfo, error, router, dispatch, isRazorpayLoaded, selectedPlan, profileCreation, profileStoreManagement]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -215,7 +345,7 @@ const MultiRoleRegisterPage = () => {
     const dataToSubmit = new FormData();
     for (const key in formData) {
       const value = formData[key as keyof typeof formData];
-      if (value) {
+      if (value !== undefined && value !== null && value !== "") {
         if (key === "serviceTypes" && Array.isArray(value)) {
           dataToSubmit.append(key, JSON.stringify(value));
         } else {
@@ -223,12 +353,16 @@ const MultiRoleRegisterPage = () => {
         }
       }
     }
+    if (selectedRole !== "user") {
+      dataToSubmit.append("selectedPlan", selectedPlan);
+      dataToSubmit.append("profileCreation", String(profileCreation));
+      dataToSubmit.append("profileStoreManagement", profileStoreManagement);
+    }
     (dispatch as AppDispatch)(registerUser(dataToSubmit));
   };
 
   const renderRoleSpecificFields = () => {
     const motionProps = {
-      key: selectedRole,
       initial: { opacity: 0, y: 10 },
       animate: { opacity: 1, y: 0 },
       exit: { opacity: 0, y: -10 },
@@ -238,7 +372,7 @@ const MultiRoleRegisterPage = () => {
       case "user":
       case "admin":
         return (
-          <motion.div {...motionProps} className="space-y-5">
+          <motion.div key={selectedRole} {...motionProps} className="space-y-5">
             <div>
               <Label htmlFor="name">Full Name*</Label>
               <Input
@@ -263,7 +397,7 @@ const MultiRoleRegisterPage = () => {
 
       case "professional":
         return (
-          <motion.div {...motionProps} className="space-y-5">
+          <motion.div key={selectedRole} {...motionProps} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Full Name*</Label>
@@ -494,7 +628,17 @@ const MultiRoleRegisterPage = () => {
 
       case "seller":
         return (
-          <motion.div {...motionProps} className="space-y-5">
+          <motion.div key={selectedRole} {...motionProps} className="space-y-5">
+            <div>
+              <Label>Full Name*</Label>
+              <Input
+                id="name"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+              />
+            </div>
             <div>
               <Label>Business Name*</Label>
               <Input
@@ -502,6 +646,7 @@ const MultiRoleRegisterPage = () => {
                 required
                 value={formData.businessName}
                 onChange={handleChange}
+                placeholder="Enter business name"
               />
             </div>
             <div>
@@ -512,6 +657,7 @@ const MultiRoleRegisterPage = () => {
                 required
                 value={formData.phone}
                 onChange={handleChange}
+                placeholder="Enter phone number"
               />
             </div>
             <div>
@@ -521,25 +667,30 @@ const MultiRoleRegisterPage = () => {
                 required
                 value={formData.address}
                 onChange={handleChange}
+                placeholder="Enter business address"
               />
             </div>
-            <div>
-              <Label>City*</Label>
-              <Input
-                id="city"
-                required
-                value={formData.city}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label>Pincode*</Label>
-              <Input
-                id="pincode"
-                required
-                value={formData.pincode}
-                onChange={handleChange}
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label>City*</Label>
+                <Input
+                  id="city"
+                  required
+                  value={formData.city}
+                  onChange={handleChange}
+                  placeholder="Enter city"
+                />
+              </div>
+              <div>
+                <Label>Pincode*</Label>
+                <Input
+                  id="pincode"
+                  required
+                  value={formData.pincode}
+                  onChange={handleChange}
+                  placeholder="Enter pincode"
+                />
+              </div>
             </div>
             <div>
               <Label>Business Category*</Label>
@@ -626,7 +777,7 @@ const MultiRoleRegisterPage = () => {
 
       case "Contractor":
         return (
-          <motion.div {...motionProps} className="space-y-5">
+          <motion.div key={selectedRole} {...motionProps} className="space-y-5">
             <div>
               <Label>Full Name*</Label>
               <Input
@@ -787,27 +938,18 @@ const MultiRoleRegisterPage = () => {
             <fieldset className="space-y-3">
               <legend className="sr-only">Select your registration type</legend>
               {userRoles.map((role) => (
-                <div key={role.id}>
-                  <input
-                    type="radio"
-                    id={`${role.id}-radio`}
-                    name="user-role"
-                    value={role.id}
-                    className="sr-only"
-                    checked={selectedRole === role.id}
-                    onChange={(e) => handleRoleChange(e.target.value)}
-                  />
-                  <label
-                    htmlFor={`${role.id}-radio`}
-                    className={`flex items-center justify-between w-full p-4 rounded-lg cursor-pointer border-2 transition-all duration-300 ${
-                      selectedRole === role.id
-                        ? "bg-accent text-accent-foreground border-transparent shadow-md"
-                        : "bg-input border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <span className="font-semibold">{role.label}</span>
-                    {selectedRole === role.id && <CheckCircle size={20} />}
-                  </label>
+                <div
+                  key={role.id}
+                  role="button"
+                  onClick={() => handleRoleChange(role.id)}
+                  className={`flex items-center justify-between w-full p-4 rounded-lg cursor-pointer border-2 transition-all duration-300 ${
+                    selectedRole === role.id
+                      ? "bg-accent text-accent-foreground border-transparent shadow-md"
+                      : "bg-input border-border hover:border-primary/50"
+                  }`}
+                >
+                  <span className="font-semibold">{role.label}</span>
+                  {selectedRole === role.id && <CheckCircle size={20} />}
                 </div>
               ))}
             </fieldset>
@@ -844,6 +986,118 @@ const MultiRoleRegisterPage = () => {
                 </button>
               </div>
             </div>
+
+            {/* Subscription & Addons Panel */}
+            {selectedRole !== "user" && (
+              <div className="space-y-6 pt-4 border-t border-border mt-4">
+                <div>
+                  <h3 className="text-lg font-bold text-foreground">Choose your Listing Plan</h3>
+                  <p className="text-xs text-muted-foreground">Select the right plan to grow your business</p>
+                </div>
+                
+                {/* Plans Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    { id: "Basic", name: "Basic Listing", price: 999, final: "1,178.82", color: "border-green-500 bg-green-500/5 text-green-800" },
+                    { id: "Standard", name: "Standard Listing", price: 1499, final: "1,768.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                    { id: "Premium", name: "Premium (6 Months)", price: 1999, final: "2,358.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                    { id: "Premium+", name: "Premium+ (12 Months)", price: 2999, final: "3,538.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
+                  ].map((p) => (
+                    <div
+                      key={p.id}
+                      role="button"
+                      onClick={() => setSelectedPlanState(p.id)}
+                      className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                        selectedPlan === p.id 
+                          ? `${p.color} ring-2 ring-primary border-primary` 
+                          : "border-border hover:border-gray-300"
+                      }`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{p.name}</span>
+                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                          selectedPlan === p.id ? "bg-primary border-primary text-white" : "border-gray-300"
+                        }`}>
+                          {selectedPlan === p.id && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                        </div>
+                      </div>
+                      <div className="mt-2 flex items-baseline">
+                        <span className="text-xl font-extrabold text-foreground">₹{p.price}</span>
+                        <span className="text-xs text-muted-foreground ml-1">+18% GST</span>
+                      </div>
+                      <div className="mt-1 text-[11px] text-muted-foreground">
+                        Final Amount: <strong className="text-foreground">₹{p.final}</strong>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Optional Services */}
+                <div className="space-y-3 pt-3 border-t border-dashed border-border">
+                  <div>
+                    <h4 className="text-sm font-bold text-foreground">Optional Services</h4>
+                    <p className="text-[11px] text-muted-foreground">Boost your profile and store visibility</p>
+                  </div>
+                  
+                  {/* Service 1: Profile Creation */}
+                  <div
+                    role="button"
+                    onClick={() => setProfileCreation(!profileCreation)}
+                    className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                      profileCreation 
+                        ? "bg-teal-500/5 border-teal-500 text-teal-800" 
+                        : "border-border hover:border-gray-300"
+                    }`}
+                  >
+                    <div>
+                      <span className="text-xs font-bold block">Profile Creation Service</span>
+                      <span className="text-[10px] text-muted-foreground font-medium">One-time setup fee</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold">₹499</span>
+                      <div className={`w-4 h-4 rounded flex items-center justify-center border ${
+                        profileCreation ? "bg-teal-500 border-teal-500 text-white" : "border-gray-300"
+                      }`}>
+                        {profileCreation && <CheckCircle size={10} />}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Service 2 & 3: Management Plans */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { id: "6_Month", name: "6-Month Management", price: 999 },
+                      { id: "1_Year", name: "1-Year Management", price: 1499 }
+                    ].map((m) => (
+                      <div
+                        key={m.id}
+                        role="button"
+                        onClick={() => setProfileStoreManagement(profileStoreManagement === m.id ? "None" : m.id)}
+                        className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                          profileStoreManagement === m.id
+                            ? "bg-amber-500/5 border-amber-500 text-amber-800"
+                            : "border-border hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="flex justify-between items-start">
+                          <span className="text-xs font-bold">{m.name}</span>
+                          <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                            profileStoreManagement === m.id ? "bg-amber-500 border-amber-500 text-white" : "border-gray-300"
+                          }`}>
+                            {profileStoreManagement === m.id && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                          </div>
+                        </div>
+                        <div className="mt-1 flex items-baseline justify-between">
+                          <span className="text-xs text-muted-foreground">Profile & Store</span>
+                          <span className="text-xs font-bold text-foreground">₹{m.price}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             <p className="text-xs text-muted-foreground text-center pt-4">
               By registering, you agree to our{" "}
               <Link href="/terms-and-conditions" className="text-primary hover:underline">

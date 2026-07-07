@@ -9,6 +9,8 @@ import {
   updateProfile,
   resetActionStatus,
 } from "@/lib/features/users/userSlice";
+import axios from "axios";
+import { generateInvoicePDF } from "@/lib/invoiceGenerator";
 
 import {
   Card,
@@ -56,6 +58,60 @@ const SellerProfilePage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const isLoading = actionStatus === "loading";
+  const [downloadingInvoice, setDownloadingInvoice] = useState(false);
+
+  const handleDownloadInvoice = async () => {
+    if (!userInfo || !userInfo.token) {
+      toast.error("User session not found.");
+      return;
+    }
+    setDownloadingInvoice(true);
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data: orders } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/myorders`,
+        config
+      );
+
+      // Find the subscription order
+      const subscriptionOrder = orders.find((o: any) => o.orderType === "subscription");
+      if (subscriptionOrder) {
+        generateInvoicePDF(subscriptionOrder, {
+          name: userInfo.name || userInfo.businessName || "Seller",
+          email: userInfo.email,
+          phone: userInfo.phone || "",
+        });
+        toast.success("Invoice downloaded successfully!");
+      } else {
+        // Fallback: If no subscription order in DB, construct one dynamically from paymentDetails
+        const fallbackOrder = {
+          _id: userInfo.paymentDetails?.orderId || `SUB-${userInfo._id.substring(18)}`,
+          createdAt: userInfo.paymentDetails?.paidAt || userInfo.createdAt || new Date(),
+          orderItems: [
+            { name: `${userInfo.selectedPlan || "Listing"} Plan`, price: userInfo.paymentDetails?.amountPaid || 999 }
+          ],
+          itemsPrice: userInfo.paymentDetails?.amountPaid || 999,
+          taxPrice: userInfo.paymentDetails?.gstPaid || 0,
+          totalPrice: (userInfo.paymentDetails?.amountPaid || 999) + (userInfo.paymentDetails?.gstPaid || 0)
+        };
+        generateInvoicePDF(fallbackOrder, {
+          name: userInfo.name || userInfo.businessName || "Seller",
+          email: userInfo.email,
+          phone: userInfo.phone || "",
+        });
+        toast.success("Invoice downloaded successfully!");
+      }
+    } catch (err) {
+      console.error("Failed to download invoice:", err);
+      toast.error("Failed to fetch order information for invoice.");
+    } finally {
+      setDownloadingInvoice(false);
+    }
+  };
 
   // Jab component load ho, Redux se data lekar form ko bharein
   useEffect(() => {
@@ -356,6 +412,50 @@ const SellerProfilePage = () => {
           </form>
         </CardContent>
       </Card>
+
+      {/* --- Subscription & Invoice Card --- */}
+      {userInfo.selectedPlan && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Subscription & Invoices</CardTitle>
+            <CardDescription>View your active listing plan and download receipts.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gray-50 rounded-lg border gap-4">
+              <div>
+                <p className="text-sm font-semibold text-gray-800">
+                  Plan: <span className="text-orange-600 font-bold">{userInfo.selectedPlan}</span>
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Payment Status: <span className="font-semibold text-green-600">{userInfo.paymentStatus || "Paid"}</span>
+                </p>
+                {userInfo.paymentDetails?.paidAt && (
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Paid on: {new Date(userInfo.paymentDetails.paidAt).toLocaleDateString("en-IN")}
+                  </p>
+                )}
+              </div>
+              
+              {userInfo.paymentStatus === "Paid" && (
+                <Button 
+                  onClick={handleDownloadInvoice} 
+                  disabled={downloadingInvoice}
+                  className="bg-orange-500 hover:bg-orange-600 text-white font-medium shadow"
+                >
+                  {downloadingInvoice ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                      Downloading...
+                    </>
+                  ) : (
+                    "Download Invoice (PDF)"
+                  )}
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
