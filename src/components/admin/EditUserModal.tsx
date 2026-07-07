@@ -66,6 +66,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   const [status, setStatus] = useState("");
   const [profession, setProfession] = useState("");
   const [contractorType, setContractorType] = useState("Normal");
+  const [selectedPlan, setSelectedPlan] = useState("None");
+  const [paymentStatus, setPaymentStatus] = useState("Unpaid");
 
   useEffect(() => {
     if (user && isOpen) {
@@ -78,6 +80,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
       setRole(user.role || "");
       setStatus(user.status || "");
       setContractorType(user.contractorType || "Normal");
+      setSelectedPlan(user.selectedPlan || "None");
+      setPaymentStatus(user.paymentStatus || "Unpaid");
 
       if (user.role?.toLowerCase() === "professional") {
         setProfession(user.profession || "");
@@ -105,6 +109,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
     const lowerRole = role?.toLowerCase()?.trim();
     if (lowerRole === "professional" || lowerRole === "contractor" || lowerRole === "seller") {
       userData.contractorType = contractorType;
+      userData.selectedPlan = selectedPlan === "None" ? null : selectedPlan;
+      userData.paymentStatus = paymentStatus;
     }
 
     try {
@@ -212,26 +218,65 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
 
           {/* ====> Account Type (For Professional, Contractor & Seller) <==== */}
           {(["professional", "contractor", "seller"].includes(lowerRole || "")) && (
-            <div>
-              <Label>Account Type</Label>
-              <Select
-                value={contractorType}
-                onValueChange={setContractorType}
-                disabled={isLoading}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select account type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Normal">Normal</SelectItem>
-                  <SelectItem value="Verified">Verified ✅</SelectItem>
-                  <SelectItem value="Premium">Premium ⭐</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-gray-500 mt-1">
-                Normal = basic listing · Verified = WhatsApp button · Premium = full profile page + contact
-              </p>
-            </div>
+            <>
+              <div>
+                <Label>Account Type</Label>
+                <Select
+                  value={contractorType}
+                  onValueChange={setContractorType}
+                  disabled={isLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select account type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Normal">Normal</SelectItem>
+                    <SelectItem value="Verified">Verified ✅</SelectItem>
+                    <SelectItem value="Premium">Premium ⭐</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Normal = basic listing · Verified = WhatsApp button · Premium = full profile page + contact
+                </p>
+              </div>
+
+              <div>
+                <Label>Selected Plan</Label>
+                <Select
+                  value={selectedPlan}
+                  onValueChange={setSelectedPlan}
+                  disabled={isLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Plan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="None">None</SelectItem>
+                    <SelectItem value="Basic">Basic Listing</SelectItem>
+                    <SelectItem value="Standard">Standard Listing</SelectItem>
+                    <SelectItem value="Premium">Premium Listing (6 Months)</SelectItem>
+                    <SelectItem value="Premium+">Premium+ Listing (12 Months)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Payment Status</Label>
+                <Select
+                  value={paymentStatus}
+                  onValueChange={setPaymentStatus}
+                  disabled={isLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Payment Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Unpaid">Unpaid</SelectItem>
+                    <SelectItem value="Paid">Paid</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
           )}
 
           {needsApproval && (

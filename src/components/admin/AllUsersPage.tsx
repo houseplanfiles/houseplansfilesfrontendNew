@@ -108,6 +108,11 @@ const AllUsersPage = () => {
   const [contractorType, setContractorType] = useState("Normal");
   const [premiumExpiresAt, setPremiumExpiresAt] = useState("");
 
+  const [selectedPlanAdmin, setSelectedPlanAdmin] = useState("");
+  const [profileCreationAdmin, setProfileCreationAdmin] = useState(false);
+  const [profileStoreManagementAdmin, setProfileStoreManagementAdmin] = useState("None");
+  const [paymentStatusAdmin, setPaymentStatusAdmin] = useState("Unpaid");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   // New state for export loading
   const [isExporting, setIsExporting] = useState(false);
@@ -176,6 +181,10 @@ const AllUsersPage = () => {
       } else {
         setProfession("");
       }
+      setSelectedPlanAdmin(selectedUser.selectedPlan || "None");
+      setProfileCreationAdmin(!!selectedUser.profileCreation);
+      setProfileStoreManagementAdmin(selectedUser.profileStoreManagement || "None");
+      setPaymentStatusAdmin(selectedUser.paymentStatus || "Unpaid");
     }
   }, [selectedUser, reset, isEditModalOpen]);
 
@@ -354,6 +363,10 @@ const AllUsersPage = () => {
       } else {
         userData.premiumExpiresAt = null;
       }
+      userData.selectedPlan = selectedPlanAdmin === "None" ? null : selectedPlanAdmin;
+      userData.profileCreation = profileCreationAdmin;
+      userData.profileStoreManagement = profileStoreManagementAdmin;
+      userData.paymentStatus = paymentStatusAdmin;
     }
 
     try {
@@ -598,14 +611,25 @@ const AllUsersPage = () => {
                         </span>
                       </td>
                       <td className="p-4 text-xs text-gray-500">
-                        {user.role === "professional" && user.profession}
-                        {["Contractor", "Architect", "seller"].includes(user.role || "") && (
-                          <div className="flex flex-col gap-0.5">
+                        {user.role === "professional" && <div className="font-semibold text-gray-800">{user.profession}</div>}
+                        {["Contractor", "Architect", "seller", "professional"].includes(user.role || "") && (
+                          <div className="flex flex-col gap-1 mt-1">
+                            {user.selectedPlan && (
+                              <span className="px-1.5 py-0.5 rounded bg-orange-50 text-orange-800 border border-orange-200 w-fit font-bold text-[10px]">
+                                Plan: {user.selectedPlan} ({user.paymentStatus || "Unpaid"})
+                              </span>
+                            )}
+                            {(user.profileCreation || (user.profileStoreManagement && user.profileStoreManagement !== "None")) && (
+                              <div className="text-[10px] text-gray-600 bg-slate-50 px-1.5 py-0.5 border border-slate-100 rounded w-fit">
+                                {user.profileCreation && "• Profile Setup "}
+                                {user.profileStoreManagement && user.profileStoreManagement !== "None" && `• Store Mgmt (${user.profileStoreManagement})`}
+                              </div>
+                            )}
                             <span className={`font-semibold ${
                               user.contractorType === "Premium" ? "text-orange-600" :
                               user.contractorType === "Verified" ? "text-green-600" : "text-gray-500"
                             }`}>
-                              {user.contractorType === "Premium" ? "⭐ Premium" :
+                              Listing: {user.contractorType === "Premium" ? "⭐ Premium" :
                                user.contractorType === "Verified" ? "✅ Verified" : "Normal"}
                             </span>
                             {user.contractorType === "Premium" && user.premiumExpiresAt && (
@@ -892,6 +916,81 @@ const AllUsersPage = () => {
                       <SelectItem value="Rejected">Rejected</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+              )}
+
+              {needsApproval && (
+                <div className="border-t pt-4 space-y-4">
+                  <h4 className="text-sm font-semibold text-orange-600">Subscription & Addons (Admin)</h4>
+                  
+                  <div>
+                    <Label>Selected Plan</Label>
+                    <Select
+                      value={selectedPlanAdmin || "None"}
+                      onValueChange={setSelectedPlanAdmin}
+                      disabled={isSubmitting}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="No Plan" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="None">None</SelectItem>
+                        <SelectItem value="Basic">Basic Listing</SelectItem>
+                        <SelectItem value="Standard">Standard Listing</SelectItem>
+                        <SelectItem value="Premium">Premium Listing (6 Month)</SelectItem>
+                        <SelectItem value="Premium+">Premium+ Listing (12 Month)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label>Payment Status</Label>
+                    <Select
+                      value={paymentStatusAdmin}
+                      onValueChange={setPaymentStatusAdmin}
+                      disabled={isSubmitting}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Unpaid">Unpaid</SelectItem>
+                        <SelectItem value="Paid">Paid</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex items-center space-x-2 pt-1">
+                    <input
+                      type="checkbox"
+                      id="profileCreationAdmin"
+                      checked={profileCreationAdmin}
+                      onChange={(e) => setProfileCreationAdmin(e.target.checked)}
+                      disabled={isSubmitting}
+                      className="rounded accent-orange-600 w-4 h-4"
+                    />
+                    <label htmlFor="profileCreationAdmin" className="text-xs font-medium text-gray-700 cursor-pointer">
+                      Profile Creation Service (₹499)
+                    </label>
+                  </div>
+
+                  <div>
+                    <Label>Profile & Store Management</Label>
+                    <Select
+                      value={profileStoreManagementAdmin}
+                      onValueChange={setProfileStoreManagementAdmin}
+                      disabled={isSubmitting}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="None">None</SelectItem>
+                        <SelectItem value="6_Month">6 Months Management (₹999)</SelectItem>
+                        <SelectItem value="1_Year">1 Year Management (₹1499)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               )}
 
