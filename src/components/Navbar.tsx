@@ -95,6 +95,7 @@ const Navbar = () => {
     return () => { document.body.style.overflow = "auto"; };
   }, [isMenuOpen, isWishlistOpen]);
 
+  // Navigation configuration links with submenu dropdown
   const navLinks = [
     { name: "Home", path: "/" },
     {
