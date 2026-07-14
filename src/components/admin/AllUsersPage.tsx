@@ -358,7 +358,7 @@ const AllUsersPage = () => {
     const lowerRole = role?.toLowerCase()?.trim();
     if (["professional", "contractor", "seller", "architect"].includes(lowerRole || "")) {
       userData.contractorType = contractorType;
-      if (contractorType === "Premium" && premiumExpiresAt) {
+      if ((contractorType === "Premium" || contractorType === "Verified") && premiumExpiresAt) {
         userData.premiumExpiresAt = new Date(premiumExpiresAt).toISOString();
       } else {
         userData.premiumExpiresAt = null;
@@ -632,7 +632,7 @@ const AllUsersPage = () => {
                               Listing: {user.contractorType === "Premium" ? "⭐ Premium" :
                                user.contractorType === "Verified" ? "✅ Verified" : "Normal"}
                             </span>
-                            {user.contractorType === "Premium" && user.premiumExpiresAt && (
+                            {(user.contractorType === "Premium" || user.contractorType === "Verified") && user.premiumExpiresAt && (
                               <span className="text-[10px] text-orange-500 font-medium">
                                 Expires: {new Date(user.premiumExpiresAt).toLocaleDateString("en-IN")}
                               </span>
@@ -848,6 +848,8 @@ const AllUsersPage = () => {
                           "Tile & granite Contractor",
                           "General Contractor",
                           "Civil Contractor",
+                          "Carpenter",
+                          "Glass Fabricator",
                         ].map((type) => (
                           <SelectItem key={type} value={type}>
                             {type}
@@ -885,7 +887,7 @@ const AllUsersPage = () => {
                 </div>
               )}
 
-              {(["professional", "contractor", "seller", "architect"].includes(role?.toLowerCase()?.trim() || "")) && contractorType === "Premium" && (
+              {(["professional", "contractor", "seller", "architect"].includes(role?.toLowerCase()?.trim() || "")) && (contractorType === "Premium" || contractorType === "Verified") && (
                 <div className="space-y-1">
                   <Label className="font-semibold text-orange-600">⏳ Listing Expiry Date</Label>
                   <input

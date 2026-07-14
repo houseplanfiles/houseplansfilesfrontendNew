@@ -57,6 +57,8 @@ const contractorProfessions = [
   "Tile & granite Contractor",
   "Labour Contractor",
   "Turnkey Contractor",
+  "Carpenter",
+  "Glass Fabricator",
 ];
 
 const materialTypes = [
