@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Heart, ShoppingCart, Menu, X, User, LogOut } from "lucide-react";
+import { Heart, ShoppingCart, Menu, X, User, LogOut, ChevronDown } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import WishlistPanel from "@/components/WishlistPanel";
@@ -27,6 +27,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const { state: cartState } = useCart();
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
@@ -43,7 +44,7 @@ const Navbar = () => {
     mounted &&
     userInfo &&
     ["user", "admin", "professional", "seller", "contractor", "architect"].includes(
-      userInfo.role?.toLowerCase()
+      userInfo.role?.toLowerCase() || ""
     );
 
   const showCartAndWishlist = !mounted || !userInfo || userInfo?.role === "user";
@@ -94,9 +95,19 @@ const Navbar = () => {
     return () => { document.body.style.overflow = "auto"; };
   }, [isMenuOpen, isWishlistOpen]);
 
+  // Navigation configuration links with submenu dropdown
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Readymade Home Design", path: "/house-plans" },
+    {
+      name: "Readymade Home Design",
+      path: "/house-plans",
+      submenu: [
+        { name: "Floor Plan", path: "/house-plans" },
+        { name: "Floor plan + 3D Elevation", path: "/3d-plans" },
+        { name: "Readymade Interior Designs", path: "/interior-designs" },
+        { name: "Digital Products (Download)", path: "/products" },
+      ],
+    },
     { name: "Architect & Interior Designer", path: "/architects" },
     { name: "City Contractor", path: "/city-partners" },
     { name: "Marketplace", path: "/marketplace" },
@@ -136,22 +147,68 @@ const Navbar = () => {
 
             <nav className="hidden lg:flex items-center gap-3 ml-8 mr-4">
               {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.path}
-                  className={`text-[13px] font-medium relative transition-colors duration-300 group whitespace-nowrap ${
-                    isActive(link.path)
-                      ? "text-orange-600"
-                      : "text-gray-600 hover:text-orange-600"
-                  }`}
-                >
-                  {link.name}
-                  <span
-                    className={`absolute bottom-[-4px] left-0 w-full h-0.5 bg-orange-500 transition-transform duration-300 origin-center ${
-                      isActive(link.path) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                link.submenu ? (
+                  <div
+                    key={link.name}
+                    className="relative group"
+                    onMouseEnter={() => setActiveDropdown(link.name)}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    <Link
+                      href={link.path}
+                      className={`text-[13px] font-medium flex items-center gap-1 relative transition-colors duration-300 ${
+                        isActive(link.path) || link.submenu.some(sub => isActive(sub.path))
+                          ? "text-orange-600"
+                          : "text-gray-600 hover:text-orange-600"
+                      }`}
+                    >
+                      {link.name}
+                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                        activeDropdown === link.name ? 'rotate-180 text-orange-600' : 
+                        (isActive(link.path) || link.submenu.some(sub => isActive(sub.path)) ? 'text-orange-600' : 'text-gray-600 group-hover:text-orange-600')
+                      }`} />
+                      <span
+                        className={`absolute bottom-[-4px] left-0 w-full h-0.5 bg-orange-500 transition-transform duration-300 origin-center ${
+                          isActive(link.path) || link.submenu.some(sub => isActive(sub.path)) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                        }`}
+                      />
+                    </Link>
+                    {activeDropdown === link.name && (
+                      <div className="absolute left-0 top-full pt-2 w-56 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="bg-white border border-gray-100 rounded-xl shadow-xl py-2">
+                          {link.submenu.map((sub) => (
+                            <Link
+                              key={sub.name}
+                              href={sub.path}
+                              className={`block px-4 py-2.5 text-xs font-semibold transition-colors ${
+                                isActive(sub.path) ? "bg-orange-50 text-orange-600" : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
+                              }`}
+                            >
+                              {sub.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={link.name}
+                    href={link.path}
+                    className={`text-[13px] font-medium relative transition-colors duration-300 group whitespace-nowrap ${
+                      isActive(link.path)
+                        ? "text-orange-600"
+                        : "text-gray-600 hover:text-orange-600"
                     }`}
-                  />
-                </Link>
+                  >
+                    {link.name}
+                    <span
+                      className={`absolute bottom-[-4px] left-0 w-full h-0.5 bg-orange-500 transition-transform duration-300 origin-center ${
+                        isActive(link.path) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                      }`}
+                    />
+                  </Link>
+                )
               ))}
             </nav>
 
@@ -287,17 +344,42 @@ const Navbar = () => {
               <nav className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
                 <div className="flex flex-col gap-2">
                   {navLinks.map((link) => (
-                    <Link
-                      key={link.name}
-                      href={link.path}
-                      className={`text-lg font-medium p-4 rounded-xl transition-all ${
-                        isActive(link.path)
-                          ? "bg-orange-50 text-orange-600 translate-x-2 shadow-sm"
-                          : "text-gray-700 hover:bg-gray-50 hover:translate-x-1"
-                      }`}
-                    >
-                      {link.name}
-                    </Link>
+                    link.submenu ? (
+                      <div key={link.name} className="flex flex-col mb-2">
+                        <span className="text-xs font-black uppercase text-gray-400 tracking-widest px-4 pt-4 pb-2">
+                          {link.name}
+                        </span>
+                        <div className="flex flex-col pl-4 border-l border-orange-100 ml-4 gap-1">
+                          {link.submenu.map((sub) => (
+                            <Link
+                              key={sub.name}
+                              href={sub.path}
+                              onClick={() => setIsMenuOpen(false)}
+                              className={`text-base font-semibold py-3 px-4 rounded-xl transition-all ${
+                                isActive(sub.path)
+                                  ? "bg-orange-50 text-orange-600"
+                                  : "text-gray-700 hover:bg-gray-50"
+                              }`}
+                            >
+                              {sub.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <Link
+                        key={link.name}
+                        href={link.path}
+                        onClick={() => setIsMenuOpen(false)}
+                        className={`text-lg font-medium p-4 rounded-xl transition-all ${
+                          isActive(link.path)
+                            ? "bg-orange-50 text-orange-600 translate-x-2 shadow-sm"
+                            : "text-gray-700 hover:bg-gray-50 hover:translate-x-1"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    )
                   ))}
                 </div>
               </nav>

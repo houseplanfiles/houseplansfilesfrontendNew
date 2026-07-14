@@ -99,7 +99,7 @@ const AdminContractorsPage = () => {
     
     const userData = {
       contractorType,
-      premiumExpiresAt: contractorType === "Premium" && premiumExpiresAt 
+      premiumExpiresAt: (contractorType === "Premium" || contractorType === "Verified") && premiumExpiresAt 
         ? new Date(premiumExpiresAt).toISOString() 
         : null
     };
@@ -244,7 +244,7 @@ const AdminContractorsPage = () => {
                          </span>
                       </td>
                       <td className="p-4">
-                        {user.contractorType === "Premium" ? (
+                        {(user.contractorType === "Premium" || user.contractorType === "Verified") ? (
                           <div className="flex flex-col items-center">
                             {daysLeft !== null ? (
                               <div className={`flex items-center gap-1.5 px-3 py-1 rounded-lg border font-bold text-sm
@@ -361,9 +361,9 @@ const AdminContractorsPage = () => {
               </div>
             </div>
 
-            {contractorType === "Premium" && (
+            {(contractorType === "Premium" || contractorType === "Verified") && (
               <div className="space-y-2 animate-in slide-in-from-top-2 duration-300">
-                <Label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Premium Expiry Date</Label>
+                <Label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Expiry Date</Label>
                 <div className="relative">
                   <Clock className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
                   <Input
@@ -373,7 +373,7 @@ const AdminContractorsPage = () => {
                     onChange={(e) => setPremiumExpiresAt(e.target.value)}
                   />
                 </div>
-                <p className="text-[10px] font-bold text-orange-600 italic uppercase">User will automatically lose premium status after this date.</p>
+                <p className="text-[10px] font-bold text-orange-600 italic uppercase">User will automatically lose status after this date.</p>
               </div>
             )}
           </div>
