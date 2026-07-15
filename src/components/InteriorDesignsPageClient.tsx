@@ -35,6 +35,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { fetchProducts } from "@/lib/features/products/productSlice";
 import { fetchAllApprovedPlans } from "@/lib/features/professional/professionalPlanSlice";
 import { fetchMyOrders } from "@/lib/features/orders/orderSlice";
+import { submitCustomizationRequest } from "@/lib/features/customization/customizationSlice";
 
 import useDebounce from "@/hooks/useDebounce";
 import { useCurrency } from "@/contexts/CurrencyContext"; // Currency Context जोड़ा गया
@@ -53,170 +54,315 @@ const themes = [
   "Eclectic Theme",
 ];
 
-const FilterSidebar = ({ filters, setFilters, isOpen, onClose }: any) => (
-  <>
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
-    </AnimatePresence>
-    <motion.aside
-      initial={false}
-      animate={{
-        x: isOpen ? 0 : "-100%",
-      }}
-      transition={{ type: "spring", damping: 30, stiffness: 300 }}
-      className={`
-        fixed lg:sticky top-0 left-0 h-screen lg:h-fit
-        w-80 sm:w-96 lg:w-full
-        p-4 sm:p-6 bg-white rounded-none lg:rounded-xl 
-        shadow-2xl lg:shadow-lg border-r lg:border border-gray-200 
-        z-50 lg:z-auto overflow-y-auto
-        lg:top-24
-      `}
-    >
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
-        aria-label="Close filters"
-      >
-        <X className="w-5 h-5" />
-      </button>
+const FilterSidebar = ({
+  filters,
+  setFilters,
+  isOpen,
+  onClose,
+  selectedCategories = [],
+  setSelectedCategories,
+}: any) => {
+  const categoryOptions = [
+    { id: "full-house", label: "Full House (पूरा घर)", value: "Full House" },
+    { id: "bedroom", label: "Bedroom (बेडरूम)", value: "Bedroom" },
+    { id: "drawing-room", label: "Drawing Room (ड्राइंग रूम)", value: "Drawing Room" },
+    { id: "living-room", label: "Living Room (लिविंग रूम)", value: "Living Room" },
+    { id: "kitchen", label: "Kitchen (किचन)", value: "Kitchen" },
+    { id: "terrace-garden", label: "Terrace Garden (छत का बगीचा / टेरेस गार्डन)", value: "Terrace Garden" },
+    { id: "outdoor", label: "Outdoor (बाहरी हिस्सा / आउटडोर)", value: "Outdoor" },
+    { id: "dining", label: "Dining (डाइनिंग एरिया)", value: "Dining" },
+  ];
 
-      <h3 className="text-xl font-bold mb-4 flex items-center text-gray-800">
-        <Filter className="w-5 h-5 mr-2 text-gray-500" />
-        Filters
-      </h3>
-      <div className="space-y-4 sm:space-y-6">
-        <div>
-          <Label
-            htmlFor="theme"
-            className="font-semibold text-gray-600 text-sm sm:text-base"
-          >
-            Theme
-          </Label>
-          <Select
-            value={filters.theme}
-            onValueChange={(value) =>
-              setFilters((prev: any) => ({ ...prev, theme: value }))
-            }
-          >
-            <SelectTrigger
-              id="theme"
-              className="mt-2 bg-gray-100 border-transparent h-11 sm:h-12"
-            >
-              <SelectValue placeholder="Select Theme" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Themes</SelectItem>
-              {themes.map((theme) => (
-                <SelectItem key={theme} value={theme}>
-                  {theme}
-                </SelectItem>
+  return (
+    <>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={onClose}
+          />
+        )}
+      </AnimatePresence>
+      <motion.aside
+        initial={false}
+        animate={{
+          x: isOpen ? 0 : "-100%",
+        }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        className={`
+          fixed lg:sticky top-0 left-0 h-screen lg:h-fit
+          w-80 sm:w-96 lg:w-full
+          p-4 sm:p-6 bg-white rounded-none lg:rounded-xl 
+          shadow-2xl lg:shadow-lg border-r lg:border border-gray-200 
+          z-50 lg:z-auto overflow-y-auto
+          lg:top-24
+        `}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
+          aria-label="Close filters"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <h3 className="text-xl font-bold mb-4 flex items-center text-gray-800">
+          <Filter className="w-5 h-5 mr-2 text-gray-500" />
+          Filters
+        </h3>
+        <div className="space-y-4 sm:space-y-6">
+          {/* Readymade Interior Designs Categories */}
+          <div className="border-b border-gray-200 pb-4">
+            <Label className="font-bold text-gray-800 text-sm sm:text-base mb-3 block">
+              Categories
+            </Label>
+            <div className="space-y-2.5 mt-2">
+              {categoryOptions.map((option) => (
+                <label key={option.id} className="flex items-center gap-2.5 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 rounded text-orange-600 border-gray-300 focus:ring-orange-500 focus:ring-offset-0 cursor-pointer accent-orange-600"
+                    checked={selectedCategories.includes(option.value)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedCategories([...selectedCategories, option.value]);
+                      } else {
+                        setSelectedCategories(selectedCategories.filter((c: string) => c !== option.value));
+                      }
+                    }}
+                  />
+                  <span className="text-xs sm:text-sm text-gray-600 group-hover:text-orange-600 transition-colors font-medium">
+                    {option.label}
+                  </span>
+                </label>
               ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label
-            htmlFor="roomType"
-            className="font-semibold text-gray-600 text-sm sm:text-base"
-          >
-            Room Type
-          </Label>
-          <Select
-            value={filters.roomType}
-            onValueChange={(value) =>
-              setFilters((prev: any) => ({ ...prev, roomType: value }))
-            }
-          >
-            <SelectTrigger
-              id="roomType"
-              className="mt-2 bg-gray-100 border-transparent h-11 sm:h-12"
+            </div>
+          </div>
+
+          <div>
+            <Label
+              htmlFor="theme"
+              className="font-semibold text-gray-600 text-sm sm:text-base"
             >
-              <SelectValue placeholder="Select Room" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Rooms</SelectItem>
-              <SelectItem value="Kitchen">Kitchen</SelectItem>
-              <SelectItem value="Bedroom">Bedroom</SelectItem>
-              <SelectItem value="Living Room">Living Room</SelectItem>
-              <SelectItem value="Bathroom">Bathroom</SelectItem>
-              <SelectItem value="Dining Room">Dining Room</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label
-            htmlFor="propertyType"
-            className="font-semibold text-gray-600 text-sm sm:text-base"
-          >
-            Property Type
-          </Label>
-          <Select
-            value={filters.propertyType}
-            onValueChange={(value) =>
-              setFilters((prev: any) => ({ ...prev, propertyType: value }))
-            }
-          >
-            <SelectTrigger
-              id="propertyType"
-              className="mt-2 bg-gray-100 border-transparent h-11 sm:h-12"
+              Theme
+            </Label>
+            <Select
+              value={filters.theme}
+              onValueChange={(value) =>
+                setFilters((prev: any) => ({ ...prev, theme: value }))
+              }
             >
-              <SelectValue placeholder="Select Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="Residential">Residential</SelectItem>
-              <SelectItem value="Commercial">Commercial</SelectItem>
-            </SelectContent>
-          </Select>
+              <SelectTrigger
+                id="theme"
+                className="mt-2 bg-gray-100 border-transparent h-11 sm:h-12"
+              >
+                <SelectValue placeholder="Select Theme" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Themes</SelectItem>
+                {themes.map((theme) => (
+                  <SelectItem key={theme} value={theme}>
+                    {theme}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label
+              htmlFor="propertyType"
+              className="font-semibold text-gray-600 text-sm sm:text-base"
+            >
+              Property Type
+            </Label>
+            <Select
+              value={filters.propertyType}
+              onValueChange={(value) =>
+                setFilters((prev: any) => ({ ...prev, propertyType: value }))
+              }
+            >
+              <SelectTrigger
+                id="propertyType"
+                className="mt-2 bg-gray-100 border-transparent h-11 sm:h-12"
+              >
+                <SelectValue placeholder="Select Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="Residential">Residential</SelectItem>
+                <SelectItem value="Commercial">Commercial</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className="font-semibold text-gray-600 text-sm sm:text-base">
+              Budget: ₹{filters.budget[0].toLocaleString()} - ₹
+              {filters.budget[1].toLocaleString()}
+            </Label>
+            <Slider
+              value={filters.budget}
+              onValueChange={(value) =>
+                setFilters((prev: any) => ({
+                  ...prev,
+                  budget: value as [number, number],
+                }))
+              }
+              max={50000}
+              min={500}
+              step={100}
+              className="mt-3"
+            />
+          </div>
+          <Button
+            onClick={() => {
+              setFilters({
+                theme: "all",
+                category: "all",
+                roomType: "all",
+                propertyType: "all",
+                budget: [500, 50000],
+              });
+              setSelectedCategories([]);
+              onClose?.();
+            }}
+            variant="outline"
+            className="w-full"
+          >
+            Clear Filters
+          </Button>
+        </div>
+      </motion.aside>
+    </>
+  );
+};
+
+const CustomizeInteriorForm = ({ userInfo, dispatch, toast }: any) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    city: "",
+    project: "",
+    mobile: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (userInfo) {
+      setFormData((prev) => ({
+        ...prev,
+        name: userInfo.name || userInfo.businessName || "",
+      }));
+    }
+  }, [userInfo]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.city || !formData.project || !formData.mobile) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill all fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    const apiData = new FormData();
+    apiData.append("name", formData.name);
+    apiData.append("countryName", formData.city); // Map City to countryName
+    apiData.append("description", formData.project); // Map Project to description
+    apiData.append("whatsappNumber", formData.mobile); // Map Mobile to whatsappNumber
+    apiData.append("email", userInfo?.email || "inquiry@houseplanfiles.com");
+    apiData.append("requestType", "Interior Design");
+
+    try {
+      await (dispatch as any)(submitCustomizationRequest(apiData)).unwrap();
+      toast({
+        title: "Success",
+        description: "Your customization inquiry has been submitted successfully! We will contact you soon.",
+      });
+      setFormData({
+        name: userInfo?.name || userInfo?.businessName || "",
+        city: "",
+        project: "",
+        mobile: "",
+      });
+    } catch (err: any) {
+      console.error(err);
+      toast({
+        title: "Error",
+        description: err || "Failed to submit inquiry. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-lg w-full sticky top-24">
+      <h3 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2 flex items-center gap-2">
+        <span className="w-1.5 h-5 bg-orange-500 rounded-full block"></span>
+        Customize your Interior
+      </h3>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Name</label>
+          <input
+            type="text"
+            className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+            placeholder="Your Name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            required
+          />
         </div>
         <div>
-          <Label className="font-semibold text-gray-600 text-sm sm:text-base">
-            Budget: ₹{filters.budget[0].toLocaleString()} - ₹
-            {filters.budget[1].toLocaleString()}
-          </Label>
-          <Slider
-            value={filters.budget}
-            onValueChange={(value) =>
-              setFilters((prev: any) => ({
-                ...prev,
-                budget: value as [number, number],
-              }))
-            }
-            max={50000}
-            min={500}
-            step={100}
-            className="mt-3"
+          <label className="block text-xs font-semibold text-gray-600 mb-1">City</label>
+          <input
+            type="text"
+            className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+            placeholder="Your City"
+            value={formData.city}
+            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Project</label>
+          <input
+            type="text"
+            className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+            placeholder="Project Description"
+            value={formData.project}
+            onChange={(e) => setFormData({ ...formData, project: e.target.value })}
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Mobile No.</label>
+          <input
+            type="tel"
+            className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+            placeholder="Mobile / WhatsApp"
+            value={formData.mobile}
+            onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+            required
           />
         </div>
         <Button
-          onClick={() => {
-            setFilters({
-              theme: "all",
-              category: "all",
-              roomType: "all",
-              propertyType: "all",
-              budget: [500, 50000],
-            });
-            onClose?.();
-          }}
-          variant="outline"
-          className="w-full"
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold text-sm py-2.5 rounded-lg transition-all shadow-md shadow-orange-500/10"
         >
-          Clear Filters
+          {isSubmitting ? "Submitting..." : "Submit Inquiry"}
         </Button>
-      </div>
-    </motion.aside>
-  </>
-);
+      </form>
+    </div>
+  );
+};
 
 const ProductCard = ({ product, userOrders }: any) => {
   const router = useRouter();
@@ -443,6 +589,7 @@ const ProductCard = ({ product, userOrders }: any) => {
 
 const InteriorDesignsPage = () => {
   const dispatch: AppDispatch = useDispatch();
+  const { toast } = useToast();
 
   const {
     products: adminProducts,
@@ -468,6 +615,7 @@ const InteriorDesignsPage = () => {
     propertyType: "all",
     budget: [500, 50000] as [number, number],
   });
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [jumpToPage, setJumpToPage] = useState("");
@@ -504,7 +652,7 @@ const InteriorDesignsPage = () => {
     if (currentPage !== 1) {
       setCurrentPage(1);
     }
-  }, [debouncedFilters, sortBy]);
+  }, [debouncedFilters, sortBy, selectedCategories]);
 
   const combinedProducts = useMemo(
     () => [
@@ -517,6 +665,49 @@ const InteriorDesignsPage = () => {
     ],
     [adminProducts, professionalPlans]
   );
+
+  const filteredProducts = useMemo(() => {
+    if (selectedCategories.length === 0) return combinedProducts;
+    return combinedProducts.filter((product) => {
+      const name = (product.name || product.planName || product.Name || "").toLowerCase();
+      const roomType = (product.roomType || product.size || "").toLowerCase();
+      const category = (
+        Array.isArray(product.category) 
+          ? product.category.join(" ") 
+          : (product.category || "")
+      ).toLowerCase();
+
+      return selectedCategories.some((cat) => {
+        const catLower = cat.toLowerCase();
+        
+        if (catLower === "full house") {
+          return name.includes("full house") || name.includes("complete") || category.includes("full house");
+        }
+        if (catLower === "bedroom") {
+          return name.includes("bedroom") || roomType.includes("bedroom") || category.includes("bedroom");
+        }
+        if (catLower === "drawing room") {
+          return name.includes("drawing") || roomType.includes("drawing") || category.includes("drawing");
+        }
+        if (catLower === "living room") {
+          return name.includes("living") || roomType.includes("living") || category.includes("living");
+        }
+        if (catLower === "kitchen") {
+          return name.includes("kitchen") || roomType.includes("kitchen") || category.includes("kitchen");
+        }
+        if (catLower === "terrace garden") {
+          return name.includes("terrace") || name.includes("garden") || roomType.includes("terrace") || category.includes("terrace");
+        }
+        if (catLower === "outdoor") {
+          return name.includes("outdoor") || name.includes("exterior") || roomType.includes("outdoor") || category.includes("outdoor");
+        }
+        if (catLower === "dining") {
+          return name.includes("dining") || roomType.includes("dining") || category.includes("dining");
+        }
+        return false;
+      });
+    });
+  }, [combinedProducts, selectedCategories]);
 
   const totalCount = adminCount || 0;
   const totalPages = adminPages > 0 ? adminPages : 1;
@@ -537,40 +728,46 @@ const InteriorDesignsPage = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      
       <Navbar />
       <main className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-12">
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 items-start">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+          {/* Left Column: Categories and filters (Desktop) */}
           <div className="hidden lg:block lg:w-1/4 xl:w-1/5">
             <FilterSidebar
               filters={filters}
               setFilters={setFilters}
               isOpen={true}
               onClose={() => {}}
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
             />
           </div>
 
+          {/* Left Column Drawer (Mobile) */}
           <div className="lg:hidden">
             <FilterSidebar
               filters={filters}
               setFilters={setFilters}
               isOpen={isFilterOpen}
               onClose={() => setIsFilterOpen(false)}
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
             />
           </div>
 
-          <div className="w-full lg:w-3/4 xl:w-4/5">
+          {/* Center Column: Design listings grid */}
+          <div className="w-full lg:w-2/4 xl:w-3/5">
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-start sm:items-center mb-4 sm:mb-6 border-b pb-3 sm:pb-4">
               <div className="w-full sm:w-auto">
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
                   Interior Design Plans
                 </h1>
                 <p className="text-gray-500 text-xs sm:text-sm mt-1">
-                  Showing {combinedProducts.length} of {totalCount} results
+                  Showing {filteredProducts.length} of {totalCount} results
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                <Link href="/customize/interior-designs">
+                <Link href="/customize/interior-design">
                   <Button className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white shadow-md transition-all">
                     Customize Your Interior
                   </Button>
@@ -624,10 +821,10 @@ const InteriorDesignsPage = () => {
               <>
                 <motion.div
                   layout
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6"
+                  className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-4 sm:gap-6"
                 >
-                  {combinedProducts.length > 0 ? (
-                    combinedProducts.map((product) => (
+                  {filteredProducts.length > 0 ? (
+                    filteredProducts.map((product) => (
                       <ProductCard
                         key={`${product.source}-${product._id}`}
                         product={product}
@@ -693,6 +890,24 @@ const InteriorDesignsPage = () => {
               </>
             )}
           </div>
+
+          {/* Right Column: Customize Form (Desktop Only) */}
+          <div className="hidden lg:block lg:w-1/4 xl:w-1/5">
+            <CustomizeInteriorForm
+              userInfo={userInfo}
+              dispatch={dispatch}
+              toast={toast}
+            />
+          </div>
+        </div>
+
+        {/* Customize Form (Mobile Only at the bottom) */}
+        <div className="lg:hidden mt-10">
+          <CustomizeInteriorForm
+            userInfo={userInfo}
+            dispatch={dispatch}
+            toast={toast}
+          />
         </div>
       </main>
       <Footer />
@@ -701,3 +916,4 @@ const InteriorDesignsPage = () => {
 };
 
 export default InteriorDesignsPage;
+
