@@ -93,12 +93,12 @@ const FilterSidebar = ({
         }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
         className={`
-          fixed lg:sticky top-0 left-0 h-screen lg:h-fit
+          fixed lg:sticky top-0 left-0 h-screen lg:h-[calc(100vh-120px)]
           w-80 sm:w-96 lg:w-full
           p-4 sm:p-6 bg-white rounded-none lg:rounded-xl 
           shadow-2xl lg:shadow-lg border-r lg:border border-gray-200 
           z-50 lg:z-auto overflow-y-auto
-          lg:top-24
+          lg:top-[100px]
         `}
       >
         <button
@@ -302,7 +302,7 @@ const CustomizeInteriorForm = ({ userInfo, dispatch, toast }: any) => {
   };
 
   return (
-    <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-lg w-full sticky top-24">
+    <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-lg w-full sticky top-[100px] max-h-[calc(100vh-120px)] overflow-y-auto">
       <h3 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2 flex items-center gap-2">
         <span className="w-1.5 h-5 bg-orange-500 rounded-full block"></span>
         Customize your Interior
