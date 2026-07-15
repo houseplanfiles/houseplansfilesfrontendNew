@@ -187,12 +187,12 @@ const PackageCard = ({ pkg }: { pkg: Package }) => {
             }`}
           >
             <Link
-              href="/booking-form"
-              state={{
+              href={`/booking-form?packageName=${encodeURIComponent(pkg.title)}&packageUnit=${encodeURIComponent(pkg.unit)}&packagePrice=${encodeURIComponent(pkg.price)}`}
+              /*
                 packageName: pkg.title,
                 packageUnit: pkg.unit,
                 packagePrice: pkg.price,
-              }}
+              */
             >
               Select Plan
             </Link>

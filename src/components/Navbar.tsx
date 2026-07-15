@@ -124,11 +124,10 @@ const Navbar = () => {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 w-full transition-all duration-300 border-b ${
-          isScrolled
-            ? "bg-white/95 backdrop-blur-md shadow-sm border-gray-200"
-            : "bg-white border-transparent"
-        }`}
+        className={`sticky top-0 z-50 w-full transition-all duration-300 border-b ${isScrolled
+          ? "bg-white/95 backdrop-blur-md shadow-sm border-gray-200"
+          : "bg-white border-transparent"
+          }`}
       >
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
@@ -156,21 +155,18 @@ const Navbar = () => {
                   >
                     <Link
                       href={link.path}
-                      className={`text-[13px] font-medium flex items-center gap-1 relative transition-colors duration-300 ${
-                        isActive(link.path) || link.submenu.some(sub => isActive(sub.path))
-                          ? "text-orange-600"
-                          : "text-gray-600 hover:text-orange-600"
-                      }`}
+                      className={`text-[13px] font-medium flex items-center gap-1 relative transition-colors duration-300 ${isActive(link.path) || link.submenu.some(sub => isActive(sub.path))
+                        ? "text-orange-600"
+                        : "text-gray-600 hover:text-orange-600"
+                        }`}
                     >
                       {link.name}
-                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                        activeDropdown === link.name ? 'rotate-180 text-orange-600' : 
+                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-orange-600' :
                         (isActive(link.path) || link.submenu.some(sub => isActive(sub.path)) ? 'text-orange-600' : 'text-gray-600 group-hover:text-orange-600')
-                      }`} />
+                        }`} />
                       <span
-                        className={`absolute bottom-[-4px] left-0 w-full h-0.5 bg-orange-500 transition-transform duration-300 origin-center ${
-                          isActive(link.path) || link.submenu.some(sub => isActive(sub.path)) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                        }`}
+                        className={`absolute bottom-[-4px] left-0 w-full h-0.5 bg-orange-500 transition-transform duration-300 origin-center ${isActive(link.path) || link.submenu.some(sub => isActive(sub.path)) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                          }`}
                       />
                     </Link>
                     {activeDropdown === link.name && (
@@ -180,9 +176,8 @@ const Navbar = () => {
                             <Link
                               key={sub.name}
                               href={sub.path}
-                              className={`block px-4 py-2.5 text-xs font-semibold transition-colors ${
-                                isActive(sub.path) ? "bg-orange-50 text-orange-600" : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
-                              }`}
+                              className={`block px-4 py-2.5 text-xs font-semibold transition-colors ${isActive(sub.path) ? "bg-orange-50 text-orange-600" : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
+                                }`}
                             >
                               {sub.name}
                             </Link>
@@ -195,17 +190,15 @@ const Navbar = () => {
                   <Link
                     key={link.name}
                     href={link.path}
-                    className={`text-[13px] font-medium relative transition-colors duration-300 group whitespace-nowrap ${
-                      isActive(link.path)
-                        ? "text-orange-600"
-                        : "text-gray-600 hover:text-orange-600"
-                    }`}
+                    className={`text-[13px] font-medium relative transition-colors duration-300 group whitespace-nowrap ${isActive(link.path)
+                      ? "text-orange-600"
+                      : "text-gray-600 hover:text-orange-600"
+                      }`}
                   >
                     {link.name}
                     <span
-                      className={`absolute bottom-[-4px] left-0 w-full h-0.5 bg-orange-500 transition-transform duration-300 origin-center ${
-                        isActive(link.path) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                      }`}
+                      className={`absolute bottom-[-4px] left-0 w-full h-0.5 bg-orange-500 transition-transform duration-300 origin-center ${isActive(link.path) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                        }`}
                     />
                   </Link>
                 )
@@ -297,7 +290,6 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
-
               <div className="lg:hidden flex items-center">
                 <button
                   onClick={() => setIsMenuOpen(true)}
@@ -311,7 +303,6 @@ const Navbar = () => {
           </div>
         </div>
       </header>
-
       <AnimatePresence>
         {isMenuOpen && (
           <>
@@ -355,11 +346,10 @@ const Navbar = () => {
                               key={sub.name}
                               href={sub.path}
                               onClick={() => setIsMenuOpen(false)}
-                              className={`text-base font-semibold py-3 px-4 rounded-xl transition-all ${
-                                isActive(sub.path)
-                                  ? "bg-orange-50 text-orange-600"
-                                  : "text-gray-700 hover:bg-gray-50"
-                              }`}
+                              className={`text-base font-semibold py-3 px-4 rounded-xl transition-all ${isActive(sub.path)
+                                ? "bg-orange-50 text-orange-600"
+                                : "text-gray-700 hover:bg-gray-50"
+                                }`}
                             >
                               {sub.name}
                             </Link>
@@ -371,11 +361,10 @@ const Navbar = () => {
                         key={link.name}
                         href={link.path}
                         onClick={() => setIsMenuOpen(false)}
-                        className={`text-lg font-medium p-4 rounded-xl transition-all ${
-                          isActive(link.path)
-                            ? "bg-orange-50 text-orange-600 translate-x-2 shadow-sm"
-                            : "text-gray-700 hover:bg-gray-50 hover:translate-x-1"
-                        }`}
+                        className={`text-lg font-medium p-4 rounded-xl transition-all ${isActive(link.path)
+                          ? "bg-orange-50 text-orange-600 translate-x-2 shadow-sm"
+                          : "text-gray-700 hover:bg-gray-50 hover:translate-x-1"
+                          }`}
                       >
                         {link.name}
                       </Link>
@@ -383,7 +372,6 @@ const Navbar = () => {
                   ))}
                 </div>
               </nav>
-
               <div className="border-t pt-6 mt-4 flex-shrink-0 space-y-4">
                 {showCartAndWishlist && (
                   <div className="grid grid-cols-2 gap-3 mb-4">
@@ -398,7 +386,6 @@ const Navbar = () => {
                     </button>
                   </div>
                 )}
-
                 {isUserAllowed ? (
                   <div className="bg-gray-50 p-4 rounded-xl">
                     <div className="flex items-center justify-between mb-4">

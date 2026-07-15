@@ -12,6 +12,7 @@ interface PremiumRequest {
   city: string;
   address?: string;
   requirements?: string;
+  category?: string;
   status: "Pending" | "Contacted" | "In Progress" | "Completed" | "Cancelled";
   createdAt: string;
   updatedAt?: string;
@@ -33,6 +34,8 @@ interface CreateRequestData {
   city: string;
   address?: string;
   requirements?: string;
+  category?: string;
+  [key: string]: any;
 }
 
 interface UpdateRequestData {
@@ -159,10 +162,10 @@ const premiumRequestSlice = createSlice({
 
     const actionRejected = (
       state: PremiumRequestState,
-      action: PayloadAction<string>
+      action: any
     ) => {
       state.actionStatus = "failed";
-      state.error = action.payload;
+      state.error = action.payload || "An error occurred";
     };
 
     builder

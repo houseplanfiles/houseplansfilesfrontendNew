@@ -95,6 +95,7 @@ const PremiumRequestsPage: React.FC = () => {
     const headers = [
       "ID",
       "Package",
+      "Category",
       "Name",
       "WhatsApp",
       "Email",
@@ -113,6 +114,7 @@ const PremiumRequestsPage: React.FC = () => {
       [
         escapeCSV(req._id),
         escapeCSV(req.packageName),
+        escapeCSV(req.category),
         escapeCSV(req.name),
         escapeCSV(req.whatsapp),
         escapeCSV(req.email),
@@ -240,6 +242,9 @@ const PremiumRequestsPage: React.FC = () => {
                         Package
                       </th>
                       <th className="p-4 font-semibold text-sm text-gray-600">
+                        Category
+                      </th>
+                      <th className="p-4 font-semibold text-sm text-gray-600">
                         Customer
                       </th>
                       <th className="p-4 font-semibold text-sm text-gray-600">
@@ -264,6 +269,9 @@ const PremiumRequestsPage: React.FC = () => {
                       >
                         <td className="p-4 font-medium text-gray-800">
                           {req.packageName}
+                        </td>
+                        <td className="p-4 text-gray-600">
+                          {req.category || "N/A"}
                         </td>
                         <td className="p-4">
                           <div className="font-medium text-gray-800">

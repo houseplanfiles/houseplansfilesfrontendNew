@@ -32,6 +32,7 @@ interface EditRequestModalProps {
     city?: string;
     projectDetails?: string;
     adminNotes?: string;
+    category?: string;
     [key: string]: any;
   } | null;
 }
@@ -102,6 +103,14 @@ const EditRequestModal: React.FC<EditRequestModalProps> = ({
             <Label className="text-right">City</Label>
             <span className="col-span-3">{request.city}</span>
           </div>
+          {request.category && (
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Category</Label>
+              <span className="col-span-3 font-semibold text-orange-600">
+                {request.category}
+              </span>
+            </div>
+          )}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right">Details</Label>
             <p className="col-span-3 text-sm bg-gray-50 p-2 rounded-md border">

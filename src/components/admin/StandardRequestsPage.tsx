@@ -132,6 +132,7 @@ const StandardRequestsPage: React.FC = () => {
     const headers = [
       "ID",
       "Package Name",
+      "Category",
       "Customer Name",
       "WhatsApp",
       "City",
@@ -149,6 +150,7 @@ const StandardRequestsPage: React.FC = () => {
       [
         escapeCSV(req._id),
         escapeCSV(req.packageName),
+        escapeCSV(req.category),
         escapeCSV(req.name),
         escapeCSV(req.whatsapp),
         escapeCSV(req.city),
@@ -294,6 +296,9 @@ const StandardRequestsPage: React.FC = () => {
                         Package
                       </th>
                       <th className="p-4 font-semibold text-sm text-gray-600">
+                        Category
+                      </th>
+                      <th className="p-4 font-semibold text-sm text-gray-600">
                         Customer
                       </th>
                       <th className="p-4 font-semibold text-sm text-gray-600">
@@ -315,6 +320,9 @@ const StandardRequestsPage: React.FC = () => {
                       <tr key={req._id} className="border-t hover:bg-gray-50">
                         <td className="p-4 font-medium text-gray-800">
                           {req.packageName}
+                        </td>
+                        <td className="p-4 text-gray-600">
+                          {req.category || "N/A"}
                         </td>
                         <td className="p-4">
                           <div className="font-medium text-gray-800">
