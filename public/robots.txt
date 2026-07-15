@@ -1,7 +1,6 @@
 # *
 User-agent: *
 Allow: /
-Disallow: /*?*
 Disallow: /admin/
 Disallow: /dashboard/
 Disallow: /professional/
@@ -24,7 +23,6 @@ Disallow: /corporate-inquiry/
 # Googlebot
 User-agent: Googlebot
 Allow: /
-Disallow: /*?*
 Disallow: /admin/
 Disallow: /dashboard/
 Disallow: /professional/

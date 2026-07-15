@@ -36,7 +36,6 @@ const EditPremiumRequestModal = ({ isOpen, onClose, request }) => {
     (state: RootState) => state.premiumRequests
   );
 
-  // --- ✨ BADLAAV #1: Har field ke liye state banayein ✨ ---
   const [name, setName] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [city, setCity] = useState("");
@@ -45,7 +44,6 @@ const EditPremiumRequestModal = ({ isOpen, onClose, request }) => {
   const [adminNotes, setAdminNotes] = useState("");
 
   useEffect(() => {
-    // --- ✨ BADLAAV #2: Modal khulne par saare fields ko populate karein ✨ ---
     if (request) {
       setName(request.name || "");
       setWhatsapp(request.whatsapp || "");
@@ -57,7 +55,6 @@ const EditPremiumRequestModal = ({ isOpen, onClose, request }) => {
   }, [request]);
 
   const handleUpdate = () => {
-    // --- ✨ BADLAAV #3: Saare updated fields ko bhejein ✨ ---
     const updateData = {
       name,
       whatsapp,
@@ -99,7 +96,6 @@ const EditPremiumRequestModal = ({ isOpen, onClose, request }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-6 py-4 max-h-[60vh] overflow-y-auto pr-4">
-          {/* --- ✨ BADLAAV #4: Sabhi fields ko editable banayein ✨ --- */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="name">Customer Name</Label>
@@ -143,6 +139,16 @@ const EditPremiumRequestModal = ({ isOpen, onClose, request }) => {
               </Select>
             </div>
           </div>
+          {request.category && (
+            <div>
+              <Label>Service Category</Label>
+              <Input
+                value={request.category}
+                readOnly
+                className="bg-gray-50 cursor-not-allowed font-semibold text-orange-600"
+              />
+            </div>
+          )}
           <div>
             <Label htmlFor="projectDetails">Project Details</Label>
             <Textarea
