@@ -54,6 +54,8 @@ const themes = [
   "Eclectic Theme",
 ];
 
+const house3 = "/floorplan1.jpg";
+
 const FilterSidebar = ({
   filters,
   setFilters,
@@ -668,7 +670,7 @@ const InteriorDesignsPage = () => {
 
   const filteredProducts = useMemo(() => {
     if (selectedCategories.length === 0) return combinedProducts;
-    return combinedProducts.filter((product) => {
+    return combinedProducts.filter((product: any) => {
       const name = (product.name || product.planName || product.Name || "").toLowerCase();
       const roomType = (product.roomType || product.size || "").toLowerCase();
       const category = (
@@ -916,4 +918,3 @@ const InteriorDesignsPage = () => {
 };
 
 export default InteriorDesignsPage;
-
