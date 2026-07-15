@@ -30,7 +30,32 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
-const EditPremiumRequestModal = ({ isOpen, onClose, request }) => {
+interface EditPremiumRequestModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  request: {
+    _id: string;
+    packageName: string;
+    name: string;
+    email?: string;
+    phone?: string;
+    whatsapp: string;
+    city: string;
+    address?: string;
+    requirements?: string;
+    category?: string;
+    status: "Pending" | "Contacted" | "In Progress" | "Completed" | "Cancelled";
+    adminNotes?: string;
+    projectDetails?: string;
+    [key: string]: any;
+  } | null;
+}
+
+const EditPremiumRequestModal: React.FC<EditPremiumRequestModalProps> = ({
+  isOpen,
+  onClose,
+  request,
+}) => {
   const dispatch: AppDispatch = useDispatch();
   const { actionStatus, error } = useSelector(
     (state: RootState) => state.premiumRequests
@@ -40,7 +65,7 @@ const EditPremiumRequestModal = ({ isOpen, onClose, request }) => {
   const [whatsapp, setWhatsapp] = useState("");
   const [city, setCity] = useState("");
   const [projectDetails, setProjectDetails] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState<"Pending" | "Contacted" | "In Progress" | "Completed" | "Cancelled">("Pending");
   const [adminNotes, setAdminNotes] = useState("");
 
   useEffect(() => {
@@ -55,6 +80,7 @@ const EditPremiumRequestModal = ({ isOpen, onClose, request }) => {
   }, [request]);
 
   const handleUpdate = () => {
+    if (!request) return;
     const updateData = {
       name,
       whatsapp,
@@ -67,7 +93,7 @@ const EditPremiumRequestModal = ({ isOpen, onClose, request }) => {
     dispatch(
       updatePremiumRequest({
         requestId: request._id,
-        updateData,
+        updateData: updateData as any,
       })
     );
   };
