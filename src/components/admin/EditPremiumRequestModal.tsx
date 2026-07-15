@@ -151,7 +151,7 @@ const EditPremiumRequestModal: React.FC<EditPremiumRequestModalProps> = ({
             </div>
             <div>
               <Label htmlFor="status">Status</Label>
-              <Select value={status} onValueChange={setStatus}>
+              <Select value={status} onValueChange={(value) => setStatus(value as any)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
