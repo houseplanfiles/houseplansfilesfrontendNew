@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import ReadymadePlansSection from "@/components/ReadymadePlansSection";
-import CustomDesignSection from "@/components/CustomDesignSection";
 import TopArchitectsSection from "@/components/TopArchitectsSection";
 import ConstructionPartnersSection from "@/components/ConstructionPartnersSection";
 import SellersSection from "@/components/SellersSection";
@@ -58,7 +57,6 @@ export default function HomePage() {
         <main>
           <Hero />
           <ReadymadePlansSection />
-          <CustomDesignSection />
           <TopArchitectsSection />
           <ConstructionPartnersSection />
           <SellersSection />
