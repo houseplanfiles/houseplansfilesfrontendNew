@@ -38,6 +38,7 @@ const nextConfig = {
       { source: '/contractors-in-:city', destination: '/city/:city', permanent: true },
       { source: '/:plotSize-house-plan', destination: '/house-plans/plot/:plotSize', permanent: true },
       { source: '/:plotSize-house-plans', destination: '/house-plans/plot/:plotSize', permanent: true },
+      { source: '/customize/:path*', destination: '/booking-form', permanent: true },
     ];
   },
 
