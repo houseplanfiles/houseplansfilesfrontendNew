@@ -105,7 +105,7 @@ const Navbar = () => {
         { name: "Floor Plan", path: "/house-plans" },
         { name: "Floor plan + 3D Elevation", path: "/3d-plans" },
         { name: "Readymade Interior Designs", path: "/interior-designs" },
-        { name: "Digital Products (Download)", path: "/products" },
+        { name: "Digital Products (Download)", path: "/download" },
       ],
     },
     { name: "Architect & Interior Designer", path: "/architects" },
