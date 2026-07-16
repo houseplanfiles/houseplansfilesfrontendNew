@@ -136,7 +136,7 @@ const ReadymadePlansSection = () => {
       category: selectedOption?.category || "Other",
       projectDetails: formData.details,
       spaceType: "Residential", // Default
-      area: "0", // Default
+      totalArea: 0, // Default
     };
 
     dispatch(createStandardRequest(payload));
