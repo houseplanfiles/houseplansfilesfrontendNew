@@ -28,6 +28,7 @@ const mainLinks = [
   { name: "Contractor & Architect Projects", path: "/admin/contractor-projects", icon: Box },
   { name: "Manage Contractors", path: "/admin/manage-contractors", icon: Briefcase },
   { name: "Profile & Store SEO", path: "/admin/seller-seo", icon: Globe },
+  { name: "🎯 Lead Management", path: "/admin/lead-management", icon: Gem },
 ];
 const requestLinks = [
   { name: "Customization", path: "/admin/customization-requests", icon: FileCheck2 },
