@@ -190,11 +190,11 @@ const PartnersPage: FC = () => {
   const pathname = usePathname();
   // Read ?city= from URL on mount (e.g. /contractors?city=Bhopal)
   const [cityFilter, setCityFilter] = useState(() => searchParams?.get("city") || "");
-  const [professionFilter, setProfessionFilter] = useState("All");
+  const [professionFilter, setProfessionFilter] = useState(() => searchParams?.get("profession") || "All");
   const [currentPage, setCurrentPage] = useState(1);
   const [revealedPhoneIds, setRevealedPhoneIds] = useState<Set<string>>(new Set());
   const itemsPerPage = 8;
-
+ 
   const togglePhoneReveal = (id: string) => {
     setRevealedPhoneIds(prev => {
       const next = new Set(prev);
@@ -203,16 +203,16 @@ const PartnersPage: FC = () => {
       return next;
     });
   };
-
+ 
   useEffect(() => {
     dispatch(fetchContractors({ page: 1, limit: 500 }));
   }, [dispatch]);
-
+ 
   useEffect(() => {
     setCurrentPage(1);
-    // Sync city filter to URL (clear stale params, set fresh ?city=)
     const params = new URLSearchParams();
     if (cityFilter) params.set("city", cityFilter);
+    if (professionFilter && professionFilter !== "All") params.set("profession", professionFilter);
     const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(newUrl, { scroll: false });
   }, [cityFilter, professionFilter, router, pathname]);
