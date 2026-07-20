@@ -194,7 +194,7 @@ export default function LeadsPageClient() {
     <>
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-orange-50/40 via-white to-gray-50 py-14 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
 
           {/* Header */}
           <div className="text-center mb-14">
@@ -222,7 +222,7 @@ export default function LeadsPageClient() {
               <p className="text-gray-400 mt-2 max-w-sm mx-auto text-sm">No inquiries available. Check back soon.</p>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {leads.map((lead, idx) => {
                 // ✅ Use ONLY the explicit boolean from backend — zero string matching
                 const revealed: boolean = lead.contactRevealed === true;
