@@ -202,10 +202,13 @@ const LeadsPageClient = () => {
                   lead.clientPhone === LOCKED_PHONE ||
                   lead.clientName === LOCKED_NAME;
                 const isSold = lead.status === "Sold";
+                // Unlocked = contact is revealed (buyer's own view)
                 const isUnlocked = !isLocked;
+                // Sold to someone else = status is Sold BUT we can't see contact
                 const isSoldToOthers = isSold && isLocked;
                 const isAdminLead = lead.sourceType === "admin_lead";
-                const hasPaidPrice = isAdminLead && lead.price > 0;
+                // Show pay button ONLY if: admin lead, has price, NOT sold to anyone yet
+                const hasPaidPrice = isAdminLead && lead.price > 0 && !isSold;
                 const catColor =
                   categoryColors[lead.category] || "bg-gray-100 text-gray-600";
 
