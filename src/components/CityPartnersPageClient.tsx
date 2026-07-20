@@ -77,6 +77,29 @@ const getFileUrl = (path: string) => {
   return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path.replace(/\\/g, "/")}`;
 };
 
+const CONTRACTOR_CATEGORIES = [
+  "All",
+  "Building",
+  "Interior",
+  "Electrical",
+  "Plumbing",
+  "Tiles & Granite",
+  "Painting & Waterproofing",
+  "Swimming Pool",
+  "Pre Engineering Board / PEB",
+  "Pre Fabricated House",
+  "Pest Control",
+  "Landscaping & Garden",
+  "Manpower Supply",
+  "Modular Kitchen",
+  "Lift Services",
+  "Building Inspection",
+  "Solar Rooftop Panel",
+  "HVAC",
+  "Carpenter",
+  "Glass Fabricator"
+];
+
 // --- Contact Modal Component ---
 const ContactModal: FC<{
   isOpen: boolean;
@@ -190,11 +213,11 @@ const PartnersPage: FC = () => {
   const pathname = usePathname();
   // Read ?city= from URL on mount (e.g. /contractors?city=Bhopal)
   const [cityFilter, setCityFilter] = useState(() => searchParams?.get("city") || "");
-  const [professionFilter, setProfessionFilter] = useState(() => searchParams?.get("profession") || "All");
+  const [professionFilter, setProfessionFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [revealedPhoneIds, setRevealedPhoneIds] = useState<Set<string>>(new Set());
   const itemsPerPage = 8;
- 
+
   const togglePhoneReveal = (id: string) => {
     setRevealedPhoneIds(prev => {
       const next = new Set(prev);
@@ -203,16 +226,16 @@ const PartnersPage: FC = () => {
       return next;
     });
   };
- 
+
   useEffect(() => {
     dispatch(fetchContractors({ page: 1, limit: 500 }));
   }, [dispatch]);
- 
+
   useEffect(() => {
     setCurrentPage(1);
+    // Sync city filter to URL (clear stale params, set fresh ?city=)
     const params = new URLSearchParams();
     if (cityFilter) params.set("city", cityFilter);
-    if (professionFilter && professionFilter !== "All") params.set("profession", professionFilter);
     const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(newUrl, { scroll: false });
   }, [cityFilter, professionFilter, router, pathname]);
@@ -224,18 +247,15 @@ const PartnersPage: FC = () => {
       const matchesCity = !cityFilter || c.city?.toLowerCase().includes(cityFilter.toLowerCase());
       const lowerCaseProfession = c.profession?.toLowerCase() || "";
       const matchesProfession = professionFilter === "All" ||
-        (professionFilter === "Building" && (
-          lowerCaseProfession.includes("civil") || 
-          lowerCaseProfession.includes("general") || 
-          lowerCaseProfession.includes("building") || 
-          lowerCaseProfession.includes("labour") || 
-          lowerCaseProfession.includes("turnkey")
+        (professionFilter.toLowerCase() === "building" && (
+          lowerCaseProfession.includes("civil") ||
+          lowerCaseProfession.includes("building") ||
+          lowerCaseProfession.includes("construction") ||
+          lowerCaseProfession.includes("turnkey") ||
+          lowerCaseProfession.includes("labour")
         )) ||
-        (professionFilter === "Interior" && lowerCaseProfession.includes("interior")) ||
-        (professionFilter === "Electrical" && lowerCaseProfession.includes("electrical")) ||
-        (professionFilter === "Plumbing" && lowerCaseProfession.includes("plumbing")) ||
-        (professionFilter === "Painting" && lowerCaseProfession.includes("painting")) ||
-        (professionFilter === "Tile & granite" && (lowerCaseProfession.includes("tile") || lowerCaseProfession.includes("granite")));
+        lowerCaseProfession.includes(professionFilter.toLowerCase()) ||
+        professionFilter.toLowerCase().includes(lowerCaseProfession);
       return isApproved && matchesCity && matchesProfession;
     });
   }, [contractors, cityFilter, professionFilter]);
@@ -252,7 +272,7 @@ const PartnersPage: FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col w-full overflow-x-hidden">
-      
+
 
       <Navbar />
 
@@ -277,9 +297,9 @@ const PartnersPage: FC = () => {
 
       <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10 pb-20">
         {/* --- Filters Section --- */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-4 sm:p-6 mb-10 w-full overflow-hidden">
-          <div className="flex flex-col lg:flex-row gap-4 items-end">
-            <div className="w-full lg:w-1/2">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-4 sm:p-6 mb-10 w-full">
+          <div className="flex flex-col gap-4">
+            <div className="w-full">
               <Label className="text-xs font-bold text-gray-500 uppercase">Find by City</Label>
               <div className="relative mt-2">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -288,7 +308,7 @@ const PartnersPage: FC = () => {
             </div>
 
             {/* Profession Filter */}
-            <div className="w-full lg:w-1/2">
+            <div className="w-full">
               {/* Mobile Filter */}
               <div className="lg:hidden w-full">
                 <Sheet>
@@ -298,14 +318,30 @@ const PartnersPage: FC = () => {
                       <SlidersHorizontal className="w-4 h-4" />
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="bottom" className="rounded-t-3xl h-[60vh] overflow-y-auto">
-                    <SheetHeader><SheetTitle>Select Profession</SheetTitle></SheetHeader>
-                    <div className="grid grid-cols-1 gap-2 mt-4 pb-6">
-                      {["All", "Building", "Interior", "Electrical", "Plumbing", "Painting", "Tile & granite"].map((cat) => (
-                        <button key={cat} onClick={() => setProfessionFilter(cat)} className={`p-4 rounded-xl text-left border ${professionFilter === cat ? "bg-orange-50 border-orange-200 text-orange-600" : "bg-white"}`}>
-                          {cat} {cat !== "All" ? "Contractor" : ""}
-                        </button>
-                      ))}
+                  <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl p-0">
+                    <SheetHeader className="p-6 border-b bg-white sticky top-0 z-10">
+                      <SheetTitle className="text-xl font-bold flex items-center gap-2">
+                        <FilterIcon className="w-5 h-5 text-orange-600" />
+                        Select Specialization
+                      </SheetTitle>
+                    </SheetHeader>
+                    <div className="p-6 overflow-y-auto h-full pb-24">
+                      <div className="grid grid-cols-1 gap-2">
+                        {CONTRACTOR_CATEGORIES.map((cat) => (
+                          <button
+                            key={cat}
+                            onClick={() => setProfessionFilter(cat)}
+                            className={`w-full text-left p-4 rounded-xl text-sm font-semibold transition-all border flex items-center justify-between ${
+                              professionFilter === cat
+                                ? "bg-orange-50 text-orange-600 border-orange-200"
+                                : "bg-white text-gray-600 border-gray-100"
+                            }`}
+                          >
+                            {cat}
+                            {professionFilter === cat && <CheckCircle2 className="w-4 h-4 text-orange-500" />}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </SheetContent>
                 </Sheet>
@@ -313,9 +349,23 @@ const PartnersPage: FC = () => {
 
               {/* Desktop Filter */}
               <div className="hidden lg:block w-full">
-                <div className="grid grid-cols-4 gap-2">
-                  {["All", "Building", "Interior", "Electrical", "Plumbing", "Painting", "Tile & granite"].map((cat) => (
-                    <button key={cat} onClick={() => setProfessionFilter(cat)} className={`h-11 rounded-lg text-[13px] font-medium border transition-all ${professionFilter === cat ? "bg-gray-900 text-white" : "bg-white hover:bg-gray-50"}`}>
+                <Label className="text-xs font-bold text-gray-500 tracking-wide flex items-center gap-2 mb-2 uppercase">
+                  <FilterIcon className="w-3 h-3" /> Specialization
+                </Label>
+                <div
+                  className="flex overflow-x-auto whitespace-nowrap gap-2 pb-2"
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
+                  {CONTRACTOR_CATEGORIES.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setProfessionFilter(cat)}
+                      className={`px-4 h-10 rounded-full text-sm font-medium transition-all border whitespace-nowrap ${
+                        professionFilter === cat
+                          ? "bg-orange-600 text-white border-orange-600 shadow-md"
+                          : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                      }`}
+                    >
                       {cat}
                     </button>
                   ))}
@@ -389,7 +439,7 @@ const PartnersPage: FC = () => {
                         </>
                       )}
                       {contractor.contractorType === "Verified" && (
-                        <Button 
+                        <Button
                           onClick={() => window.open(waLink, "_blank")}
                           className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-10"
                         >
@@ -430,14 +480,14 @@ const PartnersPage: FC = () => {
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
-              { slug: "bhopal",    display: "Bhopal",     state: "Madhya Pradesh" },
-              { slug: "indore",    display: "Indore",     state: "Madhya Pradesh" },
-              { slug: "lucknow",   display: "Lucknow",    state: "Uttar Pradesh"  },
-              { slug: "jaipur",    display: "Jaipur",     state: "Rajasthan"      },
-              { slug: "nagpur",    display: "Nagpur",     state: "Maharashtra"    },
-              { slug: "pune",      display: "Pune",       state: "Maharashtra"    },
-              { slug: "hyderabad", display: "Hyderabad",  state: "Telangana"      },
-              { slug: "chennai",   display: "Chennai",    state: "Tamil Nadu"     },
+              { slug: "bhopal", display: "Bhopal", state: "Madhya Pradesh" },
+              { slug: "indore", display: "Indore", state: "Madhya Pradesh" },
+              { slug: "lucknow", display: "Lucknow", state: "Uttar Pradesh" },
+              { slug: "jaipur", display: "Jaipur", state: "Rajasthan" },
+              { slug: "nagpur", display: "Nagpur", state: "Maharashtra" },
+              { slug: "pune", display: "Pune", state: "Maharashtra" },
+              { slug: "hyderabad", display: "Hyderabad", state: "Telangana" },
+              { slug: "chennai", display: "Chennai", state: "Tamil Nadu" },
             ].map((city) => (
               <a
                 key={city.slug}
