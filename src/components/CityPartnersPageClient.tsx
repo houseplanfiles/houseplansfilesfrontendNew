@@ -246,16 +246,17 @@ const PartnersPage: FC = () => {
       const isApproved = c.status === "Approved";
       const matchesCity = !cityFilter || c.city?.toLowerCase().includes(cityFilter.toLowerCase());
       const lowerCaseProfession = c.profession?.toLowerCase() || "";
-      const matchesProfession = professionFilter === "All" ||
-        (professionFilter.toLowerCase() === "building" && (
+      const filter = professionFilter || "All";
+      const matchesProfession = filter === "All" ||
+        (filter.toLowerCase() === "building" && (
           lowerCaseProfession.includes("civil") ||
           lowerCaseProfession.includes("building") ||
           lowerCaseProfession.includes("construction") ||
           lowerCaseProfession.includes("turnkey") ||
           lowerCaseProfession.includes("labour")
         )) ||
-        lowerCaseProfession.includes(professionFilter.toLowerCase()) ||
-        professionFilter.toLowerCase().includes(lowerCaseProfession);
+        lowerCaseProfession.includes(filter.toLowerCase()) ||
+        filter.toLowerCase().includes(lowerCaseProfession);
       return isApproved && matchesCity && matchesProfession;
     });
   }, [contractors, cityFilter, professionFilter]);
