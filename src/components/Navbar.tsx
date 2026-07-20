@@ -47,7 +47,7 @@ const Navbar = () => {
       userInfo.role?.toLowerCase() || ""
     );
 
-  const showCartAndWishlist = !mounted || !userInfo || userInfo?.role === "user";
+  const showCartAndWishlist = mounted && (!userInfo || userInfo?.role === "user");
 
   const getDashboardPath = () => {
     if (!userInfo) return "/login";
@@ -120,6 +120,31 @@ const Navbar = () => {
   const isActive = (path: string) => pathname === path;
   const displayName = userInfo?.name || userInfo?.businessName || "User";
   const avatarFallback = displayName.charAt(0).toUpperCase();
+
+  if (!mounted) {
+    return (
+      <header className="sticky top-0 z-50 w-full bg-white border-b border-transparent">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex-shrink-0 flex items-center">
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/logo1.png"
+                  alt="HousePlanFiles Logo"
+                  width={180}
+                  height={56}
+                  className="h-14 w-auto object-contain"
+                  priority
+                />
+              </div>
+            </div>
+            <div className="hidden lg:flex items-center gap-3 ml-8 mr-4 h-20" />
+            <div className="flex items-center gap-1.5 flex-shrink-0 h-20" />
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <>
