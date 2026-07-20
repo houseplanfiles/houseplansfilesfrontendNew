@@ -118,6 +118,7 @@ const Footer = () => {
                 { name: "Terms of Service", href: "/terms-and-conditions" },
                 { name: "Privacy Policy", href: "/privacy-policy" },
                 { name: "Blogs", href: "/blogs" },
+                { name: "Leads Board", href: "/leads" },
               ].map((item) => (
                 <li key={item.name}>
                   <Link href={item.href} className="text-muted-foreground hover:text-primary transition-colors">
