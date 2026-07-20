@@ -308,6 +308,29 @@ const PartnerCard: FC<{
   </motion.div>
 )};
 
+const CONTRACTOR_CATEGORIES = [
+  "All",
+  "Civil Construction",
+  "Electrical",
+  "Plumbing",
+  "Tiles & Granite",
+  "Painting",
+  "Swimming Pool",
+  "Pre Engineering / PEB",
+  "Pre Fabricated Building",
+  "Pest Control",
+  "Landscaping / Garden",
+  "Manpower Supply / Labour",
+  "Modular Kitchen",
+  "Lift / Elevator",
+  "Pre Cast Materials",
+  "Building Inspection",
+  "Solar Rooftop Panel",
+  "HVAC",
+  "Wood Work / Carpenter",
+  "Fabrication / Welder"
+];
+
 // --- MAIN COMPONENT: ConstructionPartnersSection ---
 const ConstructionPartnersSection: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -327,7 +350,7 @@ const ConstructionPartnersSection: FC = () => {
       dispatch(fetchContractors({ 
         city: cityFilter, 
         status: "Approved",
-        limit: 24 // Fetch a reasonable amount for the section
+        limit: 24 
       }));
     }, 500);
 
@@ -340,20 +363,26 @@ const ConstructionPartnersSection: FC = () => {
     return (contractors as CityPartnerType[]).filter((p) => {
       const isApproved = p.status === "Approved";
       const isValidType = ["Normal", "Verified", "Premium"].includes(p.contractorType || "");
-      
       const matchesCity = !cityFilter || p.city?.toLowerCase().includes(cityFilter.toLowerCase());
       
-      const lowerCaseProfession = p.profession?.toLowerCase() || "";
-      const matchesProfession =
-        professionFilter === "All" ||
-        (professionFilter === "Building" &&
-          (lowerCaseProfession.includes("civil") ||
-            lowerCaseProfession.includes("general") ||
-            lowerCaseProfession.includes("building"))) ||
-        (professionFilter === "Interior" &&
-          lowerCaseProfession.includes("interior"));
+      if (!isApproved || !isValidType || !matchesCity) return false;
+      if (professionFilter === "All") return true;
 
-      return isApproved && isValidType && matchesCity && matchesProfession;
+      const lowerCaseProfession = p.profession?.toLowerCase() || "";
+      
+      // Special alias for Civil Construction to match older "Building" or "Construction"
+      if (professionFilter === "Civil Construction") {
+        return (
+          lowerCaseProfession.includes("civil") ||
+          lowerCaseProfession.includes("building") ||
+          lowerCaseProfession.includes("construction") ||
+          lowerCaseProfession.includes("turnkey")
+        );
+      }
+
+      // Default sub-string match using the first word and whole category
+      const keyword = professionFilter.split(" ")[0].toLowerCase();
+      return lowerCaseProfession.includes(keyword) || lowerCaseProfession.includes(professionFilter.toLowerCase());
     });
   }, [contractors, cityFilter, professionFilter]);
 
@@ -416,41 +445,25 @@ const ConstructionPartnersSection: FC = () => {
                   {/* Profession Filter Toggle */}
                   <div className="w-full md:w-1/2 text-left">
                     <Label className="text-xs font-bold text-gray-500 uppercase tracking-wide flex items-center gap-2">
-                      <Filter className="w-3 h-3" /> Profession
+                      <Filter className="w-3.5 h-3.5 text-orange-500" /> Specialization
                     </Label>
-                    <div className="grid grid-cols-3 gap-2 mt-2">
-                      <button
-                        onClick={() => setProfessionFilter("All")}
-                        className={`h-12 rounded-lg text-sm font-medium transition-all border ${
-                          professionFilter === "All"
-                            ? "bg-gray-900 text-white border-gray-900 shadow-md"
-                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-                        }`}
-                      >
-                        All
-                      </button>
-                      <button
-                        onClick={() => setProfessionFilter("Building")}
-                        className={`h-12 rounded-lg text-sm font-medium transition-all border flex items-center justify-center gap-2 ${
-                          professionFilter === "Building"
-                            ? "bg-gray-900 text-white border-gray-900 shadow-md"
-                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-                        }`}
-                      >
-                        <HardHat className="w-4 h-4" />
-                        <span className="hidden sm:inline">Building</span>
-                      </button>
-                      <button
-                        onClick={() => setProfessionFilter("Interior")}
-                        className={`h-12 rounded-lg text-sm font-medium transition-all border flex items-center justify-center gap-2 ${
-                          professionFilter === "Interior"
-                            ? "bg-gray-900 text-white border-gray-900 shadow-md"
-                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-                        }`}
-                      >
-                        <Paintbrush className="w-4 h-4" />
-                        <span className="hidden sm:inline">Interior</span>
-                      </button>
+                    <div 
+                      className="flex gap-2 overflow-x-auto pb-2 pt-2 scrollbar-none -mx-2 px-2" 
+                      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                    >
+                      {CONTRACTOR_CATEGORIES.map((cat) => (
+                        <button
+                          key={cat}
+                          onClick={() => setProfessionFilter(cat)}
+                          className={`h-10 px-5 rounded-full text-xs font-bold whitespace-nowrap transition-all border shrink-0 flex items-center gap-1.5 ${
+                            professionFilter === cat
+                              ? "bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-500/20"
+                              : "bg-white text-gray-700 border-gray-200 hover:border-orange-300 hover:text-orange-600"
+                          }`}
+                        >
+                          {cat}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>

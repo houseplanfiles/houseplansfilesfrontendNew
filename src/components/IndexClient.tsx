@@ -15,8 +15,6 @@ import ConstructionPartnersSection from "@/components/ConstructionPartnersSectio
 import TopArchitectsSection from "@/components/TopArchitectsSection";
 import TopBar from "@/components/TopBar";
 
-import Services from "@/components/Services";
-
 const Index = () => {
   return (
     <div className="min-h-screen">
@@ -32,14 +30,11 @@ const Index = () => {
       {/* ✅ Top Architects Section */}
       <TopArchitectsSection />
 
-      {/* ✅ Construction Partners (Headings only) */}
-      <ConstructionPartnersSection />
-
       {/* ✅ Marketplace (Sellers Section) */}
       <SellersSection />
 
-      {/* ✅ Services Section */}
-      <Services />
+      {/* ✅ Construction Partners (Headings only) */}
+      <ConstructionPartnersSection />
 
       <RegionalPlansSection />
       <Testimonials />

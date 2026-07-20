@@ -8,7 +8,6 @@ import ReadymadePlansSection from "@/components/ReadymadePlansSection";
 import TopArchitectsSection from "@/components/TopArchitectsSection";
 import ConstructionPartnersSection from "@/components/ConstructionPartnersSection";
 import SellersSection from "@/components/SellersSection";
-import Services from "@/components/Services";
 import RegionalPlansSection from "@/components/RegionalPlansSection";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
@@ -58,9 +57,8 @@ export default function HomePage() {
           <Hero />
           <ReadymadePlansSection />
           <TopArchitectsSection />
-          <ConstructionPartnersSection />
           <SellersSection />
-          <Services />
+          <ConstructionPartnersSection />
           <RegionalPlansSection />
 
           {/* Browse by City — geo SEO entry point for users */}
