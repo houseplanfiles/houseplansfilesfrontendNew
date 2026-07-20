@@ -49,14 +49,23 @@ const professionalSubRoles = [
 ];
 
 const contractorProfessions = [
-  "Building Contractor",
+  "Civil Construction Contractor",
   "Interior Contractor",
   "Electrical Contractor",
   "Plumbing Contractor",
-  "Painting Contractor",
-  "Tile & granite Contractor",
-  "Labour Contractor",
-  "Turnkey Contractor",
+  "Tiles & Granite Contractor",
+  "Painting & Waterproofing Contractor",
+  "Swimming Pool Contractor",
+  "Pre Engineering Board / PEB",
+  "Pre Fabricated House Contractor",
+  "Pest Control Contractor",
+  "Landscaping & Garden Contractor",
+  "Manpower Supply",
+  "Modular Kitchen Contractor",
+  "Lift Services Contractor",
+  "Building Inspection Contractor",
+  "Solar Rooftop Panel Contractor",
+  "HVAC Contractor",
   "Carpenter",
   "Glass Fabricator",
 ];
