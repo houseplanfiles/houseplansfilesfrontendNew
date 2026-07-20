@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import React, { useState, useEffect, useMemo, FC, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
@@ -130,10 +130,11 @@ const ArchitectsPage: FC = () => {
   const { architects, architectListStatus } = useSelector((state: RootState) => state.user);
 
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedArchitect, setSelectedArchitect] = useState<ArchitectType | null>(null);
   const [cityFilter, setCityFilter] = useState(searchParams?.get("city") || "");
-  const [professionFilter, setProfessionFilter] = useState("All");
+  const [professionFilter, setProfessionFilter] = useState(() => searchParams?.get("profession") || "All");
   const [currentPage, setCurrentPage] = useState(1);
   const [revealedPhoneIds, setRevealedPhoneIds] = useState<Set<string>>(new Set());
   const itemsPerPage = 8;
@@ -147,7 +148,15 @@ const ArchitectsPage: FC = () => {
   };
 
   useEffect(() => { dispatch(fetchArchitects({ page: 1, limit: 500 })); }, [dispatch]);
-  useEffect(() => { setCurrentPage(1); }, [cityFilter, professionFilter]);
+  
+  useEffect(() => {
+    setCurrentPage(1);
+    const params = new URLSearchParams();
+    if (cityFilter) params.set("city", cityFilter);
+    if (professionFilter && professionFilter !== "All") params.set("profession", professionFilter);
+    const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+    router.replace(newUrl, { scroll: false });
+  }, [cityFilter, professionFilter, router, pathname]);
 
   const filteredArchitects = useMemo(() => {
     if (!Array.isArray(architects)) return [];
