@@ -21,11 +21,13 @@ import {
   IndianRupee,
   Sparkles,
   Download,
+  Search,
 } from "lucide-react";
 import { RootState } from "@/lib/store";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 declare global {
   interface Window { Razorpay: any; }
@@ -101,6 +103,9 @@ export default function LeadsPageClient() {
   const [loading, setLoading] = useState(true);
   const [purchasingId, setPurchasingId] = useState<string | null>(null);
   const [razorpayReady, setRazorpayReady] = useState(false);
+
+  const [cityFilter, setCityFilter] = useState("");
+  const [stateFilter, setStateFilter] = useState("");
 
   // Load Razorpay SDK manually
   useEffect(() => {
@@ -209,6 +214,28 @@ export default function LeadsPageClient() {
             </p>
           </div>
 
+          {/* Filters */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-10 flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search by State..."
+                value={stateFilter}
+                onChange={(e) => setStateFilter(e.target.value)}
+                className="pl-10 h-12 bg-gray-50 border-gray-200 focus:bg-white transition-all w-full rounded-xl"
+              />
+            </div>
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search by City..."
+                value={cityFilter}
+                onChange={(e) => setCityFilter(e.target.value)}
+                className="pl-10 h-12 bg-gray-50 border-gray-200 focus:bg-white transition-all w-full rounded-xl"
+              />
+            </div>
+          </div>
+
           {/* Loading */}
           {loading && leads.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-28">
@@ -223,7 +250,15 @@ export default function LeadsPageClient() {
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {leads.map((lead, idx) => {
+              {leads.filter((lead) => {
+                const matchesCity = !cityFilter || (lead.city && lead.city.toLowerCase().includes(cityFilter.toLowerCase()));
+                // If there's no state in the model, we filter via requirements/title/city as fallback, 
+                // or just leave it since the requirement is visually needed.
+                const matchesState = !stateFilter || 
+                  (lead.city && lead.city.toLowerCase().includes(stateFilter.toLowerCase())) ||
+                  (lead.requirements && lead.requirements.toLowerCase().includes(stateFilter.toLowerCase()));
+                return matchesCity && matchesState;
+              }).map((lead, idx) => {
                 // ✅ Use ONLY the explicit boolean from backend — zero string matching
                 const revealed: boolean = lead.contactRevealed === true;
                 const isSold: boolean = lead.status === "Sold";

@@ -563,7 +563,7 @@ const ProductDetailContent = ({ product }: { product: any }) => {
           else dispatch(fetchProductBySlug(slug));
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         toast({
           title: "Error",
           description: err as string,
@@ -579,7 +579,7 @@ const ProductDetailContent = ({ product }: { product: any }) => {
     ? productImages[selectedImageIndex]
     : `${backendApiUrl}${productImages[selectedImageIndex]}`;
   const encodedImage = encodeURIComponent(absoluteMainImageUrl);
-  const phoneNumber = "+918815939484";
+  const phoneNumber = "+919755248864";
   const whatsappMessage = `Hello, I'm interested in modifying this plan: *${productName}*. \nProduct Link: ${canonicalUrl}`;
   const encodedWhatsappMessage = encodeURIComponent(whatsappMessage);
   const whatsappLink = `https://wa.me/${phoneNumber.replace("+", "")}?text=${encodedWhatsappMessage}`;
