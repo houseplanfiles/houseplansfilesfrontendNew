@@ -563,7 +563,7 @@ const ProductDetailContent = ({ product }: { product: any }) => {
           else dispatch(fetchProductBySlug(slug));
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         toast({
           title: "Error",
           description: err as string,
