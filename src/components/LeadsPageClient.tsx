@@ -105,7 +105,7 @@ export default function LeadsPageClient() {
   const [razorpayReady, setRazorpayReady] = useState(false);
 
   const [cityFilter, setCityFilter] = useState("");
-  const [stateFilter, setStateFilter] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   // Load Razorpay SDK manually
   useEffect(() => {
@@ -215,17 +215,8 @@ export default function LeadsPageClient() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-10 flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search by State..."
-                value={stateFilter}
-                onChange={(e) => setStateFilter(e.target.value)}
-                className="pl-10 h-12 bg-gray-50 border-gray-200 focus:bg-white transition-all w-full rounded-xl"
-              />
-            </div>
-            <div className="relative flex-1">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-10 flex flex-col gap-6">
+            <div className="relative w-full sm:w-1/2">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 placeholder="Search by City..."
@@ -233,6 +224,70 @@ export default function LeadsPageClient() {
                 onChange={(e) => setCityFilter(e.target.value)}
                 className="pl-10 h-12 bg-gray-50 border-gray-200 focus:bg-white transition-all w-full rounded-xl"
               />
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {/* Column 1 */}
+              <div>
+                <h3 className="font-bold text-gray-800 mb-4 pb-2 border-b">Professionals</h3>
+                <div className="space-y-3">
+                  {["Architect", "Civil Engineer", "Interior Designer", "Structure Engineer", "MEP Consultant", "Vastu Consultant"].map((prof) => (
+                    <label key={prof} className="flex items-center gap-3 cursor-pointer group">
+                      <div className="relative flex items-center justify-center">
+                        <input
+                          type="checkbox"
+                          className="peer sr-only"
+                          checked={selectedCategories.includes(prof)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedCategories([...selectedCategories, prof]);
+                            } else {
+                              setSelectedCategories(selectedCategories.filter(c => c !== prof));
+                            }
+                          }}
+                        />
+                        <div className="w-5 h-5 border-2 border-gray-300 rounded transition-colors peer-checked:bg-orange-500 peer-checked:border-orange-500 flex items-center justify-center group-hover:border-orange-400">
+                          <svg className={`w-3 h-3 text-white transition-opacity ${selectedCategories.includes(prof) ? 'opacity-100' : 'opacity-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      </div>
+                      <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{prof}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Column 2 */}
+              <div>
+                <h3 className="font-bold text-gray-800 mb-4 pb-2 border-b">Contractors</h3>
+                <div className="space-y-3">
+                  {["Building Contractor", "Interior Contractor", "Electrical Contractor", "Plumbing Contractor", "Carpenter", "Painting Contractor", "Tiles Contractor"].map((prof) => (
+                    <label key={prof} className="flex items-center gap-3 cursor-pointer group">
+                      <div className="relative flex items-center justify-center">
+                        <input
+                          type="checkbox"
+                          className="peer sr-only"
+                          checked={selectedCategories.includes(prof)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedCategories([...selectedCategories, prof]);
+                            } else {
+                              setSelectedCategories(selectedCategories.filter(c => c !== prof));
+                            }
+                          }}
+                        />
+                        <div className="w-5 h-5 border-2 border-gray-300 rounded transition-colors peer-checked:bg-orange-500 peer-checked:border-orange-500 flex items-center justify-center group-hover:border-orange-400">
+                          <svg className={`w-3 h-3 text-white transition-opacity ${selectedCategories.includes(prof) ? 'opacity-100' : 'opacity-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      </div>
+                      <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{prof}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -252,12 +307,8 @@ export default function LeadsPageClient() {
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {leads.filter((lead) => {
                 const matchesCity = !cityFilter || (lead.city && lead.city.toLowerCase().includes(cityFilter.toLowerCase()));
-                // If there's no state in the model, we filter via requirements/title/city as fallback, 
-                // or just leave it since the requirement is visually needed.
-                const matchesState = !stateFilter || 
-                  (lead.city && lead.city.toLowerCase().includes(stateFilter.toLowerCase())) ||
-                  (lead.requirements && lead.requirements.toLowerCase().includes(stateFilter.toLowerCase()));
-                return matchesCity && matchesState;
+                const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(lead.category);
+                return matchesCity && matchesCategory;
               }).map((lead, idx) => {
                 // ✅ Use ONLY the explicit boolean from backend — zero string matching
                 const revealed: boolean = lead.contactRevealed === true;
