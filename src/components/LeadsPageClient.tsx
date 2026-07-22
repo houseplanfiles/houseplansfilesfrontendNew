@@ -307,7 +307,14 @@ export default function LeadsPageClient() {
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {leads.filter((lead) => {
                 const matchesCity = !cityFilter || (lead.city && lead.city.toLowerCase().includes(cityFilter.toLowerCase()));
-                const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(lead.category);
+                const matchesCategory = selectedCategories.length === 0 || selectedCategories.some(cat => {
+                  const searchStr = cat.toLowerCase();
+                  return (
+                    lead.category?.toLowerCase().includes(searchStr) ||
+                    lead.title?.toLowerCase().includes(searchStr) ||
+                    lead.requirements?.toLowerCase().includes(searchStr)
+                  );
+                });
                 return matchesCity && matchesCategory;
               }).map((lead, idx) => {
                 // ✅ Use ONLY the explicit boolean from backend — zero string matching
