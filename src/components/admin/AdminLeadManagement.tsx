@@ -80,7 +80,14 @@ const SetPriceModal = ({
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      if (isAdminLead) {
+      if (lead._id === "new") {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads`,
+          { ...form, price },
+          config
+        );
+        toast.success("New lead created successfully!");
+      } else if (isAdminLead) {
         // Update existing admin lead
         await axios.put(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads/${lead._id}`,
@@ -128,10 +135,12 @@ const SetPriceModal = ({
           <div>
             <h2 className="text-lg font-bold text-white flex items-center gap-2">
               <IndianRupee className="w-5 h-5 text-orange-400" />
-              {isAdminLead ? "Edit Lead & Price" : "Convert to Paid Lead"}
+              {lead._id === "new" ? "Create New Lead" : isAdminLead ? "Edit Lead & Price" : "Convert to Paid Lead"}
             </h2>
             <p className="text-gray-400 text-xs mt-0.5">
-              {isAdminLead
+              {lead._id === "new"
+                ? "Manually create a new lead to display on the board."
+                : isAdminLead
                 ? "Update details for this published lead."
                 : "Set a price to publish this inquiry on the Leads Board."}
             </p>
@@ -230,7 +239,7 @@ const SetPriceModal = ({
             ) : (
               <CheckCircle2 className="w-4 h-4 mr-2" />
             )}
-            {isAdminLead ? "Save Changes" : "Publish Lead"}
+            {lead._id === "new" ? "Create Lead" : isAdminLead ? "Save Changes" : "Publish Lead"}
           </Button>
         </div>
       </div>
@@ -321,13 +330,36 @@ const AdminLeadManagement: React.FC = () => {
               View all inquiries from every source. Set prices to publish them on the public Leads Board.
             </p>
           </div>
-          <a
-            href="/leads"
-            target="_blank"
-            className="text-sm text-orange-600 font-bold flex items-center gap-1.5 hover:underline"
-          >
-            <ExternalLink className="w-4 h-4" /> View Public Leads Board
-          </a>
+          <div className="flex flex-col sm:flex-row items-center gap-4 mt-4 sm:mt-0">
+            <Button
+              onClick={() => setSelectedLead({
+                _id: "new",
+                sourceType: "admin_lead",
+                title: "",
+                category: "",
+                city: "",
+                budget: "",
+                requirements: "",
+                price: 0,
+                clientName: "",
+                clientPhone: "",
+                clientEmail: "",
+                status: "Available",
+                buyer: null,
+                createdAt: new Date().toISOString()
+              })}
+              className="bg-slate-800 hover:bg-slate-900 text-white font-bold h-9 shadow-sm"
+            >
+              <Plus className="w-4 h-4 mr-1.5" /> Create New Lead
+            </Button>
+            <a
+              href="/leads"
+              target="_blank"
+              className="text-sm text-orange-600 font-bold flex items-center gap-1.5 hover:underline"
+            >
+              <ExternalLink className="w-4 h-4" /> View Public Leads Board
+            </a>
+          </div>
         </div>
 
         {/* Stats */}
