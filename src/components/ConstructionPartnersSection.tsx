@@ -488,18 +488,18 @@ const ConstructionPartnersSection: FC = () => {
           </div>
 
           {/* --- WHAT ARE YOU LOOKING FOR? GRID SECTION 2 --- */}
-          <div className="mb-16">
+          <div className="mb-20">
             <div className="text-center mb-10 animate-fade-in">
               <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">
-                Industrial Construction &amp; <span className="text-orange-600">Infrastructure Services</span>
+                Other <span className="text-orange-600">Services</span>
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
-                Explore specialized services and experts for large scale industrial and infrastructure projects.
+                Discover a wide range of additional maintenance and finishing services.
               </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-6">
-              {INDUSTRIAL_SERVICES.map((option) => {
+              {OTHER_SERVICES.map((option) => {
                 return (
                   <button
                     key={option.id}
@@ -519,18 +519,18 @@ const ConstructionPartnersSection: FC = () => {
           </div>
 
           {/* --- WHAT ARE YOU LOOKING FOR? GRID SECTION 3 --- */}
-          <div className="mb-20">
+          <div className="mb-16">
             <div className="text-center mb-10 animate-fade-in">
               <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">
-                Other <span className="text-orange-600">Services</span>
+                Industrial Construction &amp; <span className="text-orange-600">Infrastructure Services</span>
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
-                Discover a wide range of additional maintenance and finishing services.
+                Explore specialized services and experts for large scale industrial and infrastructure projects.
               </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-6">
-              {OTHER_SERVICES.map((option) => {
+              {INDUSTRIAL_SERVICES.map((option) => {
                 return (
                   <button
                     key={option.id}
