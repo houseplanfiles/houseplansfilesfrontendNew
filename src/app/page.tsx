@@ -55,10 +55,10 @@ export default function HomePage() {
         <Navbar />
         <main>
           <Hero />
-          <ReadymadePlansSection />
+          <ConstructionPartnersSection />
           <TopArchitectsSection />
           <SellersSection />
-          <ConstructionPartnersSection />
+          <ReadymadePlansSection />
           <RegionalPlansSection />
 
           {/* Browse by City — geo SEO entry point for users */}
