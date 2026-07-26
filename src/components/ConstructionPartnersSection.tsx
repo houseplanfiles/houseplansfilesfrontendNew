@@ -373,7 +373,7 @@ const INDUSTRIAL_SERVICES = [
   { id: 4, label: "Machinery Services", link: "/city-partners?profession=Building", icon: Settings, color: "bg-gray-500/10 text-gray-600 hover:border-gray-500" },
   { id: 5, label: "Manpower Supply", link: "/city-partners?profession=Building", icon: Users, color: "bg-fuchsia-500/10 text-fuchsia-600 hover:border-fuchsia-500" },
   { id: 6, label: "Building Inspection Services", link: "/city-partners?profession=Building", icon: ClipboardCheck, color: "bg-slate-500/10 text-slate-600 hover:border-slate-500" },
-  { id: 7, label: "Building Material Services", link: "/marketplace?category=Building Material", icon: Wrench, color: "bg-orange-600/10 text-orange-700 hover:border-orange-600" },
+  { id: 7, label: "Bulk Building Material Services", link: "/marketplace?category=Building Material", icon: Wrench, color: "bg-orange-600/10 text-orange-700 hover:border-orange-600" },
 ];
 
 // Section 3: Other Services
