@@ -63,7 +63,8 @@ import {
   Hammer,
   Wrench,
   Shield,
-  Settings
+  Settings,
+  Flame
 } from "lucide-react";
 
 
@@ -352,15 +353,16 @@ const CONTRACTOR_CATEGORIES = [
 
 // Section 1: Home Designing and Construction Services
 const HOME_SERVICES = [
-  { id: 1, label: "House Planning", link: "/architects?profession=Architect", icon: Home, color: "bg-blue-500/10 text-blue-600 hover:border-blue-500" },
-  { id: 2, label: "Architect", link: "/architects?profession=Architect", icon: Compass, color: "bg-indigo-500/10 text-indigo-600 hover:border-indigo-500" },
-  { id: 3, label: "Contractor (Building & Interior)", link: "/city-partners?profession=Building", icon: HardHat, color: "bg-amber-500/10 text-amber-600 hover:border-amber-500" },
+  { id: 1, label: "Architects & engineers", link: "/architects?profession=Architect", icon: Home, color: "bg-blue-500/10 text-blue-600 hover:border-blue-500" },
+  { id: 2, label: "Interior designer", link: "/architects?profession=Architect", icon: Compass, color: "bg-indigo-500/10 text-indigo-600 hover:border-indigo-500" },
+  { id: 3, label: "Contractors Buildind & Interior", link: "/city-partners?profession=Building", icon: HardHat, color: "bg-amber-500/10 text-amber-600 hover:border-amber-500" },
   { id: 4, label: "Electrical Contractor", link: "/city-partners?profession=Electrical", icon: Zap, color: "bg-yellow-500/10 text-yellow-600 hover:border-yellow-500" },
   { id: 5, label: "Plumbing Contractor", link: "/city-partners?profession=Plumbing", icon: Droplet, color: "bg-sky-500/10 text-sky-600 hover:border-sky-500" },
   { id: 6, label: "Tiles & Stone Contractor", link: "/city-partners?profession=Tile & granite", icon: Grid, color: "bg-teal-500/10 text-teal-600 hover:border-teal-500" },
   { id: 7, label: "Painting Contractor", link: "/city-partners?profession=Painting", icon: Paintbrush, color: "bg-rose-500/10 text-rose-600 hover:border-rose-500" },
   { id: 9, label: "Carpenter Services", link: "/city-partners?profession=Interior", icon: Hammer, color: "bg-orange-500/10 text-orange-600 hover:border-orange-500" },
   { id: 16, label: "False Ceiling Contractor", link: "/city-partners?profession=Interior", icon: Layers, color: "bg-fuchsia-500/10 text-fuchsia-600 hover:border-fuchsia-500" },
+  { id: 21, label: "Building material", link: "/marketplace?category=Building Material", icon: Boxes, color: "bg-emerald-500/10 text-emerald-600 hover:border-emerald-500" },
 ];
 
 // Section 2: Industrial Construction and Infrastructure Services
@@ -385,6 +387,7 @@ const OTHER_SERVICES = [
   { id: 8, label: "Garden & Landscaping Contractor", link: "/city-partners?profession=Interior", icon: Leaf, color: "bg-green-500/10 text-green-600 hover:border-green-500" },
   { id: 17, label: "Modular Kitchen Services", link: "/city-partners?profession=Interior", icon: ChefHat, color: "bg-orange-500/10 text-orange-600 hover:border-orange-500" },
   { id: 12, label: "Swimming Pool Contractor", link: "/city-partners?profession=Building", icon: Waves, color: "bg-cyan-500/10 text-cyan-600 hover:border-cyan-500" },
+  { id: 22, label: "Fire safety services", link: "/city-partners?profession=Building", icon: Flame, color: "bg-red-500/10 text-red-600 hover:border-red-500" },
 ];
 
 // --- MAIN COMPONENT: ConstructionPartnersSection ---

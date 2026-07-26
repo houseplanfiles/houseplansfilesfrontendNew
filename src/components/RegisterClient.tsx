@@ -21,7 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { registerUser, resetActionStatus } from "@/lib/features/users/userSlice";
 
 const userRoles = [
-  { id: "user", label: "Register as a Customer" },
+  { id: "user", label: "Register as a Home owner" },
   { id: "professional", label: "Register as a Architect, engineer, interior designer" },
   { id: "seller", label: "Register as a Material Seller" },
   { id: "Contractor", label: "Register as a Contractor (building & interior)" },
