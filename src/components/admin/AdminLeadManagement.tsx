@@ -106,9 +106,9 @@ const SetPriceModal = ({
             budget: form.budget,
             requirements: form.requirements,
             price,
-            clientName: lead.clientName,
-            clientPhone: lead.clientPhone,
-            clientEmail: lead.clientEmail || "",
+            clientName: form.clientName,
+            clientPhone: form.clientPhone,
+            clientEmail: form.clientEmail,
           },
           config
         );
@@ -152,16 +152,38 @@ const SetPriceModal = ({
 
         {/* Body */}
         <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-          {/* Client info (read-only preview) */}
-          <div className="bg-gray-50 rounded-xl p-4 text-sm space-y-1 border">
+          {/* Client info */}
+          <div className="bg-gray-50 rounded-xl p-4 text-sm space-y-3 border">
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">
               Client Details (Hidden from public)
             </p>
-            <p><span className="font-bold text-gray-600">Name:</span> {lead.clientName}</p>
-            <p><span className="font-bold text-gray-600">Phone:</span> {lead.clientPhone}</p>
-            {lead.clientEmail && (
-              <p><span className="font-bold text-gray-600">Email:</span> {lead.clientEmail}</p>
-            )}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-600">Name</label>
+              <Input
+                value={form.clientName}
+                onChange={(e) => setForm({ ...form, clientName: e.target.value })}
+                placeholder="Client Name"
+                className="h-9"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-600">Phone</label>
+              <Input
+                value={form.clientPhone}
+                onChange={(e) => setForm({ ...form, clientPhone: e.target.value })}
+                placeholder="Client Phone"
+                className="h-9"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-600">Email (Optional)</label>
+              <Input
+                value={form.clientEmail}
+                onChange={(e) => setForm({ ...form, clientEmail: e.target.value })}
+                placeholder="Client Email"
+                className="h-9"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
