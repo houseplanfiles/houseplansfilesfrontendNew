@@ -388,7 +388,7 @@ const OTHER_SERVICES = [
   { id: 17, label: "Modular Kitchen Services", link: "/city-partners?profession=Interior", icon: ChefHat, color: "bg-orange-500/10 text-orange-600 hover:border-orange-500" },
   { id: 12, label: "Swimming Pool Contractor", link: "/city-partners?profession=Building", icon: Waves, color: "bg-cyan-500/10 text-cyan-600 hover:border-cyan-500" },
   { id: 22, label: "Fire safety services", link: "/city-partners?profession=Building", icon: Flame, color: "bg-red-500/10 text-red-600 hover:border-red-500" },
-  { id: 23, label: "Fabricator Services", link: "/city-partners?profession=Building", icon: Wrench, color: "bg-gray-500/10 text-gray-600 hover:border-gray-500" },
+  { id: 23, label: "Fabricator", link: "/city-partners?profession=Fabricator", icon: Wrench, color: "bg-gray-500/10 text-gray-600 hover:border-gray-500" },
 ];
 
 // --- MAIN COMPONENT: ConstructionPartnersSection ---
