@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "@/components/MotionWrapper";
 
 import { Star, Heart, Share2 } from "lucide-react";
@@ -25,13 +26,15 @@ const PlanCard = ({ plan }: PlanCardProps) => {
       transition={{ duration: 0.5 }}
       className="bg-white rounded-lg shadow-md overflow-hidden group transition-shadow duration-300 hover:shadow-xl"
     >
-      <div className="relative">
-        <img
+      <div className="relative h-56 w-full">
+        <Image
           src={plan.image}
           alt={plan.title}
-          className="w-full h-56 object-cover"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover"
         />
-        <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
           <button className="bg-white p-2 rounded-full shadow-md hover:bg-red-100">
             <Heart size={18} className="text-red-500" />
           </button>

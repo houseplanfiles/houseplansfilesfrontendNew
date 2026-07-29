@@ -3,6 +3,7 @@ import { useParams, useRouter } from "next/navigation";
 
 
 import React, { useState, useEffect, useMemo, FC } from "react";
+import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -165,7 +166,9 @@ const CartModal = ({ items, seller, onClose, onRemove }: { items: any[]; seller:
           ) : (
             items.map((item) => (
               <div key={item._id} className="flex gap-4 p-3 bg-gray-50 rounded-xl group border border-transparent hover:border-orange-100 transition-all">
-                <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
+                <div className="relative w-16 h-16 flex-shrink-0">
+                  <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover rounded-lg" />
+                </div>
                 <div className="flex-grow min-w-0">
                   <h4 className="font-bold text-gray-900 truncate">{item.name}</h4>
                   <p className="text-orange-600 font-bold text-sm">₹{item.price.toLocaleString()}</p>
@@ -222,8 +225,8 @@ const ProductCard = ({
       animate={{ opacity: 1, y: 0 }}
       className="group bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden h-full"
     >
-      <div className="relative h-48 sm:h-64 overflow-hidden bg-gray-100 cursor-pointer" onClick={() => router.push(`/marketplace/product/${product._id}`)}>
-        <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+      <div className="relative h-48 sm:h-64 w-full overflow-hidden bg-gray-100 cursor-pointer" onClick={() => router.push(`/marketplace/product/${product._id}`)}>
+        <Image src={product.image} alt={product.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
         <div className="absolute top-3 left-3 bg-orange-600 text-white px-2 py-1 rounded text-[10px] font-bold uppercase z-10">
           {product.category}
         </div>
@@ -379,7 +382,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
           <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
             <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 border-4 border-white/10">
               {sellerInfo?.photoUrl ? (
-                <img src={sellerInfo.photoUrl} alt={sellerInfo.businessName} className="w-full h-full object-cover" />
+                <Image src={sellerInfo.photoUrl} alt={sellerInfo.businessName} fill priority sizes="(max-width: 640px) 96px, 128px" className="object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-orange-100 text-orange-600">
                   <Store size={48} />
@@ -464,7 +467,9 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
                     whileHover={{ scale: 1.05 }}
                     className="min-w-[200px] h-32 rounded-xl overflow-hidden shadow-md border border-gray-100"
                   >
-                    <img src={img} alt={`Store ${idx}`} className="w-full h-full object-cover" />
+                    <div className="relative w-full h-full">
+                      <Image src={img} alt={`Store ${idx}`} fill sizes="200px" className="object-cover" />
+                    </div>
                   </motion.div>
                 ))}
              </div>

@@ -1,0 +1,20 @@
+# HousePlanFiles
+
+HousePlanFiles is India's leading platform for readymade house plans, architectural designs, and construction services.
+We connect users with architects, contractors, building material suppliers, and interior design shops in their cities.
+
+## Core Offerings
+- **Readymade House Plans**: 1000s of ready-to-use floor plans, 3D elevations, and complete blueprints.
+- **Architects & Interior Designers**: Discover and hire top-rated professionals.
+- **Contractors**: Find reliable building contractors, electrical contractors, plumbers, etc.
+- **Marketplace**: Buy building materials, home decor, and construction equipment from verified local shops and manufacturers.
+- **Lead Board**: A marketplace for professionals to purchase leads and connect with potential clients.
+
+## Technology Stack
+- Frontend: Next.js, React, Tailwind CSS, Redux Toolkit
+- Backend: Node.js, Express, MongoDB
+- Payments: Razorpay
+
+## Official Links
+- Website: https://www.houseplanfiles.com
+- Contact: houseplansdesignsfile@gmail.com

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
@@ -182,7 +183,14 @@ const ProjectDetailPage = () => {
           <div className="lg:col-span-9 space-y-10">
             {/* Main Featured Image */}
             <div className="relative rounded-3xl overflow-hidden shadow-2xl h-[450px] md:h-[600px] bg-gray-100">
-               <img src={getFileUrl(project.imageUrl)} className="w-full h-full object-cover" alt="Main" />
+               <Image 
+                 src={getFileUrl(project.imageUrl)} 
+                 className="object-cover" 
+                 alt="Main" 
+                 fill 
+                 priority 
+                 sizes="(max-width: 1024px) 100vw, 75vw"
+               />
                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                <div className="absolute bottom-10 left-10 text-white">
                   <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-2">
@@ -229,11 +237,13 @@ const ProjectDetailPage = () => {
                </h2>
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
                   {images.map((img: any, i: number) => (
-                    <div key={i} className="rounded-2xl overflow-hidden aspect-video shadow-md border border-gray-100 hover:shadow-xl transition-all group">
-                      <img 
+                    <div key={i} className="relative rounded-2xl overflow-hidden aspect-video shadow-md border border-gray-100 hover:shadow-xl transition-all group">
+                      <Image 
                         src={getFileUrl(img)} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                        className="object-cover group-hover:scale-105 transition-transform duration-700" 
                         alt={`View ${i}`} 
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
                       />
                     </div>
                   ))}
@@ -448,10 +458,12 @@ const ProjectDetailPage = () => {
                     className="bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all cursor-pointer group flex flex-col h-full"
                   >
                     <div className="h-72 bg-gray-100 relative overflow-hidden">
-                      <img
+                      <Image
                         src={getFileUrl(sample.imageUrl)}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                        className="object-cover group-hover:scale-110 transition-transform duration-1000"
                         alt={sample.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
                       <div className="absolute bottom-8 left-8 right-8">
