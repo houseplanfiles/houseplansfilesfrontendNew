@@ -181,6 +181,21 @@ const Hero = () => {
               Marketplace
             </Button>
           </Link>
+          <Link href="/leads">
+            <Button className="bg-white text-blue-600 hover:bg-gray-100 hover:text-blue-700 font-bold px-5 sm:px-6 py-5 rounded-xl shadow-xl text-sm sm:text-base transition-transform hover:-translate-y-1">
+              Lead Board
+            </Button>
+          </Link>
+          <Link href="/city-partners?profession=Building">
+            <Button className="bg-white text-indigo-600 hover:bg-gray-100 hover:text-indigo-700 font-bold px-5 sm:px-6 py-5 rounded-xl shadow-xl text-sm sm:text-base transition-transform hover:-translate-y-1">
+              Infra Services
+            </Button>
+          </Link>
+          <Link href="/city-partners?profession=Other">
+            <Button className="bg-white text-teal-600 hover:bg-gray-100 hover:text-teal-700 font-bold px-5 sm:px-6 py-5 rounded-xl shadow-xl text-sm sm:text-base transition-transform hover:-translate-y-1">
+              Other Services
+            </Button>
+          </Link>
         </motion.div>
 
         {/* Search Bar */}
