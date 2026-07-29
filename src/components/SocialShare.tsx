@@ -15,12 +15,14 @@ interface SocialShareProps {
   url?: string;
   title?: string;
   phone?: string;
+  heading?: string;
 }
 
 const SocialShare: React.FC<SocialShareProps> = ({ 
   url = window.location.href, 
   title = "Check this out on HousePlanFiles!", 
-  phone 
+  phone,
+  heading = "Share this plan"
 }) => {
   const shareLinks = [
     {
@@ -81,7 +83,7 @@ const SocialShare: React.FC<SocialShareProps> = ({
 
   return (
     <div className="mt-6">
-      <p className="text-sm font-bold text-gray-900 mb-3">Share this plan</p>
+      {heading && <p className="text-sm font-bold text-gray-900 mb-3">{heading}</p>}
       <div className="flex flex-wrap gap-2">
         {shareLinks.map((item, idx) => (
           <a
