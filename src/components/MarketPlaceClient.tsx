@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 
 import React, { useState, useEffect, useMemo, FC } from "react";
+import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -231,13 +232,15 @@ const ProductCard = ({ product, onInquiryClick, onImageClick }: any) => (
     className="group bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden h-full"
   >
     <div
-      className="relative h-36 sm:h-64 overflow-hidden bg-gray-100 cursor-zoom-in"
+      className="relative h-36 sm:h-64 w-full overflow-hidden bg-gray-100 cursor-zoom-in"
       onClick={() => onImageClick(product.image)}
     >
-      <img
+      <Image
         src={product.image || "https://via.placeholder.com/400x300"}
         alt={product.name}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        fill
+        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        className="object-cover transition-transform duration-700 group-hover:scale-110"
       />
       <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-white/90 backdrop-blur-md px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm z-10">
         <MapPin size={10} className="sm:w-3 sm:h-3 text-orange-500" />
@@ -340,11 +343,13 @@ const ShopCard = ({ seller, productCount, products }: { seller: any; productCoun
       className="group bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden h-full cursor-pointer"
       onClick={() => router.push(`/seller-shop/${seller._id}`)}
     >
-      <div className="relative h-48 sm:h-64 overflow-hidden bg-gray-100">
-        <img
+      <div className="relative h-48 sm:h-64 w-full overflow-hidden bg-gray-100">
+        <Image
           src={displayImage}
           alt={seller.businessName}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
 
@@ -576,13 +581,15 @@ const MarketplacePage: FC = () => {
       <Navbar />
 
       {/* --- Banner --- */}
-      <div className="relative h-[300px] md:h-[450px] bg-gray-900 overflow-hidden">
+      <div className="relative h-[300px] md:h-[450px] bg-gray-900 overflow-hidden w-full">
         <div className="absolute inset-0">
-          <img
+          <Image
             src="/marketplace.webp"
             alt="Marketplace"
-            className="w-full h-full object-cover"
-            loading="eager"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-gray-900/20" />
         </div>

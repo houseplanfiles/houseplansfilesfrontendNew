@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/store";
 import useEmblaCarousel from "embla-carousel-react";
@@ -102,15 +103,13 @@ const GalleryImageCard = ({
           {items.map((item, imgIndex) => (
             <div className="flex-grow-0 flex-shrink-0 w-full" key={item._id}>
               <div className="aspect-square w-full bg-gray-100 relative">
-                <img
+                <Image
                   src={item.imageUrl}
                   alt={item.altText || item.title}
-                  width="400"
-                  height="400"
-                  className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                  loading={isPriority && imgIndex === 0 ? "eager" : "lazy"}
-                  // @ts-ignore
-                  fetchPriority={isPriority && imgIndex === 0 ? "high" : "auto"}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+                  priority={isPriority && imgIndex === 0}
                 />
               </div>
             </div>
@@ -377,14 +376,13 @@ const GalleryPage: React.FC = () => {
       <Navbar />
       <main className="pb-16">
         <div className="relative w-full h-48 md:h-80 overflow-hidden flex items-center justify-center mb-8 md:mb-12 bg-black">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
             alt="Interior Design Gallery Banner"
-            width="2070"
-            height="800"
-            // @ts-ignore
-            fetchPriority="high"
-            className="absolute inset-0 w-full h-full object-cover opacity-60"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover opacity-60"
           />
           <div className="relative z-10 text-center px-4 text-white">
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-2 md:mb-4 drop-shadow-lg">
@@ -547,10 +545,12 @@ const GalleryPage: React.FC = () => {
                             }`}
                         >
                           <div className="absolute inset-0 bg-black/20 z-10" />
-                          <img
+                          <Image
                             src={item.imageUrl}
                             alt=""
-                            className="w-full h-full object-cover blur-[1px]" // Thumbnails bhi thode blur
+                            fill
+                            sizes="64px"
+                            className="object-cover blur-[1px]" // Thumbnails bhi thode blur
                           />
                         </button>
                       ))}
