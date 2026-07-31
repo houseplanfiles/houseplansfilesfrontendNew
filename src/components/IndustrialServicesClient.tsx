@@ -286,7 +286,7 @@ const PartnersPage: FC = () => {
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <Badge className="bg-orange-500 mb-4">Trusted Network</Badge>
           <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl lg:whitespace-nowrap font-extrabold text-white mb-4 px-2 leading-tight">
-            City Contractor ( Building & Interior )
+            Industrial Construction & Infrastructure Services
           </h1>
           <div className="flex justify-center px-4">
             <Button onClick={() => router.push("/register")} className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 py-6 px-8 rounded-full shadow-lg transition-transform hover:scale-105">
