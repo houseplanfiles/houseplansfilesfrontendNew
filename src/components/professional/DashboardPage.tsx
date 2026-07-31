@@ -41,6 +41,8 @@ const DashboardPage = () => {
     if (isProfessionalPartner) {
        return {
          enquiriesCount: inquiries?.length || 0,
+         profileViews: userInfo?.profileViews || 0,
+         contactClicks: userInfo?.contactClicks || 0,
          portfolioCount: userInfo?.workSamples?.length || 0,
          projectsCount: userInfo?.projects?.length || 0
        };
@@ -49,6 +51,7 @@ const DashboardPage = () => {
     let totalSales = 0;
     let totalRating = 0;
     let reviewCount = 0;
+    let totalProductViews = 0;
 
     orders?.forEach((order) => {
       if (order.isPaid) {
@@ -59,6 +62,7 @@ const DashboardPage = () => {
     });
 
     myProducts?.forEach((product) => {
+      totalProductViews += (product.views || 0);
       if (product.rating && product.rating > 0) {
         totalRating += product.rating;
         reviewCount += 1;
@@ -69,6 +73,9 @@ const DashboardPage = () => {
 
     return {
       productsListed: myProducts?.length || 0,
+      totalProductViews,
+      profileViews: userInfo?.profileViews || 0,
+      contactClicks: userInfo?.contactClicks || 0,
       totalSales: `₹${totalSales.toLocaleString()}`,
       averageRating: averageRating,
     };
@@ -78,6 +85,8 @@ const DashboardPage = () => {
     { title: "Total Enquiries", value: stats.enquiriesCount, icon: MessageSquare },
     { title: "Portfolio Items", value: stats.portfolioCount, icon: Briefcase },
     { title: "Active Projects", value: stats.projectsCount, icon: LayoutGrid },
+    { title: "Profile Views", value: stats.profileViews, icon: Eye },
+    { title: "Contact Clicks", value: stats.contactClicks, icon: PlusCircle },
   ] : [
     {
       title: "Products Listed",
@@ -86,6 +95,9 @@ const DashboardPage = () => {
     },
     { title: "Total Sales", value: stats.totalSales, icon: DollarSign },
     { title: "Average Rating", value: stats.averageRating, icon: Star },
+    { title: "Product Views", value: stats.totalProductViews, icon: Eye },
+    { title: "Profile Views", value: stats.profileViews, icon: Eye },
+    { title: "Contact Clicks", value: stats.contactClicks, icon: PlusCircle },
   ];
 
   const rawLabel = userInfo?.profession || userInfo?.role || "Professional";
