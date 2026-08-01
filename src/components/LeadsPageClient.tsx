@@ -230,13 +230,13 @@ export default function LeadsPageClient() {
               />
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Column 1 */}
               <div>
                 <h3 className="font-bold text-gray-800 mb-4 pb-2 border-b">Professionals</h3>
-                <div className="space-y-3">
+                <div className="flex flex-wrap gap-3">
                   {["Architect", "Civil Engineer", "Interior Designer", "Structure Engineer", "MEP Consultant", "Vastu Consultant"].map((prof) => (
-                    <label key={prof} className="flex items-center gap-3 cursor-pointer group">
+                    <label key={prof} className="flex items-center gap-2 cursor-pointer group bg-gray-50 hover:bg-orange-50 border border-gray-200 hover:border-orange-200 px-3 py-2 rounded-lg transition-colors">
                       <div className="relative flex items-center justify-center">
                         <input
                           type="checkbox"
@@ -250,13 +250,13 @@ export default function LeadsPageClient() {
                             }
                           }}
                         />
-                        <div className="w-5 h-5 border-2 border-gray-300 rounded transition-colors peer-checked:bg-orange-500 peer-checked:border-orange-500 flex items-center justify-center group-hover:border-orange-400">
-                          <svg className={`w-3 h-3 text-white transition-opacity ${selectedCategories.includes(prof) ? 'opacity-100' : 'opacity-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <div className="w-4 h-4 border-2 border-gray-300 rounded transition-colors peer-checked:bg-orange-500 peer-checked:border-orange-500 flex items-center justify-center">
+                          <svg className={`w-2.5 h-2.5 text-white transition-opacity ${selectedCategories.includes(prof) ? 'opacity-100' : 'opacity-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
                       </div>
-                      <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{prof}</span>
+                      <span className="text-sm text-gray-700 group-hover:text-orange-900 font-medium">{prof}</span>
                     </label>
                   ))}
                 </div>
@@ -265,9 +265,9 @@ export default function LeadsPageClient() {
               {/* Column 2 */}
               <div>
                 <h3 className="font-bold text-gray-800 mb-4 pb-2 border-b">Contractors</h3>
-                <div className="space-y-3">
+                <div className="flex flex-wrap gap-3">
                   {["Building Contractor", "Interior Contractor", "Electrical Contractor", "Plumbing Contractor", "Carpenter", "Painting Contractor", "Tiles Contractor"].map((prof) => (
-                    <label key={prof} className="flex items-center gap-3 cursor-pointer group">
+                    <label key={prof} className="flex items-center gap-2 cursor-pointer group bg-gray-50 hover:bg-orange-50 border border-gray-200 hover:border-orange-200 px-3 py-2 rounded-lg transition-colors">
                       <div className="relative flex items-center justify-center">
                         <input
                           type="checkbox"
@@ -281,13 +281,13 @@ export default function LeadsPageClient() {
                             }
                           }}
                         />
-                        <div className="w-5 h-5 border-2 border-gray-300 rounded transition-colors peer-checked:bg-orange-500 peer-checked:border-orange-500 flex items-center justify-center group-hover:border-orange-400">
-                          <svg className={`w-3 h-3 text-white transition-opacity ${selectedCategories.includes(prof) ? 'opacity-100' : 'opacity-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <div className="w-4 h-4 border-2 border-gray-300 rounded transition-colors peer-checked:bg-orange-500 peer-checked:border-orange-500 flex items-center justify-center">
+                          <svg className={`w-2.5 h-2.5 text-white transition-opacity ${selectedCategories.includes(prof) ? 'opacity-100' : 'opacity-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
                       </div>
-                      <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{prof}</span>
+                      <span className="text-sm text-gray-700 group-hover:text-orange-900 font-medium">{prof}</span>
                     </label>
                   ))}
                 </div>

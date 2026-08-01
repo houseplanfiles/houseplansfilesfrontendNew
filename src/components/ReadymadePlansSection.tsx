@@ -144,7 +144,7 @@ const ReadymadePlansSection = () => {
 
   const handleWhatsAppRedirect = () => {
     if (!selectedOption) return;
-    
+
     const message = `Hello, I want to inquire about *${selectedOption.label}* services.
 *Name:* ${formData.name || "N/A"}
 *City:* ${formData.city || "N/A"}
@@ -171,7 +171,7 @@ const ReadymadePlansSection = () => {
   return (
     <section className="py-12 md:py-20 bg-gradient-to-b from-gray-50/50 via-white to-gray-50/50">
       <div className="container mx-auto px-4 max-w-7xl">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
           <motion.div
@@ -231,7 +231,7 @@ const ReadymadePlansSection = () => {
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 py-4">
-            
+
             {/* Name field */}
             <div>
               <Label htmlFor="name" className="text-sm font-semibold text-gray-700">

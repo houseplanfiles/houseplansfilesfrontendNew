@@ -43,7 +43,7 @@ const AdminAnalyticsReportPage = () => {
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
-    doc.text("Analytics Report", 14, 15);
+    doc.text("Analytics Report - All Users", 14, 15);
     
     autoTable(doc, {
       startY: 20,
@@ -58,7 +58,36 @@ const AdminAnalyticsReportPage = () => {
       ]),
     });
     
-    doc.save("analytics_report.pdf");
+    doc.save("analytics_report_all.pdf");
+  };
+
+  const handleDownloadIndividualPDF = (user: any) => {
+    const doc = new jsPDF();
+    const title = `Analytics Report: ${user.name}`;
+    doc.setFontSize(18);
+    doc.text(title, 14, 20);
+    
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    if (user.companyName) doc.text(`Company: ${user.companyName}`, 14, 30);
+    doc.text(`Email: ${user.email}`, 14, 36);
+    doc.text(`Role: ${user.role.toUpperCase()}`, 14, 42);
+    
+    autoTable(doc, {
+      startY: 50,
+      theme: 'grid',
+      head: [["Metric", "Count"]],
+      body: [
+        ["Profile Views", user.profileViews.toString()],
+        ["Project/Product Views", user.projectViews.toString()],
+        ["WhatsApp Clicks", user.whatsappClicks.toString()],
+        ["Call Clicks", user.callClicks.toString()],
+        ["Total Engagement", (user.profileViews + user.projectViews + user.whatsappClicks + user.callClicks).toString()]
+      ],
+      headStyles: { fillColor: [234, 88, 12] }, // orange-600 to match theme
+    });
+    
+    doc.save(`analytics_report_${user.name.replace(/\s+/g, '_')}.pdf`);
   };
 
   if (loading) {
@@ -102,6 +131,7 @@ const AdminAnalyticsReportPage = () => {
                 <th className="px-4 py-3">Project Views</th>
                 <th className="px-4 py-3 text-green-600">WhatsApp Clicks</th>
                 <th className="px-4 py-3 text-blue-600">Call Clicks</th>
+                <th className="px-4 py-3 text-right">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -116,6 +146,16 @@ const AdminAnalyticsReportPage = () => {
                   <td className="px-4 py-3 font-semibold">{r.projectViews}</td>
                   <td className="px-4 py-3 font-bold text-green-600">{r.whatsappClicks}</td>
                   <td className="px-4 py-3 font-bold text-blue-600">{r.callClicks}</td>
+                  <td className="px-4 py-3 text-right">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleDownloadIndividualPDF(r)}
+                      className="text-orange-600 hover:bg-orange-50 hover:text-orange-700"
+                    >
+                      <Download className="w-4 h-4 mr-2" /> PDF
+                    </Button>
+                  </td>
                 </tr>
               ))}
               {filteredReports.length === 0 && (
