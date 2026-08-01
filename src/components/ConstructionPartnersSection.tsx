@@ -252,14 +252,14 @@ const PartnerCard: FC<{
         {type === "Premium" && (
           <div className="grid grid-cols-2 gap-2">
             <Button 
-              onClick={() => { trackAnalytics('user', partner._id, 'contact'); window.open(waLink, "_blank"); }}
+              onClick={() => { trackAnalytics('user', partner._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
               className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11 px-0"
             >
               <MessageCircle className="w-4 h-4 mr-1.5" />
               WhatsApp
             </Button>
             <Button 
-              onClick={() => { trackAnalytics('user', partner._id, 'contact'); window.location.href = callLink; }}
+              onClick={() => { trackAnalytics('user', partner._id, 'call_click'); window.location.href = callLink; }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors h-11 px-0"
             >
               <Phone className="w-4 h-4 mr-1.5" />
@@ -270,7 +270,7 @@ const PartnerCard: FC<{
 
         {type === "Verified" && (
           <Button 
-            onClick={() => { trackAnalytics('user', partner._id, 'contact'); window.open(waLink, "_blank"); }}
+            onClick={() => { trackAnalytics('user', partner._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
             className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11"
           >
             <MessageCircle className="w-4 h-4 mr-2" />
