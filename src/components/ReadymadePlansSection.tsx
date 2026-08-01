@@ -205,10 +205,10 @@ const ReadymadePlansSection = () => {
                 onClick={() => handleOpenForm(opt)}
                 className="bg-card border border-border/80 hover:border-orange-500/50 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col items-center text-center group"
               >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-200 ${opt.color}`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110 duration-200 ${opt.color}`}>
                   <IconComponent size={28} />
                 </div>
-                <h3 className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 min-h-[40px] flex items-center justify-center">
+                <h3 className="text-xs sm:text-sm font-bold text-gray-800 group-hover:text-orange-600 transition-colors text-balance min-h-[40px] flex items-center justify-center leading-tight px-1">
                   {opt.label}
                 </h3>
               </motion.div>
