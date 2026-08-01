@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import { RootState, AppDispatch } from "@/lib/store";
 import { fetchDashboardSummary } from "@/lib/features/admin/adminSlice";
 import { Button } from "@/components/ui/button";
@@ -23,9 +24,19 @@ const AdminDashboardPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const { summary, status } = useSelector((state: RootState) => state.admin);
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const [analytics, setAnalytics] = React.useState<any>(null);
 
   useEffect(() => {
     dispatch(fetchDashboardSummary());
+    const fetchAnalytics = async () => {
+      try {
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/analytics/admin`, {
+          headers: { Authorization: `Bearer ${userInfo?.token}` }
+        });
+        setAnalytics(data);
+      } catch (err) {}
+    };
+    if (userInfo?.token) fetchAnalytics();
   }, [dispatch]);
 
   if (status === "loading" || !summary) {
@@ -35,6 +46,37 @@ const AdminDashboardPage = () => {
       </div>
     );
   }
+
+  const row3Cards = [
+    {
+      title: "PROFILE VIEWS",
+      value: (analytics?.profileViews || 0).toLocaleString(),
+      icon: Users,
+      iconBg: "bg-blue-100",
+      iconColor: "text-blue-600",
+    },
+    {
+      title: "CONTACT CLICKS",
+      value: (analytics?.contactClicks || 0).toLocaleString(),
+      icon: DollarSign,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
+    },
+    {
+      title: "PRODUCT VIEWS",
+      value: (analytics?.productViews || 0).toLocaleString(),
+      icon: ShoppingCart,
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
+    },
+    {
+      title: "PLAN VIEWS",
+      value: (analytics?.planViews || 0).toLocaleString(),
+      icon: BookOpen,
+      iconBg: "bg-orange-100",
+      iconColor: "text-orange-500",
+    },
+  ];
 
   const row1Cards = [
     {
@@ -126,6 +168,21 @@ const AdminDashboardPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {row2Cards.map((card) => (
           <StatCard key={card.title} {...card} />
+        ))}
+      </div>
+
+      {/* Row 3 — Analytics cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {row3Cards.map((card, i) => (
+          <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center justify-between hover:shadow-md transition-shadow">
+            <div>
+              <p className="text-sm font-medium text-gray-500 mb-1">{card.title}</p>
+              <h3 className="text-2xl font-bold text-gray-900">{card.value}</h3>
+            </div>
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${card.iconBg}`}>
+              <card.icon className={`w-6 h-6 ${card.iconColor}`} />
+            </div>
+          </div>
         ))}
       </div>
 
