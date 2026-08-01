@@ -144,7 +144,7 @@ const ReadymadePlansSection = () => {
 
   const handleWhatsAppRedirect = () => {
     if (!selectedOption) return;
-    
+
     const message = `Hello, I want to inquire about *${selectedOption.label}* services.
 *Name:* ${formData.name || "N/A"}
 *City:* ${formData.city || "N/A"}
@@ -171,7 +171,7 @@ const ReadymadePlansSection = () => {
   return (
     <section className="py-12 md:py-20 bg-gradient-to-b from-gray-50/50 via-white to-gray-50/50">
       <div className="container mx-auto px-4 max-w-7xl">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
           <motion.div
@@ -205,10 +205,10 @@ const ReadymadePlansSection = () => {
                 onClick={() => handleOpenForm(opt)}
                 className="bg-card border border-border/80 hover:border-orange-500/50 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col items-center text-center group"
               >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110 duration-200 ${opt.color}`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-200 ${opt.color}`}>
                   <IconComponent size={28} />
                 </div>
-                <h3 className="text-xs sm:text-sm font-bold text-gray-800 group-hover:text-orange-600 transition-colors text-balance min-h-[40px] flex items-center justify-center leading-tight px-1">
+                <h3 className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 min-h-[40px] flex items-center justify-center">
                   {opt.label}
                 </h3>
               </motion.div>
@@ -231,7 +231,7 @@ const ReadymadePlansSection = () => {
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 py-4">
-            
+
             {/* Name field */}
             <div>
               <Label htmlFor="name" className="text-sm font-semibold text-gray-700">
