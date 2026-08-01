@@ -42,7 +42,8 @@ const DashboardPage = () => {
        return {
          enquiriesCount: inquiries?.length || 0,
          profileViews: userInfo?.profileViews || 0,
-         contactClicks: userInfo?.contactClicks || 0,
+         whatsappClicks: userInfo?.whatsappClicks || 0,
+         callClicks: userInfo?.callClicks || 0,
          portfolioCount: userInfo?.workSamples?.length || 0,
          projectsCount: userInfo?.projects?.length || 0
        };
@@ -75,7 +76,8 @@ const DashboardPage = () => {
       productsListed: myProducts?.length || 0,
       totalProductViews,
       profileViews: userInfo?.profileViews || 0,
-      contactClicks: userInfo?.contactClicks || 0,
+      whatsappClicks: userInfo?.whatsappClicks || 0,
+      callClicks: userInfo?.callClicks || 0,
       totalSales: `₹${totalSales.toLocaleString()}`,
       averageRating: averageRating,
     };
@@ -86,7 +88,8 @@ const DashboardPage = () => {
     { title: "Portfolio Items", value: stats.portfolioCount, icon: Briefcase },
     { title: "Active Projects", value: stats.projectsCount, icon: LayoutGrid },
     { title: "Profile Views", value: stats.profileViews, icon: Eye },
-    { title: "Contact Clicks", value: stats.contactClicks, icon: PlusCircle },
+    { title: "WhatsApp Clicks", value: stats.whatsappClicks, icon: MessageSquare },
+    { title: "Call Clicks", value: stats.callClicks, icon: PlusCircle },
   ] : [
     {
       title: "Products Listed",
@@ -97,7 +100,8 @@ const DashboardPage = () => {
     { title: "Average Rating", value: stats.averageRating, icon: Star },
     { title: "Product Views", value: stats.totalProductViews, icon: Eye },
     { title: "Profile Views", value: stats.profileViews, icon: Eye },
-    { title: "Contact Clicks", value: stats.contactClicks, icon: PlusCircle },
+    { title: "WhatsApp Clicks", value: stats.whatsappClicks, icon: MessageSquare },
+    { title: "Call Clicks", value: stats.callClicks, icon: PlusCircle },
   ];
 
   const rawLabel = userInfo?.profession || userInfo?.role || "Professional";

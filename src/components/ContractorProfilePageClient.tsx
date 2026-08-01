@@ -244,6 +244,7 @@ const ContractorProfilePage = ({ contractorId }: ContractorProfilePageClientProp
                 {(contractor.contractorType === "Verified" || contractor.contractorType === "Premium" || contractor.role === "Premium") && (
                   <Button 
                     onClick={() => {
+                      trackAnalytics('user', contractor._id, 'whatsapp_click');
                       const phoneStr = contractor.phone ? contractor.phone.replace(/\D/g, '') : '';
                       window.open(`https://wa.me/${phoneStr}?text=${encodeURIComponent(`Hi ${contractor.name}, I found your profile on HousePlansFiles.`)}`, "_blank");
                     }} 

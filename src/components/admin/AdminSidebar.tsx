@@ -19,6 +19,7 @@ const mainLinks = [
   { name: "Orders", path: "/admin/orders", icon: ShoppingBag },
   { name: "Customers", path: "/admin/customers", icon: Users },
   { name: "Reports", path: "/admin/reports", icon: BarChart2 },
+  { name: "Analytics Report", path: "/admin/analytics-report", icon: BarChart2 },
   { name: "Profile", path: "/admin/profile", icon: UserCircle },
   { name: "Videos", path: "/admin/addvideos", icon: PlusCircle },
   { name: "Seller Products", path: "/admin/seller-products", icon: Box },
