@@ -1,5 +1,6 @@
-import Image from "next/image";
 "use client";
+import Image from "next/image";
+
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useMemo, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";

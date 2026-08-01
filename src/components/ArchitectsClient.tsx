@@ -1,5 +1,6 @@
-import Image from "next/image";
 "use client";
+import Image from "next/image";
+
 
 import { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
