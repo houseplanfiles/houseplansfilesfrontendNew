@@ -1,3 +1,4 @@
+import Image from "next/image";
 "use client";
 
 import Link from "next/link";
@@ -54,6 +55,7 @@ import {
   ChevronRight,
   MessageCircle,
 } from "lucide-react";
+import { trackAnalytics } from "@/lib/analytics";
 
 // --- Types ---
 type ContractorType = {
@@ -280,7 +282,7 @@ const PartnersPage: FC = () => {
       {/* --- Hero Section --- */}
       <div className="relative bg-gray-900 py-12 sm:py-20 overflow-hidden w-full">
         <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80" className="w-full h-full object-cover opacity-20" alt="Hero" />
+          <Image src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80" className="object-cover opacity-20" alt="Hero" fill priority sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 text-center">
@@ -388,7 +390,7 @@ const PartnersPage: FC = () => {
               return (
                 <div key={contractor._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full group">
                   <div className="h-28 bg-gray-100 relative">
-                    <img src={contractor.shopImageUrl ? getFileUrl(contractor.shopImageUrl) : "/contractor.jpeg"} className="w-full h-full object-cover" alt="" />
+                    <Image src={contractor.shopImageUrl ? getFileUrl(contractor.shopImageUrl) : "/contractor.jpeg"} className="object-cover" alt="Shop Image" fill sizes="(max-width: 768px) 50vw, 25vw" />
                     <div className="absolute top-2 right-2 flex flex-col gap-1">
                       {contractor.contractorType === "Premium" && <Badge className="bg-orange-500 text-[10px]">Premium</Badge>}
                       {contractor.contractorType === "Verified" && <Badge className="bg-blue-600 text-[10px]">Verified</Badge>}
@@ -441,7 +443,7 @@ const PartnersPage: FC = () => {
                       )}
                       {contractor.contractorType === "Verified" && (
                         <Button
-                          onClick={() => window.open(waLink, "_blank")}
+                          onClick={() => { trackAnalytics('user', partner._id, 'contact'); window.open(waLink, "_blank"); }}
                           className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-10"
                         >
                           <MessageCircle className="w-4 h-4 mr-2" />

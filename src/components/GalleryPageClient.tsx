@@ -64,7 +64,6 @@ const resolveProductLink = (productLink?: string, title?: string): string => {
   return "/house-plans";
 };
 
-// --- Customized Gallery Card (Thumbnails Clear rahenge taaki user attract ho) ---
 const GalleryImageCard = ({
   items,
   index,
@@ -540,8 +539,8 @@ const GalleryPage: React.FC = () => {
                           key={item._id}
                           onClick={() => setCurrentImageIndex(index)}
                           className={`shrink-0 w-10 h-10 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 transition-all relative ${index === currentImageIndex
-                              ? "border-orange-500 scale-110"
-                              : "border-white/20 opacity-50"
+                            ? "border-orange-500 scale-110"
+                            : "border-white/20 opacity-50"
                             }`}
                         >
                           <div className="absolute inset-0 bg-black/20 z-10" />

@@ -27,6 +27,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
+import { trackAnalytics } from "@/lib/analytics";
 // --- Icon Components (same as ProductDetail) ---
 const FacebookIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -92,6 +93,7 @@ const ProjectDetailPage = () => {
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/contractor/${id}`
         );
         setContractor(data);
+        trackAnalytics('user', id, 'view');
       } catch (error) {
         console.error("Error fetching project data:", error);
       } finally {

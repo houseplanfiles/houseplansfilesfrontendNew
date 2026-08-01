@@ -1,3 +1,4 @@
+import Image from "next/image";
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -307,9 +308,9 @@ const ProjectsPage = () => {
                            <TableCell>
                               <div className="w-16 h-12 rounded-lg bg-gray-100 overflow-hidden border border-gray-200">
                                  {sample.imageUrl ? (
-                                   <img src={sample.imageUrl.startsWith("http") ? sample.imageUrl : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${sample.imageUrl}`} className="w-full h-full object-cover" alt="" />
+                                   <Image src={sample.imageUrl.startsWith("http") ? sample.imageUrl : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${sample.imageUrl}`} alt="Project" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                                  ) : (sample.imageFiles?.length > 0) ? (
-                                   <img src={URL.createObjectURL(sample.imageFiles[0])} className="w-full h-full object-cover" alt="" />
+                                   <Image src={URL.createObjectURL(sample.imageFiles[0])} alt="Project Preview" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                                  ) : (
                                    <div className="w-full h-full flex items-center justify-center"><ImageIcon className="w-4 h-4 text-gray-300" /></div>
                                  )}
@@ -498,7 +499,7 @@ const ProjectsPage = () => {
                  {/* Preview Strip */}
                  {tempProject.imageFiles.map((file, fIdx) => (
                     <div key={fIdx} className="w-24 h-24 rounded-xl overflow-hidden border border-gray-200 bg-white relative group">
-                      <img src={URL.createObjectURL(file)} className="w-full h-full object-cover" alt="" />
+                      <Image src={URL.createObjectURL(file)} alt="File Preview" fill className="object-cover" sizes="100px" />
                       <div 
                         className="absolute inset-0 bg-red-500/80 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity" 
                         onClick={() => {
@@ -513,7 +514,7 @@ const ProjectsPage = () => {
                  ))}
                  {!tempProject.imageFiles.length && tempProject.imageUrl && (
                     <div className="w-24 h-24 rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm opacity-60">
-                      <img src={tempProject.imageUrl.startsWith("http") ? tempProject.imageUrl : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${tempProject.imageUrl}`} className="w-full h-full object-cover" alt="" />
+                      <Image src={tempProject.imageUrl.startsWith("http") ? tempProject.imageUrl : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${tempProject.imageUrl}`} alt="Project Preview" fill className="object-cover" sizes="100px" />
                       <span className="absolute bottom-1 right-1 bg-white text-[8px] font-black uppercase px-1 rounded">Current</span>
                     </div>
                  )}
