@@ -1,3 +1,4 @@
+import Image from "next/image";
 "use client";
 
 import Link from "next/link";
@@ -6,6 +7,7 @@ import React, { useState, useEffect, useMemo, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { trackAnalytics } from "@/lib/analytics";
 import {
   Loader2,
   ServerCrash,
@@ -271,7 +273,7 @@ const SellerProductDetailPage: FC = () => {
                         selectedImage === img ? "border-orange-600 shadow-md scale-105" : "border-gray-200 hover:border-gray-400"
                       }`}
                     >
-                      <img src={img} alt={`${product.name} ${idx}`} className="w-full h-full object-cover" />
+                      <Image src={img} alt={`${product.name} ${idx}`} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
                     </button>
                   ))}
                 </div>
@@ -424,7 +426,7 @@ const SellerProductDetailPage: FC = () => {
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 flex-shrink-0">
                  {product.seller.photoUrl ? (
-                   <img src={product.seller.photoUrl} alt="Seller" className="w-full h-full object-cover rounded-2xl" />
+                   <Image src={product.seller.photoUrl || "/contractor.jpeg"} alt="Seller" fill className="object-cover rounded-2xl" sizes="(max-width: 768px) 50vw, 33vw" />
                  ) : (
                    <Store size={32} />
                  )}

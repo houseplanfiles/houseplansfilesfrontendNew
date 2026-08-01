@@ -35,6 +35,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { toast } from "sonner";
+import { trackAnalytics } from "@/lib/analytics";
 
 
 interface ContractorProfilePageClientProps {
@@ -57,6 +58,7 @@ const ContractorProfilePage = ({ contractorId }: ContractorProfilePageClientProp
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/contractor/${id}`
         );
         setContractor(data);
+        trackAnalytics('user', id, 'view');
       } catch (error) {
         console.error("Error fetching contractor:", error);
       } finally {

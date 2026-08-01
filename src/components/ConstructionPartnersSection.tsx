@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { toast } from "sonner";
 import { MapPin, Building, Phone, X, Send, Loader2, Star, Briefcase, CheckCircle2, UserPlus, Search, Filter, HardHat, Paintbrush, MessageCircle, Home, Compass, Zap, Droplet, Grid, Waves, Building2, Layers, Bug, Leaf, Users, ChefHat, ArrowUpDown, Boxes, ClipboardCheck, Sun, Wind, Hammer, Wrench, Shield, Settings, Flame, PencilRuler, Sofa, LayoutGrid, PaintRoller, AppWindow, Factory, PackageOpen, Cuboid, Truck, Fan, Cpu, Umbrella, TreePine, Utensils } from "lucide-react";
+import { trackAnalytics } from "@/lib/analytics";
 
 
 // --- Types ---
@@ -251,14 +252,14 @@ const PartnerCard: FC<{
         {type === "Premium" && (
           <div className="grid grid-cols-2 gap-2">
             <Button 
-              onClick={() => window.open(waLink, "_blank")}
+              onClick={() => { trackAnalytics('user', partner._id, 'contact'); window.open(waLink, "_blank"); }}
               className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11 px-0"
             >
               <MessageCircle className="w-4 h-4 mr-1.5" />
               WhatsApp
             </Button>
             <Button 
-              onClick={() => window.location.href = callLink}
+              onClick={() => { trackAnalytics('user', partner._id, 'contact'); window.location.href = callLink; }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors h-11 px-0"
             >
               <Phone className="w-4 h-4 mr-1.5" />
@@ -269,7 +270,7 @@ const PartnerCard: FC<{
 
         {type === "Verified" && (
           <Button 
-            onClick={() => window.open(waLink, "_blank")}
+            onClick={() => { trackAnalytics('user', partner._id, 'contact'); window.open(waLink, "_blank"); }}
             className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11"
           >
             <MessageCircle className="w-4 h-4 mr-2" />
@@ -279,7 +280,7 @@ const PartnerCard: FC<{
 
         {type === "Normal" && (
           <Button 
-            onClick={() => onContact(partner)} 
+            onClick={() => { trackAnalytics('user', partner._id, 'contact'); onContact(partner); }} 
             className="w-full bg-gray-800 hover:opacity-90 text-white transition-colors h-11"
           >
             Enquiry Now

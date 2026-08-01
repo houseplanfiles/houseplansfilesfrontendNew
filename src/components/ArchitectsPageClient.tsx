@@ -275,7 +275,7 @@ const ArchitectsPage: FC = () => {
                       <motion.div key={architect._id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: index * 0.05 }} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full group">
                         {/* Banner */}
                         <div className="h-28 sm:h-32 relative overflow-hidden shrink-0">
-                          <img src={architect.shopImageUrl ? getFileUrl(architect.shopImageUrl) : "/architect.png"} alt={`${architect.name} banner`} className="absolute inset-0 w-full h-full object-cover" />
+                          <Image src={architect.shopImageUrl ? getFileUrl(architect.shopImageUrl) : "/architect.png"} alt={`${architect.name} banner`} fill className="object-cover" sizes="100vw" priority />
                           {type === "Premium" && (
                             <div className="absolute top-3 right-3">
                               <Badge className="bg-orange-500 text-white border-none shadow-lg px-2 py-0.5 text-[10px] font-bold"><Zap className="w-3 h-3 mr-1 fill-current" /> PREMIUM</Badge>

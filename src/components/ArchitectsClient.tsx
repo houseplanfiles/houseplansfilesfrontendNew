@@ -1,3 +1,4 @@
+import Image from "next/image";
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -99,7 +100,7 @@ export default function ArchitectsClient() {
                 {/* Cover */}
                 <div className="h-28 bg-gradient-to-r from-orange-400 to-orange-600 relative">
                   {arch.shopImageUrl && (
-                    <img src={arch.shopImageUrl} alt={arch.companyName || arch.name} className="w-full h-full object-cover" />
+                    <Image src={arch.shopImageUrl || "/contractor.jpeg"} alt={arch.companyName || arch.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                   )}
                   <div className="absolute inset-0 bg-black/20" />
                 </div>

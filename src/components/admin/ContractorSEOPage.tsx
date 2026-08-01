@@ -1,3 +1,4 @@
+import Image from "next/image";
 "use client";
 import { useParams, useRouter } from "next/navigation";
 
@@ -151,7 +152,7 @@ const ContractorSEOPage = () => {
                     onClick={() => handleEditSEO(idx)}
                   >
                     <div className="h-40 rounded-2xl overflow-hidden mb-4 bg-gray-100">
-                      <img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${project.imageUrl}`} className="w-full h-full object-cover" alt="Project" />
+                      <Image src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${project.imageUrl}`} alt="Project" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                     </div>
                     <h3 className="font-extrabold text-gray-900 mb-2 truncate">{project.title}</h3>
                     <div className="flex items-center gap-2">
