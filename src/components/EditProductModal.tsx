@@ -144,12 +144,37 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="category">Category</Label>
-              <Input
+              <select
                 id="category"
                 {...register("category", { required: true })}
-                className="w-full p-2 border rounded"
-                placeholder="e.g. Cement"
-              />
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="" disabled>Select Category</option>
+                {[
+                  "Building Material",
+                  "Cement & Concrete",
+                  "Steel & Iron",
+                  "Bricks & Blocks",
+                  "Tiles & Flooring",
+                  "Electrical Material",
+                  "Plumbing Material",
+                  "Paint & Coatings",
+                  "Glass & Windows",
+                  "Doors & Frames",
+                  "Modular Kitchen",
+                  "Sanitary & Bath",
+                  "Solar & Renewable Energy",
+                  "Home Decor",
+                  "Furniture",
+                  "Chemical Product",
+                  "Machinery",
+                  "Tools & Equipment",
+                  "Safety & PPE",
+                  "Hardware & Fasteners",
+                ].map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </div>
             <div>
               <Label htmlFor="brand">Brand</Label>

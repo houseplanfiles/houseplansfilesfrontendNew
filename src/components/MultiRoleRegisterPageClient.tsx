@@ -732,7 +732,28 @@ const MultiRoleRegisterPage = () => {
                   <SelectValue placeholder="Select Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {["Building Material", "Home Decor", "Furniture", "Chemical Product", "Machinery"].map((c) => (
+                  {[
+                    "Building Material",
+                    "Cement & Concrete",
+                    "Steel & Iron",
+                    "Bricks & Blocks",
+                    "Tiles & Flooring",
+                    "Electrical Material",
+                    "Plumbing Material",
+                    "Paint & Coatings",
+                    "Glass & Windows",
+                    "Doors & Frames",
+                    "Modular Kitchen",
+                    "Sanitary & Bath",
+                    "Solar & Renewable Energy",
+                    "Home Decor",
+                    "Furniture",
+                    "Chemical Product",
+                    "Machinery",
+                    "Tools & Equipment",
+                    "Safety & PPE",
+                    "Hardware & Fasteners",
+                  ].map((c) => (
                     <SelectItem key={c} value={c}>
                       {c}
                     </SelectItem>

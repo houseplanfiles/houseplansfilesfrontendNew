@@ -409,7 +409,29 @@ const SellersSection: FC = () => {
   const [selectedMaterialType, setSelectedMaterialType] = useState("All");
 
   // Fixed shop categories
-  const SHOP_CATEGORIES = ["All", "Building Material", "Home Decor", "Furniture", "Chemical Product", "Machinery"];
+  const SHOP_CATEGORIES = [
+    "All",
+    "Building Material",
+    "Cement & Concrete",
+    "Steel & Iron",
+    "Bricks & Blocks",
+    "Tiles & Flooring",
+    "Electrical Material",
+    "Plumbing Material",
+    "Paint & Coatings",
+    "Glass & Windows",
+    "Doors & Frames",
+    "Modular Kitchen",
+    "Sanitary & Bath",
+    "Solar & Renewable Energy",
+    "Home Decor",
+    "Furniture",
+    "Chemical Product",
+    "Machinery",
+    "Tools & Equipment",
+    "Safety & PPE",
+    "Hardware & Fasteners",
+  ];
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
