@@ -10,12 +10,14 @@ import { AppDispatch, RootState } from "@/lib/store";
 import { fetchMyProducts } from "@/lib/features/products/productSlice";
 import { fetchMyProfessionalOrders } from "@/lib/features/professional/professionalOrderSlice";
 import { fetchMyInquiries } from "@/lib/features/inquiries/inquirySlice";
-
+import axios from "axios";
 
 const DashboardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { userInfo } = useSelector((state: RootState) => state.user);
+  
+  const [unlockedLeadsCount, setUnlockedLeadsCount] = useState(0);
   const isProfessionalPartner = ["professional", "contractor", "architect"].includes(userInfo?.role?.toLowerCase() || "");
 
   const { myProducts, listStatus: productStatus } = useSelector(
@@ -31,16 +33,24 @@ const DashboardPage = () => {
   useEffect(() => {
     if (isProfessionalPartner) {
       dispatch(fetchMyInquiries());
+      if (userInfo?.token) {
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads/my-unlocked`, {
+          headers: { Authorization: `Bearer ${userInfo.token}` }
+        })
+        .then(res => setUnlockedLeadsCount(res.data.length))
+        .catch(err => console.error(err));
+      }
     } else {
       dispatch(fetchMyProducts());
       dispatch(fetchMyProfessionalOrders());
     }
-  }, [dispatch, isProfessionalPartner]);
+  }, [dispatch, isProfessionalPartner, userInfo]);
 
   const stats = useMemo(() => {
     if (isProfessionalPartner) {
        return {
          enquiriesCount: inquiries?.length || 0,
+         unlockedLeads: unlockedLeadsCount,
          profileViews: userInfo?.profileViews || 0,
          whatsappClicks: userInfo?.whatsappClicks || 0,
          callClicks: userInfo?.callClicks || 0,
@@ -84,12 +94,12 @@ const DashboardPage = () => {
   }, [orders, myProducts, isProfessionalPartner, inquiries, userInfo]);
 
   const summaryCards = isProfessionalPartner ? [
-    { title: "Total Enquiries", value: stats.enquiriesCount, icon: MessageSquare },
+    { title: "Direct Enquiries", value: stats.enquiriesCount, icon: MessageSquare },
+    { title: "Unlocked Leads", value: stats.unlockedLeads, icon: ClipboardList },
     { title: "Portfolio Items", value: stats.portfolioCount, icon: Briefcase },
     { title: "Active Projects", value: stats.projectsCount, icon: LayoutGrid },
     { title: "Profile Views", value: stats.profileViews, icon: Eye },
     { title: "WhatsApp Clicks", value: stats.whatsappClicks, icon: MessageSquare },
-    { title: "Call Clicks", value: stats.callClicks, icon: PlusCircle },
   ] : [
     {
       title: "Products Listed",

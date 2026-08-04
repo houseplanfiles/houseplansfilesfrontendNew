@@ -19,15 +19,34 @@ import { RootState, AppDispatch } from "@/lib/store";
 import { fetchMyInquiries } from "@/lib/features/inquiries/inquirySlice";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import axios from "axios";
 
 const ContractorEnquiriesPage = () => {
   const dispatch: AppDispatch = useDispatch();
+  const { userInfo } = useSelector((state: RootState) => state.user);
   const { inquiries, listStatus, error } = useSelector((state: RootState) => state.inquiries);
+  
+  const [activeTab, setActiveTab] = useState<"direct" | "unlocked">("direct");
+  const [unlockedLeads, setUnlockedLeads] = useState<any[]>([]);
+  const [unlockedLoading, setUnlockedLoading] = useState(false);
+  
   const [selectedInquiry, setSelectedInquiry] = useState<any>(null);
+  const [selectedLead, setSelectedLead] = useState<any>(null);
 
   useEffect(() => {
     dispatch(fetchMyInquiries());
-  }, [dispatch]);
+    
+    // Fetch unlocked leads
+    if (userInfo?.token) {
+      setUnlockedLoading(true);
+      axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads/my-unlocked`, {
+        headers: { Authorization: `Bearer ${userInfo.token}` }
+      })
+      .then(res => setUnlockedLeads(res.data))
+      .catch(err => console.error("Failed to fetch unlocked leads", err))
+      .finally(() => setUnlockedLoading(false));
+    }
+  }, [dispatch, userInfo]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -49,23 +68,39 @@ const ContractorEnquiriesPage = () => {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
         <div>
-           <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Enquiries</h1>
-           <p className="text-gray-500 font-medium">Manage leads and customer requests.</p>
+           <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Leads & Enquiries</h1>
+           <p className="text-gray-500 font-medium">Manage direct enquiries and leads purchased from the Leads Board.</p>
+        </div>
+        
+        <div className="flex bg-gray-100 p-1 rounded-xl w-fit">
+          <button 
+            onClick={() => setActiveTab("direct")}
+            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "direct" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+          >
+            Direct Enquiries ({inquiries.length})
+          </button>
+          <button 
+            onClick={() => setActiveTab("unlocked")}
+            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "unlocked" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+          >
+            Unlocked Leads ({unlockedLeads.length})
+          </button>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        {inquiries.length === 0 ? (
-          <div className="p-20 text-center flex flex-col items-center gap-4">
-            <Inbox className="h-12 w-12 text-gray-300" />
-            <p className="font-bold text-gray-500">No enquiries received yet.</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="bg-gray-50/50">
+        {activeTab === "direct" && (
+          inquiries.length === 0 ? (
+            <div className="p-20 text-center flex flex-col items-center gap-4">
+              <Inbox className="h-12 w-12 text-gray-300" />
+              <p className="font-bold text-gray-500">No direct enquiries received yet.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-gray-50/50">
                 <tr>
                   <th className="p-4 font-black text-[10px] text-gray-400 uppercase tracking-widest">Customer</th>
                   <th className="p-4 font-black text-[10px] text-gray-400 uppercase tracking-widest">Received On</th>
@@ -103,10 +138,69 @@ const ContractorEnquiriesPage = () => {
               </tbody>
             </table>
           </div>
+          )
+        )}
+
+        {activeTab === "unlocked" && (
+          unlockedLoading ? (
+            <div className="p-20 text-center flex justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+            </div>
+          ) : unlockedLeads.length === 0 ? (
+            <div className="p-20 text-center flex flex-col items-center gap-4">
+              <Inbox className="h-12 w-12 text-gray-300" />
+              <p className="font-bold text-gray-500">No purchased leads yet.</p>
+              <Button variant="outline" onClick={() => window.location.href='/leads'}>Explore Leads Board</Button>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-gray-50/50">
+                  <tr>
+                    <th className="p-4 font-black text-[10px] text-gray-400 uppercase tracking-widest">Client Name</th>
+                    <th className="p-4 font-black text-[10px] text-gray-400 uppercase tracking-widest">Project / Category</th>
+                    <th className="p-4 font-black text-[10px] text-gray-400 uppercase tracking-widest">Unlocked On</th>
+                    <th className="p-4 font-black text-[10px] text-gray-400 uppercase tracking-widest text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {unlockedLeads.map((lead) => (
+                    <tr key={lead._id} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="p-4">
+                        <div className="flex flex-col">
+                          <span className="font-black text-gray-900">{lead.clientName}</span>
+                          <span className="text-xs text-green-600 font-bold">{lead.clientPhone}</span>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-gray-800 line-clamp-1">{lead.title}</span>
+                          <span className="text-xs text-gray-500">{lead.category} • {lead.city}</span>
+                        </div>
+                      </td>
+                      <td className="p-4 text-sm font-medium text-gray-600">
+                        {lead.paymentDetails?.purchasedAt ? new Date(lead.paymentDetails.purchasedAt).toLocaleDateString(undefined, { dateStyle: 'medium' }) : new Date(lead.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="p-4 text-right">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="font-bold border-gray-200 hover:bg-gray-100"
+                          onClick={() => setSelectedLead(lead)}
+                        >
+                          <Eye className="w-4 h-4 mr-2" /> View Details
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
         )}
       </div>
 
-      {/* Detail Modal */}
+      {/* Enquiry Detail Modal */}
       {selectedInquiry && (
         <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-300">
            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-300">
@@ -187,6 +281,98 @@ const ContractorEnquiriesPage = () => {
                  <div className="pt-4 flex justify-end gap-3">
                     <Button onClick={() => setSelectedInquiry(null)} className="rounded-xl px-8 font-black bg-gray-900 hover:bg-black">
                        Understood
+                    </Button>
+                 </div>
+              </div>
+           </div>
+        </div>
+      )}
+
+      {/* Unlocked Lead Detail Modal */}
+      {selectedLead && (
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-300">
+           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+              <div className="bg-gray-900 p-6 flex justify-between items-center text-white">
+                 <h2 className="text-xl font-black uppercase tracking-tight">Unlocked Lead Details</h2>
+                 <button onClick={() => setSelectedLead(null)} className="hover:bg-white/20 p-2 rounded-full transition-colors">
+                    <X className="w-6 h-6" />
+                 </button>
+              </div>
+              
+              <div className="p-8 space-y-8">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                       <h3 className="text-[10px] font-black uppercase text-gray-400 tracking-widest flex items-center gap-2">
+                          <User className="w-3 h-3" /> Contact Information
+                       </h3>
+                       <div className="space-y-3">
+                          <div className="flex items-center gap-4">
+                             <div className="bg-orange-100 p-2.5 rounded-xl text-orange-600">
+                                <User className="w-5 h-5" />
+                             </div>
+                             <div>
+                                <p className="text-[10px] font-black text-gray-400 uppercase">Name</p>
+                                <p className="font-bold text-gray-900 text-lg">{selectedLead.clientName}</p>
+                             </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                             <div className="bg-green-100 p-2.5 rounded-xl text-green-600">
+                                <Phone className="w-5 h-5" />
+                             </div>
+                             <div>
+                                <p className="text-[10px] font-black text-gray-400 uppercase">Phone</p>
+                                <p className="font-bold text-gray-900">{selectedLead.clientPhone}</p>
+                             </div>
+                          </div>
+                          {selectedLead.clientEmail && (
+                            <div className="flex items-center gap-4">
+                               <div className="bg-blue-100 p-2.5 rounded-xl text-blue-600">
+                                  <Mail className="w-5 h-5" />
+                               </div>
+                               <div>
+                                  <p className="text-[10px] font-black text-gray-400 uppercase">Email</p>
+                                  <p className="font-bold text-gray-900">{selectedLead.clientEmail}</p>
+                               </div>
+                            </div>
+                          )}
+                       </div>
+                    </div>
+
+                    <div className="space-y-4">
+                       <h3 className="text-[10px] font-black uppercase text-gray-400 tracking-widest flex items-center gap-2">
+                          <Clock className="w-3 h-3" /> Project Details
+                       </h3>
+                       <div className="bg-gray-50 rounded-2xl p-5 space-y-3 border border-gray-100">
+                          <div className="flex justify-between items-center">
+                             <span className="text-xs font-bold text-gray-500">Category</span>
+                             <span className="text-xs font-black text-gray-900">{selectedLead.category}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                             <span className="text-xs font-bold text-gray-500">City</span>
+                             <span className="text-xs font-black text-gray-900">{selectedLead.city}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                             <span className="text-xs font-bold text-gray-500">Budget</span>
+                             <span className="text-xs font-black text-orange-600">{selectedLead.budget}</span>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+
+                 <div className="space-y-4">
+                    <h3 className="text-[10px] font-black uppercase text-gray-400 tracking-widest flex items-center gap-2">
+                       <MessageSquare className="w-3 h-3" /> Requirements
+                    </h3>
+                    <div className="bg-orange-50/50 rounded-2xl p-6 border border-orange-100">
+                       <p className="text-gray-700 font-medium leading-relaxed italic">
+                          "{selectedLead.requirements}"
+                       </p>
+                    </div>
+                 </div>
+
+                 <div className="pt-4 flex justify-end gap-3">
+                    <Button onClick={() => setSelectedLead(null)} className="rounded-xl px-8 font-black bg-gray-900 hover:bg-black">
+                       Close
                     </Button>
                  </div>
               </div>
