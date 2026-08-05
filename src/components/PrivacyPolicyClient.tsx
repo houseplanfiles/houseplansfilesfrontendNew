@@ -113,6 +113,40 @@ const PrivacyPolicy = () => {
                 permitted by law.
               </p>
 
+              <h2 className="text-2xl font-bold">Lead Sharing & Ecosystem Marketplace</h2>
+              <p>
+                HousePlanFiles.com operates as a digital ecosystem marketplace connecting homeowners, property owners, builders, architects, interior designers, contractors, consultants, manufacturers, suppliers, and other construction-related businesses.
+              </p>
+              <p>
+                By submitting an enquiry, registration, quotation request, callback request, contact form, WhatsApp message, or any other information through our platform, you expressly authorize HousePlanFiles.com to collect, process, and share your information with relevant registered businesses, professionals, partners, vendors, or service providers for the purpose of responding to your enquiry and providing products or services.
+              </p>
+              <p>The information that may be shared includes, but is not limited to:</p>
+              <ul className="list-disc space-y-2 pl-6">
+                <li>Name</li>
+                <li>Mobile number</li>
+                <li>Email address</li>
+                <li>City and State</li>
+                <li>Property location</li>
+                <li>Project requirements</li>
+                <li>Budget</li>
+                <li>Uploaded documents, drawings, or images</li>
+                <li>Any other information voluntarily provided by you.</li>
+              </ul>
+              <p>
+                HousePlanFiles.com may distribute your enquiry to one or more relevant registered businesses based on your requirements, project type, service category, or location to help you receive quotations, consultations, or business proposals.
+              </p>
+              <p>You understand and agree that:</p>
+              <ul className="list-disc space-y-2 pl-6">
+                <li>Your enquiry may be shared with multiple verified businesses relevant to your requirements.</li>
+                <li>Businesses receiving your enquiry may contact you through phone calls, WhatsApp, SMS, email, or other communication channels.</li>
+                <li>HousePlanFiles.com may use your information to facilitate lead distribution, business matchmaking, customer support, and marketplace services.</li>
+                <li>Once your information has been shared with a registered business based on your consent, that business is responsible for handling your information in accordance with its own privacy practices.</li>
+                <li>HousePlanFiles.com does not guarantee the quality, pricing, performance, or outcome of services provided by any third-party business.</li>
+              </ul>
+              <p>
+                By using HousePlanFiles.com and submitting your information, you provide your explicit consent for the collection, processing, storage, and sharing of your information as described in this Privacy Policy for the purpose of lead distribution, service fulfillment, marketplace operations, and business networking.
+              </p>
+
               <h2 className="text-2xl font-bold">Your Rights</h2>
               <ul className="list-disc space-y-2 pl-6">
                 <li>

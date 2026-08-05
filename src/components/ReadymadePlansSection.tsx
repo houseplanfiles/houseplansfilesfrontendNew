@@ -294,6 +294,11 @@ const ReadymadePlansSection = () => {
               />
             </div>
 
+            {/* Privacy Policy Disclaimer */}
+            <div className="text-[10px] text-gray-500 mt-2 px-1 leading-tight">
+              By submitting this enquiry, you agree to our <a href="/privacy-policy" target="_blank" className="text-orange-600 hover:underline">Privacy Policy</a> regarding lead sharing with relevant registered businesses.
+            </div>
+
             {/* Action Buttons */}
             <DialogFooter className="flex flex-col sm:flex-row gap-3 pt-3">
               <Button
