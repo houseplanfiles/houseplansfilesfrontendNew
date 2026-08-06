@@ -32,7 +32,29 @@ const professionalSubRoles = [
   "Interior Designer", "Site Engineer", "MEP Consultant", "Vastu Consultant",
 ];
 
-const contractorProfessions = ["Labour Contractor", "Turnkey Contractor"];
+const contractorProfessions = [
+  "Civil Construction Contractor",
+  "Interior Contractor",
+  "Electrical Contractor",
+  "Plumbing Contractor",
+  "Tiles & Granite Contractor",
+  "Painting & Waterproofing Contractor",
+  "Swimming Pool Contractor",
+  "Pre Engineering Board / PEB",
+  "Pre Fabricated House Contractor",
+  "Pest Control Contractor",
+  "Landscaping & Garden Contractor",
+  "Manpower Supply",
+  "Modular Kitchen Contractor",
+  "Lift Services Contractor",
+  "Building Inspection Contractor",
+  "Solar Rooftop Panel Contractor",
+  "HVAC Contractor",
+  "Carpenter",
+  "Glass Fabricator",
+  "Labour Contractor",
+  "Turnkey Contractor"
+];
 
 const materialTypes = [
   "Cement & Concrete", "Bricks & Blocks", "Steel & Rebar", "Paints",

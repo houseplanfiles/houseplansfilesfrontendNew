@@ -303,14 +303,6 @@ const PartnersPage: FC = () => {
         {/* --- Filters Section --- */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-4 sm:p-6 mb-10 w-full">
           <div className="flex flex-col gap-4">
-            <div className="w-full">
-              <Label className="text-xs font-bold text-gray-500 uppercase">Find by City</Label>
-              <div className="relative mt-2">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input placeholder="Search City..." value={cityFilter} onChange={(e) => setCityFilter(e.target.value)} className="pl-9 h-12 bg-gray-50 w-full" />
-              </div>
-            </div>
-
             {/* Profession Filter */}
             <div className="w-full">
               {/* Mobile Filter */}
