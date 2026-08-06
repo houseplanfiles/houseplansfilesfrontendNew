@@ -436,7 +436,7 @@ const PartnersPage: FC = () => {
                       )}
                       {contractor.contractorType === "Verified" && (
                         <Button
-                          onClick={() => { trackAnalytics('user', partner._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
+                          onClick={() => { trackAnalytics('user', contractor._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
                           className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-10"
                         >
                           <MessageCircle className="w-4 h-4 mr-2" />
