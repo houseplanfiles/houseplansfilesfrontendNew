@@ -222,7 +222,7 @@ const PartnerCard: FC<{
         </h3>
         <div className="flex items-center gap-1.5 text-gray-500 text-sm mt-1 mb-4">
           <Building className="w-3.5 h-3.5" />
-          <span className="font-medium line-clamp-1">{partner.companyName || "City Contractor"}</span>
+          <span className="font-medium line-clamp-1">{partner.companyName || "Independent Professional"}</span>
         </div>
 
         <div className="space-y-2.5">
@@ -255,15 +255,15 @@ const PartnerCard: FC<{
               onClick={() => { trackAnalytics('user', partner._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
               className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11 px-0"
             >
-              <MessageCircle className="w-4 h-4 mr-1.5" />
-              WhatsApp
+              <MessageCircle className="w-3.5 h-3.5 mr-1 shrink-0" />
+              <span className="text-[11px] sm:text-xs">WhatsApp</span>
             </Button>
             <Button 
               onClick={() => { trackAnalytics('user', partner._id, 'call_click'); window.location.href = callLink; }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors h-11 px-0"
             >
-              <Phone className="w-4 h-4 mr-1.5" />
-              Call Now
+              <Phone className="w-3.5 h-3.5 mr-1 shrink-0" />
+              <span className="text-[11px] sm:text-xs">Call Now</span>
             </Button>
           </div>
         )}

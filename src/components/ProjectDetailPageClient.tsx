@@ -93,7 +93,7 @@ const ProjectDetailPage = () => {
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/contractor/${id}`
         );
         setContractor(data);
-        trackAnalytics('user', id, 'view');
+        trackAnalytics('user', id as string, 'view');
       } catch (error) {
         console.error("Error fetching project data:", error);
       } finally {
