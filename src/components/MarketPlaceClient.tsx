@@ -606,14 +606,14 @@ const MarketplacePage: FC = () => {
       <div className="relative h-[300px] md:h-[450px] bg-gray-900 overflow-hidden w-full">
         <div className="absolute inset-0">
           <Image
-            src="/marketplace.webp"
+            src="/b11.webp"
             alt="Marketplace"
             fill
             priority
             sizes="100vw"
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-gray-900/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-gray-900/60" />
         </div>
         <div className="relative z-10 h-full max-w-7xl mx-auto px-4 flex flex-col justify-center items-center text-center">
           <motion.h1
