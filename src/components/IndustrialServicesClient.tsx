@@ -32,6 +32,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 
@@ -305,68 +312,21 @@ const PartnersPage: FC = () => {
           <div className="flex flex-col gap-4">
             {/* Profession Filter */}
             <div className="w-full">
-              {/* Mobile Filter */}
-              <div className="lg:hidden w-full">
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" className="w-full h-12 flex justify-between px-4 border-gray-200">
-                      <span>Profession: {professionFilter}</span>
-                      <SlidersHorizontal className="w-4 h-4" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl p-0">
-                    <SheetHeader className="p-6 border-b bg-white sticky top-0 z-10">
-                      <SheetTitle className="text-xl font-bold flex items-center gap-2">
-                        <FilterIcon className="w-5 h-5 text-orange-600" />
-                        Select Specialization
-                      </SheetTitle>
-                    </SheetHeader>
-                    <div className="p-6 overflow-y-auto h-full pb-24">
-                      <div className="grid grid-cols-1 gap-2">
-                        {CONTRACTOR_CATEGORIES.map((cat) => (
-                          <button
-                            key={cat}
-                            onClick={() => setProfessionFilter(cat)}
-                            className={`w-full text-left p-4 rounded-xl text-sm font-semibold transition-all border flex items-center justify-between ${
-                              professionFilter === cat
-                                ? "bg-orange-50 text-orange-600 border-orange-200"
-                                : "bg-white text-gray-600 border-gray-100"
-                            }`}
-                          >
-                            {cat}
-                            {professionFilter === cat && <CheckCircle2 className="w-4 h-4 text-orange-500" />}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </SheetContent>
-                </Sheet>
-              </div>
-
-              {/* Desktop Filter */}
-              <div className="hidden lg:block w-full">
-                <Label className="text-xs font-bold text-gray-500 tracking-wide flex items-center gap-2 mb-2 uppercase">
-                  <FilterIcon className="w-3 h-3" /> Specialization
-                </Label>
-                <div
-                  className="flex overflow-x-auto whitespace-nowrap gap-2 pb-2"
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                >
+              <Label className="text-xs font-bold text-gray-500 uppercase flex items-center gap-2 mb-2">
+                <FilterIcon className="w-3 h-3" /> Specialization
+              </Label>
+              <Select value={professionFilter} onValueChange={(val) => setProfessionFilter(val)}>
+                <SelectTrigger className="w-full h-12 bg-gray-50 border-gray-200 text-sm font-semibold text-gray-700">
+                  <SelectValue placeholder="Select Specialization" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px]">
                   {CONTRACTOR_CATEGORIES.map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => setProfessionFilter(cat)}
-                      className={`px-4 h-10 rounded-full text-sm font-medium transition-all border whitespace-nowrap ${
-                        professionFilter === cat
-                          ? "bg-orange-600 text-white border-orange-600 shadow-md"
-                          : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-                      }`}
-                    >
+                    <SelectItem key={cat} value={cat}>
                       {cat}
-                    </button>
+                    </SelectItem>
                   ))}
-                </div>
-              </div>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
@@ -424,12 +384,12 @@ const PartnersPage: FC = () => {
                       </Link>
                       {contractor.contractorType === "Premium" && (
                         <>
-                          <div className="grid grid-cols-2 gap-2">
-                            <Button onClick={() => window.open(waLink)} className="bg-[#25D366] text-[10px] h-10 px-1 hover:bg-[#128C7E]">
+                          <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2">
+                            <Button onClick={() => window.open(waLink)} className="bg-[#25D366] text-[11px] sm:text-xs h-10 px-0 sm:px-2 hover:bg-[#128C7E] w-full">
                               <MessageCircle className="w-3 h-3 mr-1" /> WhatsApp
                             </Button>
-                            <Button onClick={() => togglePhoneReveal(contractor._id)} className={`text-[10px] h-10 px-1 ${revealedPhoneIds.has(contractor._id) ? 'bg-orange-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
-                              <Phone className="w-3 h-3 mr-1" /> {revealedPhoneIds.has(contractor._id) ? contractor.phone : "Call Now"}
+                            <Button onClick={() => togglePhoneReveal(contractor._id)} className={`text-[11px] sm:text-xs h-10 px-0 sm:px-2 w-full ${revealedPhoneIds.has(contractor._id) ? 'bg-orange-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
+                              <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> {revealedPhoneIds.has(contractor._id) ? contractor.phone : "Call Now"}
                             </Button>
                           </div>
                         </>

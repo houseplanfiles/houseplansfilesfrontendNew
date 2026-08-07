@@ -140,12 +140,12 @@ const CartModal = ({ items, seller, onClose, onRemove }: { items: any[]; seller:
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-sm">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 20 }}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden flex flex-col max-h-[90vh]"
+        exit={{ opacity: 0, y: 50 }}
+        className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[90vh]"
       >
         <div className="bg-orange-600 p-6 text-white flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -365,7 +365,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 overflow-x-hidden w-full">
       
       <Navbar />
 
@@ -380,7 +380,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
           </button>
           
           <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-            <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 border-4 border-white/10">
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 border-4 border-white/10">
               {sellerInfo?.photoUrl ? (
                 <Image src={sellerInfo.photoUrl} alt={sellerInfo.businessName} fill priority sizes="(max-width: 640px) 96px, 128px" className="object-cover" />
               ) : (
@@ -490,7 +490,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
           </div>
 
           {products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
               {products.map((p) => (
                 <ProductCard 
                   key={p._id} 

@@ -322,12 +322,12 @@ const ArchitectsPage: FC = () => {
                             <Button onClick={() => router.push(`/architects/${architect._id}`)} variant="outline" className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-10 text-xs">View Profile</Button>
                             {type === "Premium" ? (
                               <>
-                                <div className="grid grid-cols-2 gap-2">
-                                  <Button onClick={() => window.open(waLink, "_blank")} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[10px] sm:text-xs h-10 px-1">
-                                    <MessageCircle className="w-3 h-3 mr-1" /> WhatsApp
+                                <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2">
+                                  <Button onClick={() => window.open(waLink, "_blank")} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1">
+                                    <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> WhatsApp
                                   </Button>
-                                  <Button onClick={() => revealedPhoneIds.has(architect._id) ? window.open(callLink) : togglePhoneReveal(architect._id)} className={`w-full ${revealedPhoneIds.has(architect._id) ? 'bg-orange-600' : 'bg-blue-600'} text-white text-[10px] sm:text-xs h-10 px-1`}>
-                                    <Phone className="w-3 h-3 mr-1" />{revealedPhoneIds.has(architect._id) ? architect.phone : "Call Now"}
+                                  <Button onClick={() => revealedPhoneIds.has(architect._id) ? window.open(callLink) : togglePhoneReveal(architect._id)} className={`w-full ${revealedPhoneIds.has(architect._id) ? 'bg-orange-600' : 'bg-blue-600'} text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1`}>
+                                    <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />{revealedPhoneIds.has(architect._id) ? architect.phone : "Call Now"}
                                   </Button>
                                 </div>
                               </>
