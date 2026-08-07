@@ -1,4 +1,4 @@
-import { API_CONFIG } from './config';
+import { config } from './config';
 
 export const trackAnalytics = async (
   type: 'user' | 'product' | 'plan' | 'sellerProduct',
@@ -6,7 +6,7 @@ export const trackAnalytics = async (
   action: 'view' | 'contact' | 'whatsapp_click' | 'call_click'
 ) => {
   try {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/analytics/track`, {
+    const response = await fetch(`${config.backendUrl}/api/analytics/track`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
