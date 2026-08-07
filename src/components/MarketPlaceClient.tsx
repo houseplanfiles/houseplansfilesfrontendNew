@@ -606,7 +606,7 @@ const MarketplacePage: FC = () => {
       <div className="relative h-[300px] md:h-[450px] bg-gray-900 overflow-hidden w-full">
         <div className="absolute inset-0">
           <Image
-            src="/b11.webp"
+            src="/marketplace_banner.png"
             alt="Marketplace"
             fill
             priority
