@@ -17,7 +17,9 @@ import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -49,25 +51,30 @@ const professionalSubRoles = [
 ];
 
 const contractorProfessions = [
-  "Civil Construction Contractor",
-  "Interior Contractor",
-  "Electrical Contractor",
-  "Plumbing Contractor",
-  "Tiles & Granite Contractor",
-  "Painting & Waterproofing Contractor",
-  "Swimming Pool Contractor",
-  "Pre Engineering Board / PEB",
-  "Pre Fabricated House Contractor",
-  "Pest Control Contractor",
-  "Landscaping & Garden Contractor",
-  "Manpower Supply",
-  "Modular Kitchen Contractor",
-  "Lift Services Contractor",
-  "Building Inspection Contractor",
-  "Solar Rooftop Panel Contractor",
-  "HVAC Contractor",
-  "Carpenter",
-  "Glass Fabricator",
+  {
+    category: "Home Designing & Construction",
+    professions: ["Building", "Interior", "Electrical", "Plumbing", "Tiles & Granite", "Painting & Waterproofing", "Carpenter", "Swimming Pool"]
+  },
+  {
+    category: "Industrial Construction & Infrastructure",
+    professions: ["Pre Engineering Board / PEB", "Pre Fabricated House", "Building Inspection", "Manpower Supply"]
+  },
+  {
+    category: "Other Services",
+    professions: ["Pest Control", "Landscaping & Garden", "Modular Kitchen", "Lift Services", "Solar Rooftop Panel", "HVAC", "Glass Fabricator"]
+  },
+  {
+    category: "Already Registered (Existing)",
+    professions: [
+      "Civil Construction Contractor", "Interior Contractor", "Electrical Contractor",
+      "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor",
+      "Swimming Pool Contractor", "Pre Engineering Board / PEB", "Pre Fabricated House Contractor",
+      "Pest Control Contractor", "Landscaping & Garden Contractor", "Manpower Supply",
+      "Modular Kitchen Contractor", "Lift Services Contractor", "Building Inspection Contractor",
+      "Solar Rooftop Panel Contractor", "HVAC Contractor", "Carpenter", "Glass Fabricator",
+      "Labour Contractor", "Turnkey Contractor"
+    ]
+  }
 ];
 
 const materialTypes = [
@@ -241,9 +248,9 @@ const MultiRoleRegisterPage = () => {
             // Redirect based on role
             const role = registeredUser.role?.toLowerCase();
             if (role === "seller") {
-              router.push("/seller");
+              router.push("/seller/profile");
             } else if (role === "professional" || role === "contractor") {
-              router.push("/professional");
+              router.push("/professional/profile");
             } else {
               router.push("/dashboard");
             }
@@ -279,8 +286,8 @@ const MultiRoleRegisterPage = () => {
         toast.success("Admin registration successful! Redirecting...");
         setTimeout(() => router.push("/admin"), 1000);
       } else if (userInfo.role === "user") {
-        toast.success("Registration successful! Redirecting...");
-        setTimeout(() => router.push("/login"), 1000);
+        toast.success("Registration successful! Welcome to HousePlanFiles!");
+        setTimeout(() => router.push("/dashboard"), 1000);
       } else {
         toast.success("Registration successful! Initiating payment...");
         initiatePayment(userInfo);
@@ -849,10 +856,15 @@ const MultiRoleRegisterPage = () => {
                   <SelectValue placeholder="Select Profession" />
                 </SelectTrigger>
                 <SelectContent>
-                  {contractorProfessions.map((prof) => (
-                    <SelectItem key={prof} value={prof}>
-                      {prof}
-                    </SelectItem>
+                  {contractorProfessions.map((group) => (
+                    <SelectGroup key={group.category}>
+                      <SelectLabel className="text-orange-600 bg-orange-50/50 uppercase tracking-wider text-xs">{group.category}</SelectLabel>
+                      {group.professions.map((prof) => (
+                        <SelectItem key={prof} value={prof}>
+                          {prof}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   ))}
                 </SelectContent>
               </Select>

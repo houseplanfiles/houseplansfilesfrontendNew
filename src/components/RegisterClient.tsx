@@ -14,7 +14,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,27 +33,30 @@ const professionalSubRoles = [
 ];
 
 const contractorProfessions = [
-  "Civil Construction Contractor",
-  "Interior Contractor",
-  "Electrical Contractor",
-  "Plumbing Contractor",
-  "Tiles & Granite Contractor",
-  "Painting & Waterproofing Contractor",
-  "Swimming Pool Contractor",
-  "Pre Engineering Board / PEB",
-  "Pre Fabricated House Contractor",
-  "Pest Control Contractor",
-  "Landscaping & Garden Contractor",
-  "Manpower Supply",
-  "Modular Kitchen Contractor",
-  "Lift Services Contractor",
-  "Building Inspection Contractor",
-  "Solar Rooftop Panel Contractor",
-  "HVAC Contractor",
-  "Carpenter",
-  "Glass Fabricator",
-  "Labour Contractor",
-  "Turnkey Contractor"
+  {
+    category: "Home Designing & Construction",
+    professions: ["Building", "Interior", "Electrical", "Plumbing", "Tiles & Granite", "Painting & Waterproofing", "Carpenter", "Swimming Pool"]
+  },
+  {
+    category: "Industrial Construction & Infrastructure",
+    professions: ["Pre Engineering Board / PEB", "Pre Fabricated House", "Building Inspection", "Manpower Supply"]
+  },
+  {
+    category: "Other Services",
+    professions: ["Pest Control", "Landscaping & Garden", "Modular Kitchen", "Lift Services", "Solar Rooftop Panel", "HVAC", "Glass Fabricator"]
+  },
+  {
+    category: "Already Registered (Existing)",
+    professions: [
+      "Civil Construction Contractor", "Interior Contractor", "Electrical Contractor",
+      "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor",
+      "Swimming Pool Contractor", "Pre Engineering Board / PEB", "Pre Fabricated House Contractor",
+      "Pest Control Contractor", "Landscaping & Garden Contractor", "Manpower Supply",
+      "Modular Kitchen Contractor", "Lift Services Contractor", "Building Inspection Contractor",
+      "Solar Rooftop Panel Contractor", "HVAC Contractor", "Carpenter", "Glass Fabricator",
+      "Labour Contractor", "Turnkey Contractor"
+    ]
+  }
 ];
 
 const materialTypes = [
@@ -97,16 +100,20 @@ const RegisterClient = () => {
           setTimeout(() => router.push("/admin"), 1000);
           break;
         case "professional":
-          toast.success("Professional registration successful! Your account is under review.");
-          setTimeout(() => router.push("/login"), 2000);
+          toast.success("Registration successful! Opening your profile...");
+          setTimeout(() => router.push("/professional/profile"), 1500);
+          break;
+        case "Contractor":
+          toast.success("Registration successful! Opening your profile...");
+          setTimeout(() => router.push("/professional/profile"), 1500);
           break;
         case "seller":
-          toast.success("Material Seller registration successful! Your account is under review.");
-          setTimeout(() => router.push("/login"), 2000);
+          toast.success("Registration successful! Opening your store profile...");
+          setTimeout(() => router.push("/seller/profile"), 1500);
           break;
         default:
-          toast.success("Registration successful! Redirecting...");
-          setTimeout(() => router.push("/login"), 1000);
+          toast.success("Registration successful! Welcome to HousePlanFiles!");
+          setTimeout(() => router.push("/dashboard"), 1000);
       }
     }
   }, [actionStatus, userInfo, error, router, dispatch]);
@@ -292,7 +299,18 @@ const RegisterClient = () => {
               <Label>Profession*</Label>
               <Select onValueChange={(v) => handleSelectChange(v, "profession")} value={formData.profession} required>
                 <SelectTrigger><SelectValue placeholder="Select Profession" /></SelectTrigger>
-                <SelectContent>{contractorProfessions.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
+                <SelectContent>
+                  {contractorProfessions.map((group) => (
+                    <SelectGroup key={group.category}>
+                      <SelectLabel className="text-orange-600 bg-orange-50/50 uppercase tracking-wider text-xs">{group.category}</SelectLabel>
+                      {group.professions.map((prof) => (
+                        <SelectItem key={prof} value={prof}>
+                          {prof}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  ))}
+                </SelectContent>
               </Select>
             </div>
             <div>
