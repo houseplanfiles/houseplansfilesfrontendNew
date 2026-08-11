@@ -201,16 +201,23 @@ const ReadymadePlansSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: idx * 0.03 }}
-                whileHover={{ y: -4, scale: 1.02 }}
+                whileHover={{ y: -8 }}
                 onClick={() => handleOpenForm(opt)}
-                className="bg-card border border-border/80 hover:border-orange-500/50 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col items-center text-center group"
+                className="relative bg-white border border-gray-100/80 hover:border-orange-200/60 rounded-3xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(234,88,12,0.15)] transition-all duration-300 cursor-pointer flex flex-col items-center text-center group z-10 overflow-hidden"
               >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-200 ${opt.color}`}>
-                  <IconComponent size={28} />
+                {/* Background subtle hover glow */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-orange-50/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+                
+                <div className={`w-16 h-16 rounded-[1.2rem] flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md ${opt.color}`}>
+                  <IconComponent size={28} strokeWidth={1.8} />
                 </div>
-                <h3 className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 min-h-[40px] flex items-center justify-center">
+                
+                <h3 className="text-[15px] leading-snug font-extrabold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 min-h-[44px] flex items-center justify-center tracking-tight">
                   {opt.label}
                 </h3>
+
+                {/* Animated underline on hover */}
+                <div className="h-0.5 w-0 bg-orange-500 rounded-full mt-3 transition-all duration-300 group-hover:w-8" />
               </motion.div>
             );
           })}

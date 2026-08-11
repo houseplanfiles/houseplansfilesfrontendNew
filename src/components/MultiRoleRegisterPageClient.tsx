@@ -53,7 +53,7 @@ const professionalSubRoles = [
 const contractorProfessions = [
   {
     category: "Home Designing & Construction",
-    professions: ["Building", "Interior", "Electrical", "Plumbing", "Tiles & Granite", "Painting & Waterproofing", "Carpenter", "Swimming Pool"]
+    professions: ["Building", "Interior", "Electrical", "Plumbing", "Tiles & Granite", "Flooring", "Painting & Waterproofing", "Carpenter", "Swimming Pool"]
   },
   {
     category: "Industrial Construction & Infrastructure",
@@ -165,6 +165,10 @@ const MultiRoleRegisterPage = () => {
       case "Premium+":
         planPrice = 2999;
         planName = "Premium+ Listing (12 Month)";
+        break;
+      case "Industrial_and_Infra_Services":
+        planPrice = 4999;
+        planName = "Industrial & Infra Services";
         break;
       default:
         planPrice = 999;
@@ -1045,7 +1049,8 @@ const MultiRoleRegisterPage = () => {
                     { id: "Basic", name: "Basic Listing", price: 999, final: "1,178.82", color: "border-green-500 bg-green-500/5 text-green-800" },
                     { id: "Standard", name: "Standard Listing", price: 1499, final: "1,768.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
                     { id: "Premium", name: "Premium (6 Months)", price: 1999, final: "2,358.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
-                    { id: "Premium+", name: "Premium+ (12 Months)", price: 2999, final: "3,538.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
+                    { id: "Premium+", name: "Premium+ (12 Months)", price: 2999, final: "3,538.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" },
+                    { id: "Industrial_and_Infra_Services", name: "Industrial & Infra Services", price: 4999, final: "5,898.82", color: "border-red-500 bg-red-500/5 text-red-800" }
                   ].map((p) => (
                     <div
                       key={p.id}
