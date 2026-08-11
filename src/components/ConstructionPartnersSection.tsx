@@ -437,14 +437,21 @@ const ConstructionPartnersSection: FC = () => {
                   <button
                     key={option.id}
                     onClick={() => router.push(option.link)}
-                    className="flex flex-col items-center justify-center p-6 bg-white border border-gray-150 rounded-2xl shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300 hover:scale-105 group text-center min-h-[160px]"
+                    className="relative flex flex-col items-center justify-center p-6 bg-white border border-gray-100/80 hover:border-orange-200/60 rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(234,88,12,0.15)] transition-all duration-300 hover:-translate-y-2 group text-center min-h-[160px] overflow-hidden z-10"
                   >
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon className="w-8 h-8 transition-transform duration-300" />
+                    {/* Background subtle hover glow */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-orange-50/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+                    
+                    <div className={`w-16 h-16 rounded-[1.2rem] flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                      <option.icon className="w-8 h-8 transition-transform duration-300" strokeWidth={1.8} />
                     </div>
-                    <span className="text-sm sm:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
+                    
+                    <span className="text-[15px] sm:text-base font-extrabold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug tracking-tight">
                       {option.label}
                     </span>
+
+                    {/* Animated underline on hover */}
+                    <div className="h-0.5 w-0 bg-orange-500 rounded-full mt-3 transition-all duration-300 group-hover:w-8" />
                   </button>
                 );
               })}
@@ -468,14 +475,21 @@ const ConstructionPartnersSection: FC = () => {
                   <button
                     key={option.id}
                     onClick={() => router.push(option.link)}
-                    className="flex flex-col items-center justify-center p-6 bg-white border border-gray-150 rounded-2xl shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300 hover:scale-105 group text-center min-h-[160px]"
+                    className="relative flex flex-col items-center justify-center p-6 bg-white border border-gray-100/80 hover:border-orange-200/60 rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(234,88,12,0.15)] transition-all duration-300 hover:-translate-y-2 group text-center min-h-[160px] overflow-hidden z-10"
                   >
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon className="w-8 h-8 transition-transform duration-300" />
+                    {/* Background subtle hover glow */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-orange-50/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+                    
+                    <div className={`w-16 h-16 rounded-[1.2rem] flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                      <option.icon className="w-8 h-8 transition-transform duration-300" strokeWidth={1.8} />
                     </div>
-                    <span className="text-sm sm:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
+                    
+                    <span className="text-[15px] sm:text-base font-extrabold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug tracking-tight">
                       {option.label}
                     </span>
+
+                    {/* Animated underline on hover */}
+                    <div className="h-0.5 w-0 bg-orange-500 rounded-full mt-3 transition-all duration-300 group-hover:w-8" />
                   </button>
                 );
               })}
@@ -499,14 +513,21 @@ const ConstructionPartnersSection: FC = () => {
                   <button
                     key={option.id}
                     onClick={() => router.push(option.link)}
-                    className="flex flex-col items-center justify-center p-6 bg-white border border-gray-150 rounded-2xl shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300 hover:scale-105 group text-center min-h-[160px]"
+                    className="relative flex flex-col items-center justify-center p-6 bg-white border border-gray-100/80 hover:border-orange-200/60 rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(234,88,12,0.15)] transition-all duration-300 hover:-translate-y-2 group text-center min-h-[160px] overflow-hidden z-10"
                   >
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon className="w-8 h-8 transition-transform duration-300" />
+                    {/* Background subtle hover glow */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-orange-50/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+                    
+                    <div className={`w-16 h-16 rounded-[1.2rem] flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                      <option.icon className="w-8 h-8 transition-transform duration-300" strokeWidth={1.8} />
                     </div>
-                    <span className="text-sm sm:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
+                    
+                    <span className="text-[15px] sm:text-base font-extrabold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug tracking-tight">
                       {option.label}
                     </span>
+
+                    {/* Animated underline on hover */}
+                    <div className="h-0.5 w-0 bg-orange-500 rounded-full mt-3 transition-all duration-300 group-hover:w-8" />
                   </button>
                 );
               })}

@@ -86,6 +86,10 @@ const CheckoutSubscriptionClient = () => {
         planPrice = 2999;
         planName = "Premium+ Listing (12 Month)";
         break;
+      case "Industrial_and_Infra_Services":
+        planPrice = 4999;
+        planName = "Industrial & Infra Services";
+        break;
       default:
         planPrice = 999;
         planName = "Basic Listing";

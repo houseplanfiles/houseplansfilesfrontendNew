@@ -35,6 +35,7 @@ import {
   ZoomIn,
   Lock,
   Eye,
+  Download,
 } from "lucide-react";
 
 
@@ -67,9 +68,11 @@ const resolveProductLink = (productLink?: string, title?: string): string => {
 const GalleryImageCard = ({
   items,
   index,
+  onImageClick,
 }: {
   items: GalleryItem[];
   index: number;
+  onImageClick?: (group: GalleryItem[]) => void;
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const firstItem = items[0];
@@ -96,8 +99,8 @@ const GalleryImageCard = ({
   const productLink = resolveProductLink(firstItem.productLink, firstItem.title);
 
   return (
-    <Card className="rounded-lg md:rounded-xl overflow-hidden group relative border-2 border-transparent hover:border-orange-500/50 transition-all duration-300 shadow-sm hover:shadow-xl cursor-default">
-      <div className="overflow-hidden relative" ref={emblaRef}>
+    <Card className="rounded-lg md:rounded-xl overflow-hidden group relative border-2 border-transparent hover:border-orange-500/50 transition-all duration-300 shadow-sm hover:shadow-xl">
+      <div className="overflow-hidden relative cursor-pointer" ref={emblaRef} onClick={() => onImageClick && onImageClick(items)}>
         <div className="flex">
           {items.map((item, imgIndex) => (
             <div className="flex-grow-0 flex-shrink-0 w-full" key={item._id}>
@@ -274,6 +277,12 @@ const GalleryPage: React.FC = () => {
     }
   };
 
+  const handleImageClick = (group: GalleryItem[]) => {
+    setSelectedGroup(group);
+    setCurrentImageIndex(0);
+    setIsModalOpen(true);
+  };
+
   const renderContent = () => {
     if (status === "loading") {
       return (
@@ -317,6 +326,7 @@ const GalleryPage: React.FC = () => {
               key={`${group[0].title}-${index}`}
               items={group}
               index={index}
+              onImageClick={handleImageClick}
             />
           ))}
         </div>
@@ -442,9 +452,6 @@ const GalleryPage: React.FC = () => {
                       <p className="text-orange-400 text-xs md:text-base font-semibold">
                         {selectedGroup[currentImageIndex].category}
                       </p>
-                      <span className="flex items-center gap-1 text-[10px] text-red-400 border border-red-500/50 px-1.5 py-0.5 rounded uppercase tracking-wider">
-                        <Lock size={10} /> Preview Locked
-                      </span>
                     </div>
                   </div>
                   <Button
@@ -458,43 +465,17 @@ const GalleryPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Main Image Container - BLURRED & WATERMARKED */}
+              {/* Main Image Container - UNLOCKED */}
               <div
                 className="relative w-full h-full flex items-center justify-center bg-zinc-900 overflow-hidden select-none"
-                onContextMenu={(e) => e.preventDefault()} // Right Click Blocked
               >
-                {/* 1. Blurred Image */}
+                {/* 1. Clear Image */}
                 <img
                   src={selectedGroup[currentImageIndex].imageUrl}
-                  alt="Protected Content"
+                  alt={selectedGroup[currentImageIndex].title}
                   loading="lazy"
-                  className="max-w-full max-h-full object-contain pointer-events-none opacity-60"
-                  style={{
-                    filter: "blur(5px)", // 5px blur se image clear nahi dikhegi
-                    transform: "scale(1.02)"
-                  }}
+                  className="max-w-full max-h-full object-contain pointer-events-none"
                 />
-
-                {/* 2. Grid Pattern Overlay (to ruin screenshot quality) */}
-                <div
-                  className="absolute inset-0 z-10 pointer-events-none opacity-20"
-                  style={{
-                    backgroundImage: "linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000)",
-                    backgroundSize: "20px 20px",
-                    backgroundPosition: "0 0, 10px 10px"
-                  }}
-                ></div>
-
-                {/* 3. Text Watermark */}
-                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
-                  <Lock className="text-white/20 w-24 h-24 mb-4" />
-                  <h1 className="text-white/30 text-4xl md:text-6xl font-black tracking-widest -rotate-12">
-                    PREVIEW ONLY
-                  </h1>
-                  <p className="text-white/30 text-lg md:text-2xl font-bold mt-4 tracking-wider -rotate-12">
-                    BUY TO VIEW CLEARLY
-                  </p>
-                </div>
 
                 {/* Navigation Buttons */}
                 {selectedGroup.length > 1 && (
@@ -530,7 +511,7 @@ const GalleryPage: React.FC = () => {
               {/* Bottom Section */}
               <div className="absolute bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-black via-black/90 to-transparent pb-6 pt-12 px-4">
 
-                {/* Thumbnails (Also slightly blurred) */}
+                {/* Thumbnails */}
                 {selectedGroup.length > 1 && (
                   <div className="flex justify-center mb-4">
                     <div className="flex gap-2 bg-black/60 p-2 rounded-full backdrop-blur-md border border-white/10 overflow-x-auto max-w-full scrollbar-hide">
@@ -549,7 +530,7 @@ const GalleryPage: React.FC = () => {
                             alt=""
                             fill
                             sizes="64px"
-                            className="object-cover blur-[1px]" // Thumbnails bhi thode blur
+                            className="object-cover"
                           />
                         </button>
                       ))}
@@ -557,24 +538,21 @@ const GalleryPage: React.FC = () => {
                   </div>
                 )}
 
-                {/* Buy Button */}
-                {resolveProductLink(selectedGroup[currentImageIndex].productLink, selectedGroup[currentImageIndex].title) !== "/house-plans" ? (
-                  <div className="flex flex-col items-center gap-3">
-                    <p className="text-white/70 text-xs md:text-sm text-center flex items-center gap-2">
-                      <Eye className="w-4 h-4" /> Want to see the clear image?
-                    </p>
-                    <Link
-                      href={resolveProductLink(selectedGroup[currentImageIndex].productLink, selectedGroup[currentImageIndex].title)}
-                      onClick={handleCloseModal}
-                      className="w-full md:max-w-md"
-                    >
-                      <Button className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold h-12 md:h-14 text-sm md:text-lg shadow-2xl rounded-full border-t border-orange-400 animate-pulse">
-                        <ShoppingCart className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                        Buy Plan to Unlock
-                      </Button>
-                    </Link>
-                  </div>
-                ) : null}
+                {/* Download Button */}
+                <div className="flex justify-center">
+                  <a
+                    href={selectedGroup[currentImageIndex].imageUrl}
+                    download
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full md:max-w-md"
+                  >
+                    <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold h-12 md:h-14 text-sm md:text-lg shadow-2xl rounded-full">
+                      <Download className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                      Download Image
+                    </Button>
+                  </a>
+                </div>
               </div>
             </>
           )}

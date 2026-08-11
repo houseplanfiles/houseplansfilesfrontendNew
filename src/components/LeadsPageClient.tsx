@@ -230,7 +230,7 @@ export default function LeadsPageClient() {
               />
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
               {/* Column 1: Professionals */}
               <div>
                 <h3 className="font-bold text-gray-800 mb-4 pb-2 border-b">Professionals</h3>
@@ -320,6 +320,34 @@ export default function LeadsPageClient() {
                 <h3 className="font-bold text-gray-800 mb-4 pb-2 border-b">Infrastructure Service</h3>
                 <div className="flex flex-col gap-2">
                   {["Pre Engineered Building Contractor", "Pre Fabricated Building", "Pre Cast Materials", "Solar Panel Contractor", "Building Material Services"].map((prof) => (
+                    <label key={prof} className="flex items-center gap-2 cursor-pointer group hover:bg-orange-50 px-2 py-1.5 rounded-md transition-colors -ml-2">
+                      <div className="relative flex items-center justify-center flex-shrink-0">
+                        <input
+                          type="checkbox"
+                          className="peer sr-only"
+                          checked={selectedCategories.includes(prof)}
+                          onChange={(e) => {
+                            if (e.target.checked) setSelectedCategories([...selectedCategories, prof]);
+                            else setSelectedCategories(selectedCategories.filter(c => c !== prof));
+                          }}
+                        />
+                        <div className="w-4 h-4 border-2 border-gray-300 rounded transition-colors peer-checked:bg-orange-500 peer-checked:border-orange-500 flex items-center justify-center">
+                          <svg className={`w-2.5 h-2.5 text-white transition-opacity ${selectedCategories.includes(prof) ? 'opacity-100' : 'opacity-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      </div>
+                      <span className="text-sm text-gray-700 group-hover:text-orange-900 font-medium leading-tight">{prof}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Column 5: Sellers */}
+              <div>
+                <h3 className="font-bold text-gray-800 mb-4 pb-2 border-b">Sellers</h3>
+                <div className="flex flex-col gap-2">
+                  {["Manufacturer", "Supplier", "Retail Shop"].map((prof) => (
                     <label key={prof} className="flex items-center gap-2 cursor-pointer group hover:bg-orange-50 px-2 py-1.5 rounded-md transition-colors -ml-2">
                       <div className="relative flex items-center justify-center flex-shrink-0">
                         <input

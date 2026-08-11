@@ -44,7 +44,7 @@ interface ContractorProfilePageClientProps {
 
 const ContractorProfilePage = ({ contractorId }: ContractorProfilePageClientProps = {}) => {
   const params = useParams();
-  const id = contractorId || params?.id;
+  const id = (contractorId || params?.id) as string;
   const router = useRouter();
   const [contractor, setContractor] = useState<any>(null);
   const [loading, setLoading] = useState(true);
