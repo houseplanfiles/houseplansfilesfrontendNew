@@ -200,24 +200,34 @@ const ReadymadePlansSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.03 }}
-                whileHover={{ y: -8 }}
+                transition={{ duration: 0.4, delay: idx * 0.02 }}
+                whileHover={{ y: -5 }}
                 onClick={() => handleOpenForm(opt)}
-                className="relative bg-white border border-gray-100/80 hover:border-orange-200/60 rounded-3xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(234,88,12,0.15)] transition-all duration-300 cursor-pointer flex flex-col items-center text-center group z-10 overflow-hidden"
+                className="relative bg-white rounded-[1.5rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col justify-between group overflow-hidden border border-gray-50 min-h-[140px]"
               >
-                {/* Background subtle hover glow */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-orange-50/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
-                
-                <div className={`w-16 h-16 rounded-[1.2rem] flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md ${opt.color}`}>
-                  <IconComponent size={28} strokeWidth={1.8} />
+                {/* Decorative Faint Background Icon */}
+                <div className={`absolute -right-6 -bottom-6 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity duration-500 pointer-events-none ${opt.color.split(' ')[1]}`}>
+                  <IconComponent size={140} strokeWidth={1} />
+                </div>
+
+                {/* Top Section: Icon */}
+                <div className="flex justify-between items-start z-10">
+                  <div className={`w-12 h-12 rounded-[1rem] flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 ${opt.color}`}>
+                    <IconComponent size={24} strokeWidth={2} />
+                  </div>
                 </div>
                 
-                <h3 className="text-[15px] leading-snug font-extrabold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 min-h-[44px] flex items-center justify-center tracking-tight">
-                  {opt.label}
-                </h3>
-
-                {/* Animated underline on hover */}
-                <div className="h-0.5 w-0 bg-orange-500 rounded-full mt-3 transition-all duration-300 group-hover:w-8" />
+                {/* Bottom Section: Text & Action */}
+                <div className="mt-6 flex items-end justify-between z-10">
+                  <h3 className="text-[15px] font-bold text-gray-800 leading-tight pr-2 group-hover:text-black transition-colors">
+                    {opt.label}
+                  </h3>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-50 text-gray-400 group-hover:bg-black group-hover:text-white transition-all duration-300 shrink-0 transform group-hover:translate-x-1 group-hover:shadow-md">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
               </motion.div>
             );
           })}
