@@ -437,21 +437,31 @@ const ConstructionPartnersSection: FC = () => {
                   <button
                     key={option.id}
                     onClick={() => router.push(option.link)}
-                    className="relative flex flex-col items-center justify-center p-6 bg-white border border-gray-100/80 hover:border-orange-200/60 rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(234,88,12,0.15)] transition-all duration-300 hover:-translate-y-2 group text-center min-h-[160px] overflow-hidden z-10"
+                    className="relative bg-white rounded-[1.5rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col justify-between group overflow-hidden border border-gray-50 min-h-[140px] text-left hover:-translate-y-1"
                   >
-                    {/* Background subtle hover glow */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-orange-50/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
-                    
-                    <div className={`w-16 h-16 rounded-[1.2rem] flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon className="w-8 h-8 transition-transform duration-300" strokeWidth={1.8} />
+                    {/* Decorative Faint Background Icon */}
+                    <div className={`absolute -right-6 -bottom-6 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity duration-500 pointer-events-none ${option.color.split(" ")[1]}`}>
+                      <option.icon size={140} strokeWidth={1} />
+                    </div>
+
+                    {/* Top Section: Icon */}
+                    <div className="flex justify-between items-start z-10">
+                      <div className={`w-12 h-12 rounded-[1rem] flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                        <option.icon size={24} strokeWidth={2} />
+                      </div>
                     </div>
                     
-                    <span className="text-[15px] sm:text-base font-extrabold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug tracking-tight">
-                      {option.label}
-                    </span>
-
-                    {/* Animated underline on hover */}
-                    <div className="h-0.5 w-0 bg-orange-500 rounded-full mt-3 transition-all duration-300 group-hover:w-8" />
+                    {/* Bottom Section: Text & Action */}
+                    <div className="mt-6 flex items-end justify-between z-10">
+                      <span className="text-[15px] font-bold text-gray-800 leading-tight pr-2 group-hover:text-black transition-colors text-left">
+                        {option.label}
+                      </span>
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-50 text-gray-400 group-hover:bg-black group-hover:text-white transition-all duration-300 shrink-0 transform group-hover:translate-x-1 group-hover:shadow-md">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
                   </button>
                 );
               })}
@@ -475,21 +485,31 @@ const ConstructionPartnersSection: FC = () => {
                   <button
                     key={option.id}
                     onClick={() => router.push(option.link)}
-                    className="relative flex flex-col items-center justify-center p-6 bg-white border border-gray-100/80 hover:border-orange-200/60 rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(234,88,12,0.15)] transition-all duration-300 hover:-translate-y-2 group text-center min-h-[160px] overflow-hidden z-10"
+                    className="relative bg-white rounded-[1.5rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col justify-between group overflow-hidden border border-gray-50 min-h-[140px] text-left hover:-translate-y-1"
                   >
-                    {/* Background subtle hover glow */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-orange-50/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
-                    
-                    <div className={`w-16 h-16 rounded-[1.2rem] flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon className="w-8 h-8 transition-transform duration-300" strokeWidth={1.8} />
+                    {/* Decorative Faint Background Icon */}
+                    <div className={`absolute -right-6 -bottom-6 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity duration-500 pointer-events-none ${option.color.split(" ")[1]}`}>
+                      <option.icon size={140} strokeWidth={1} />
+                    </div>
+
+                    {/* Top Section: Icon */}
+                    <div className="flex justify-between items-start z-10">
+                      <div className={`w-12 h-12 rounded-[1rem] flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                        <option.icon size={24} strokeWidth={2} />
+                      </div>
                     </div>
                     
-                    <span className="text-[15px] sm:text-base font-extrabold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug tracking-tight">
-                      {option.label}
-                    </span>
-
-                    {/* Animated underline on hover */}
-                    <div className="h-0.5 w-0 bg-orange-500 rounded-full mt-3 transition-all duration-300 group-hover:w-8" />
+                    {/* Bottom Section: Text & Action */}
+                    <div className="mt-6 flex items-end justify-between z-10">
+                      <span className="text-[15px] font-bold text-gray-800 leading-tight pr-2 group-hover:text-black transition-colors text-left">
+                        {option.label}
+                      </span>
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-50 text-gray-400 group-hover:bg-black group-hover:text-white transition-all duration-300 shrink-0 transform group-hover:translate-x-1 group-hover:shadow-md">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
                   </button>
                 );
               })}
@@ -513,21 +533,31 @@ const ConstructionPartnersSection: FC = () => {
                   <button
                     key={option.id}
                     onClick={() => router.push(option.link)}
-                    className="relative flex flex-col items-center justify-center p-6 bg-white border border-gray-100/80 hover:border-orange-200/60 rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-12px_rgba(234,88,12,0.15)] transition-all duration-300 hover:-translate-y-2 group text-center min-h-[160px] overflow-hidden z-10"
+                    className="relative bg-white rounded-[1.5rem] p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 cursor-pointer flex flex-col justify-between group overflow-hidden border border-gray-50 min-h-[140px] text-left hover:-translate-y-1"
                   >
-                    {/* Background subtle hover glow */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-orange-50/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
-                    
-                    <div className={`w-16 h-16 rounded-[1.2rem] flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon className="w-8 h-8 transition-transform duration-300" strokeWidth={1.8} />
+                    {/* Decorative Faint Background Icon */}
+                    <div className={`absolute -right-6 -bottom-6 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity duration-500 pointer-events-none ${option.color.split(" ")[1]}`}>
+                      <option.icon size={140} strokeWidth={1} />
+                    </div>
+
+                    {/* Top Section: Icon */}
+                    <div className="flex justify-between items-start z-10">
+                      <div className={`w-12 h-12 rounded-[1rem] flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                        <option.icon size={24} strokeWidth={2} />
+                      </div>
                     </div>
                     
-                    <span className="text-[15px] sm:text-base font-extrabold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug tracking-tight">
-                      {option.label}
-                    </span>
-
-                    {/* Animated underline on hover */}
-                    <div className="h-0.5 w-0 bg-orange-500 rounded-full mt-3 transition-all duration-300 group-hover:w-8" />
+                    {/* Bottom Section: Text & Action */}
+                    <div className="mt-6 flex items-end justify-between z-10">
+                      <span className="text-[15px] font-bold text-gray-800 leading-tight pr-2 group-hover:text-black transition-colors text-left">
+                        {option.label}
+                      </span>
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-50 text-gray-400 group-hover:bg-black group-hover:text-white transition-all duration-300 shrink-0 transform group-hover:translate-x-1 group-hover:shadow-md">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
                   </button>
                 );
               })}
