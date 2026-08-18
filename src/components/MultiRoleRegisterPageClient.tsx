@@ -977,6 +977,7 @@ const MultiRoleRegisterPage = () => {
             </div>
           </motion.div>
         );
+      }
 
       default:
         return null;
