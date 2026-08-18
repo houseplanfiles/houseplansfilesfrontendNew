@@ -64,17 +64,17 @@ const contractorProfessions = [
 ];
 
 const homeDesigningProfessions = [
-  "Building", "Interior", "Electrical", "Plumbing", "Tiles & Granite", 
-  "Flooring", "Painting & Waterproofing", "Carpenter", "Swimming Pool"
+  "Architects & engineers", "Interior designer", "Contractors Building & Interior", "Electrical Contractor", "Plumbing Contractor", 
+  "Tiles & Stone Contractor", "Painting Contractor", "Carpenter Services", "False Ceiling Contractor", "Building material"
 ];
 
 const industrialProfessions = [
-  "Pre Engineering Board / PEB", "Pre Fabricated House", "Building Inspection", "Manpower Supply"
+  "Pre Engineering Buildings", "Pre Fabricated Buildings", "Pre Cast Concrete Material", "Machinery Services", "Manpower Supply", "Building Inspection Services", "Bulk Building Material Services"
 ];
 
 const otherServicesProfessions = [
-  "Pest Control", "Landscaping & Garden", "Modular Kitchen", "Lift Services", 
-  "Solar Rooftop Panel", "HVAC", "Glass Fabricator"
+  "Pest Control Service", "HVAC System Installation", "Lift Installation Services", "Solar Panel Installation", 
+  "Home Automation", "Water Proofing Installation", "Garden & Landscaping Contractor", "Modular Kitchen Services", "Swimming Pool Contractor", "Fire safety services", "Fabricator"
 ];
 
 const materialTypes = [
