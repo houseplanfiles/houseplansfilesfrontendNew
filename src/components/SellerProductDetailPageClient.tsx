@@ -253,14 +253,14 @@ const SellerProductDetailPage: FC = () => {
             {/* Left: Image Gallery */}
             <div className="p-6 md:p-10 bg-gray-50/50">
               <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-inner mb-6 border border-gray-200 group">
-                <img 
+                <Image 
                   src={selectedImage || product.image} 
                   alt={product.seoAltText || product.name} 
                   title={product.seoTitle || product.name}
-                  // @ts-ignore
-                  fetchPriority="high"
-                  loading="eager"
-                  className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105" 
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-contain p-4 transition-transform duration-500 group-hover:scale-105" 
                 />
                 <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-sm">
                   <ZoomIn size={20} className="text-gray-500" />
