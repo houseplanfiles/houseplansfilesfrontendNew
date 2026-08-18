@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter, usePathname } from "next/navigation";
 
@@ -684,14 +684,12 @@ const ProductDetailContent = ({ product }: { product: any }) => {
                 onMouseMove={handleMouseMove}
               >
                 {/* LCP Optimization: High Priority + Eager Loading for Main Image */}
-                <img
+                <Image
                   src={productImages[selectedImageIndex]}
                   alt={displayData.seo?.altText || productName}
-                  width="800"
-                  height="600"
-                  // @ts-ignore
-                  fetchPriority="high"
-                  loading="eager"
+                  width={800}
+                  height={600}
+                  priority
                   className="w-full h-[300px] sm:h-96 lg:h-[500px] object-cover transition-opacity duration-300"
                   style={{ opacity: isZooming ? 0 : 1 }}
                 />
@@ -751,11 +749,11 @@ const ProductDetailContent = ({ product }: { product: any }) => {
                     type="button"
                   >
                     {/* Thumbnail Images: Lazy Loaded */}
-                    <img
+                    <Image
                       src={image}
                       alt={`${productName} view ${index + 1}`}
-                      width="150"
-                      height="100"
+                      width={150}
+                      height={100}
                       loading="lazy"
                       className="w-full h-24 object-cover"
                     />

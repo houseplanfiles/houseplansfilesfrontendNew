@@ -470,11 +470,12 @@ const GalleryPage: React.FC = () => {
                 className="relative w-full h-full flex items-center justify-center bg-zinc-900 overflow-hidden select-none"
               >
                 {/* 1. Clear Image */}
-                <img
+                <Image
                   src={selectedGroup[currentImageIndex].imageUrl}
                   alt={selectedGroup[currentImageIndex].title}
-                  loading="lazy"
-                  className="max-w-full max-h-full object-contain pointer-events-none"
+                  fill
+                  sizes="100vw"
+                  className="object-contain pointer-events-none"
                 />
 
                 {/* Navigation Buttons */}

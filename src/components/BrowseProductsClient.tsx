@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -259,10 +260,12 @@ export default function BrowseProductsClient({
                     >
                       <div className="relative aspect-[4/3] overflow-hidden">
                         <Link href={href || "/house-plans"}>
-                          <img
+                          <Image
                             src={product.mainImage || "/floorplan.jpg"}
                             alt={product.seo?.altText || `${product.name} - House Plan`}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
                             loading="lazy"
                           />
                         </Link>
@@ -317,15 +320,15 @@ export default function BrowseProductsClient({
                             {product.salePrice > 0 ? (
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-orange-600">
-                                  <DisplayPrice price={product.salePrice} />
+                                  <DisplayPrice inrPrice={product.salePrice} />
                                 </span>
                                 <span className="text-xs text-gray-400 line-through">
-                                  <DisplayPrice price={product.price} />
+                                  <DisplayPrice inrPrice={product.price} />
                                 </span>
                               </div>
                             ) : (
                               <span className="font-bold text-orange-600">
-                                <DisplayPrice price={product.price} />
+                                <DisplayPrice inrPrice={product.price} />
                               </span>
                             )}
                           </div>
