@@ -590,7 +590,7 @@ const SellersSection: FC = () => {
       {/* --- Banner --- */}
       <div className="relative py-16 sm:py-24 overflow-hidden">
         <div className="absolute inset-0">
-          <Image src="/marketplace.webp" alt="Marketplace" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+          <Image src="/marketplace_banner.png" alt="Marketplace" fill className="object-cover" sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/70 to-gray-900/30" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 text-center z-10 flex flex-col justify-center items-center">

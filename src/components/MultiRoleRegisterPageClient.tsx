@@ -38,6 +38,9 @@ const userRoles = [
   { id: "professional", label: "Register as a Architect, engineer, interior designer" },
   { id: "seller", label: "Register as a manufacturer, supplier or Shop" },
   { id: "Contractor", label: "Register as a Contractor" },
+  { id: "home_designing", label: "Register for Home Designing & Construction Services" },
+  { id: "industrial", label: "Register for Industrial Construction & Infrastructure Services" },
+  { id: "other_services", label: "Register for Other Services" },
 ];
 
 const professionalSubRoles = [
@@ -51,30 +54,27 @@ const professionalSubRoles = [
 ];
 
 const contractorProfessions = [
-  {
-    category: "Home Designing & Construction",
-    professions: ["Building", "Interior", "Electrical", "Plumbing", "Tiles & Granite", "Flooring", "Painting & Waterproofing", "Carpenter", "Swimming Pool"]
-  },
-  {
-    category: "Industrial Construction & Infrastructure",
-    professions: ["Pre Engineering Board / PEB", "Pre Fabricated House", "Building Inspection", "Manpower Supply"]
-  },
-  {
-    category: "Other Services",
-    professions: ["Pest Control", "Landscaping & Garden", "Modular Kitchen", "Lift Services", "Solar Rooftop Panel", "HVAC", "Glass Fabricator"]
-  },
-  {
-    category: "Already Registered (Existing)",
-    professions: [
-      "Civil Construction Contractor", "Interior Contractor", "Electrical Contractor",
-      "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor",
-      "Swimming Pool Contractor", "Pre Engineering Board / PEB", "Pre Fabricated House Contractor",
-      "Pest Control Contractor", "Landscaping & Garden Contractor", "Manpower Supply",
-      "Modular Kitchen Contractor", "Lift Services Contractor", "Building Inspection Contractor",
-      "Solar Rooftop Panel Contractor", "HVAC Contractor", "Carpenter", "Glass Fabricator",
-      "Labour Contractor", "Turnkey Contractor"
-    ]
-  }
+  "Civil Construction Contractor", "Interior Contractor", "Electrical Contractor",
+  "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor",
+  "Swimming Pool Contractor", "Pre Engineering Board / PEB", "Pre Fabricated House Contractor",
+  "Pest Control Contractor", "Landscaping & Garden Contractor", "Manpower Supply",
+  "Modular Kitchen Contractor", "Lift Services Contractor", "Building Inspection Contractor",
+  "Solar Rooftop Panel Contractor", "HVAC Contractor", "Carpenter", "Glass Fabricator",
+  "Labour Contractor", "Turnkey Contractor"
+];
+
+const homeDesigningProfessions = [
+  "Building", "Interior", "Electrical", "Plumbing", "Tiles & Granite", 
+  "Flooring", "Painting & Waterproofing", "Carpenter", "Swimming Pool"
+];
+
+const industrialProfessions = [
+  "Pre Engineering Board / PEB", "Pre Fabricated House", "Building Inspection", "Manpower Supply"
+];
+
+const otherServicesProfessions = [
+  "Pest Control", "Landscaping & Garden", "Modular Kitchen", "Lift Services", 
+  "Solar Rooftop Panel", "HVAC", "Glass Fabricator"
 ];
 
 const materialTypes = [
@@ -370,6 +370,8 @@ const MultiRoleRegisterPage = () => {
       if (value !== undefined && value !== null && value !== "") {
         if (key === "serviceTypes" && Array.isArray(value)) {
           dataToSubmit.append(key, JSON.stringify(value));
+        } else if (key === "role" && ["home_designing", "industrial", "other_services"].includes(value as string)) {
+          dataToSubmit.append("role", "Contractor");
         } else {
           dataToSubmit.append(key, value as string | Blob);
         }
@@ -819,6 +821,15 @@ const MultiRoleRegisterPage = () => {
         );
 
       case "Contractor":
+      case "home_designing":
+      case "industrial":
+      case "other_services": {
+        let professionsList: string[] = [];
+        if (selectedRole === "Contractor") professionsList = contractorProfessions;
+        else if (selectedRole === "home_designing") professionsList = homeDesigningProfessions;
+        else if (selectedRole === "industrial") professionsList = industrialProfessions;
+        else if (selectedRole === "other_services") professionsList = otherServicesProfessions;
+
         return (
           <motion.div key={selectedRole} {...motionProps} className="space-y-5">
             <div>
@@ -860,15 +871,10 @@ const MultiRoleRegisterPage = () => {
                   <SelectValue placeholder="Select Profession" />
                 </SelectTrigger>
                 <SelectContent>
-                  {contractorProfessions.map((group) => (
-                    <SelectGroup key={group.category}>
-                      <SelectLabel className="text-orange-600 bg-orange-50/50 uppercase tracking-wider text-xs">{group.category}</SelectLabel>
-                      {group.professions.map((prof) => (
-                        <SelectItem key={prof} value={prof}>
-                          {prof}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
+                  {professionsList.map((prof) => (
+                    <SelectItem key={prof} value={prof}>
+                      {prof}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -971,6 +977,7 @@ const MultiRoleRegisterPage = () => {
             </div>
           </motion.div>
         );
+      }
 
       default:
         return null;
