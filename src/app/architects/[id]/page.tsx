@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import ArchitectProfilePageClient from "@/components/ArchitectProfilePageClient";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -31,6 +32,16 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function ArchitectProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/users/contractor/${resolvedParams.id}`, { next: { revalidate: 3600 } });
+    if (!res.ok) notFound();
+    const data = await res.json();
+    const arch = data?.architect || data;
+    if (!arch || !arch.name) notFound();
+  } catch {
+    notFound();
+  }
   const breadcrumbSchema = {
     "@context": "https://schema.org", "@type": "BreadcrumbList",
     itemListElement: [

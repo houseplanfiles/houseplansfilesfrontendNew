@@ -257,6 +257,9 @@ const SellerProductDetailPage: FC = () => {
                   src={selectedImage || product.image} 
                   alt={product.seoAltText || product.name} 
                   title={product.seoTitle || product.name}
+                  // @ts-ignore
+                  fetchPriority="high"
+                  loading="eager"
                   className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105" 
                 />
                 <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-sm">

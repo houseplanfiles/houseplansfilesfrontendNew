@@ -48,7 +48,9 @@ export async function generateMetadata({
         "readymade house plan india",
         "house plan download",
       ].filter(Boolean);
-  const imageUrl = product.mainImage || "/floorplan.jpg";
+  const imageUrl = product.mainImage 
+    ? (product.mainImage.startsWith("http") ? product.mainImage : `${BACKEND_URL}/${product.mainImage.replace(/^\//, '')}`)
+    : "https://www.houseplanfiles.com/floorplan.jpg";
   const imageAlt = product.seo?.altText || `${product.name} - Floor Plan Image`;
   const canonicalUrl = `https://www.houseplanfiles.com/house-plans/${resolvedParams.slug}`;
 
@@ -80,13 +82,17 @@ export default async function HousePlanDetailPage({
     notFound();
   }
 
+  const imageUrl = product.mainImage 
+    ? (product.mainImage.startsWith("http") ? product.mainImage : `${BACKEND_URL}/${product.mainImage.replace(/^\//, '')}`)
+    : "https://www.houseplanfiles.com/floorplan.jpg";
+
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
     description: product.description || `${product.name} - Readymade house plan designed by expert architects.`,
-    image: product.mainImage || "/floorplan.jpg",
-    sku: product.productNo,
+    image: imageUrl,
+    sku: product.productNo || product._id,
     brand: { "@type": "Brand", name: "HousePlanFiles" },
     offers: {
       "@type": "Offer",
