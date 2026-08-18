@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import ContractorProfilePageClient from "@/components/ContractorProfilePageClient";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -31,6 +32,16 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function ContractorProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/users/contractor/${resolvedParams.id}`, { next: { revalidate: 3600 } });
+    if (!res.ok) notFound();
+    const data = await res.json();
+    const contractor = data?.contractor || data;
+    if (!contractor || !contractor.name) notFound();
+  } catch {
+    notFound();
+  }
   return (
     <>
 <main>
