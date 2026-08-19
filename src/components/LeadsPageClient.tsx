@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion } from "@/components/MotionWrapper";
 import {
   MapPin,
   Calendar,

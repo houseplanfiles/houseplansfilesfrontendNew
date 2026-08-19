@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
 import {

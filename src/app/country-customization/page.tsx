@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 
 const CountryCustomizationPageClient = dynamic(
   () => import("@/components/CountryCustomizationPageClient"),
-  { ssr: false }
 );
 
 export default function Page() {

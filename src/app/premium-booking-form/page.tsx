@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 
 const PremiumBookingPageClient = dynamic(
   () => import("@/components/PremiumBookingPageClient"),
-  { ssr: false }
 );
 
 export default function Page() {

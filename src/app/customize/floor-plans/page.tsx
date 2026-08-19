@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 
 const CustomizeRequestPageClient = dynamic(
   () => import("@/components/CustomizeRequestPageClient"),
-  { ssr: false }
 );
 
 export default function Page() {

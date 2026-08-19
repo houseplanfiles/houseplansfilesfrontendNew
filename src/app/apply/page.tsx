@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 
 const ApplicationPageClient = dynamic(
   () => import("@/components/ApplicationPageClient"),
-  { ssr: false }
 );
 
 export default function Page() {

@@ -5,7 +5,7 @@ import { getOptimizedImageUrl } from "@/lib/cloudinary";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
-import { motion } from "framer-motion";
+import { motion } from "@/components/MotionWrapper";
 
 import {
   Heart,

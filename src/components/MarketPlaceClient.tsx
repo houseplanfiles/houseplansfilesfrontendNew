@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useMemo, FC } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { toast } from "sonner";
 import {
   Loader2,

@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 
  // Helmet ko import karen
 import Footer from "@/components/Footer";

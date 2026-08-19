@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import {
   CheckCircle,
   ChevronLeft,

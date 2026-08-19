@@ -19,7 +19,6 @@ export const metadata: Metadata = {
 
 const BrowseProductsPageClient = dynamic(
   () => import("@/components/BrowseProductsPageClient"),
-  { ssr: false }
 );
 
 export default function FloorPlansPage() {

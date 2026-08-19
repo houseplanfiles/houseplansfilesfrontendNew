@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import {
   LayoutDashboard, ShoppingBag, Box, PlusCircle, Users, BarChart2,
   UserCircle, LogOut, X, ChevronDown, FileText, Building, Briefcase,

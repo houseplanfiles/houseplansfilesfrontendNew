@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import React, { useState, useEffect, useMemo, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { toast } from "sonner";
 import { trackAnalytics } from "@/lib/analytics";
 import {

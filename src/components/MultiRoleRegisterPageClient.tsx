@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 import { Eye, EyeOff, CheckCircle, Loader2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "@/lib/store";
 type AppDispatch = typeof store.dispatch;

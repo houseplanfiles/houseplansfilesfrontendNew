@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { LayoutGrid, ShoppingCart, Download, User, LogOut, X } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
