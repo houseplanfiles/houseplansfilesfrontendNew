@@ -272,7 +272,7 @@ const ArchitectsPage: FC = () => {
                     const callLink = `tel:${phoneStr}`;
 
                     return (
-                      <motion.div key={architect._id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: index * 0.05 }} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full group">
+                      <div key={architect._id} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full group animate-slide-up" style={{ animationDelay: `${index * 0.05}s` }}>
                         {/* Banner */}
                         <div className="h-28 sm:h-32 relative overflow-hidden shrink-0">
                           <Image src={architect.shopImageUrl ? getFileUrl(architect.shopImageUrl) : "/architect.png"} alt={`${architect.name} banner`} fill className="object-cover" sizes="100vw" priority />
@@ -340,7 +340,7 @@ const ArchitectsPage: FC = () => {
                             )}
                           </div>
                         </div>
-                      </motion.div>
+                      </div>
                     );
                   })}
                 </div>
