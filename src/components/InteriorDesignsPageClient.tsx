@@ -366,7 +366,7 @@ const CustomizeInteriorForm = ({ userInfo, dispatch, toast }: any) => {
   );
 };
 
-const ProductCard = ({ product, userOrders }: any) => {
+const ProductCard = ({ product, userOrders, index }: any) => {
   const router = useRouter();
   const { toast } = useToast();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
@@ -464,11 +464,14 @@ const ProductCard = ({ product, userOrders }: any) => {
             src={
               product.mainImage ||
               product.image ||
-              product.Images?.split(",")[0] ||
+              product.Images?.split(",")[0].trim() ||
               house3
             }
             alt={productName}
-            className="w-full h-40 sm:h-48 object-cover rounded-md group-hover:scale-105 transition-transform duration-500"
+            loading={index < 4 ? "eager" : "lazy"}
+            // @ts-ignore
+            fetchPriority={index < 4 ? "high" : "auto"}
+            className="w-full h-48 sm:h-56 lg:h-64 object-cover rounded-md group-hover:scale-105 transition-transform duration-500"
           />
         </Link>
         {isSale && (
@@ -831,11 +834,12 @@ const InteriorDesignsPage = ({ initialData }: { initialData?: any }) => {
                   className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-4 sm:gap-6"
                 >
                   {filteredProducts.length > 0 ? (
-                    filteredProducts.map((product) => (
+                    filteredProducts.map((product: any, idx: number) => (
                       <ProductCard
                         key={`${product.source}-${product._id}`}
                         product={product}
                         userOrders={orders}
+                        index={idx}
                       />
                     ))
                   ) : (

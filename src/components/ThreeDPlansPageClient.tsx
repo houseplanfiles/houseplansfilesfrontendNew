@@ -413,7 +413,7 @@ const FilterSidebar = ({ filters, setFilters, isOpen, onClose }: any) => (
   </>
 );
 
-const ProductCard = ({ plan, userOrders, onPlayVideo }: any) => {
+const ProductCard = ({ plan, userOrders, onPlayVideo, index }: any) => {
   const router = useRouter();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { userInfo } = useSelector((state: RootState) => state.user);
@@ -558,6 +558,9 @@ const ProductCard = ({ plan, userOrders, onPlayVideo }: any) => {
             <img
               src={mainImage}
               alt={productName}
+              loading={index < 4 ? "eager" : "lazy"}
+              // @ts-ignore
+              fetchPriority={index < 4 ? "high" : "auto"}
               className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
             />
           </div>
@@ -960,12 +963,13 @@ const ThreeDPlansPage = ({ initialData }: { initialData?: any }) => {
                     layout
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6"
                   >
-                    {combinedProducts.map((plan: any) => (
+                    {combinedProducts.map((plan: any, idx: number) => (
                       <ProductCard
                         key={`${plan.source}-${plan._id}`}
                         plan={plan}
                         userOrders={orders}
                         onPlayVideo={handlePlayVideo}
+                        index={idx}
                       />
                     ))}
                   </motion.div>
