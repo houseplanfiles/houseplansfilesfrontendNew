@@ -252,11 +252,9 @@ export default function BrowseProductsClient({
                     : `/house-plans/${product.slug || slugify(product.name) + "-" + product._id}`;
 
                   return (
-                    <motion.div
+                    <div
                       key={product._id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="bg-white rounded-xl shadow-soft hover:shadow-large transition-all duration-300 overflow-hidden group"
+                      className="bg-white rounded-xl shadow-soft hover:shadow-large transition-all duration-300 overflow-hidden group animate-slide-up"
                     >
                       <div className="relative aspect-[4/3] overflow-hidden">
                         <Link href={href || "/house-plans"}>
@@ -339,7 +337,7 @@ export default function BrowseProductsClient({
                           </Link>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   );
                 })}
               </div>
