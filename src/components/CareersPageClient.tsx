@@ -128,12 +128,7 @@ const CareersPage = () => {
       <main>
         {/* Hero Section */}
         <section className="py-24 bg-orange-50 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="container mx-auto px-4"
-          >
+          <div className="container mx-auto px-4 animate-fade-in">
             <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4">
               Join & Collaborate With Us
             </h1>
@@ -141,7 +136,7 @@ const CareersPage = () => {
               We're looking for passionate individuals and businesses to help us
               shape the future of architecture.
             </p>
-          </motion.div>
+          </div>
         </section>
 
         {/* --- ✨ JOB LISTINGS SECTION (RESTORED) ✨ --- */}
@@ -152,13 +147,10 @@ const CareersPage = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {jobOpenings.map((job, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col text-left transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
+                  className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col text-left transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 animate-slide-up"
+                  style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="flex-grow">
                     <h3 className="text-xl font-bold text-gray-800">
@@ -176,15 +168,14 @@ const CareersPage = () => {
                     </div>
                   </div>
                   <Link
-                    href="/apply"
-                    state={{ jobTitle: job.title }}
+                    href={{ pathname: "/apply", query: { jobTitle: job.title } }}
                     className="mt-auto"
                   >
                     <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold">
                       Apply Now
                     </Button>
                   </Link>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -192,29 +183,20 @@ const CareersPage = () => {
         {/* Collaboration Opportunities Section */}
         <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="text-center mb-16"
-            >
+            <div className="text-center mb-16 animate-fade-in">
               <h2 className="text-4xl font-bold text-gray-900">
                 Collaboration Opportunities
               </h2>
               <p className="mt-2 text-lg text-gray-600">
                 Explore diverse ways to partner with us.
               </p>
-            </motion.div>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {corporatePackages.map((pkg, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className={`bg-white rounded-xl p-8 flex flex-col text-center items-center transition-all duration-300 border-2 ${pkg.highlight ? "border-orange-500 shadow-2xl" : "border-gray-200"} hover:border-orange-500 hover:shadow-xl hover:-translate-y-2`}
+                  className={`bg-white rounded-xl p-8 flex flex-col text-center items-center transition-all duration-300 border-2 animate-slide-up ${pkg.highlight ? "border-orange-500 shadow-2xl" : "border-gray-200"} hover:border-orange-500 hover:shadow-xl hover:-translate-y-2`}
+                  style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="mb-5 p-4 bg-orange-100 rounded-full">
                     {pkg.icon}
@@ -233,7 +215,7 @@ const CareersPage = () => {
                       Inquire Now
                     </Button>
                   </Link>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -242,12 +224,7 @@ const CareersPage = () => {
         {/* Contact Us Section */}
         <section className="py-20 bg-gray-800 text-white">
           <div className="container mx-auto px-4 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-            >
+            <div className="animate-fade-in">
               <Mail className="mx-auto h-12 w-12 text-orange-400 mb-4" />
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Have a Different Idea?
@@ -265,7 +242,7 @@ const CareersPage = () => {
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-            </motion.div>
+            </div>
           </div>
         </section>
       </main>
