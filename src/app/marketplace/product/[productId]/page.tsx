@@ -81,7 +81,7 @@ export default async function Page({ params }: { params: Promise<{ productId: st
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <SellerProductDetailPageClient />
+      <SellerProductDetailPageClient initialProduct={product} />
     </>
   );
 }
