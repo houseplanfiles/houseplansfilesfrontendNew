@@ -6,10 +6,12 @@ import { store } from "@/lib/store";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
-import WhatsAppWidget from "@/components/WhatsAppWidget";
-import VoiceNavigation from "@/components/VoiceNavigation";
-import FloatingCurrencySwitcher from "@/components/FloatingCurrencySwitcher";
 import ScrollToTop from "@/components/ScrollToTop";
+import dynamic from "next/dynamic";
+
+const VoiceNavigation = dynamic(() => import("@/components/VoiceNavigation"), { ssr: false });
+const WhatsAppWidget = dynamic(() => import("@/components/WhatsAppWidget"), { ssr: false });
+const FloatingCurrencySwitcher = dynamic(() => import("@/components/FloatingCurrencySwitcher"), { ssr: false });
 
 const queryClient = new QueryClient({
   defaultOptions: {
