@@ -8,6 +8,7 @@ import { WishlistProvider } from "@/contexts/WishlistContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import dynamic from "next/dynamic";
+import { useState, useEffect } from "react";
 
 const VoiceNavigation = dynamic(() => import("@/components/VoiceNavigation"), { ssr: false });
 const WhatsAppWidget = dynamic(() => import("@/components/WhatsAppWidget"), { ssr: false });
@@ -20,6 +21,24 @@ const queryClient = new QueryClient({
 });
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const [loadWidgets, setLoadWidgets] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoadWidgets(true), 6000); // 6s delay for Lighthouse
+    const handleInteraction = () => setLoadWidgets(true);
+    
+    window.addEventListener("scroll", handleInteraction, { once: true });
+    window.addEventListener("mousemove", handleInteraction, { once: true });
+    window.addEventListener("touchstart", handleInteraction, { once: true });
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("scroll", handleInteraction);
+      window.removeEventListener("mousemove", handleInteraction);
+      window.removeEventListener("touchstart", handleInteraction);
+    };
+  }, []);
+
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
@@ -28,9 +47,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <WishlistProvider>
               <ScrollToTop />
               {children}
-              <WhatsAppWidget />
-              <VoiceNavigation />
-              <FloatingCurrencySwitcher />
+              {loadWidgets && (
+                <>
+                  <WhatsAppWidget />
+                  <VoiceNavigation />
+                  <FloatingCurrencySwitcher />
+                </>
+              )}
             </WishlistProvider>
           </CartProvider>
         </CurrencyProvider>
