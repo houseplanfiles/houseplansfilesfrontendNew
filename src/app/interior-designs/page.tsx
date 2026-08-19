@@ -14,11 +14,11 @@ const InteriorDesignsPageClient = dynamic(
   () => import("@/components/InteriorDesignsPageClient")
 );
 
-async function getInitialInteriorProducts() {
+async function getInitialInteriorProducts(pageNumber: number = 1) {
   try {
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
     const res = await fetch(
-      `${BACKEND_URL}/api/products?pageNumber=1&limit=12&category=Interior Design`,
+      `${BACKEND_URL}/api/products?pageNumber=${pageNumber}&limit=12&category=Interior Design`,
       { next: { revalidate: 3600 } }
     );
     if (!res.ok) return null;
@@ -29,8 +29,9 @@ async function getInitialInteriorProducts() {
   }
 }
 
-export default async function Page() {
-  const initialData = await getInitialInteriorProducts();
+export default async function Page({ searchParams }: { searchParams: { page?: string } }) {
+  const pageNumber = Number(searchParams?.page) || 1;
+  const initialData = await getInitialInteriorProducts(pageNumber);
 
   return (
     <Suspense fallback={
