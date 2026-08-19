@@ -179,7 +179,7 @@ const PartnerCard: FC<{
     className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group"
   >
     <div className="h-32 bg-gray-100 relative">
-      <img src={getImageUrl(partner.shopImageUrl)} alt={partner.companyName} className="w-full h-full object-cover" loading="lazy" />
+      <Image src={getImageUrl(partner.shopImageUrl)} alt={partner.companyName || "Contractor"} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover" loading="lazy" />
       <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
       <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
         {partner.contractorType === "Premium" && (
@@ -373,7 +373,7 @@ const ConstructionPartnersSection: FC = () => {
       dispatch(fetchContractors({ 
         city: cityFilter, 
         status: "Approved",
-        limit: 500 
+        limit: 8 
       }));
     }, 500);
 
@@ -516,7 +516,7 @@ const ConstructionPartnersSection: FC = () => {
           {/* --- HERO HEADER --- */}
           <div className="relative bg-gray-900 p-10 md:p-14 rounded-[2rem] overflow-hidden mb-12 shadow-2xl">
             <div className="absolute inset-0 opacity-20">
-               <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80" alt="bg" className="w-full h-full object-cover" loading="lazy" />
+               <Image src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80" alt="bg" fill sizes="100vw" className="object-cover" loading="lazy" />
             </div>
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
               <div>

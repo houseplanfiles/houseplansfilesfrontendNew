@@ -186,10 +186,12 @@ const ArchitectCard: FC<{
       className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group"
     >
       <div className="h-32 relative overflow-hidden">
-        <img
+        <Image
           src={architect.shopImageUrl ? getFileUrl(architect.shopImageUrl) : "/architect.png"}
           alt="Banner"
-          className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className="object-cover" loading="lazy" />
         <div className="absolute inset-0 bg-black/10" />
         <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
           {architect.contractorType === "Premium" && (
@@ -310,7 +312,7 @@ const TopArchitectsSection: FC = () => {
       dispatch(fetchArchitects({
         city: cityFilter,
         status: "Approved",
-        limit: 500
+        limit: 8
       }));
     }, 500);
 

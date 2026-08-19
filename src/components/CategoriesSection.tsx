@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
@@ -280,10 +281,12 @@ const CategoriesSection = () => {
                           <div
                             className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-40 transition-opacity duration-500 z-10`}
                           ></div>
-                          <img
+                          <Image
                             src={category.image}
                             alt={category.name}
-                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                            fill
+                            sizes="(max-width: 768px) 50vw, 25vw"
+                            className="object-cover transform group-hover:scale-110 transition-transform duration-700"
                             loading="lazy"
                           />
 

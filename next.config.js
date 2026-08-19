@@ -14,6 +14,8 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images.pexels.com', pathname: '/**' },
       { protocol: 'https', hostname: 'images.unsplash.com', pathname: '/**' },
       { protocol: 'http', hostname: 'localhost', pathname: '/**' },
+      { protocol: 'https', hostname: 'img.freepik.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'encrypted-tbn0.gstatic.com', pathname: '/**' },
       // FIX: Added S3 hostname so next/image can optimize S3 images
       { protocol: 'https', hostname: 'houseplanfiles1.s3.eu-north-1.amazonaws.com', pathname: '/**' },
       { protocol: 'https', hostname: '*.s3.*.amazonaws.com', pathname: '/**' },
