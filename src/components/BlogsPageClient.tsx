@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "@/components/MotionWrapper";
-import { Calendar, User, Loader2, ServerCrash } from "lucide-react";
+import { Calendar, User, Loader2, ServerCrash, ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { fetchAllPosts, BlogPost } from "@/lib/features/blog/blogSlice";
 import { RootState, AppDispatch } from "@/lib/store";
 
@@ -20,6 +21,21 @@ const BlogsPage = () => {
   }, [dispatch, status]);
 
   const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 6;
+  const totalPages = Math.ceil(posts.length / postsPerPage);
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="bg-soft-teal min-h-screen">
@@ -54,9 +70,10 @@ const BlogsPage = () => {
           )}
 
           {status === "succeeded" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              {posts.map((post, index) => {
-                const gridImageUrl = post.mainImage?.startsWith("http")
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                {currentPosts.map((post, index) => {
+                  const gridImageUrl = post.mainImage?.startsWith("http")
                   ? post.mainImage
                   : `${backendApiUrl}${post.mainImage}`;
                 return (
@@ -96,7 +113,32 @@ const BlogsPage = () => {
                   </motion.div>
                 );
               })}
-            </div>
+              </div>
+              
+              {totalPages > 1 && (
+                <div className="mt-12 flex justify-center items-center gap-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className="w-4 h-4 mr-2" />
+                    Previous
+                  </Button>
+                  <span className="font-medium text-muted-foreground">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                    <ChevronRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
