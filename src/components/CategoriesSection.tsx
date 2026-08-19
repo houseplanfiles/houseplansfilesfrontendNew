@@ -193,7 +193,7 @@ const CategoriesSection = () => {
   const currentItems = categories.slice(indexOfFirstItem, indexOfLastItem);
 
   // Change page function
-  const paginate = (pageNumber) => {
+  const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     // Optional: Scroll to top of section when page changes
     const section = document.getElementById("categories-section");
@@ -262,7 +262,7 @@ const CategoriesSection = () => {
           {" "}
           {/* Min height to prevent jumping */}
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8 max-w-7xl mx-auto">
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               {currentItems.map((category, index) => {
                 const IconComponent = category.icon;
                 return (
