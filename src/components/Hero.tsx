@@ -67,7 +67,10 @@ const Hero = () => {
   // Fetch products once for search suggestions
   useEffect(() => {
     if (listStatus === "idle") {
-      dispatch(fetchProducts({ limit: 100 }));
+      const timer = setTimeout(() => {
+        dispatch(fetchProducts({ limit: 15 }));
+      }, 2500); // Delay by 2.5s to not block initial hydration
+      return () => clearTimeout(timer);
     }
   }, [dispatch, listStatus]);
 
