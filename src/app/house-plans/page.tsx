@@ -15,10 +15,27 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://www.houseplanfiles.com/house-plans" },
 };
 
-export default function HousePlansPage() {
+async function getInitialHousePlans() {
+  try {
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+    const res = await fetch(
+      `${BACKEND_URL}/api/products?pageNumber=1&limit=12`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export default async function HousePlansPage() {
+  const initialData = await getInitialHousePlans();
+
   return (
     <Suspense fallback={<div className="py-20 text-center text-gray-500">Loading house plans...</div>}>
-      <ProductsClient />
+      <ProductsClient initialData={initialData} />
     </Suspense>
   );
 }

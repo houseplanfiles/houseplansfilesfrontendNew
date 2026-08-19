@@ -95,7 +95,7 @@ const ImageViewModal = ({ imageUrl, onClose }: any) => {
           src={imageUrl}
           alt="Full View"
           className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl border border-white/10 pointer-events-auto"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e: React.MouseEvent) => e.stopPropagation()}
         />
       </motion.div>
     </motion.div>

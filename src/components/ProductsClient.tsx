@@ -211,7 +211,7 @@ const VideoModal = ({
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.8, y: 50 }}
         className="relative w-full max-w-4xl bg-black rounded-lg overflow-hidden shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e: React.MouseEvent) => e.stopPropagation()}
       >
         <div className="aspect-video">
           <iframe
@@ -974,9 +974,11 @@ const CountryCustomizationForm = ({ countryName }: any) => {
 const Products = ({
   headerSlot,
   showFooter = true,
+  initialData,
 }: {
   headerSlot?: React.ReactNode;
   showFooter?: boolean;
+  initialData?: any;
 }) => {
   const dispatch: AppDispatch = useDispatch();
   const searchParams = useSearchParams();
@@ -988,9 +990,13 @@ const Products = ({
   const countryQuery = searchParams?.get("country");
   const pageQuery = Number(searchParams?.get("page")) || 1;
 
-  const { products, page, pages, count, listStatus, error } = useSelector(
+  const { products: reduxProducts, page, pages: reduxPages, count: reduxCount, listStatus, error } = useSelector(
     (state: RootState) => state.products
   );
+
+  const products = (initialData?.products && listStatus === "idle") ? initialData.products : reduxProducts;
+  const count = (initialData?.count !== undefined && listStatus === "idle") ? initialData.count : reduxCount;
+  const pages = (initialData?.pages !== undefined && listStatus === "idle") ? initialData.pages : reduxPages;
 
   const { orders: userOrders } = useSelector(
     (state: RootState) => state.orders
@@ -1140,7 +1146,7 @@ const Products = ({
     setPlayingVideoUrl(null);
   };
 
-  const isLoading = listStatus === "loading";
+  const isLoading = !initialData && listStatus === "loading";
   const isError = listStatus === "failed";
   const errorMessage = String(error);
 
@@ -1249,7 +1255,7 @@ const Products = ({
                   exit={{ x: "-100%" }}
                   transition={{ type: "spring", damping: 25, stiffness: 200 }}
                   className="absolute top-0 left-0 bottom-0 w-[85%] max-w-sm bg-white overflow-y-auto"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e: React.MouseEvent) => e.stopPropagation()}
                 >
                   <FilterSidebar
                     filters={filters}
@@ -1326,7 +1332,7 @@ const Products = ({
               </div>
             )}
 
-            {!isLoading && !isError && products.length === 0 && (
+            {!isLoading && !isError && (!products || products.length === 0) && (
               <div className="text-center py-20">
                 <h3 className="text-xl font-semibold">No Plans Found</h3>
                 <p className="mt-2 text-gray-500">
@@ -1354,7 +1360,7 @@ const Products = ({
               </div>
             )}
 
-            {!isLoading && !isError && products.length > 0 && (
+            {!isLoading && !isError && products && products.length > 0 && (
               <div
                 className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}
               >
