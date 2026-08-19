@@ -67,7 +67,7 @@ const Hero = () => {
   // Fetch products once for search suggestions
   useEffect(() => {
     if (listStatus === "idle") {
-      dispatch(fetchProducts({}));
+      dispatch(fetchProducts({ limit: 100 }));
     }
   }, [dispatch, listStatus]);
 
