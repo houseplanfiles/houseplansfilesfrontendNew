@@ -1,9 +1,7 @@
 "use client";
 
-import CountUp from "react-countup";
 import { motion } from "@/components/MotionWrapper";
 
-// Yeh component ek number ko 0 se end tak animate karega
 interface AnimatedStatProps {
   end: number;
   suffix?: string;
@@ -20,13 +18,7 @@ const AnimatedStat = ({ end, suffix, label }: AnimatedStatProps) => {
       transition={{ duration: 0.5 }}
     >
       <div className="text-2xl md:text-3xl font-bold group-hover:text-accent transition-colors duration-300 group-hover:scale-110 transform">
-        <CountUp
-          end={end}
-          duration={0.5} // Faster animation to prevent long tasks and TBT
-          suffix={suffix}
-          enableScrollSpy // Yeh tabhi start hoga jab screen par dikhega
-          scrollSpyOnce={true} // Sirf ek baar animate hoga
-        />
+        {end}{suffix}
       </div>
       <div className="text-sm md:text-base text-white/80">{label}</div>
     </motion.div>

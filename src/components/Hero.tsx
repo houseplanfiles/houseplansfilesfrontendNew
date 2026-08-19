@@ -64,15 +64,12 @@ const Hero = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
 
-  // Fetch products once for search suggestions
-  useEffect(() => {
+  // Fetch products only when user interacts with search to save TBT and LCP
+  const handleSearchFocus = () => {
     if (listStatus === "idle") {
-      const timer = setTimeout(() => {
-        dispatch(fetchProducts({ limit: 15 }));
-      }, 2500); // Delay by 2.5s to not block initial hydration
-      return () => clearTimeout(timer);
+      dispatch(fetchProducts({ limit: 15 }));
     }
-  }, [dispatch, listStatus]);
+  };
 
   // Live search suggestions
   useEffect(() => {
@@ -233,6 +230,7 @@ const Hero = () => {
                 className="h-12 text-base border-2 border-transparent bg-gray-50 focus:border-orange-500 focus:ring-0 text-gray-700 transition-all duration-300 hover:bg-gray-100 rounded-xl px-4"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={handleSearchFocus}
                 autoComplete="off"
               />
 
