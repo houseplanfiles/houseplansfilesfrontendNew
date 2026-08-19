@@ -147,21 +147,19 @@ const Hero = () => {
 
       {/* Hero Content */}
       <div className="relative z-10 text-center max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center h-full pt-10 md:pt-0">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 animate-slide-up leading-[1.3] sm:leading-[1.2] tracking-wide max-w-5xl mx-auto drop-shadow-2xl text-white px-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 leading-[1.3] sm:leading-[1.2] tracking-wide max-w-5xl mx-auto drop-shadow-2xl text-white px-4">
           Find Readymade Home design, Architect, contractor and marketplace shop in your city
         </h2>
 
         <p
-          className="text-sm sm:text-lg md:text-xl mb-6 md:mb-8 text-white/90 font-light animate-fade-in max-w-lg mx-auto md:max-w-none drop-shadow-md"
-          style={{ animationDelay: "0.6s" }}
+          className="text-sm sm:text-lg md:text-xl mb-6 md:mb-8 text-white/90 font-light max-w-lg mx-auto md:max-w-none drop-shadow-md"
         >
           Discover amazing architectural designs for your dream home
         </p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
           className="mb-8 md:mb-10 flex flex-wrap justify-center gap-3 sm:gap-4"
         >
           <Link href="/architects">
@@ -204,8 +202,7 @@ const Hero = () => {
         {/* Search Bar */}
         <div
           ref={searchContainerRef}
-          className="bg-white rounded-xl md:rounded-2xl p-2 sm:p-4 shadow-large max-w-2xl w-full mx-auto animate-scale-in relative"
-          style={{ animationDelay: "0.9s" }}
+          className="bg-white rounded-xl md:rounded-2xl p-2 sm:p-4 shadow-large max-w-2xl w-full mx-auto relative"
         >
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
             <div className="flex-1">
