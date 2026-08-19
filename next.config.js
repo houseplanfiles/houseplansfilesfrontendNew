@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: false,
   transpilePackages: ["framer-motion"],
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
+  },
 
   typescript: {
     ignoreBuildErrors: true,
