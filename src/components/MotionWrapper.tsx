@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, CSSProperties, ElementType } from "react";
+import React, { CSSProperties, ElementType } from "react";
 
 // All framer-motion specific props that should NOT be passed to DOM elements
 const MOTION_PROPS = new Set([
@@ -38,25 +38,17 @@ function toStyle(obj?: Record<string, any>): CSSProperties {
 
 function MotionComponent(tag: ElementType) {
   return function Component({ children, initial, animate, whileInView, transition, style, className, onClick, ...rest }: any) {
-    const [mounted, setMounted] = useState(false);
     const duration = transition?.duration ?? 0.5;
-    const delay = transition?.delay ?? 0;
-
-    useEffect(() => {
-      const timer = setTimeout(() => setMounted(true), delay * 1000 + 50);
-      return () => clearTimeout(timer);
-    }, [delay]);
-
-    const baseStyle = toStyle(initial);
-    const animStyle = toStyle(whileInView || animate);
-    const currentStyle = mounted ? animStyle : baseStyle;
+    
+    // Always render in the final "animated" state immediately to avoid JS execution
+    const animStyle = toStyle(whileInView || animate || initial);
     const domProps = filterMotionProps(rest);
 
     return React.createElement(
       tag,
       {
         className,
-        style: { transition: `all ${duration}s ease`, ...currentStyle, ...style },
+        style: { transition: `all ${duration}s ease`, ...animStyle, ...style },
         onClick,
         ...domProps,
       },
