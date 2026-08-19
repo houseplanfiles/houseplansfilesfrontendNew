@@ -4,8 +4,7 @@ import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 
 const CorporateInquiryPageClient = dynamic(
-  () => import("@/components/CorporateInquiryPageClient"),
-  { ssr: false }
+  () => import("@/components/CorporateInquiryPageClient")
 );
 
 export default function Page() {

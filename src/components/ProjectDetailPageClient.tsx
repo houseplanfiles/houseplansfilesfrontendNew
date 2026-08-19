@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion } from "@/components/MotionWrapper";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";

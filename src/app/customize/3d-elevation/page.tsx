@@ -4,8 +4,7 @@ import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 
 const ThreeDElevationPageClient = dynamic(
-  () => import("@/components/ThreeDElevationPageClient"),
-  { ssr: false }
+  () => import("@/components/ThreeDElevationPageClient")
 );
 
 export default function Page() {

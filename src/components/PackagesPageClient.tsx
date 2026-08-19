@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 
 
 import { Loader2, ChevronDown } from "lucide-react";

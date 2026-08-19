@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, usePathname, useParams, useSearchParams} from "next/navigation";
+import { useRouter, usePathname, useSearchParams} from "next/navigation";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
 
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import {
   Filter,
   Heart,
@@ -40,13 +40,14 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { useWishlist } from "@/contexts/WishlistContext";
-const house3 = "/floorplan1.jpg";
 import { toast } from "sonner";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import DisplayPrice from "@/components/DisplayPrice";
 import { Textarea } from "@/components/ui/textarea";
 import { submitCustomizationRequest } from "@/lib/features/customization/customizationSlice";
 import useDebounce from "@/hooks/useDebounce";
+
+const house3 = "/floorplan1.jpg";
 
 // --- 1. SEO DATA MAPPING ---
 // Yahan humne har category ke liye alag se meta title aur description store kiya hai
@@ -219,7 +220,7 @@ const VideoModal = ({
             src={embedUrl}
             title="YouTube video player"
             loading="lazy"
-            frameBorder="0"
+            style={{ border: "none" }}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>

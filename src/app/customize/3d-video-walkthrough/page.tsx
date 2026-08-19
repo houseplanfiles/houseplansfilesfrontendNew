@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 
 const ThreeDVideoWalkthorughClient = dynamic(
   () => import("@/components/ThreeDVideoWalkthorughClient"),
-  { ssr: false }
 );
 
 export default function Page() {

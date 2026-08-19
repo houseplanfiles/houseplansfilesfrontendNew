@@ -4,7 +4,7 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-import { motion } from "framer-motion";
+import { motion } from "@/components/MotionWrapper";
 import { CreditCard, FileText } from "lucide-react"; // FileText for policy documents
 
 const RefundCancellationPolicy = () => {

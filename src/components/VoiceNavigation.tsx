@@ -2,7 +2,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Mic, MicOff, Loader2, Sparkles } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";

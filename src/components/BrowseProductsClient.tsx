@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import {
   Loader2, ServerCrash, Filter, Heart, Download, Lock,
   ChevronLeft, ChevronRight, X, Search, Youtube,

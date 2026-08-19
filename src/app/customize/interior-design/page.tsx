@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 
 const InteriorDesignClient = dynamic(
   () => import("@/components/InteriorDesignClient"),
-  { ssr: false }
 );
 
 export default function Page() {

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 // src/pages/CareersPage.jsx
 import React from "react";
-import { motion } from "framer-motion";
+import { motion } from "@/components/MotionWrapper";
 
  
 import Navbar from "@/components/Navbar";

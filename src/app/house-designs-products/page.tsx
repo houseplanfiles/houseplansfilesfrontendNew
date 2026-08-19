@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 
 const ConstructionProductsPageClient = dynamic(
   () => import("@/components/ConstructionProductsPageClient"),
-  { ssr: false }
 );
 
 export default function Page() {

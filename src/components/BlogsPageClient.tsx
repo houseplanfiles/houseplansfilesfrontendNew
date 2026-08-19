@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { motion } from "framer-motion";
+import { motion } from "@/components/MotionWrapper";
 import { Calendar, User, Loader2, ServerCrash } from "lucide-react";
 import { fetchAllPosts, BlogPost } from "@/lib/features/blog/blogSlice";
 import { RootState, AppDispatch } from "@/lib/store";

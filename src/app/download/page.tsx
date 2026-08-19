@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 
 const DownloadsPageClient = dynamic(
   () => import("@/components/DownloadsPageClient"),
-  { ssr: false }
 );
 
 export default function Page() {

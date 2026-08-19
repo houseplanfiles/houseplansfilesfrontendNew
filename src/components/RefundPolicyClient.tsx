@@ -3,7 +3,7 @@ import Image from "next/image";
 
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion } from "@/components/MotionWrapper";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ShieldCheck, FileText, UserCheck, Clock, AlertTriangle, Mail } from "lucide-react";

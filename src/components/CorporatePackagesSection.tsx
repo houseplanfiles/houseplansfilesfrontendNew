@@ -1,7 +1,7 @@
 "use client";
 // 📁 src/components/CorporatePackagesSection.tsx
 
-import { motion } from "framer-motion";
+import { motion } from "@/components/MotionWrapper";
 import Link from "next/link";
 import { Building2, Store, Factory } from "lucide-react";
 import { Button } from "@/components/ui/button";

@@ -5,7 +5,7 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-import { motion } from "framer-motion";
+import { motion } from "@/components/MotionWrapper";
 import { Gavel } from "lucide-react"; // An icon for legal pages
 
 const TermsAndConditions = () => {
