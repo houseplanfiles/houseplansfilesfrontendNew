@@ -1,9 +1,11 @@
 "use client";
+import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 // 📁 src/pages/PackagesPage.tsx
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -155,31 +157,28 @@ const PackagesPage = () => {
     <>
       
       <Navbar />
-      <main className="overflow-x-hidden">
-        {/* --- HERO SECTION --- */}
-        <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.7 }}
-          className="relative py-16 md:py-32 text-center text-white"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="absolute inset-0 bg-black/60 z-0"></div>
-          <div className="container mx-auto px-4 relative z-10">
-            <h1 className="text-3xl md:text-6xl font-extrabold mb-3 md:mb-6">
+      <main>
+        {/* Hero Section */}
+        <section className="relative py-16 md:py-32 text-center text-white overflow-hidden">
+          <Image
+            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+            alt="Packages Hero"
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover -z-10"
+          />
+          <div className="absolute inset-0 bg-black/60 -z-10" />
+          <div className="relative z-10 container mx-auto px-4 animate-fade-in">
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
               Our Architectural Packages
             </h1>
-            <p className="text-sm md:text-2xl max-w-3xl mx-auto opacity-90 font-light">
-              Find the perfect design package that fits your needs, from
+            <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-90">
+              Find the perfect design package that fits your needs. From
               standard plans to corporate solutions.
             </p>
           </div>
-        </motion.section>
+        </section>
 
         {/* Loading aur Error State ko handle karein */}
         {status === "loading" && (
