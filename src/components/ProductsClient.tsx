@@ -1108,8 +1108,8 @@ const Products = ({
     };
 
     // Check if the selected category has custom SEO data
-    if (filters.category && seoDataByCategory[filters.category]) {
-      return seoDataByCategory[filters.category];
+    if (filters.category && (seoDataByCategory as Record<string, { title: string; description: string }>)[filters.category]) {
+      return (seoDataByCategory as Record<string, { title: string; description: string }>)[filters.category];
     }
 
     // Fallback to default if no specific category is matched
