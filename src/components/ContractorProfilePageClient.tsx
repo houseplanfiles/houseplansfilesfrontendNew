@@ -39,20 +39,21 @@ import { trackAnalytics } from "@/lib/analytics";
 
 
 interface ContractorProfilePageClientProps {
-  contractorId?: string;
+  initialContractor?: any;
 }
 
-const ContractorProfilePage = ({ contractorId }: ContractorProfilePageClientProps = {}) => {
+const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClientProps = {}) => {
   const params = useParams();
-  const id = (contractorId || params?.id) as string;
+  const id = params?.id as string;
   const router = useRouter();
-  const [contractor, setContractor] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [contractor, setContractor] = useState<any>(initialContractor || null);
+  const [loading, setLoading] = useState(!initialContractor);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
 
   useEffect(() => {
     const fetchContractor = async () => {
+      if (initialContractor) return;
       try {
         const { data } = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/contractor/${id}`

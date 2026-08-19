@@ -41,15 +41,15 @@ import { toast } from "sonner";
 
 
 interface ArchitectProfilePageClientProps {
-  architectId?: string;
+  initialArchitect?: any;
 }
 
-const ArchitectProfilePage = ({ architectId }: ArchitectProfilePageClientProps = {}) => {
+const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientProps = {}) => {
   const params = useParams();
-  const id = architectId || params?.id;
+  const id = params?.id;
   const router = useRouter();
-  const [architect, setArchitect] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [architect, setArchitect] = useState<any>(initialArchitect || null);
+  const [loading, setLoading] = useState(!initialArchitect);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
 
@@ -57,6 +57,7 @@ const ArchitectProfilePage = ({ architectId }: ArchitectProfilePageClientProps =
 
   useEffect(() => {
     const fetchArchitect = async () => {
+      if (initialArchitect) return;
       setLoading(true);
       setError(null);
       try {

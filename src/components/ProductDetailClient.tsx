@@ -254,13 +254,12 @@ const VideoModal = ({
 };
 
 interface ProductDetailClientProps {
-  slug?: string;
   initialProduct?: any;
 }
 
-const DetailPage = ({ slug: slugProp, initialProduct }: ProductDetailClientProps = {}) => {
+const DetailPage = ({ initialProduct }: ProductDetailClientProps = {}) => {
   const params = useParams<{ slug: string }>();
-  const slug = slugProp || params?.slug;
+  const slug = params?.slug;
   const pathname = usePathname();
   const dispatch: AppDispatch = useDispatch();
 
@@ -310,7 +309,7 @@ const DetailPage = ({ slug: slugProp, initialProduct }: ProductDetailClientProps
     initialProduct,
   ]);
 
-  if (listStatus === "loading" || listStatus === "idle") {
+  if (!displayData && (listStatus === "loading" || listStatus === "idle")) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-12 h-12 animate-spin text-primary" />
@@ -318,7 +317,7 @@ const DetailPage = ({ slug: slugProp, initialProduct }: ProductDetailClientProps
     );
   }
 
-  if (!displayData || listStatus === "failed") {
+  if (!displayData && listStatus === "failed") {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />

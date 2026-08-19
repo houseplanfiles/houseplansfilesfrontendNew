@@ -169,23 +169,28 @@ const InquiryModal = ({ product, onClose }: { product: any; onClose: () => void 
 };
 
 // --- 2. MAIN COMPONENT ---
-const SellerProductDetailPage: FC = () => {
+interface SellerProductProps {
+  initialProduct?: any;
+}
+
+const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => {
   const { productId } = useParams();
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
 
-  const { product, status, error } = useSelector(
+  const { product: reduxProduct, status, error } = useSelector(
     (state: RootState) => state.sellerProducts
   );
+  const product = initialProduct || reduxProduct;
   
   const [selectedImage, setSelectedImage] = useState("");
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
 
   useEffect(() => {
-    if (productId) {
+    if (productId && !initialProduct) {
       dispatch(fetchPublicProductById(productId as string));
     }
-  }, [dispatch, productId]);
+  }, [dispatch, productId, initialProduct]);
 
   useEffect(() => {
     if (product?.image) {
@@ -198,7 +203,7 @@ const SellerProductDetailPage: FC = () => {
     return [product.image, ...(product.images || [])].filter(Boolean);
   }, [product]);
 
-  if (status === "loading") {
+  if (!product && status === "loading") {
     return (
       <div className="min-h-screen flex flex-col">
         <Navbar />
@@ -210,7 +215,7 @@ const SellerProductDetailPage: FC = () => {
     );
   }
 
-  if (status === "failed" || !product) {
+  if (!product && status === "failed") {
     return (
       <div className="min-h-screen flex flex-col">
         <Navbar />
