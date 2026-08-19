@@ -7,7 +7,24 @@ const DownloadsPageClient = dynamic(
   () => import("@/components/DownloadsPageClient"),
 );
 
-export default function Page() {
+async function getInitialDownloadProducts() {
+  try {
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+    const res = await fetch(
+      `${BACKEND_URL}/api/products?pageNumber=1&limit=12&category=Digital Downloads`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export default async function Page() {
+  const initialData = await getInitialDownloadProducts();
+
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50">
@@ -18,7 +35,7 @@ export default function Page() {
         </div>
       </div>
     }>
-      <DownloadsPageClient />
+      <DownloadsPageClient initialData={initialData} />
     </Suspense>
   );
 }

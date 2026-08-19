@@ -41,7 +41,7 @@ const slugify = (text: any) => {
     .replace(/[^\w\-]+/g, "")
     .replace(/\-\-+/g, "-");
 };
-const ProductCard = ({ product, userOrders }: any) => {
+const ProductCard = ({ product, userOrders, index }: any) => {
   const router = useRouter();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { userInfo } = useSelector((state: RootState) => state.user);
@@ -137,13 +137,14 @@ const ProductCard = ({ product, userOrders }: any) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 flex flex-col group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <div className="relative p-2">
         <Link href={linkTo}>
-          <div className="aspect-square w-full bg-gray-100 rounded-md overflow-hidden">
-            <img
-              src={mainImage}
-              alt={productName}
-              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-            />
-          </div>
+          <img
+            src={mainImage}
+            alt={productName}
+            loading={index < 4 ? "eager" : "lazy"}
+            // @ts-ignore
+            fetchPriority={index < 4 ? "high" : "auto"}
+            className="w-full h-40 sm:h-48 object-cover rounded-md group-hover:scale-105 transition-transform duration-500"
+          />
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-gray-900/80 text-white text-xs font-bold px-4 py-2 rounded-md shadow-lg text-center">
             <p>{plotSize}</p>
             <p className="text-xs font-normal">
@@ -255,7 +256,7 @@ const ProductCard = ({ product, userOrders }: any) => {
     </div>
   );
 };
-const DownloadsPage = () => {
+const DownloadsPage = ({ initialData }: { initialData?: any }) => {
   const dispatch: AppDispatch = useDispatch();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -264,9 +265,11 @@ const DownloadsPage = () => {
 
   const pageQuery = Number(searchParams.get("page")) || 1;
 
-  const { products, pages, count, listStatus, error } = useSelector(
+  const { products: reduxProducts, pages, count, listStatus, error } = useSelector(
     (state: RootState) => state.products
   );
+
+  const products = (initialData?.products && listStatus === "idle") ? initialData.products : reduxProducts;
   const { orders: userOrders } = useSelector(
     (state: RootState) => state.orders
   );
@@ -307,7 +310,7 @@ const DownloadsPage = () => {
     }
     setJumpToPage("");
   };
-  const isLoading = listStatus === "loading";
+  const isLoading = !initialData && listStatus === "loading";
   const isError = listStatus === "failed";
   const errorMessage = String(error);
   return (
@@ -347,11 +350,12 @@ const DownloadsPage = () => {
           )}
           {!isLoading && !isError && products.length > 0 && (
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {products.map((product) => (
+              {products.map((product: any, idx: number) => (
                 <ProductCard
                   key={product._id}
                   product={product}
                   userOrders={userOrders}
+                  index={idx}
                 />
               ))}
             </div>
