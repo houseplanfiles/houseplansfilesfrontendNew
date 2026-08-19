@@ -197,7 +197,7 @@ export default function RootLayout({
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -211,12 +211,12 @@ export default function RootLayout({
 
         {/* Google Ads */}
         <Script
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=AW-11378419977`}
         />
         <Script
           id="google-ads"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];

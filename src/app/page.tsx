@@ -1,19 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
-
-// Dynamic Imports for below-the-fold components to improve LCP/FCP
-const ReadymadePlansSection = dynamic(() => import("@/components/ReadymadePlansSection"));
-const TopArchitectsSection = dynamic(() => import("@/components/TopArchitectsSection"));
-const ConstructionPartnersSection = dynamic(() => import("@/components/ConstructionPartnersSection"));
-const SellersSection = dynamic(() => import("@/components/SellersSection"));
-const RegionalPlansSection = dynamic(() => import("@/components/RegionalPlansSection"));
-const Testimonials = dynamic(() => import("@/components/Testimonials"));
-const CTA = dynamic(() => import("@/components/CTA"));
+import ReadymadePlansSection from "@/components/ReadymadePlansSection";
+import TopArchitectsSection from "@/components/TopArchitectsSection";
+import ConstructionPartnersSection from "@/components/ConstructionPartnersSection";
+import SellersSection from "@/components/SellersSection";
+import RegionalPlansSection from "@/components/RegionalPlansSection";
+import Testimonials from "@/components/Testimonials";
+import CTA from "@/components/CTA";
 
 export const metadata: Metadata = {
   title: "Readymade houseplans, Architects, interior designer, contractor, Building material and Home decor",
