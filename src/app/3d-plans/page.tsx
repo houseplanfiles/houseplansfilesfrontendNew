@@ -29,7 +29,8 @@ async function getInitial3DPlans(pageNumber: number = 1) {
   }
 }
 
-export default async function ThreeDPlansPage() {
+export default async function ThreeDPlansPage({ searchParams }: { searchParams: { page?: string } }) {
+  const pageNumber = Number(searchParams?.page) || 1;
   const initialData = await getInitial3DPlans(pageNumber);
 
   return (

@@ -30,7 +30,8 @@ async function getInitialHousePlans(pageNumber: number = 1) {
   }
 }
 
-export default async function HousePlansPage() {
+export default async function HousePlansPage({ searchParams }: { searchParams: { page?: string } }) {
+  const pageNumber = Number(searchParams?.page) || 1;
   const initialData = await getInitialHousePlans(pageNumber);
 
   return (
