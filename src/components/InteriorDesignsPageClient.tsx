@@ -589,17 +589,23 @@ const ProductCard = ({ product, userOrders }: any) => {
   );
 };
 
-const InteriorDesignsPage = () => {
+const InteriorDesignsPage = ({ initialData }: { initialData?: any }) => {
   const dispatch: AppDispatch = useDispatch();
   const { toast } = useToast();
+  const router = useRouter();
 
   const {
-    products: adminProducts,
-    count: adminCount,
-    pages: adminPages,
-    listStatus: adminListStatus,
-    error: adminError,
+    products: reduxProducts,
+    count: reduxCount,
+    pages: reduxPages,
+    listStatus,
+    error,
   } = useSelector((state: RootState) => state.products);
+
+  const products = (initialData?.products && listStatus === "idle") ? initialData.products : reduxProducts;
+  const currentCount = (initialData?.count !== undefined && listStatus === "idle") ? initialData.count : reduxCount;
+  const currentPages = (initialData?.pages !== undefined && listStatus === "idle") ? initialData.pages : reduxPages;
+
   const {
     plans: professionalPlans,
     listStatus: profListStatus,
@@ -658,14 +664,14 @@ const InteriorDesignsPage = () => {
 
   const combinedProducts = useMemo(
     () => [
-      ...(Array.isArray(adminProducts)
-        ? adminProducts.map((p) => ({ ...p, source: "admin" }))
+      ...(Array.isArray(products)
+        ? products.map((p) => ({ ...p, source: "admin" }))
         : []),
       ...(Array.isArray(professionalPlans)
         ? professionalPlans.map((p) => ({ ...p, source: "professional" }))
         : []),
     ],
-    [adminProducts, professionalPlans]
+    [products, professionalPlans]
   );
 
   const filteredProducts = useMemo(() => {
@@ -711,13 +717,12 @@ const InteriorDesignsPage = () => {
     });
   }, [combinedProducts, selectedCategories]);
 
-  const totalCount = adminCount || 0;
-  const totalPages = adminPages > 0 ? adminPages : 1;
+  const totalCount = currentCount || 0;
+  const totalPages = currentPages > 0 ? currentPages : 1;
 
-  const isLoading =
-    adminListStatus === "loading" || profListStatus === "loading";
-  const isError = adminListStatus === "failed" || profListStatus === "failed";
-  const errorMessage = String(adminError || profError || "An error occurred.");
+  const isLoading = !initialData && (listStatus === "loading" || profListStatus === "loading");
+  const isError = listStatus === "failed" || profListStatus === "failed";
+  const errorMessage = String(error || profError || "An error occurred.");
 
   const handlePageJump = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

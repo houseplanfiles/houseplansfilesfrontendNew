@@ -104,7 +104,7 @@ const VideoModal = ({
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.8, y: 50 }}
         className="relative w-full max-w-4xl bg-black rounded-lg overflow-hidden shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e: React.MouseEvent) => e.stopPropagation()}
       >
         <div className="aspect-video">
           <iframe
@@ -715,21 +715,28 @@ const ProductCard = ({ plan, userOrders, onPlayVideo }: any) => {
   );
 };
 
-const ThreeDPlansPage = () => {
+const ThreeDPlansPage = ({ initialData }: { initialData?: any }) => {
   const dispatch: AppDispatch = useDispatch();
+  const router = useRouter();
 
   const {
-    products: adminProducts,
-    count: adminCount,
-    pages: adminPages,
-    listStatus: adminListStatus,
-    error: adminError,
+    products: reduxProducts,
+    listStatus,
+    error,
+    page,
+    pages,
+    count,
   } = useSelector((state: RootState) => state.products);
+
   const {
     plans: professionalPlans,
     listStatus: profListStatus,
     error: profError,
   } = useSelector((state: RootState) => state.professionalPlans);
+
+  const products = (initialData?.products && listStatus === "idle") ? initialData.products : reduxProducts;
+  const currentCount = (initialData?.count !== undefined && listStatus === "idle") ? initialData.count : count;
+  const currentPages = (initialData?.pages !== undefined && listStatus === "idle") ? initialData.pages : pages;
 
   const { userInfo } = useSelector((state: RootState) => state.user);
   const { orders } = useSelector((state: RootState) => state.orders);
@@ -804,23 +811,21 @@ const ThreeDPlansPage = () => {
 
   const combinedProducts = useMemo(
     () => [
-      ...(Array.isArray(adminProducts)
-        ? adminProducts.map((p) => ({ ...p, source: "admin" }))
+      ...(Array.isArray(products)
+        ? products.map((p: any) => ({ ...p, source: "admin" }))
         : []),
       ...(Array.isArray(professionalPlans)
-        ? professionalPlans.map((p) => ({ ...p, source: "professional" }))
+        ? professionalPlans.map((p: any) => ({ ...p, source: "professional" }))
         : []),
     ],
-    [adminProducts, professionalPlans]
+    [products, professionalPlans]
   );
 
-  const totalCount = adminCount || 0;
-  const totalPages = adminPages > 0 ? adminPages : 1;
+  const totalPages = currentPages > 0 ? currentPages : 1;
 
-  const isLoading =
-    adminListStatus === "loading" || profListStatus === "loading";
-  const isError = adminListStatus === "failed" || profListStatus === "failed";
-  const errorMessage = String(adminError || profError);
+  const isLoading = !initialData && (listStatus === "loading" || profListStatus === "loading");
+  const isError = listStatus === "failed" || profListStatus === "failed";
+  const errorMessage = String(error || profError);
   const pageTitle = "Floor Plans + 3D Elevation";
 
   const handlePageJump = (e: React.FormEvent<HTMLFormElement>) => {
@@ -839,9 +844,6 @@ const ThreeDPlansPage = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      {/* --- SEO METADATA UPDATED HERE --- */}
-      
-
       <Navbar />
 
       <AnimatePresence>
@@ -869,7 +871,7 @@ const ThreeDPlansPage = () => {
                   {pageTitle}
                 </h1>
                 <p className="text-gray-500 text-xs sm:text-sm mt-1">
-                  Showing {combinedProducts.length} of {totalCount} results
+                  Showing {combinedProducts.length} of {currentCount || 0} results
                   <span className="hidden sm:inline">
                     {" "}
                     on page {currentPage} of {totalPages}
@@ -958,7 +960,7 @@ const ThreeDPlansPage = () => {
                     layout
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6"
                   >
-                    {combinedProducts.map((plan) => (
+                    {combinedProducts.map((plan: any) => (
                       <ProductCard
                         key={`${plan.source}-${plan._id}`}
                         plan={plan}

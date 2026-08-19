@@ -2,12 +2,36 @@ import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Interior Design Plans | Modern Home Interiors | HousePlanFiles",
+  description: "Browse premium interior design plans — modern, contemporary & traditional home interior designs. Find the perfect interior plan for every room.",
+  alternates: { canonical: "https://www.houseplanfiles.com/interior-designs" },
+};
 
 const InteriorDesignsPageClient = dynamic(
   () => import("@/components/InteriorDesignsPageClient")
 );
 
-export default function Page() {
+async function getInitialInteriorProducts() {
+  try {
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+    const res = await fetch(
+      `${BACKEND_URL}/api/products?pageNumber=1&limit=12&category=Interior Design`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export default async function Page() {
+  const initialData = await getInitialInteriorProducts();
+
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50">
@@ -18,7 +42,7 @@ export default function Page() {
         </div>
       </div>
     }>
-      <InteriorDesignsPageClient />
+      <InteriorDesignsPageClient initialData={initialData} />
     </Suspense>
   );
 }

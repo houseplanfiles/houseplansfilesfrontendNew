@@ -107,7 +107,7 @@ const VideoModal = ({
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.8, y: 50 }}
         className="relative w-full max-w-4xl bg-black rounded-lg overflow-hidden shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e: React.MouseEvent) => e.stopPropagation()}
       >
         <div className="aspect-video">
           <iframe
