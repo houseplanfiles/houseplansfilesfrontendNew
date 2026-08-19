@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
 
@@ -77,14 +78,12 @@ const BrandPartnersSection: React.FC = () => {
                 key={logo.name + index}
                 className="flex-shrink-0 w-32 mx-8 flex items-center justify-center"
               >
-                <img
+                <Image
                   src={logo.src}
                   alt={logo.name}
+                  width={128}
+                  height={64}
                   className="max-h-16 w-auto object-contain transition-transform duration-300 hover:scale-110"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      "https://via.placeholder.com/128x64?text=Logo";
-                  }}
                 />
               </div>
             ))}

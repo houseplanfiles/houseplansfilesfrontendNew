@@ -224,10 +224,12 @@ const ProductCard = ({ product, onInquiryClick, onImageClick }: any) => (
       className="relative h-36 sm:h-64 overflow-hidden bg-gray-100 cursor-zoom-in"
       onClick={() => onImageClick(product.image)}
     >
-      <img
-        src={product.image || "https://via.placeholder.com/400x300"}
+      <Image
+        src={product.image || "/marketplace_banner.png"}
         alt={product.name}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+        className="object-cover transition-transform duration-700 group-hover:scale-110"
       />
       <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-white/90 backdrop-blur-md px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm z-10">
         <MapPin size={10} className="sm:w-3 sm:h-3 text-orange-500" />
@@ -444,7 +446,7 @@ const SellersSection: FC = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchPublicSellerProducts({ limit: 500 }));
+    dispatch(fetchPublicSellerProducts({ limit: 8 }));
   }, [dispatch]);
 
   // Unique Categories & Cities from products
