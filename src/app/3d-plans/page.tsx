@@ -14,11 +14,11 @@ const ThreeDPlansPageClient = dynamic(
   () => import("@/components/ThreeDPlansPageClient")
 );
 
-async function getInitial3DPlans() {
+async function getInitial3DPlans(pageNumber: number = 1) {
   try {
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
     const res = await fetch(
-      `${BACKEND_URL}/api/products?pageNumber=1&limit=12&category=3D Elevation`,
+      `${BACKEND_URL}/api/products?pageNumber=${pageNumber}&limit=12&category=3D Elevation`,
       { next: { revalidate: 3600 } }
     );
     if (!res.ok) return null;
@@ -30,7 +30,7 @@ async function getInitial3DPlans() {
 }
 
 export default async function ThreeDPlansPage() {
-  const initialData = await getInitial3DPlans();
+  const initialData = await getInitial3DPlans(pageNumber);
 
   return (
     <Suspense fallback={
