@@ -387,7 +387,7 @@ const PartnersPage: FC = () => {
                       </Link>
                       {contractor.contractorType === "Premium" && (
                         <>
-                          <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2">
+                          <div className="flex flex-col gap-2">
                             <Button onClick={() => window.open(waLink)} className="bg-[#25D366] text-[11px] sm:text-xs h-10 px-0 sm:px-2 hover:bg-[#128C7E] w-full">
                               <MessageCircle className="w-3 h-3 mr-1" /> WhatsApp
                             </Button>

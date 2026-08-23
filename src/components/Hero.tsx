@@ -125,7 +125,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative h-[80vh] min-h-[550px] md:h-screen md:min-h-[700px] flex items-center justify-center text-white overflow-hidden">
+    <section className="relative min-h-[80vh] h-auto py-24 md:h-screen md:min-h-[700px] flex items-center justify-center text-white overflow-hidden">
       {/* Background Slider */}
       <div className="absolute inset-0">
         <Image
