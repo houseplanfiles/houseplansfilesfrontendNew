@@ -139,7 +139,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="tel:+919755248864" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="#" onClick={(e) => handleCallClick(e, "+919755248864")} className="text-muted-foreground hover:text-primary transition-colors">
                   +91 97 552 488 64
                 </a>
               </div>

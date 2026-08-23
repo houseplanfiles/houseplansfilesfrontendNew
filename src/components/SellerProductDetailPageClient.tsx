@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
+import { handleCallClick } from "@/utils/callHelper";
 import React, { useState, useEffect, useMemo, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
