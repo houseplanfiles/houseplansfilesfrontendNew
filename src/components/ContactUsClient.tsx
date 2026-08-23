@@ -1,5 +1,6 @@
 "use client";
 
+import { handleCallClick } from "@/utils/callHelper";
 import React, { useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -125,7 +126,7 @@ const ContactUs = () => {
                     <div>
                       <h4 className="font-bold text-lg">Phone</h4>
                       <a
-                        href="tel:+919755248864"
+                        href="#" onClick={(e) => handleCallClick(e, "+919755248864")}
                         className="text-gray-600 mt-1 hover:text-orange-600 transition-colors"
                       >
                         +91 97552 48864

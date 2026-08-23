@@ -350,14 +350,14 @@ const RegisterClient = () => {
     <>
       <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-soft-teal p-4 py-12">
-        <div className="bg-card text-foreground p-8 sm:p-10 rounded-2xl shadow-2xl max-w-lg w-full">
+        <div className="bg-card text-foreground p-8 sm:p-10 rounded-2xl shadow-2xl max-w-3xl w-full">
           <form className="space-y-5" onSubmit={handleSubmit}>
-            <fieldset className="space-y-3">
+            <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <legend className="sr-only">Select your registration type</legend>
               {userRoles.map((role) => (
                 <div key={role.id}>
                   <input type="radio" id={`${role.id}-radio`} name="user-role" value={role.id} className="sr-only" checked={selectedRole === role.id} onChange={(e) => handleRoleChange(e.target.value)} />
-                  <label htmlFor={`${role.id}-radio`} className={`flex items-center justify-between w-full p-4 rounded-lg cursor-pointer border-2 transition-all duration-300 ${selectedRole === role.id ? "bg-accent text-accent-foreground border-transparent shadow-md" : "bg-input border-border hover:border-primary/50"}`}>
+                  <label htmlFor={`${role.id}-radio`} className={`flex items-center justify-between w-full p-4 h-full rounded-lg cursor-pointer border-2 transition-all duration-300 ${selectedRole === role.id ? "bg-accent text-accent-foreground border-transparent shadow-md" : "bg-input border-border hover:border-primary/50"}`}>
                     <span className="font-semibold">{role.label}</span>
                     {selectedRole === role.id && <CheckCircle size={20} />}
                   </label>
@@ -365,7 +365,7 @@ const RegisterClient = () => {
               ))}
             </fieldset>
 
-            <AnimatePresence mode="wait">{renderRoleSpecificFields()}</AnimatePresence>
+            <AnimatePresence>{renderRoleSpecificFields()}</AnimatePresence>
 
             <div><Label htmlFor="email">Email address*</Label><Input type="email" id="email" required value={formData.email} onChange={handleChange} /></div>
             <div>
