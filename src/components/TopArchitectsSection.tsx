@@ -251,7 +251,7 @@ const ArchitectCard: FC<{
           </Button>
 
           {type === "Premium" && (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex flex-col gap-2">
               <Button
                 onClick={() => window.open(waLink, "_blank")}
                 className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11 px-0"
