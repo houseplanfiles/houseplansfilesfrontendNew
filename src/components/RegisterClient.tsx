@@ -365,7 +365,7 @@ const RegisterClient = () => {
               ))}
             </fieldset>
 
-            <AnimatePresence mode="wait">{renderRoleSpecificFields()}</AnimatePresence>
+            <AnimatePresence>{renderRoleSpecificFields()}</AnimatePresence>
 
             <div><Label htmlFor="email">Email address*</Label><Input type="email" id="email" required value={formData.email} onChange={handleChange} /></div>
             <div>
