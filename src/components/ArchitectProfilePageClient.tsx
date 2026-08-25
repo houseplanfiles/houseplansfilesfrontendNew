@@ -1,7 +1,7 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 
-import { handleCallClick } from "@/utils/callHelper";
+import { handleCallClick } from "@/utils/callHelper";`nimport { trackAnalytics } from "@/lib/analytics";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -266,7 +266,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
 
                 {/* Standard / Verified -> WhatsApp */}
                 {(architect.contractorType === "Verified" || architect.contractorType === "Premium") && architect.phone && (
-                  <Button onClick={() => window.open(`https://wa.me/91${architect.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${architect.name}, I am interested in your services.`)}`, "_blank")} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-14 sm:h-16 rounded-xl sm:rounded-2xl text-sm sm:text-lg font-extrabold shadow-xl transition-all border-none px-0">
+                  <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(`https://wa.me/91${architect.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${architect.name}, I am interested in your services.`)}`, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-14 sm:h-16 rounded-xl sm:rounded-2xl text-sm sm:text-lg font-extrabold shadow-xl transition-all border-none px-0">
                     <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" /> WhatsApp Us
                   </Button>
                 )}
