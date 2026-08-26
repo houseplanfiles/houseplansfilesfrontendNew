@@ -21,9 +21,11 @@ import { registerUser, resetActionStatus } from "@/lib/features/users/userSlice"
 
 const userRoles = [
   { id: "user", label: "Register as a Home owner" },
-  { id: "professional", label: "Register as a Architect, engineer, interior designer" },
-  { id: "seller", label: "Register as a manufacturer, supplier or Shop" },
-  { id: "Contractor", label: "Register as a Contractor" },
+  { id: "industrial", label: "Register as Industrial & infra services (PEB, prefab, manpower, machinery)" },
+  { id: "professional", label: "Register as architect, engineer....." },
+  { id: "other_services", label: "Register in other services (Pest control, fabricator, roofing, flooring)" },
+  { id: "Contractor", label: "Register as contractor (Building, interior, electrical.......)" },
+  { id: "seller", label: "Register as building material (Manufacturer, supplier, shop)" },
 ];
 
 const professionalSubRoles = [
@@ -147,8 +149,11 @@ const RegisterClient = () => {
     e.preventDefault();
     const dataToSubmit = new FormData();
     for (const key in formData) {
-      const value = formData[key as keyof typeof formData];
+      let value = formData[key as keyof typeof formData];
       if (value) {
+        if (key === "role" && (value === "industrial" || value === "other_services")) {
+          value = "Contractor";
+        }
         if (key === "serviceTypes" && Array.isArray(value)) {
           dataToSubmit.append(key, JSON.stringify(value));
         } else {
@@ -288,6 +293,8 @@ const RegisterClient = () => {
           </motion.div>
         );
 
+      case "industrial":
+      case "other_services":
       case "Contractor":
         return (
           <motion.div {...motionProps} className="space-y-5">
