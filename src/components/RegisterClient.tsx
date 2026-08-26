@@ -18,6 +18,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { registerUser, resetActionStatus } from "@/lib/features/users/userSlice";
+import { State, City } from 'country-state-city';
+import ReactSelect from 'react-select';
 
 const userRoles = [
   { id: "user", label: "Register as a Home owner" },
@@ -77,10 +79,11 @@ const RegisterClient = () => {
 
   const defaultFormData = {
     role: "user", email: "", password: "", phone: "", name: "",
-    profession: "", businessName: "", address: "", city: "", pincode: "", materialType: "", category: "",
+    profession: "", businessName: "", address: "", city: "", state: "", pincode: "", materialType: "", category: "",
     companyName: "", experience: "", bankAccountNumber: "", bankName: "", businessType: "Both",
     ifscCode: "", upiId: "", gstNumber: "", natureOfBusiness: "",
     businessAddress: "", qualification: "", skills: "", serviceTypes: [] as string[],
+    selectedStates: [] as any[], selectedCities: [] as any[], registrationAmount: 0,
     charges: "", photo: null as File | null, businessCertification: null as File | null,
     shopImage: null as File | null, portfolio: null as File | null,
   };
@@ -150,18 +153,110 @@ const RegisterClient = () => {
     const dataToSubmit = new FormData();
     for (const key in formData) {
       let value = formData[key as keyof typeof formData];
-      if (value) {
+      if (value !== undefined && value !== null && value !== "") {
         if (key === "role" && (value === "industrial" || value === "other_services")) {
           value = "Contractor";
         }
-        if (key === "serviceTypes" && Array.isArray(value)) {
-          dataToSubmit.append(key, JSON.stringify(value));
+        if (key === "selectedStates" || key === "selectedCities" || key === "serviceTypes") {
+          if (Array.isArray(value) && value.length > 0) {
+            dataToSubmit.append(key, JSON.stringify(value));
+          }
         } else {
           dataToSubmit.append(key, value as string | Blob);
         }
       }
     }
     (dispatch as AppDispatch)(registerUser(dataToSubmit));
+  };
+
+  useEffect(() => {
+    if (selectedRole === "industrial") {
+      const stateCount = formData.selectedStates.length;
+      const cityCount = formData.selectedCities.length;
+      setFormData(prev => ({ ...prev, registrationAmount: (stateCount * 9999) + (cityCount * 4999) }));
+    } else {
+      setFormData(prev => ({ ...prev, registrationAmount: 0 }));
+    }
+  }, [formData.selectedStates, formData.selectedCities, selectedRole]);
+
+  const renderLocationFields = (isMulti: boolean = false) => {
+    const stateOptions = State.getStatesOfCountry('IN').map(s => ({ value: s.isoCode, label: s.name }));
+    
+    let cityOptions: any[] = [];
+    if (isMulti) {
+      formData.selectedStates.forEach((s: any) => {
+        cityOptions = [...cityOptions, ...City.getCitiesOfState('IN', s.value).map(c => ({ value: c.name, label: c.name, stateCode: s.value }))];
+      });
+    } else if (formData.state) {
+      cityOptions = City.getCitiesOfState('IN', formData.state).map(c => ({ value: c.name, label: c.name }));
+    }
+
+    if (isMulti) {
+      return (
+        <div className="space-y-4 md:col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label>Select States*</Label>
+              <ReactSelect 
+                isMulti
+                options={stateOptions}
+                value={formData.selectedStates}
+                onChange={(val: any) => setFormData(prev => ({ ...prev, selectedStates: val || [], selectedCities: prev.selectedCities.filter((c:any) => val?.some((s:any) => s.value === c.stateCode)) }))}
+                placeholder="Select states..."
+                className="text-sm"
+              />
+            </div>
+            <div>
+              <Label>Select Cities*</Label>
+              <ReactSelect 
+                isMulti
+                options={cityOptions}
+                value={formData.selectedCities}
+                onChange={(val: any) => setFormData(prev => ({ ...prev, selectedCities: val || [] }))}
+                placeholder="Select cities..."
+                isDisabled={formData.selectedStates.length === 0}
+                className="text-sm"
+              />
+            </div>
+          </div>
+          {formData.registrationAmount > 0 && (
+            <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <p className="text-sm font-semibold text-orange-800">Package Amount Calculated:</p>
+              <p className="text-2xl font-bold text-orange-600">₹{formData.registrationAmount.toLocaleString()}</p>
+              <p className="text-xs text-orange-600/80 mt-1">
+                {formData.selectedStates.length} State(s) × ₹9,999 + {formData.selectedCities.length} City(s) × ₹4,999
+              </p>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:col-span-2">
+        <div>
+          <Label>State*</Label>
+          <ReactSelect 
+            options={stateOptions}
+            value={stateOptions.find(s => s.value === formData.state) || null}
+            onChange={(val: any) => setFormData(prev => ({ ...prev, state: val?.value || "", city: "" }))}
+            placeholder="Select state..."
+            className="text-sm"
+          />
+        </div>
+        <div>
+          <Label>City*</Label>
+          <ReactSelect 
+            options={cityOptions}
+            value={cityOptions.find(c => c.value === formData.city) || null}
+            onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
+            placeholder="Select city..."
+            isDisabled={!formData.state}
+            className="text-sm"
+          />
+        </div>
+      </div>
+    );
   };
 
   const renderRoleSpecificFields = () => {
@@ -198,10 +293,8 @@ const RegisterClient = () => {
                 <SelectContent>{professionalSubRoles.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div><Label>City*</Label><Input id="city" required value={formData.city} onChange={handleChange} placeholder="Your city" /></div>
-              <div><Label>Qualification (Optional)</Label><Input id="qualification" value={formData.qualification} onChange={handleChange} placeholder="e.g. B.Arch, M.Tech" /></div>
-            </div>
+            {renderLocationFields(false)}
+            <div><Label>Qualification (Optional)</Label><Input id="qualification" value={formData.qualification} onChange={handleChange} placeholder="e.g. B.Arch, M.Tech" /></div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Experience*</Label>
@@ -240,7 +333,7 @@ const RegisterClient = () => {
             <div><Label>Business Name*</Label><Input id="businessName" required value={formData.businessName} onChange={handleChange} /></div>
             <div><Label>Phone*</Label><Input id="phone" type="tel" required value={formData.phone} onChange={handleChange} /></div>
             <div><Label>Address*</Label><Textarea id="address" required value={formData.address} onChange={handleChange} /></div>
-            <div><Label>City*</Label><Input id="city" required value={formData.city} onChange={handleChange} /></div>
+            {renderLocationFields(false)}
             <div><Label>Pincode*</Label><Input id="pincode" required value={formData.pincode} onChange={handleChange} /></div>
             <div>
               <Label>Business Category*</Label>
@@ -340,7 +433,7 @@ const RegisterClient = () => {
                 ))}
               </div>
             </div>
-            <div><Label>City*</Label><Input id="city" required value={formData.city} onChange={handleChange} /></div>
+            {renderLocationFields(false)}
             <div><Label>GST Number (Optional)</Label><Input id="gstNumber" value={formData.gstNumber} onChange={handleChange} placeholder="Enter GSTIN" /></div>
             <div><Label htmlFor="businessCertification">Business Certification (Optional)</Label><Input id="businessCertification" type="file" accept="image/*,.pdf" onChange={handleFileChange} /></div>
             <div><Label htmlFor="photo">Profile Picture (DP)*</Label><Input id="photo" type="file" accept="image/*" required onChange={handleFileChange} /></div>
