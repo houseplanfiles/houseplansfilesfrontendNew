@@ -326,8 +326,8 @@ const ArchitectsPage: FC = () => {
                                   <Button onClick={() => window.open(waLink, "_blank")} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1">
                                     <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> WhatsApp
                                   </Button>
-                                  <Button onClick={() => revealedPhoneIds.has(architect._id) ? window.open(callLink) : togglePhoneReveal(architect._id)} className={`w-full ${revealedPhoneIds.has(architect._id) ? 'bg-orange-600' : 'bg-blue-600'} text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1`}>
-                                    <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />{revealedPhoneIds.has(architect._id) ? architect.phone : "Call Now"}
+                                  <Button onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = callLink; }} className="w-full bg-blue-600 text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1">
+                                    <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> Call Now
                                   </Button>
                                 </div>
                               </>

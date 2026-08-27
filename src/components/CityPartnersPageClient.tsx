@@ -340,7 +340,7 @@ const PartnersPage: FC = () => {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
             {paginatedContractors.map((contractor) => {
-              const phoneStr = contractor.phone ? contractor.phone.replace(/\D/g, '') : '';
+              const phoneStr = contractor.phone ? (contractor.phone || '').replace(/\D/g, '') : '';
               const waLink = `https://wa.me/${phoneStr}`;
 
               return (
@@ -392,14 +392,11 @@ const PartnersPage: FC = () => {
                               <MessageCircle className="w-3 h-3 mr-1" /> WhatsApp
                             </Button>
                             <Button onClick={() => {
-                                if (revealedPhoneIds.has(contractor._id)) {
-                                  window.location.href = `tel:${contractor.phone.replace(/\D/g, '')}`;
-                                } else {
-                                  togglePhoneReveal(contractor._id);
-                                }
-                              }} className={`text-[11px] sm:text-xs h-10 px-0 sm:px-2 w-full ${revealedPhoneIds.has(contractor._id) ? 'bg-orange-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
-                              <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> {revealedPhoneIds.has(contractor._id) ? contractor.phone : "Call Now"}
-                            </Button>
+                                trackAnalytics('user', contractor._id, 'call_click');
+                                window.location.href = `tel:${(contractor.phone || '').replace(/\D/g, '')}`;
+                              }} className="bg-blue-600 hover:bg-blue-700 text-white text-[11px] sm:text-xs h-10 px-0 sm:px-2 w-full">
+                                <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> Call Now
+                              </Button>
                           </div>
                         </>
                       )}
