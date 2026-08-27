@@ -701,12 +701,12 @@ const MultiRoleRegisterPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>City*</Label>
-                <Input
-                  id="city"
-                  required
-                  value={formData.city}
-                  onChange={handleChange}
-                  placeholder="Enter city"
+                <ReactSelect 
+                  options={cityOptions}
+                  value={cityOptions.find(c => c.value === formData.city) || null}
+                  onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
+                  placeholder="Search and select city in India..."
+                  className="text-sm"
                 />
               </div>
               <div>
@@ -936,11 +936,12 @@ const MultiRoleRegisterPage = () => {
             </div>
             <div>
               <Label>City*</Label>
-              <Input
-                id="city"
-                required
-                value={formData.city}
-                onChange={handleChange}
+              <ReactSelect 
+                options={cityOptions}
+                value={cityOptions.find(c => c.value === formData.city) || null}
+                onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
+                placeholder="Search and select city in India..."
+                className="text-sm"
               />
             </div>
             <div>
