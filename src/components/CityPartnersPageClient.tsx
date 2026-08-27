@@ -391,7 +391,13 @@ const PartnersPage: FC = () => {
                             <Button onClick={() => window.open(waLink)} className="bg-[#25D366] text-[11px] sm:text-xs h-10 px-0 sm:px-2 hover:bg-[#128C7E] w-full">
                               <MessageCircle className="w-3 h-3 mr-1" /> WhatsApp
                             </Button>
-                            <Button onClick={() => togglePhoneReveal(contractor._id)} className={`text-[11px] sm:text-xs h-10 px-0 sm:px-2 w-full ${revealedPhoneIds.has(contractor._id) ? 'bg-orange-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
+                            <Button onClick={() => {
+                                if (revealedPhoneIds.has(contractor._id)) {
+                                  window.location.href = `tel:${contractor.phone.replace(/\D/g, '')}`;
+                                } else {
+                                  togglePhoneReveal(contractor._id);
+                                }
+                              }} className={`text-[11px] sm:text-xs h-10 px-0 sm:px-2 w-full ${revealedPhoneIds.has(contractor._id) ? 'bg-orange-600' : 'bg-blue-600 hover:bg-blue-700'}`}>
                               <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> {revealedPhoneIds.has(contractor._id) ? contractor.phone : "Call Now"}
                             </Button>
                           </div>

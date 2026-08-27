@@ -24,6 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { State, City } from 'country-state-city';
+import ReactSelect from 'react-select';
 import { Textarea } from "@/components/ui/textarea";
 import {
   registerUser,
@@ -90,6 +92,8 @@ const materialTypes = [
 ];
 
 const experienceLevels = ["0-2 Years", "2-5 Years", "5-10 Years", "10+ Years"];
+
+const cityOptions = (City.getCitiesOfCountry("IN") || []).map(c => ({ value: c.name, label: `${c.name}, ${c.stateCode}` }));
 
 const MultiRoleRegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -475,12 +479,12 @@ const MultiRoleRegisterPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>City*</Label>
-                <Input
-                  id="city"
-                  required
-                  value={formData.city}
-                  onChange={handleChange}
-                  placeholder="Your city"
+                <ReactSelect 
+                  options={cityOptions}
+                  value={cityOptions.find(c => c.value === formData.city) || null}
+                  onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
+                  placeholder="Search and select city in India..."
+                  className="text-sm"
                 />
               </div>
               <div>
@@ -697,12 +701,12 @@ const MultiRoleRegisterPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>City*</Label>
-                <Input
-                  id="city"
-                  required
-                  value={formData.city}
-                  onChange={handleChange}
-                  placeholder="Enter city"
+                <ReactSelect 
+                  options={cityOptions}
+                  value={cityOptions.find(c => c.value === formData.city) || null}
+                  onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
+                  placeholder="Search and select city in India..."
+                  className="text-sm"
                 />
               </div>
               <div>
@@ -932,11 +936,12 @@ const MultiRoleRegisterPage = () => {
             </div>
             <div>
               <Label>City*</Label>
-              <Input
-                id="city"
-                required
-                value={formData.city}
-                onChange={handleChange}
+              <ReactSelect 
+                options={cityOptions}
+                value={cityOptions.find(c => c.value === formData.city) || null}
+                onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
+                placeholder="Search and select city in India..."
+                className="text-sm"
               />
             </div>
             <div>
