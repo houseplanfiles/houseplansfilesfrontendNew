@@ -1,7 +1,8 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 
-import { handleCallClick } from "@/utils/callHelper";`nimport { trackAnalytics } from "@/lib/analytics";
+import { handleCallClick } from "@/utils/callHelper";
+import { trackAnalytics } from "@/lib/analytics";
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
