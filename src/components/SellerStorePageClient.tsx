@@ -260,14 +260,14 @@ const ProductCard = ({
           </div>
 
           {sellerData?.contractorType === "Premium" ? (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2">
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
                   const waLink = `https://wa.me/91${sellerData.phone}?text=${encodeURIComponent(`Hi ${sellerData.businessName}, I am interested in your product: "${product.name}".`)}`;
                   window.open(waLink, "_blank");
                 }}
-                className="bg-[#25D366] hover:bg-[#128C7E] text-white rounded-lg px-1 sm:px-2 h-9 flex items-center justify-center text-[9px] sm:text-[10px] font-bold w-full"
+                className="bg-[#25D366] hover:bg-[#128C7E] text-white rounded-lg px-2 h-9 flex items-center justify-center text-[10px] sm:text-xs font-bold w-full"
               >
                 <MessageCircle size={14} className="mr-1" /> WhatsApp
               </Button>
@@ -276,7 +276,7 @@ const ProductCard = ({
                   e.stopPropagation();
                   window.location.href = `tel:${sellerData.phone}`;
                 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-1 sm:px-2 h-9 flex items-center justify-center text-[9px] sm:text-[10px] font-bold w-full"
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-2 h-9 flex items-center justify-center text-[10px] sm:text-xs font-bold w-full"
               >
                 <Phone size={14} className="mr-1" /> Call Now
               </Button>
