@@ -182,13 +182,15 @@ const RegisterClient = () => {
   const renderLocationFields = (isMulti: boolean = false) => {
     const stateOptions = State.getStatesOfCountry('IN').map(s => ({ value: s.isoCode, label: s.name }));
     
+    // For single select, let's just load ALL Indian cities.
+    // For multi select, if states are selected, load cities for those states. If none, load all.
     let cityOptions: any[] = [];
-    if (isMulti) {
+    if (isMulti && formData.selectedStates && formData.selectedStates.length > 0) {
       formData.selectedStates.forEach((s: any) => {
-        cityOptions = [...cityOptions, ...City.getCitiesOfState('IN', s.value).map(c => ({ value: c.name, label: c.name, stateCode: s.value }))];
+        cityOptions = [...cityOptions, ...City.getCitiesOfState('IN', s.value).map(c => ({ value: c.name, label: `${c.name} (${s.label})`, stateCode: s.value }))];
       });
-    } else if (formData.state) {
-      cityOptions = City.getCitiesOfState('IN', formData.state).map(c => ({ value: c.name, label: c.name }));
+    } else {
+      cityOptions = City.getCitiesOfCountry('IN').map(c => ({ value: c.name, label: `${c.name}, ${c.stateCode}` }));
     }
 
     if (isMulti) {
@@ -202,7 +204,7 @@ const RegisterClient = () => {
                 options={stateOptions}
                 value={formData.selectedStates}
                 onChange={(val: any) => setFormData(prev => ({ ...prev, selectedStates: val || [], selectedCities: prev.selectedCities.filter((c:any) => val?.some((s:any) => s.value === c.stateCode)) }))}
-                placeholder="Select states..."
+                placeholder="Search & select states..."
                 className="text-sm"
               />
             </div>
@@ -213,8 +215,7 @@ const RegisterClient = () => {
                 options={cityOptions}
                 value={formData.selectedCities}
                 onChange={(val: any) => setFormData(prev => ({ ...prev, selectedCities: val || [] }))}
-                placeholder="Select cities..."
-                isDisabled={formData.selectedStates.length === 0}
+                placeholder="Search & select cities..."
                 className="text-sm"
               />
             </div>
@@ -233,28 +234,15 @@ const RegisterClient = () => {
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:col-span-2">
-        <div>
-          <Label>State*</Label>
-          <ReactSelect 
-            options={stateOptions}
-            value={stateOptions.find(s => s.value === formData.state) || null}
-            onChange={(val: any) => setFormData(prev => ({ ...prev, state: val?.value || "", city: "" }))}
-            placeholder="Select state..."
-            className="text-sm"
-          />
-        </div>
-        <div>
-          <Label>City*</Label>
-          <ReactSelect 
-            options={cityOptions}
-            value={cityOptions.find(c => c.value === formData.city) || null}
-            onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
-            placeholder="Select city..."
-            isDisabled={!formData.state}
-            className="text-sm"
-          />
-        </div>
+      <div className="w-full">
+        <Label>City*</Label>
+        <ReactSelect 
+          options={cityOptions}
+          value={cityOptions.find(c => c.value === formData.city) || null}
+          onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
+          placeholder="Search and select city in India..."
+          className="text-sm"
+        />
       </div>
     );
   };
@@ -433,7 +421,7 @@ const RegisterClient = () => {
                 ))}
               </div>
             </div>
-            {renderLocationFields(false)}
+            {renderLocationFields(selectedRole === "industrial")}
             <div><Label>GST Number (Optional)</Label><Input id="gstNumber" value={formData.gstNumber} onChange={handleChange} placeholder="Enter GSTIN" /></div>
             <div><Label htmlFor="businessCertification">Business Certification (Optional)</Label><Input id="businessCertification" type="file" accept="image/*,.pdf" onChange={handleFileChange} /></div>
             <div><Label htmlFor="photo">Profile Picture (DP)*</Label><Input id="photo" type="file" accept="image/*" required onChange={handleFileChange} /></div>
