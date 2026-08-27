@@ -267,18 +267,18 @@ const ProductCard = ({
                   const waLink = `https://wa.me/91${sellerData.phone}?text=${encodeURIComponent(`Hi ${sellerData.businessName}, I am interested in your product: "${product.name}".`)}`;
                   window.open(waLink, "_blank");
                 }}
-                className="bg-[#25D366] hover:bg-[#128C7E] text-white rounded-lg px-2 h-9 flex items-center justify-center text-[10px] sm:text-xs font-bold w-full"
+                className="bg-[#25D366] hover:bg-[#128C7E] text-white rounded-lg px-0 sm:px-2 h-8 sm:h-9 flex items-center justify-center text-[9px] sm:text-xs font-bold w-full overflow-hidden"
               >
-                <MessageCircle size={14} className="mr-1" /> WhatsApp
+                <MessageCircle size={12} className="mr-1 flex-shrink-0" /> <span className="truncate">WhatsApp</span>
               </Button>
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
                   window.location.href = `tel:${sellerData.phone}`;
                 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-2 h-9 flex items-center justify-center text-[10px] sm:text-xs font-bold w-full"
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-0 sm:px-2 h-8 sm:h-9 flex items-center justify-center text-[9px] sm:text-xs font-bold w-full overflow-hidden"
               >
-                <Phone size={14} className="mr-1" /> Call Now
+                <Phone size={12} className="mr-1 flex-shrink-0" /> <span className="truncate">Call Now</span>
               </Button>
             </div>
           ) : (
