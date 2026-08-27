@@ -190,7 +190,7 @@ const RegisterClient = () => {
         cityOptions = [...cityOptions, ...City.getCitiesOfState('IN', s.value).map(c => ({ value: c.name, label: `${c.name} (${s.label})`, stateCode: s.value }))];
       });
     } else {
-      cityOptions = City.getCitiesOfCountry('IN').map(c => ({ value: c.name, label: `${c.name}, ${c.stateCode}` }));
+      cityOptions = (City.getCitiesOfCountry('IN') || []).map(c => ({ value: c.name, label: `${c.name}, ${c.stateCode}` }));
     }
 
     if (isMulti) {
