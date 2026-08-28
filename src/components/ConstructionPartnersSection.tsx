@@ -197,7 +197,7 @@ const PartnerCard: FC<{
 
     <div className="px-5 pb-5 flex flex-col flex-grow relative">
       <div className="-mt-10 mb-3">
-        <Avatar className="w-20 h-20 border-4 border-white shadow-md">
+        <Avatar className="w-14 h-14 border-4 border-white shadow-md">
           {partner.photoUrl ? (
             <Image
               src={getImageUrl(partner.photoUrl)}
@@ -256,14 +256,14 @@ const PartnerCard: FC<{
               className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11 px-0"
             >
               <MessageCircle className="w-3.5 h-3.5 mr-1 shrink-0" />
-              <span className="text-[11px] sm:text-xs">WhatsApp</span>
+              <span className="text-sm md:text-base sm:text-xs">WhatsApp</span>
             </Button>
             <Button 
               onClick={() => { trackAnalytics('user', partner._id, 'call_click'); window.location.href = callLink; }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors h-11 px-0"
             >
               <Phone className="w-3.5 h-3.5 mr-1 shrink-0" />
-              <span className="text-[11px] sm:text-xs">Call Now</span>
+              <span className="text-sm md:text-base sm:text-xs">Call Now</span>
             </Button>
           </div>
         )}
@@ -423,7 +423,7 @@ const ConstructionPartnersSection: FC = () => {
           {/* --- WHAT ARE YOU LOOKING FOR? GRID SECTION 1 --- */}
           <div className="mb-16">
             <div className="text-center pt-8 mb-10 animate-fade-in">
-              <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tight mb-4">
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">
                 Home Designing &amp; Construction <span className="text-orange-600">Services</span>
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
@@ -431,7 +431,7 @@ const ConstructionPartnersSection: FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-6">
               {HOME_SERVICES.map((option) => {
                 return (
                   <button
@@ -439,10 +439,10 @@ const ConstructionPartnersSection: FC = () => {
                     onClick={() => router.push(option.link)}
                     className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100/80 rounded-2xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:-translate-y-1 group text-center min-h-[120px]"
                   >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon size={20} strokeWidth={2} />
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                      <option.icon size={40} strokeWidth={2} />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
+                    <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
                       {option.label}
                     </span>
                   </button>
@@ -462,7 +462,7 @@ const ConstructionPartnersSection: FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-6">
               {OTHER_SERVICES.map((option) => {
                 return (
                   <button
@@ -470,10 +470,10 @@ const ConstructionPartnersSection: FC = () => {
                     onClick={() => router.push(option.link)}
                     className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100/80 rounded-2xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:-translate-y-1 group text-center min-h-[120px]"
                   >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon size={20} strokeWidth={2} />
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                      <option.icon size={40} strokeWidth={2} />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
+                    <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
                       {option.label}
                     </span>
                   </button>
@@ -493,7 +493,7 @@ const ConstructionPartnersSection: FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-6">
               {INDUSTRIAL_SERVICES.map((option) => {
                 return (
                   <button
@@ -501,10 +501,10 @@ const ConstructionPartnersSection: FC = () => {
                     onClick={() => router.push(option.link)}
                     className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100/80 rounded-2xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:-translate-y-1 group text-center min-h-[120px]"
                   >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon size={20} strokeWidth={2} />
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                      <option.icon size={40} strokeWidth={2} />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
+                    <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
                       {option.label}
                     </span>
                   </button>
@@ -521,7 +521,7 @@ const ConstructionPartnersSection: FC = () => {
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
               <div>
                 <Badge className="bg-orange-500 hover:bg-orange-600 mb-4 px-4 py-1.5 text-sm border-none">Trusted Network</Badge>
-                <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl whitespace-nowrap font-extrabold text-white tracking-tight">
                   City Contractor ( Building & Interior )
                 </h2>
                 <p className="mt-4 text-base md:text-lg text-gray-300 max-w-2xl px-2 md:px-0">
@@ -530,7 +530,7 @@ const ConstructionPartnersSection: FC = () => {
               </div>
               <Button
                 onClick={() => router.push("/register")}
-                className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-8 px-12 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-lg flex items-center gap-3 whitespace-nowrap"
+                className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 px-6 md:py-6 md:px-8 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-base md:text-lg flex items-center gap-2 whitespace-nowrap shrink-0"
               >
                 <UserPlus className="w-6 h-6" />
                 Register With Us
