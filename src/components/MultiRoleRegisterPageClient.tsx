@@ -915,27 +915,31 @@ const MultiRoleRegisterPage = () => {
               />
             </div>
             <div className="space-y-3">
-              <Label className="text-sm font-semibold text-primary">Services Offered*</Label>
-              <div className="grid grid-cols-2 gap-4">
-                {["NEW CONSTRUCTION", "RENOVATION"].map((type) => (
-                  <div
-                    key={type}
-                    onClick={() => handleServiceTypeChange(type)}
-                    className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${formData.serviceTypes.includes(type)
-                        ? "bg-orange-50 border-orange-500 text-orange-700 shadow-sm"
-                        : "bg-gray-50 border-gray-100 text-gray-500 hover:border-gray-200"
-                      }`}
-                  >
-                    <span className="text-xs font-bold">{type}</span>
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${formData.serviceTypes.includes(type)
-                        ? "bg-orange-500 border-orange-500 text-white"
-                        : "border-gray-300"
-                      }`}>
-                      {formData.serviceTypes.includes(type) && <CheckCircle size={12} />}
-                    </div>
+              {selectedRole !== 'industrial' && (
+                <>
+                  <Label className="text-sm font-semibold text-primary">Services Offered*</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {["NEW CONSTRUCTION", "RENOVATION"].map((type) => (
+                      <div
+                        key={type}
+                        onClick={() => handleServiceTypeChange(type)}
+                        className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${formData.serviceTypes.includes(type)
+                          ? "bg-orange-50 border-orange-500 text-orange-700 shadow-sm"
+                          : "bg-gray-50 border-gray-100 text-gray-500 hover:border-gray-200"
+                          }`}
+                      >
+                        <span className="text-xs font-bold">{type}</span>
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${formData.serviceTypes.includes(type)
+                          ? "bg-orange-500 border-orange-500 text-white"
+                          : "border-gray-300"
+                          }`}>
+                          {formData.serviceTypes.includes(type) && <CheckCircle size={12} />}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              )}
             </div>
             <div>
               <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple or type your own)</span></Label>
