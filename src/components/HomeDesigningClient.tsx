@@ -1,11 +1,7 @@
 "use client";
 import Image from "next/image";
-
-
 import Link from "next/link";
 import { useRouter, usePathname, useParams, useSearchParams } from "next/navigation";
-
-
 import React, { useState, useEffect, useMemo, FC, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
@@ -14,10 +10,6 @@ import {
   createInquiry,
   resetActionStatus,
 } from "@/lib/features/inquiries/inquirySlice";
-
-
-
-
 // Components
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -41,7 +33,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-
 // Animation & Icons
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { toast } from "sonner";
@@ -64,7 +55,6 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { trackAnalytics } from "@/lib/analytics";
-
 // --- Types ---
 type ContractorType = {
   _id: string;
@@ -80,13 +70,10 @@ type ContractorType = {
   status?: string;
   contractorType?: "Normal" | "Verified" | "Premium";
 };
-
-// --- Helpers ---
 const getFileUrl = (path: string) => {
   if (!path) return "";
   return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path.replace(/\\/g, "/")}`;
 };
-
 const CONTRACTOR_CATEGORIES = [
   "All",
   "Building",
@@ -109,8 +96,6 @@ const CONTRACTOR_CATEGORIES = [
   "Carpenter",
   "Glass Fabricator"
 ];
-
-// --- Contact Modal Component ---
 const ContactModal: FC<{
   isOpen: boolean;
   onClose: () => void;
@@ -118,9 +103,7 @@ const ContactModal: FC<{
 }> = ({ isOpen, onClose, user }) => {
   const dispatch: AppDispatch = useDispatch();
   const { actionStatus } = useSelector((state: RootState) => state.inquiries);
-
   if (!isOpen || !user) return null;
-
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -139,7 +122,6 @@ const ContactModal: FC<{
       senderWhatsapp: formData.get("whatsapp") as string,
       requirements: formData.get("requirements") as string,
     };
-
     dispatch(createInquiry(inquiryData)).then((result) => {
       if (createInquiry.fulfilled.match(result)) {
         toast.success(`Your inquiry has been sent to ${user.name}!`);
@@ -151,7 +133,6 @@ const ContactModal: FC<{
       }
     });
   };
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -209,14 +190,10 @@ const ContactModal: FC<{
     </AnimatePresence>
   );
 };
-
-// --- Main Page Component ---
 const PartnersPage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-
   const { contractors, contractorListStatus } = useSelector((state: RootState) => state.user);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedContractor, setSelectedContractor] = useState<ContractorType | null>(null);
   const searchParams = useSearchParams();
@@ -227,7 +204,6 @@ const PartnersPage: FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [revealedPhoneIds, setRevealedPhoneIds] = useState<Set<string>>(new Set());
   const itemsPerPage = 8;
-
   const togglePhoneReveal = (id: string) => {
     setRevealedPhoneIds(prev => {
       const next = new Set(prev);
@@ -236,11 +212,9 @@ const PartnersPage: FC = () => {
       return next;
     });
   };
-
   useEffect(() => {
     dispatch(fetchContractors({ page: 1, limit: 500 }));
   }, [dispatch]);
-
   useEffect(() => {
     setCurrentPage(1);
     const params = new URLSearchParams();
@@ -249,7 +223,6 @@ const PartnersPage: FC = () => {
     const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(newUrl, { scroll: false });
   }, [cityFilter, professionFilter, router, pathname]);
-
   const approvedContractors = useMemo(() => {
     if (!Array.isArray(contractors)) return [];
     return (contractors as ContractorType[]).filter((c) => {
@@ -280,13 +253,9 @@ const PartnersPage: FC = () => {
     setSelectedContractor(contractor);
     setIsModalOpen(true);
   };
-
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col w-full overflow-x-hidden">
-
-
       <Navbar />
-
       {/* --- Hero Section --- */}
       <div className="relative bg-gray-900 py-12 sm:py-20 overflow-hidden w-full">
         <div className="absolute inset-0">
@@ -305,7 +274,6 @@ const PartnersPage: FC = () => {
           </div>
         </div>
       </div>
-
       <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10 pb-20">
         {/* --- Filters Section --- */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-4 sm:p-6 mb-10 w-full">
@@ -338,16 +306,14 @@ const PartnersPage: FC = () => {
             </div>
           </div>
         </div>
-
         {/* --- Grid Section --- */}
         {contractorListStatus === "loading" ? (
           <div className="text-center py-24"><Loader2 className="h-12 w-12 animate-spin text-orange-600 mx-auto" /></div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
             {paginatedContractors.map((contractor) => {
               const phoneStr = contractor.phone ? (contractor.phone || '').replace(/\D/g, '') : '';
               const waLink = `https://wa.me/${phoneStr}`;
-
               return (
                 <div key={contractor._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full group">
                   <div className="h-28 bg-gray-100 relative">
@@ -357,30 +323,27 @@ const PartnersPage: FC = () => {
                       {contractor.contractorType === "Verified" && <Badge className="bg-blue-600 text-[10px]">Verified</Badge>}
                     </div>
                   </div>
-
                   <div className="px-4 pb-5 flex flex-col flex-grow">
-                    <div className="-mt-8 mb-3 relative z-10">
-                      <Avatar className="w-16 h-16 border-4 border-white shadow-md">
+                    <div className="-mt-10 mb-3 relative z-10">
+                      <Avatar className="w-20 h-20 border-4 border-white shadow-md">
                         <AvatarImage src={contractor.photoUrl} />
                         <AvatarFallback>{contractor.name?.[0]}</AvatarFallback>
                       </Avatar>
                     </div>
-
                     <div className="flex-grow">
-                      <h3 className="font-bold text-gray-900 line-clamp-1">{contractor.name}</h3>
-                      <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
-                        <Building className="w-3 h-3" /> {contractor.companyName || "Independent"}
+                      <h3 className="font-bold text-lg text-gray-900 line-clamp-1">{contractor.name}</h3>
+                      <div className="flex items-center gap-1.5 text-sm text-gray-600 mb-3">
+                        <Building className="w-4 h-4" /> {contractor.companyName || "Independent"}
                       </div>
                       <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-xs bg-gray-50 p-1.5 rounded-md">
-                          <Briefcase className="w-3.5 h-3.5 text-orange-500" /> {contractor.profession}
+                        <div className="flex items-center gap-2 text-sm bg-gray-50 p-2 rounded-md font-medium text-gray-800">
+                          <Briefcase className="w-4 h-4 text-orange-500" /> {contractor.profession}
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-600 px-1">
-                          <MapPin className="w-3.5 h-3.5 text-orange-500" /> {contractor.city}
+                        <div className="flex items-center gap-2 text-sm text-gray-600 px-1 font-medium">
+                          <MapPin className="w-4 h-4 text-orange-500" /> {contractor.city}
                         </div>
                       </div>
                     </div>
-
                     <div className="mt-5 flex flex-col gap-2">
                       <Link href={`/contractors/${contractor._id}`} className="w-full">
                         <Button
@@ -423,7 +386,6 @@ const PartnersPage: FC = () => {
             })}
           </div>
         )}
-
         {/* Pagination Logic handle kiya hai taaki mobile par na kate */}
         {approvedContractors.length > itemsPerPage && (
           <div className="mt-10 flex flex-wrap justify-center gap-2">
@@ -434,7 +396,6 @@ const PartnersPage: FC = () => {
         )}
       </main>
       <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} user={selectedContractor} />
-
       {/* Browse by city section — placed after contractor listings */}
       <section className="bg-orange-50 border-t border-orange-100 py-10 px-4">
         <div className="max-w-7xl mx-auto">
