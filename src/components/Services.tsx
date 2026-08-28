@@ -69,7 +69,7 @@ const Services = () => {
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-colors duration-300 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
                   <option.icon className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1">
+                <span className="text-base md:text-lg font-bold text-gray-800 group-hover:text-orange-600 transition-colors px-1">
                   {option.label}
                 </span>
               </Link>
@@ -98,7 +98,7 @@ const Services = () => {
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-colors duration-300 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
                   <option.icon className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1">
+                <span className="text-base md:text-lg font-bold text-gray-800 group-hover:text-orange-600 transition-colors px-1">
                   {option.label}
                 </span>
               </Link>
@@ -127,7 +127,7 @@ const Services = () => {
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-colors duration-300 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
                   <option.icon className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1">
+                <span className="text-base md:text-lg font-bold text-gray-800 group-hover:text-orange-600 transition-colors px-1">
                   {option.label}
                 </span>
               </Link>
