@@ -439,10 +439,10 @@ const ConstructionPartnersSection: FC = () => {
                     onClick={() => router.push(option.link)}
                     className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100/80 rounded-2xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:-translate-y-1 group text-center min-h-[120px]"
                   >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon size={20} strokeWidth={2} />
+                    <div className={`w-20 h-20 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                      <option.icon size={40} strokeWidth={2} />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
+                    <span className="text-base sm:text-lg md:text-xl font-black text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
                       {option.label}
                     </span>
                   </button>
@@ -470,10 +470,10 @@ const ConstructionPartnersSection: FC = () => {
                     onClick={() => router.push(option.link)}
                     className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100/80 rounded-2xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:-translate-y-1 group text-center min-h-[120px]"
                   >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon size={20} strokeWidth={2} />
+                    <div className={`w-20 h-20 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                      <option.icon size={40} strokeWidth={2} />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
+                    <span className="text-base sm:text-lg md:text-xl font-black text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
                       {option.label}
                     </span>
                   </button>
@@ -501,10 +501,10 @@ const ConstructionPartnersSection: FC = () => {
                     onClick={() => router.push(option.link)}
                     className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100/80 rounded-2xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:-translate-y-1 group text-center min-h-[120px]"
                   >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                      <option.icon size={20} strokeWidth={2} />
+                    <div className={`w-20 h-20 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                      <option.icon size={40} strokeWidth={2} />
                     </div>
-                    <span className="text-[11px] font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
+                    <span className="text-base sm:text-lg md:text-xl font-black text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
                       {option.label}
                     </span>
                   </button>
