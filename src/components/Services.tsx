@@ -66,10 +66,10 @@ const Services = () => {
                 href={option.link}
                 className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:scale-105 group text-center"
               >
-                <div className={`w-20 h-20 rounded-xl flex items-center justify-center mb-3 transition-colors duration-300 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                  <option.icon className="w-10 h-10 transition-transform duration-300 group-hover:scale-110" />
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-3 transition-colors duration-300 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                  <option.icon className="w-7 h-7 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="text-xl md:text-2xl font-black text-gray-800 group-hover:text-orange-600 transition-colors px-1">
+                <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors px-1">
                   {option.label}
                 </span>
               </Link>
@@ -95,10 +95,10 @@ const Services = () => {
                 href={option.link}
                 className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:scale-105 group text-center"
               >
-                <div className={`w-20 h-20 rounded-xl flex items-center justify-center mb-3 transition-colors duration-300 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                  <option.icon className="w-10 h-10 transition-transform duration-300 group-hover:scale-110" />
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-3 transition-colors duration-300 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                  <option.icon className="w-7 h-7 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="text-xl md:text-2xl font-black text-gray-800 group-hover:text-orange-600 transition-colors px-1">
+                <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors px-1">
                   {option.label}
                 </span>
               </Link>
@@ -124,10 +124,10 @@ const Services = () => {
                 href={option.link}
                 className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:scale-105 group text-center"
               >
-                <div className={`w-20 h-20 rounded-xl flex items-center justify-center mb-3 transition-colors duration-300 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                  <option.icon className="w-10 h-10 transition-transform duration-300 group-hover:scale-110" />
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-3 transition-colors duration-300 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
+                  <option.icon className="w-7 h-7 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="text-xl md:text-2xl font-black text-gray-800 group-hover:text-orange-600 transition-colors px-1">
+                <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors px-1">
                   {option.label}
                 </span>
               </Link>
