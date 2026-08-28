@@ -112,6 +112,7 @@ const AllUsersPage = () => {
   const [profileCreationAdmin, setProfileCreationAdmin] = useState(false);
   const [profileStoreManagementAdmin, setProfileStoreManagementAdmin] = useState("None");
   const [paymentStatusAdmin, setPaymentStatusAdmin] = useState("Unpaid");
+  const [documentFile, setDocumentFile] = useState<File | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   // New state for export loading
@@ -327,6 +328,7 @@ const AllUsersPage = () => {
     setIsEditModalOpen(false);
     setTimeout(() => {
       setSelectedUser(null);
+      setDocumentFile(null);
       reset();
     }, 200);
   };
@@ -370,13 +372,27 @@ const AllUsersPage = () => {
     }
 
     try {
+      let finalData: any;
+      if (documentFile) {
+        finalData = new FormData();
+        Object.keys(userData).forEach((key) => {
+          if (userData[key] !== null && userData[key] !== undefined) {
+            finalData.append(key, userData[key]);
+          }
+        });
+        finalData.append("businessCertification", documentFile);
+      } else {
+        finalData = userData;
+      }
+
       await dispatch(
-        updateUserByAdmin({ userId: selectedUser._id, userData })
+        updateUserByAdmin({ userId: selectedUser._id, userData: finalData })
       ).unwrap();
       toast.success("User updated successfully!");
       setIsEditModalOpen(false);
       setTimeout(() => {
         setSelectedUser(null);
+        setDocumentFile(null);
         reset();
         setIsSubmitting(false);
       }, 200);
@@ -761,6 +777,30 @@ const AllUsersPage = () => {
                   {...register("phone")}
                   disabled={isSubmitting}
                 />
+              </div>
+
+              <div className="border-t pt-4 mt-2">
+                <Label htmlFor="adminDocumentUpload" className="font-semibold text-orange-600 flex items-center gap-2 mb-1">
+                  <FileText className="w-4 h-4" /> Upload Document (Admin)
+                </Label>
+                <p className="text-xs text-gray-500 mb-2">Upload qualification, certificate, or ID for this user.</p>
+                <Input
+                  id="adminDocumentUpload"
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setDocumentFile(e.target.files[0]);
+                    }
+                  }}
+                  disabled={isSubmitting}
+                  className="cursor-pointer"
+                />
+                {selectedUser?.businessCertificationUrl && !documentFile && (
+                  <p className="text-xs text-green-600 mt-1">
+                    ✓ User already has a document uploaded.
+                  </p>
+                )}
               </div>
 
               <div className="border-t pt-4 mt-2">
