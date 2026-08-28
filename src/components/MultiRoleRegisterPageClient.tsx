@@ -915,7 +915,7 @@ const MultiRoleRegisterPage = () => {
               />
             </div>
             <div className="space-y-3">
-              {selectedRole !== 'industrial' && (
+              {selectedRole !== 'industrial' && selectedRole !== 'other_services' && (
                 <>
                   <Label className="text-sm font-semibold text-primary">Services Offered*</Label>
                   <div className="grid grid-cols-2 gap-4">
