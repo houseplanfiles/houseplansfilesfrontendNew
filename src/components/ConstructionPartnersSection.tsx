@@ -530,7 +530,7 @@ const ConstructionPartnersSection: FC = () => {
               </div>
               <Button
                 onClick={() => router.push("/register")}
-                className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-8 px-12 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-lg flex items-center gap-3 whitespace-nowrap"
+                className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 px-6 md:py-6 md:px-8 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-base md:text-lg flex items-center gap-2 whitespace-nowrap shrink-0"
               >
                 <UserPlus className="w-6 h-6" />
                 Register With Us
