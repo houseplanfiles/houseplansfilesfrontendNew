@@ -256,14 +256,14 @@ const PartnerCard: FC<{
               className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11 px-0"
             >
               <MessageCircle className="w-3.5 h-3.5 mr-1 shrink-0" />
-              <span className="text-[11px] sm:text-xs">WhatsApp</span>
+              <span className="text-sm md:text-base sm:text-xs">WhatsApp</span>
             </Button>
             <Button 
               onClick={() => { trackAnalytics('user', partner._id, 'call_click'); window.location.href = callLink; }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors h-11 px-0"
             >
               <Phone className="w-3.5 h-3.5 mr-1 shrink-0" />
-              <span className="text-[11px] sm:text-xs">Call Now</span>
+              <span className="text-sm md:text-base sm:text-xs">Call Now</span>
             </Button>
           </div>
         )}
@@ -431,7 +431,7 @@ const ConstructionPartnersSection: FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-6">
               {HOME_SERVICES.map((option) => {
                 return (
                   <button
@@ -462,7 +462,7 @@ const ConstructionPartnersSection: FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-6">
               {OTHER_SERVICES.map((option) => {
                 return (
                   <button
@@ -493,7 +493,7 @@ const ConstructionPartnersSection: FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-6">
               {INDUSTRIAL_SERVICES.map((option) => {
                 return (
                   <button
