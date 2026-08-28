@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { State, City } from 'country-state-city';
-import ReactSelect from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 import { Textarea } from "@/components/ui/textarea";
 import {
   registerUser,
@@ -118,7 +118,7 @@ const MultiRoleRegisterPage = () => {
     profession: "",
     businessName: "",
     address: "",
-    city: "",
+    city: [] as string[],
     pincode: "",
     materialType: "",
     category: "",
@@ -327,7 +327,7 @@ const MultiRoleRegisterPage = () => {
       profession: "",
       businessName: "",
       address: "",
-      city: "",
+      city: [] as string[],
       pincode: "",
       materialType: "",
       category: "",
@@ -371,6 +371,8 @@ const MultiRoleRegisterPage = () => {
       if (value !== undefined && value !== null && value !== "") {
         if (key === "serviceTypes" && Array.isArray(value)) {
           dataToSubmit.append(key, JSON.stringify(value));
+        } else if (key === "city" && Array.isArray(value)) {
+          dataToSubmit.append(key, value.join(", "));
         } else if (key === "role" && ["home_designing", "industrial", "other_services"].includes(value as string)) {
           dataToSubmit.append("role", "Contractor");
         } else {
@@ -475,13 +477,15 @@ const MultiRoleRegisterPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label>City*</Label>
-                <ReactSelect 
+                <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple or type your own)</span></Label>
+                <CreatableSelect
+                  isMulti
                   options={cityOptions}
-                  value={cityOptions.find(c => c.value === formData.city) || null}
-                  onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
-                  placeholder="Search and select city in India..."
+                  value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
+                  onChange={(vals: any) => setFormData(prev => ({ ...prev, city: vals ? vals.map((v: any) => v.value) : [] }))}
+                  placeholder="Search or type city name..."
                   className="text-sm"
+                  formatCreateLabel={(input: string) => `Add "${input}"`}
                 />
               </div>
               <div>
@@ -697,13 +701,15 @@ const MultiRoleRegisterPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label>City*</Label>
-                <ReactSelect 
+                <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple or type your own)</span></Label>
+                <CreatableSelect
+                  isMulti
                   options={cityOptions}
-                  value={cityOptions.find(c => c.value === formData.city) || null}
-                  onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
-                  placeholder="Search and select city in India..."
+                  value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
+                  onChange={(vals: any) => setFormData(prev => ({ ...prev, city: vals ? vals.map((v: any) => v.value) : [] }))}
+                  placeholder="Search or type city name..."
                   className="text-sm"
+                  formatCreateLabel={(input: string) => `Add "${input}"`}
                 />
               </div>
               <div>
@@ -932,13 +938,15 @@ const MultiRoleRegisterPage = () => {
               </div>
             </div>
             <div>
-              <Label>City*</Label>
-              <ReactSelect 
+              <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple or type your own)</span></Label>
+              <CreatableSelect
+                isMulti
                 options={cityOptions}
-                value={cityOptions.find(c => c.value === formData.city) || null}
-                onChange={(val: any) => setFormData(prev => ({ ...prev, city: val?.value || "" }))}
-                placeholder="Search and select city in India..."
+                value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
+                onChange={(vals: any) => setFormData(prev => ({ ...prev, city: vals ? vals.map((v: any) => v.value) : [] }))}
+                placeholder="Search or type city name..."
                 className="text-sm"
+                formatCreateLabel={(input: string) => `Add "${input}"`}
               />
             </div>
             <div>
