@@ -423,7 +423,7 @@ const ConstructionPartnersSection: FC = () => {
           {/* --- WHAT ARE YOU LOOKING FOR? GRID SECTION 1 --- */}
           <div className="mb-16">
             <div className="text-center pt-8 mb-10 animate-fade-in">
-              <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tight mb-4">
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">
                 Home Designing &amp; Construction <span className="text-orange-600">Services</span>
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
