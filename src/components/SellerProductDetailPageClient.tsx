@@ -36,7 +36,7 @@ const getYouTubeID = (url: string) => {
   return (match && match[2].length === 11) ? match[2] : null;
 };
 import { RootState, AppDispatch } from "@/lib/store";
-import { fetchPublicProductById } from "@/lib/features/seller/sellerProductSlice";
+import { fetchPublicProductById, clearProduct } from "@/lib/features/seller/sellerProductSlice";
 import {
   createInquiry,
   resetActionStatus,
@@ -191,6 +191,10 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
     if (productId && !initialProduct) {
       dispatch(fetchPublicProductById(productId as string));
     }
+    // Cleanup: reset product state when leaving this page
+    return () => {
+      dispatch(clearProduct());
+    };
   }, [dispatch, productId, initialProduct]);
 
   useEffect(() => {
@@ -349,7 +353,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
                   </div>
 
                   <SocialShare 
-                    url={window.location.href} 
+                    url={typeof window !== 'undefined' ? window.location.href : ''} 
                     title={product.name} 
                     phone={product.seller?.phone} 
                   />

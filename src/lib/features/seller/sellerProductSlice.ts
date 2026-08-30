@@ -183,6 +183,10 @@ const sellerProductSlice = createSlice({
       state.actionStatus = "idle";
       state.error = null;
     },
+    clearProduct: (state) => {
+      state.product = null;
+      state.status = "idle";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -289,5 +293,5 @@ const sellerProductSlice = createSlice({
   },
 });
 
-export const { resetActionStatus } = sellerProductSlice.actions;
+export const { resetActionStatus, clearProduct } = sellerProductSlice.actions;
 export default sellerProductSlice.reducer;
