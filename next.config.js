@@ -11,6 +11,7 @@ const nextConfig = {
   },
 
   images: {
+    unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: 'res.cloudinary.com', pathname: '/**' },
       { protocol: 'https', hostname: 'houseplansfiles-backend.vercel.app', pathname: '/**' },
@@ -19,14 +20,10 @@ const nextConfig = {
       { protocol: 'http', hostname: 'localhost', pathname: '/**' },
       { protocol: 'https', hostname: 'img.freepik.com', pathname: '/**' },
       { protocol: 'https', hostname: 'encrypted-tbn0.gstatic.com', pathname: '/**' },
-      // FIX: Added S3 hostname so next/image can optimize S3 images
       { protocol: 'https', hostname: 'houseplanfiles1.s3.eu-north-1.amazonaws.com', pathname: '/**' },
-      { protocol: 'https', hostname: '*.s3.*.amazonaws.com', pathname: '/**' },
+      { protocol: 'https', hostname: '*.amazonaws.com', pathname: '/**' },
     ],
-    formats: ['image/avif', 'image/webp'],
-    // FIX: Increased from 60s to 1 year for static product images
     minimumCacheTTL: 31536000,
-    // FIX: Limit device sizes to reduce redundant image variants
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [64, 128, 256, 384],
   },
