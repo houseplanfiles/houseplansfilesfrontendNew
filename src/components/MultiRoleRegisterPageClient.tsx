@@ -171,9 +171,17 @@ const MultiRoleRegisterPage = () => {
         planPrice = 4999;
         planName = "Industrial & Infra Services";
         break;
+      case "Shop_Per_City":
+        planPrice = 2999;
+        planName = "Shop (Per City)";
+        break;
+      case "Manufacturer_Pan_India":
+        planPrice = 9999;
+        planName = "Manufacturer (Yearly PAN India)";
+        break;
       default:
-        planPrice = 999;
-        planName = "Basic Listing";
+        planPrice = selectedRole === "seller" ? 2999 : 999;
+        planName = selectedRole === "seller" ? "Shop (Per City)" : "Basic Listing";
     }
 
     const items = [{ name: planName, price: planPrice }];
@@ -318,6 +326,7 @@ const MultiRoleRegisterPage = () => {
 
   const handleRoleChange = (value: string) => {
     setSelectedRole(value);
+    setSelectedPlanState(value === "seller" ? "Shop_Per_City" : "Basic");
     setFormData({
       role: value,
       email: formData.email,
@@ -1066,13 +1075,19 @@ const MultiRoleRegisterPage = () => {
                 
                 {/* Plans Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {[
-                    { id: "Basic", name: "Basic Listing", price: 999, final: "1,178.82", color: "border-green-500 bg-green-500/5 text-green-800" },
-                    { id: "Standard", name: "Standard Listing", price: 1499, final: "1,768.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
-                    { id: "Premium", name: "Premium (6 Months)", price: 1999, final: "2,358.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
-                    { id: "Premium+", name: "Premium+ (12 Months)", price: 2999, final: "3,538.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" },
-                    { id: "Industrial_and_Infra_Services", name: "Industrial & Infra Services", price: 4999, final: "5,898.82", color: "border-red-500 bg-red-500/5 text-red-800" }
-                  ].map((p) => (
+                  {(selectedRole === "seller"
+                    ? [
+                        { id: "Shop_Per_City", name: "Shop (Per City)", price: 2999, final: "3,538.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                        { id: "Manufacturer_Pan_India", name: "Manufacturer (Yearly PAN India)", price: 9999, final: "11,798.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
+                      ]
+                    : [
+                        { id: "Basic", name: "Basic Listing", price: 999, final: "1,178.82", color: "border-green-500 bg-green-500/5 text-green-800" },
+                        { id: "Standard", name: "Standard Listing", price: 1499, final: "1,768.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                        { id: "Premium", name: "Premium (6 Months)", price: 1999, final: "2,358.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                        { id: "Premium+", name: "Premium+ (12 Months)", price: 2999, final: "3,538.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" },
+                        { id: "Industrial_and_Infra_Services", name: "Industrial & Infra Services", price: 4999, final: "5,898.82", color: "border-red-500 bg-red-500/5 text-red-800" }
+                      ]
+                  ).map((p) => (
                     <div
                       key={p.id}
                       role="button"
