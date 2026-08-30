@@ -456,7 +456,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
         {product.seller && (
           <div className="mt-12 bg-white rounded-3xl p-6 border border-gray-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 flex-shrink-0">
+              <div className="relative w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 flex-shrink-0 overflow-hidden">
                  {product.seller.photoUrl ? (
                    <Image src={product.seller.photoUrl || "/contractor.jpeg"} alt="Seller" fill className="object-cover rounded-2xl" sizes="(max-width: 768px) 50vw, 33vw" />
                  ) : (
