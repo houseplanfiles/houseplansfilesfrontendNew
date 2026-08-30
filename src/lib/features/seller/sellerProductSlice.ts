@@ -276,6 +276,7 @@ const sellerProductSlice = createSlice({
       })
       .addCase(fetchPublicProductById.pending, (state) => {
         state.status = "loading";
+        state.product = null;
       })
       .addCase(fetchPublicProductById.fulfilled, (state, action) => {
         state.status = "succeeded";
