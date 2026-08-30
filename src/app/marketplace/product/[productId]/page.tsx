@@ -6,7 +6,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfi
 
 async function getProduct(productId: string) {
   try {
-    const res = await fetch(`${BACKEND_URL}/api/products/${productId}`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${BACKEND_URL}/api/seller-products/public/${productId}`, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
     return await res.json();
   } catch {
