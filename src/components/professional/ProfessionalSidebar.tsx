@@ -17,7 +17,7 @@ const navLinks = [
   { name: "My Orders", path: "/professional/my-orders", icon: ClipboardList, roles: ["professional", "admin"] },
   { name: "My Portfolio", path: "/professional/portfolio", icon: Briefcase, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
   { name: "My Projects", path: "/professional/projects", icon: LayoutGrid, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
-  { name: "SEO Settings", path: "/professional/seo", icon: Package, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
+
   { name: "My Profile", path: "/professional/profile", icon: User },
 ];
 
