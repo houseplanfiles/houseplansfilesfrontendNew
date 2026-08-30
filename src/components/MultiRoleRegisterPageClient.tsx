@@ -179,9 +179,17 @@ const MultiRoleRegisterPage = () => {
         planPrice = 9999;
         planName = "Manufacturer (Yearly PAN India)";
         break;
+      case "Industrial_State":
+        planPrice = 4999;
+        planName = "Industrial Services (Per State)";
+        break;
+      case "Industrial_Pan_India":
+        planPrice = 24999;
+        planName = "Industrial Services (Yearly PAN India)";
+        break;
       default:
-        planPrice = selectedRole === "seller" ? 2999 : 999;
-        planName = selectedRole === "seller" ? "Shop (Per City)" : "Basic Listing";
+        planPrice = selectedRole === "seller" ? 2999 : selectedRole === "industrial" ? 4999 : 999;
+        planName = selectedRole === "seller" ? "Shop (Per City)" : selectedRole === "industrial" ? "Industrial Services (Per State)" : "Basic Listing";
     }
 
     const items = [{ name: planName, price: planPrice }];
@@ -326,7 +334,7 @@ const MultiRoleRegisterPage = () => {
 
   const handleRoleChange = (value: string) => {
     setSelectedRole(value);
-    setSelectedPlanState(value === "seller" ? "Shop_Per_City" : "Basic");
+    setSelectedPlanState(value === "seller" ? "Shop_Per_City" : value === "industrial" ? "Industrial_State" : "Basic");
     setFormData({
       role: value,
       email: formData.email,
@@ -1079,6 +1087,11 @@ const MultiRoleRegisterPage = () => {
                     ? [
                         { id: "Shop_Per_City", name: "Shop (Per City)", price: 2999, final: "3,538.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
                         { id: "Manufacturer_Pan_India", name: "Manufacturer (Yearly PAN India)", price: 9999, final: "11,798.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
+                      ]
+                    : selectedRole === "industrial"
+                    ? [
+                        { id: "Industrial_State", name: "Industrial Services (Per State)", price: 4999, final: "5,898.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                        { id: "Industrial_Pan_India", name: "Industrial Services (Yearly PAN India)", price: 24999, final: "29,498.82", color: "border-red-500 bg-red-500/5 text-red-800" }
                       ]
                     : [
                         { id: "Basic", name: "Basic Listing", price: 999, final: "1,178.82", color: "border-green-500 bg-green-500/5 text-green-800" },

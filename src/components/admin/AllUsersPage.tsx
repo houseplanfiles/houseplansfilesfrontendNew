@@ -980,7 +980,7 @@ const AllUsersPage = () => {
                         <SelectItem value="Basic">Basic Listing</SelectItem>
                         <SelectItem value="Standard">Standard Listing</SelectItem>
                         <SelectItem value="Premium">Premium Listing (6 Month)</SelectItem>
-                        <SelectItem value="Premium+">Premium+ Listing (12 Month)</SelectItem><SelectItem value="Shop_Per_City">Shop (Per City)</SelectItem><SelectItem value="Manufacturer_Pan_India">Manufacturer (PAN India)</SelectItem><SelectItem value="Industrial_and_Infra_Services">Industrial & Infra Services</SelectItem>
+                        <SelectItem value="Premium+">Premium+ Listing (12 Month)</SelectItem><SelectItem value="Shop_Per_City">Shop (Per City)</SelectItem><SelectItem value="Manufacturer_Pan_India">Manufacturer (PAN India)</SelectItem><SelectItem value="Industrial_and_Infra_Services">Industrial & Infra Services</SelectItem><SelectItem value="Industrial_State">Industrial (Per State)</SelectItem><SelectItem value="Industrial_Pan_India">Industrial (PAN India)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
