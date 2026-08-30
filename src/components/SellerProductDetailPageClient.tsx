@@ -204,7 +204,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
     return [product.image, ...(product.images || [])].filter(Boolean);
   }, [product]);
 
-  if (!product && status === "loading") {
+  if (!product && (status === "loading" || status === "idle")) {
     return (
       <div className="min-h-screen flex flex-col">
         <Navbar />
@@ -230,6 +230,19 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
       </div>
     );
   }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <div className="flex-grow flex items-center justify-center">
+          <Loader2 className="h-12 w-12 animate-spin text-orange-600" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
