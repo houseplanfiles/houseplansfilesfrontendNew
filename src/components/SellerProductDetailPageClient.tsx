@@ -255,7 +255,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
         <div className="flex items-center gap-2 text-sm text-gray-500 mb-8">
            <Link href="/marketplace" className="hover:text-orange-600 transition-colors">Marketplace</Link>
            <span>/</span>
-           {product.seller && (
+           {product?.seller && (
              <>
                <Link href={`/seller-shop/${product.seller._id}`} className="hover:text-orange-600 transition-colors">
                  {product.seller.businessName}
@@ -263,7 +263,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
                <span>/</span>
              </>
            )}
-           <span className="text-gray-900 font-medium truncate max-w-[200px]">{product.name}</span>
+           <span className="text-gray-900 font-medium truncate max-w-[200px]">{product?.name}</span>
         </div>
 
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
