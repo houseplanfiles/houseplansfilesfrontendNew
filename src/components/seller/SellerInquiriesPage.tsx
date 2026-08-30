@@ -105,7 +105,7 @@ const InquiryDetailModal = ({ inquiryId, onClose, onUpdate }) => {
               </h3>
               <p>
                 <span className="font-semibold text-gray-500">Product:</span>{" "}
-                {selectedInquiry.product.name}
+                {selectedInquiry?.product?.name || "Unknown Product"}
               </p>
               <p>
                 <span className="font-semibold text-gray-500">Date:</span>{" "}
@@ -116,7 +116,7 @@ const InquiryDetailModal = ({ inquiryId, onClose, onUpdate }) => {
                 <div>
                   <p className="text-xs text-gray-400">Seller</p>
                   <p className="font-semibold">
-                    {selectedInquiry.seller.businessName}
+                    {selectedInquiry?.seller?.businessName || selectedInquiry?.seller?.name || "Unknown Seller"}
                   </p>
                 </div>
               </div>

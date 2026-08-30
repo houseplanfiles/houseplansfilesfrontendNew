@@ -90,6 +90,7 @@ const materialTypes = [
 
 const experienceLevels = ["0-2 Years", "2-5 Years", "5-10 Years", "10+ Years"];
 
+const stateOptions = (State.getStatesOfCountry("IN") || []).map(s => ({ value: s.name, label: s.name }));
 const cityOptions = (City.getCitiesOfCountry("IN") || []).map(c => ({ value: c.name, label: `${c.name}, ${c.stateCode}` }));
 
 const MultiRoleRegisterPage = () => {
@@ -119,6 +120,7 @@ const MultiRoleRegisterPage = () => {
     businessName: "",
     address: "",
     city: [] as string[],
+    selectedStates: [] as string[],
     pincode: "",
     materialType: "",
     category: "",
@@ -171,9 +173,33 @@ const MultiRoleRegisterPage = () => {
         planPrice = 4999;
         planName = "Industrial & Infra Services";
         break;
+      case "Shop_Per_City":
+        planPrice = 2999 * (formData.city.length > 0 ? formData.city.length : 1);
+        planName = "Shop (Per City)";
+        break;
+      case "Manufacturer_Pan_India":
+        planPrice = 9999;
+        planName = "Manufacturer (Yearly PAN India)";
+        break;
+      case "Industrial_State":
+        planPrice = 4999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1);
+        planName = "Industrial Services (Per State)";
+        break;
+      case "Industrial_Pan_India":
+        planPrice = 24999;
+        planName = "Industrial Services (Yearly PAN India)";
+        break;
+      case "Arch_Contractor_State":
+        planPrice = 9999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1);
+        planName = "State Level";
+        break;
+      case "Arch_Contractor_Pan_India":
+        planPrice = 24999;
+        planName = "PAN India";
+        break;
       default:
-        planPrice = 999;
-        planName = "Basic Listing";
+        planPrice = selectedRole === "seller" ? 2999 * (formData.city.length > 0 ? formData.city.length : 1) : selectedRole === "industrial" ? 4999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1) : 9999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1);
+        planName = selectedRole === "seller" ? "Shop (Per City)" : selectedRole === "industrial" ? "Industrial Services (Per State)" : "State Level";
     }
 
     const items = [{ name: planName, price: planPrice }];
@@ -318,6 +344,7 @@ const MultiRoleRegisterPage = () => {
 
   const handleRoleChange = (value: string) => {
     setSelectedRole(value);
+    setSelectedPlanState(value === "seller" ? "Shop_Per_City" : value === "industrial" ? "Industrial_State" : "Arch_Contractor_State");
     setFormData({
       role: value,
       email: formData.email,
@@ -328,6 +355,7 @@ const MultiRoleRegisterPage = () => {
       businessName: "",
       address: "",
       city: [] as string[],
+      selectedStates: [] as string[],
       pincode: "",
       materialType: "",
       category: "",
@@ -373,6 +401,8 @@ const MultiRoleRegisterPage = () => {
           dataToSubmit.append(key, JSON.stringify(value));
         } else if (key === "city" && Array.isArray(value)) {
           dataToSubmit.append(key, value.join(", "));
+        } else if (key === "selectedStates" && Array.isArray(value)) {
+          value.forEach((v) => dataToSubmit.append("selectedStates", v));
         } else if (key === "role" && ["home_designing", "industrial", "other_services"].includes(value as string)) {
           dataToSubmit.append("role", "Contractor");
         } else {
@@ -477,13 +507,23 @@ const MultiRoleRegisterPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple or type your own)</span></Label>
+                <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
+                <CreatableSelect
+                  isMulti
+                  options={stateOptions}
+                  value={(formData.selectedStates as string[]).map(s => ({ value: s, label: s }))}
+                  onChange={(vals: any) => setFormData(prev => ({ ...prev, selectedStates: vals ? vals.map((v: any) => v.value) : [] }))}
+                  placeholder="Search or select state..."
+                  className="text-sm mb-4"
+                  formatCreateLabel={(input: string) => `Add "${input}"`}
+                />
+                <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
                 <CreatableSelect
                   isMulti
                   options={cityOptions}
                   value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
                   onChange={(vals: any) => setFormData(prev => ({ ...prev, city: vals ? vals.map((v: any) => v.value) : [] }))}
-                  placeholder="Search or type city name..."
+                  placeholder="Search or select city name..."
                   className="text-sm"
                   formatCreateLabel={(input: string) => `Add "${input}"`}
                 />
@@ -701,13 +741,23 @@ const MultiRoleRegisterPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple or type your own)</span></Label>
+                <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
+                <CreatableSelect
+                  isMulti
+                  options={stateOptions}
+                  value={(formData.selectedStates as string[]).map(s => ({ value: s, label: s }))}
+                  onChange={(vals: any) => setFormData(prev => ({ ...prev, selectedStates: vals ? vals.map((v: any) => v.value) : [] }))}
+                  placeholder="Search or select state..."
+                  className="text-sm mb-4"
+                  formatCreateLabel={(input: string) => `Add "${input}"`}
+                />
+                <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
                 <CreatableSelect
                   isMulti
                   options={cityOptions}
                   value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
                   onChange={(vals: any) => setFormData(prev => ({ ...prev, city: vals ? vals.map((v: any) => v.value) : [] }))}
-                  placeholder="Search or type city name..."
+                  placeholder="Search or select city name..."
                   className="text-sm"
                   formatCreateLabel={(input: string) => `Add "${input}"`}
                 />
@@ -942,13 +992,23 @@ const MultiRoleRegisterPage = () => {
               )}
             </div>
             <div>
-              <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple or type your own)</span></Label>
+              <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
+              <CreatableSelect
+                isMulti
+                options={stateOptions}
+                value={(formData.selectedStates as string[]).map(s => ({ value: s, label: s }))}
+                onChange={(vals: any) => setFormData(prev => ({ ...prev, selectedStates: vals ? vals.map((v: any) => v.value) : [] }))}
+                placeholder="Search or select state..."
+                className="text-sm mb-4"
+                formatCreateLabel={(input: string) => `Add "${input}"`}
+              />
+              <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
               <CreatableSelect
                 isMulti
                 options={cityOptions}
                 value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
                 onChange={(vals: any) => setFormData(prev => ({ ...prev, city: vals ? vals.map((v: any) => v.value) : [] }))}
-                placeholder="Search or type city name..."
+                placeholder="Search or select city name..."
                 className="text-sm"
                 formatCreateLabel={(input: string) => `Add "${input}"`}
               />
@@ -1066,13 +1126,21 @@ const MultiRoleRegisterPage = () => {
                 
                 {/* Plans Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {[
-                    { id: "Basic", name: "Basic Listing", price: 999, final: "1,178.82", color: "border-green-500 bg-green-500/5 text-green-800" },
-                    { id: "Standard", name: "Standard Listing", price: 1499, final: "1,768.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
-                    { id: "Premium", name: "Premium (6 Months)", price: 1999, final: "2,358.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
-                    { id: "Premium+", name: "Premium+ (12 Months)", price: 2999, final: "3,538.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" },
-                    { id: "Industrial_and_Infra_Services", name: "Industrial & Infra Services", price: 4999, final: "5,898.82", color: "border-red-500 bg-red-500/5 text-red-800" }
-                  ].map((p) => (
+                  {(selectedRole === "seller"
+                    ? [
+                        { id: "Shop_Per_City", name: "Shop (Per City)", price: 2999, final: "3,538.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                        { id: "Manufacturer_Pan_India", name: "Manufacturer (Yearly PAN India)", price: 9999, final: "11,798.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
+                      ]
+                    : selectedRole === "industrial"
+                    ? [
+                        { id: "Industrial_State", name: "Industrial Services (Per State)", price: 4999, final: "5,898.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                        { id: "Industrial_Pan_India", name: "Industrial Services (Yearly PAN India)", price: 24999, final: "29,498.82", color: "border-red-500 bg-red-500/5 text-red-800" }
+                      ]
+                    : [
+                        { id: "Arch_Contractor_State", name: "State Level", price: 9999, final: "11,798.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                        { id: "Arch_Contractor_Pan_India", name: "PAN India", price: 24999, final: "29,498.82", color: "border-red-500 bg-red-500/5 text-red-800" }
+                      ]
+                  ).map((p) => (
                     <div
                       key={p.id}
                       role="button"
