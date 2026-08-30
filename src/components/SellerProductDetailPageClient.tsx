@@ -270,37 +270,37 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
            <span className="text-gray-900 font-medium truncate max-w-[200px]">{product?.name}</span>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
             
             {/* Left: Image Gallery */}
-            <div className="p-6 md:p-10 bg-gray-50/50">
-              <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-inner mb-6 border border-gray-200 group">
-                <Image 
-                  src={selectedImage || product.image} 
-                  alt={product.seoAltText || product.name} 
-                  title={product.seoTitle || product.name}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-contain p-4 transition-transform duration-500 group-hover:scale-105" 
-                />
-                <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-sm">
+            <div className="p-4 sm:p-6 lg:p-8 bg-gray-50/50 lg:col-span-7 border-b lg:border-b-0 lg:border-r border-gray-100 flex flex-col">
+              <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden bg-white shadow-inner mb-4 border border-gray-200 group flex items-center justify-center">
+                {selectedImage ? (
+                  <img
+                    src={selectedImage}
+                    alt={product.seoAltText || product.name}
+                    className="max-w-full max-h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <Package size={64} className="text-gray-300" />
+                )}
+                <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-sm pointer-events-none">
                   <ZoomIn size={20} className="text-gray-500" />
                 </div>
               </div>
 
               {galleryImages.length > 1 && (
-                <div className="flex flex-wrap gap-3">
-                  {galleryImages.map((img, idx) => (
+                <div className="flex flex-wrap gap-3 mt-auto">
+                  {galleryImages.map((img: string, idx: number) => (
                     <button
                       key={idx}
                       onClick={() => setSelectedImage(img)}
-                      className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                      className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all bg-white flex items-center justify-center ${
                         selectedImage === img ? "border-orange-600 shadow-md scale-105" : "border-gray-200 hover:border-gray-400"
                       }`}
                     >
-                      <Image src={img} alt={`${product.name} ${idx}`} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+                      <img src={img} alt={`Thumbnail ${idx}`} className="max-w-full max-h-full object-contain p-1" />
                     </button>
                   ))}
                 </div>
@@ -308,9 +308,9 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
             </div>
 
             {/* Right: Product Info */}
-            <div className="p-6 md:p-10 flex flex-col">
+            <div className="p-6 lg:p-10 flex flex-col lg:col-span-5 bg-white">
               <div className="mb-6">
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex flex-wrap items-center gap-2 mb-4">
                   <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
                     {product.category}
                   </span>
@@ -321,34 +321,39 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
                   )}
                 </div>
                 
-                <h1 className="text-3xl md:text-4xl font-black text-gray-900 mb-4 leading-tight">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 mb-4 leading-tight">
                   {product.name}
                 </h1>
                 
-                <div className="flex items-baseline gap-4 mb-4">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-extrabold text-orange-600">
+                <div className="flex items-baseline flex-wrap gap-3 mb-4">
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-orange-600">
                       ₹{(product.salePrice > 0 && product.salePrice < product.price ? product.salePrice : product.price).toLocaleString()}
                     </span>
                     {product.unit && (
-                      <span className="text-xl text-gray-500 font-bold bg-gray-100 px-3 py-1 rounded-lg">
+                      <span className="text-lg text-gray-500 font-bold bg-gray-100 px-2.5 py-1 rounded-lg">
                         / {product.unit}
                       </span>
                     )}
                   </div>
                   {product.salePrice > 0 && product.salePrice < product.price && (
-                    <span className="text-xl text-gray-400 line-through">₹{product.price.toLocaleString()}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg text-gray-400 line-through">₹{product.price.toLocaleString()}</span>
+                      <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">
+                        {Math.round(((product.price - product.salePrice) / product.price) * 100)}% OFF
+                      </span>
+                    </div>
                   )}
                 </div>
 
                 {/* Rating & Social Sharing */}
-                <div className="flex flex-col gap-6 mb-8 py-6 border-y border-gray-100">
+                <div className="flex flex-col gap-5 mb-8 py-5 border-y border-gray-100">
                   <div className="flex items-center gap-2">
-                    <div className="flex text-yellow-400 text-xl">
+                    <div className="flex text-yellow-400 text-lg">
                       {"★".repeat(Math.round(product.rating || 4.8))}
                       {"☆".repeat(5 - Math.round(product.rating || 4.8))}
                     </div>
-                    <span className="text-gray-900 font-bold ml-1">{product.rating || "4.8"}</span>
+                    <span className="text-gray-900 font-bold">{product.rating || "4.8"}</span>
                     <span className="text-gray-400 text-sm font-medium">({product.reviewsCount || "12"} reviews)</span>
                   </div>
 
@@ -359,13 +364,13 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
                   />
                 </div>
 
-                <div className="space-y-4 mb-8">
+                <div className="space-y-3 mb-8">
                   <div className="flex items-center gap-3 text-gray-600">
-                    <CheckCircle2 size={18} className="text-green-500" />
+                    <CheckCircle2 size={18} className="text-green-500 flex-shrink-0" />
                     <span className="text-sm">Verified Product from Authorized Seller</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-600">
-                    <MapPin size={18} className="text-orange-500" />
+                    <MapPin size={18} className="text-orange-500 flex-shrink-0" />
                     <span className="text-sm">Available in {product.city || "All India"}</span>
                   </div>
                 </div>
@@ -373,41 +378,41 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-auto space-y-4">
+              <div className="mt-auto space-y-3">
                 {product.seller?.contractorType === "Premium" && (
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-3">
                     <Button 
                       onClick={() => {
                         const waLink = `https://wa.me/91${product.seller.phone}?text=${encodeURIComponent(`Hi ${product.seller.businessName}, I am interested in your product: "${product.name}".`)}`;
                         window.open(waLink, "_blank");
                       }}
-                      className="w-full h-14 bg-[#25D366] hover:bg-[#128C7E] text-white text-lg font-bold rounded-2xl shadow-lg shadow-[#25D366]/20 transform transition hover:-translate-y-0.5"
+                      className="w-full h-12 sm:h-14 bg-[#25D366] hover:bg-[#128C7E] text-white text-base sm:text-lg font-bold rounded-xl shadow-md transform transition hover:-translate-y-0.5"
                     >
-                      <MessageCircle className="mr-3 h-5 w-5" /> WhatsApp
+                      <MessageCircle className="mr-2 sm:mr-3 h-5 w-5" /> WhatsApp
                     </Button>
                     <Button 
                       onClick={() => window.location.href = `tel:${product.seller.phone}`}
-                      className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold rounded-2xl shadow-lg shadow-blue-500/20 transform transition hover:-translate-y-0.5"
+                      className="w-full h-12 sm:h-14 bg-blue-600 hover:bg-blue-700 text-white text-base sm:text-lg font-bold rounded-xl shadow-md transform transition hover:-translate-y-0.5"
                     >
-                      <Phone className="mr-3 h-5 w-5" /> Call Now
+                      <Phone className="mr-2 sm:mr-3 h-5 w-5" /> Call Now
                     </Button>
                   </div>
                 )}
                 
                 <Button 
                   onClick={() => setIsInquiryOpen(true)}
-                  className={`w-full h-14 ${product.seller?.contractorType === "Premium" ? "bg-gray-900" : "bg-orange-600"} hover:opacity-90 text-white text-lg font-bold rounded-2xl shadow-lg transform transition hover:-translate-y-0.5`}
+                  className={`w-full h-12 sm:h-14 ${product.seller?.contractorType === "Premium" ? "bg-gray-900" : "bg-orange-600"} hover:opacity-90 text-white text-base sm:text-lg font-bold rounded-xl shadow-md transform transition hover:-translate-y-0.5`}
                 >
-                  <Send className="mr-3 h-5 w-5" /> Send Inquiry
+                  <Send className="mr-2 sm:mr-3 h-5 w-5" /> Send Inquiry
                 </Button>
                 
                 {product.seller && (
                   <Button 
                     variant="outline"
                     onClick={() => router.push(`/seller-shop/${product.seller._id}`)}
-                    className="w-full h-14 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white text-lg font-bold rounded-2xl transition-all"
+                    className="w-full h-12 sm:h-14 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white text-base sm:text-lg font-bold rounded-xl transition-all"
                   >
-                    <Store className="mr-3 h-5 w-5" /> Visit Seller Shop
+                    <Store className="mr-2 sm:mr-3 h-5 w-5" /> Visit Seller Shop
                   </Button>
                 )}
               </div>
