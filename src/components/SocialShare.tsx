@@ -16,70 +16,83 @@ interface SocialShareProps {
   title?: string;
   phone?: string;
   heading?: string;
+  socialLinks?: any;
 }
 
 const SocialShare: React.FC<SocialShareProps> = ({ 
   url = window.location.href, 
   title = "Check this out on HousePlanFiles!", 
   phone,
-  heading = "Share this plan"
+  heading = "Share this plan",
+  socialLinks
 }) => {
+  const isProfileMode = !!socialLinks;
+
   const shareLinks = [
     {
       name: "Facebook",
       icon: <Facebook size={18} fill="currentColor" />,
       color: "bg-[#3b5998]",
-      link: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+      link: isProfileMode && socialLinks?.facebook ? socialLinks.facebook : `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+      show: isProfileMode ? !!socialLinks?.facebook : true,
     },
     {
       name: "WhatsApp",
       icon: <MessageCircle size={18} fill="currentColor" />,
       color: "bg-[#25D366]",
-      link: `https://wa.me/?text=${encodeURIComponent(title + " " + url)}`,
+      link: isProfileMode && socialLinks?.whatsapp ? socialLinks.whatsapp : `https://wa.me/?text=${encodeURIComponent(title + " " + url)}`,
+      show: isProfileMode ? !!socialLinks?.whatsapp : true,
     },
     {
       name: "X",
       icon: <span className="font-bold text-sm">X</span>,
       color: "bg-black",
-      link: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
+      link: isProfileMode && socialLinks?.twitter ? socialLinks.twitter : `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
+      show: isProfileMode ? !!socialLinks?.twitter : true,
     },
     {
       name: "LinkedIn",
       icon: <Linkedin size={18} fill="currentColor" />,
       color: "bg-[#0077b5]",
-      link: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+      link: isProfileMode && socialLinks?.linkedin ? socialLinks.linkedin : `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+      show: isProfileMode ? !!socialLinks?.linkedin : true,
     },
     {
       name: "Pinterest",
       icon: <span className="font-bold text-sm">P</span>,
       color: "bg-[#bd081c]",
-      link: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(title)}`,
+      link: isProfileMode && socialLinks?.pinterest ? socialLinks.pinterest : `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(title)}`,
+      show: isProfileMode ? !!socialLinks?.pinterest : true,
     },
     {
       name: "Telegram",
       icon: <Send size={18} fill="currentColor" />,
       color: "bg-[#0088cc]",
-      link: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+      link: isProfileMode && socialLinks?.telegram ? socialLinks.telegram : `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+      show: isProfileMode ? !!socialLinks?.telegram : true,
     },
     {
       name: "Threads",
       icon: <span className="font-bold text-sm">@</span>,
       color: "bg-black",
-      link: `https://threads.net/intent/post?text=${encodeURIComponent(title + " " + url)}`,
+      link: isProfileMode && socialLinks?.threads ? socialLinks.threads : `https://threads.net/intent/post?text=${encodeURIComponent(title + " " + url)}`,
+      show: isProfileMode ? !!socialLinks?.threads : true,
     },
     {
       name: "YouTube",
       icon: <Youtube size={18} fill="currentColor" />,
       color: "bg-[#ff0000]",
-      link: `https://youtube.com`,
+      link: isProfileMode && socialLinks?.youtube ? socialLinks.youtube : `https://youtube.com`,
+      show: isProfileMode ? !!socialLinks?.youtube : true,
     },
     {
       name: "Call",
       icon: <Phone size={18} fill="currentColor" />,
       color: "bg-[#34495e]",
       link: phone ? `tel:${phone}` : "tel:+910000000000",
+      show: isProfileMode ? !!phone : true,
     }
-  ];
+  ].filter(item => item.show);
 
   return (
     <div className="mt-6">

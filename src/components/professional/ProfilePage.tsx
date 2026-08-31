@@ -45,6 +45,10 @@ type FormData = {
   socialLinkedin?: string;
   socialYoutube?: string;
   socialTwitter?: string;
+  socialWhatsapp?: string;
+  socialPinterest?: string;
+  socialTelegram?: string;
+  socialThreads?: string;
 };
 
 const ProfilePageProf = () => {
@@ -146,6 +150,10 @@ const ProfilePageProf = () => {
           setValue("socialLinkedin", userInfo.socialLinks.linkedin || "");
           setValue("socialYoutube", userInfo.socialLinks.youtube || "");
           setValue("socialTwitter", userInfo.socialLinks.twitter || "");
+          setValue("socialWhatsapp", userInfo.socialLinks.whatsapp || "");
+          setValue("socialPinterest", userInfo.socialLinks.pinterest || "");
+          setValue("socialTelegram", userInfo.socialLinks.telegram || "");
+          setValue("socialThreads", userInfo.socialLinks.threads || "");
         }
       }
       setPhotoPreview(userInfo.photoUrl || null);
@@ -191,6 +199,10 @@ const ProfilePageProf = () => {
       linkedin: data.socialLinkedin || "",
       youtube: data.socialYoutube || "",
       twitter: data.socialTwitter || "",
+      whatsapp: data.socialWhatsapp || "",
+      pinterest: data.socialPinterest || "",
+      telegram: data.socialTelegram || "",
+      threads: data.socialThreads || "",
     };
     dataToSubmit.append("socialLinks", JSON.stringify(socialLinks));
 
@@ -437,9 +449,25 @@ const ProfilePageProf = () => {
               <Label htmlFor="socialYoutube">YouTube Channel URL</Label>
               <Input id="socialYoutube" {...register("socialYoutube")} placeholder="https://youtube.com/c/yourchannel" />
             </div>
-            <div className="md:col-span-2">
+            <div>
               <Label htmlFor="socialTwitter">X (Twitter) URL</Label>
               <Input id="socialTwitter" {...register("socialTwitter")} placeholder="https://x.com/yourprofile" />
+            </div>
+            <div>
+              <Label htmlFor="socialWhatsapp">WhatsApp Number/URL</Label>
+              <Input id="socialWhatsapp" {...register("socialWhatsapp")} placeholder="https://wa.me/91XXXXXXXXXX" />
+            </div>
+            <div>
+              <Label htmlFor="socialPinterest">Pinterest URL</Label>
+              <Input id="socialPinterest" {...register("socialPinterest")} placeholder="https://pinterest.com/yourprofile" />
+            </div>
+            <div>
+              <Label htmlFor="socialTelegram">Telegram URL</Label>
+              <Input id="socialTelegram" {...register("socialTelegram")} placeholder="https://t.me/yourprofile" />
+            </div>
+            <div className="md:col-span-2">
+              <Label htmlFor="socialThreads">Threads URL</Label>
+              <Input id="socialThreads" {...register("socialThreads")} placeholder="https://threads.net/@yourprofile" />
             </div>
           </CardContent>
         </Card>
