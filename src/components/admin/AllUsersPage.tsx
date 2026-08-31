@@ -1028,6 +1028,7 @@ const AllUsersPage = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="None">None</SelectItem>
+                        <SelectItem value="3_Month">3 Months Management (₹499)</SelectItem>
                         <SelectItem value="6_Month">6 Months Management (₹999)</SelectItem>
                         <SelectItem value="1_Year">1 Year Management (₹1499)</SelectItem>
                       </SelectContent>
