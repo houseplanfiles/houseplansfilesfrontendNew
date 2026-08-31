@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import React, { useState, useEffect } from "react";
 
@@ -97,6 +97,7 @@ const MultiRoleRegisterPage = () => {
   const [profileStoreManagement, setProfileStoreManagement] = useState<string>("None");
   const dispatch = useDispatch();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { loaded: isRazorpayLoaded } = useExternalScripts([
     "https://checkout.razorpay.com/v1/checkout.js",
@@ -303,17 +304,14 @@ const MultiRoleRegisterPage = () => {
   };
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const roleFromQuery = urlParams.get('role');
-      if (roleFromQuery) {
-        const roleExists = userRoles.some(r => r.id === roleFromQuery);
-        if (roleExists) {
-          handleRoleChange(roleFromQuery);
-        }
+    const roleFromQuery = searchParams.get('role');
+    if (roleFromQuery) {
+      const roleExists = userRoles.some((r) => r.id === roleFromQuery);
+      if (roleExists) {
+        handleRoleChange(roleFromQuery);
       }
     }
-  }, []); // Run once on mount
+  }, [searchParams]); // Re-run if searchParams change
 
   useEffect(() => {
     if (actionStatus === "failed" && error) {

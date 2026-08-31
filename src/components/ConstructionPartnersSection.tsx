@@ -538,7 +538,7 @@ const ConstructionPartnersSection: FC = () => {
                 </p>
               </div>
               <Button
-                onClick={() => router.push("/register")}
+                onClick={() => router.push("/register?role=Contractor")}
                 className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 px-6 md:py-6 md:px-8 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-base md:text-lg flex items-center gap-2 whitespace-nowrap shrink-0"
               >
                 <UserPlus className="w-6 h-6" />

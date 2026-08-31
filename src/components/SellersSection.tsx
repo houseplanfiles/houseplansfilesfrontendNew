@@ -615,7 +615,7 @@ const SellersSection: FC = () => {
           </motion.p>
 
           <Button
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/register?role=seller")}
             className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-5 px-8 rounded-full shadow-lg hover:shadow-orange-500/20 transition-all transform hover:-translate-y-1 text-base flex items-center gap-2"
           >
             <Store className="w-5 h-5" /> Register Your Shop

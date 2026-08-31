@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-import MultiRoleRegisterPageClient from "@/components/MultiRoleRegisterPageClient";
+import React from "react";\nimport MultiRoleRegisterPageClient from "@/components/MultiRoleRegisterPageClient";
 
 export default function RegisterPage() {
-  return <MultiRoleRegisterPageClient />;
+  return <React.Suspense fallback={<div>Loading...</div>}><MultiRoleRegisterPageClient /></React.Suspense>;
 }

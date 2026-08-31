@@ -303,7 +303,7 @@ const PartnersPage: FC = () => {
             City Contractor ( Building & Interior )
           </h1>
           <div className="flex justify-center px-4">
-            <Button onClick={() => router.push("/register")} className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 py-6 px-8 rounded-full shadow-lg transition-transform hover:scale-105">
+            <Button onClick={() => router.push("/register?role=Contractor")} className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 py-6 px-8 rounded-full shadow-lg transition-transform hover:scale-105">
               <UserPlus className="w-5 h-5 mr-2" /> Register With Us
             </Button>
           </div>
