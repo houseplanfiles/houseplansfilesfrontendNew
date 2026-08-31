@@ -634,7 +634,7 @@ const MarketplacePage: FC = () => {
           </motion.p>
 
           <Button
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/register?role=seller")}
             className="bg-orange-600 hover:bg-orange-700 text-white font-black py-7 px-10 rounded-2xl shadow-2xl hover:shadow-orange-500/30 transition-all transform hover:-translate-y-1 text-lg uppercase tracking-wider"
           >
             <Store className="w-6 h-6 mr-3" />

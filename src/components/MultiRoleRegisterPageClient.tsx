@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import React, { useState, useEffect } from "react";
 
@@ -36,11 +36,9 @@ import useExternalScripts from "@/hooks/usePaymentGateway";
 import { generateInvoicePDF } from "@/lib/invoiceGenerator";
 
 const userRoles = [
-  { id: "user", label: "Register as a Home owner" },
   { id: "professional", label: "Register as a Architect, engineer, interior designer" },
   { id: "Contractor", label: "Register as a Contractor" },
   { id: "seller", label: "Register as a manufacturer, supplier or Shop" },
-  { id: "home_designing", label: "Register for Home Designing & Construction Services" },
   { id: "other_services", label: "Register for Other Services" },
   { id: "industrial", label: "Register for Industrial Construction & Infrastructure Services" },
 ];
@@ -99,6 +97,7 @@ const MultiRoleRegisterPage = () => {
   const [profileStoreManagement, setProfileStoreManagement] = useState<string>("None");
   const dispatch = useDispatch();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { loaded: isRazorpayLoaded } = useExternalScripts([
     "https://checkout.razorpay.com/v1/checkout.js",
@@ -303,6 +302,16 @@ const MultiRoleRegisterPage = () => {
       toast.error(err.response?.data?.message || "Failed to initiate payment gateway.");
     }
   };
+
+  useEffect(() => {
+    const roleFromQuery = searchParams.get('role');
+    if (roleFromQuery) {
+      const roleExists = userRoles.some((r) => r.id === roleFromQuery);
+      if (roleExists) {
+        handleRoleChange(roleFromQuery);
+      }
+    }
+  }, [searchParams]); // Re-run if searchParams change
 
   useEffect(() => {
     if (actionStatus === "failed" && error) {
@@ -1105,7 +1114,7 @@ const MultiRoleRegisterPage = () => {
             <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <legend className="sr-only">Select your registration type</legend>
               <div className="flex flex-col gap-4">
-                {userRoles.slice(0, 4).map((role) => (
+                {userRoles.slice(0, 3).map((role) => (
                   <div
                     key={role.id}
                     role="button"
@@ -1122,7 +1131,7 @@ const MultiRoleRegisterPage = () => {
                 ))}
               </div>
               <div className="flex flex-col gap-4">
-                {userRoles.slice(4).map((role) => (
+                {userRoles.slice(3).map((role) => (
                   <div
                     key={role.id}
                     role="button"

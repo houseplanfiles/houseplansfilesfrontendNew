@@ -370,7 +370,7 @@ const TopArchitectsSection: FC = () => {
                 </p>
               </div>
               <Button
-                onClick={() => router.push("/register")}
+                onClick={() => router.push("/register?role=professional")}
                 className="bg-orange-600 text-white hover:bg-orange-700 font-bold py-8 px-12 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-lg flex items-center gap-3 whitespace-nowrap"
               >
                 <UserPlus className="w-6 h-6" />

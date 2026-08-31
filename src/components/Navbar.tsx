@@ -113,7 +113,7 @@ const Navbar = () => {
     { name: "Marketplace", path: "/marketplace" },
     { name: "Package", path: "/packages" },
     { name: "Gallery", path: "/gallery" },
-    { name: "Career", path: "/careers" },
+    { name: "Digital Card", path: "/digital-card" },
     { name: "Contact", path: "/contact" },
   ];
 
