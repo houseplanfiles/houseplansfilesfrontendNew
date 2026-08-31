@@ -157,16 +157,20 @@ const MultiRoleRegisterPage = () => {
     let planName = "Basic Listing";
 
     switch (selectedPlan) {
+      case "Basic":
+        planPrice = 999 * (formData.city.length > 0 ? formData.city.length : 1);
+        planName = "Basic Listing";
+        break;
       case "Standard":
-        planPrice = 1499;
+        planPrice = 1499 * (formData.city.length > 0 ? formData.city.length : 1);
         planName = "Standard Listing";
         break;
       case "Premium":
-        planPrice = 1999;
+        planPrice = 1999 * (formData.city.length > 0 ? formData.city.length : 1);
         planName = "Premium Listing (6 Month)";
         break;
       case "Premium+":
-        planPrice = 2999;
+        planPrice = 2999 * (formData.city.length > 0 ? formData.city.length : 1);
         planName = "Premium+ Listing (12 Month)";
         break;
       case "Industrial_and_Infra_Services":
@@ -189,17 +193,11 @@ const MultiRoleRegisterPage = () => {
         planPrice = 24999;
         planName = "Industrial Services (Yearly PAN India)";
         break;
-      case "Arch_Contractor_State":
-        planPrice = 9999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1);
-        planName = "State Level";
-        break;
-      case "Arch_Contractor_Pan_India":
-        planPrice = 24999;
-        planName = "PAN India";
-        break;
       default:
-        planPrice = selectedRole === "seller" ? 2999 * (formData.city.length > 0 ? formData.city.length : 1) : selectedRole === "industrial" ? 4999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1) : 9999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1);
-        planName = selectedRole === "seller" ? "Shop (Per City)" : selectedRole === "industrial" ? "Industrial Services (Per State)" : "State Level";
+        planPrice = selectedRole === "seller" ? 2999 * (formData.city.length > 0 ? formData.city.length : 1) : 
+                    selectedRole === "industrial" ? 4999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1) : 
+                    999 * (formData.city.length > 0 ? formData.city.length : 1);
+        planName = selectedRole === "seller" ? "Shop (Per City)" : selectedRole === "industrial" ? "Industrial Services (Per State)" : "Basic Listing";
     }
 
     const items = [{ name: planName, price: planPrice }];
@@ -344,7 +342,7 @@ const MultiRoleRegisterPage = () => {
 
   const handleRoleChange = (value: string) => {
     setSelectedRole(value);
-    setSelectedPlanState(value === "seller" ? "Shop_Per_City" : value === "industrial" ? "Industrial_State" : "Arch_Contractor_State");
+    setSelectedPlanState(value === "seller" ? "Shop_Per_City" : value === "industrial" ? "Industrial_State" : "Basic");
     setFormData({
       role: value,
       email: formData.email,
@@ -1137,8 +1135,10 @@ const MultiRoleRegisterPage = () => {
                         { id: "Industrial_Pan_India", name: "Industrial Services (Yearly PAN India)", price: 24999, final: "29,498.82", color: "border-red-500 bg-red-500/5 text-red-800" }
                       ]
                     : [
-                        { id: "Arch_Contractor_State", name: "State Level", price: 9999, final: "11,798.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
-                        { id: "Arch_Contractor_Pan_India", name: "PAN India", price: 24999, final: "29,498.82", color: "border-red-500 bg-red-500/5 text-red-800" }
+                        { id: "Basic", name: "Basic Listing", price: 999, final: "1,178.82", color: "border-green-500 bg-green-500/5 text-green-800" },
+                        { id: "Standard", name: "Standard Listing", price: 1499, final: "1,768.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                        { id: "Premium", name: "Premium (6 Months)", price: 1999, final: "2,358.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                        { id: "Premium+", name: "Premium+ (12 Months)", price: 2999, final: "3,538.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
                       ]
                   ).map((p) => (
                     <div
