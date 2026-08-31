@@ -279,7 +279,7 @@ export const createUserByAdmin = createAsyncThunk<
     const token = getToken(state);
     const config = {
       headers: {
-        "Content-Type": args.userData instanceof FormData ? "multipart/form-data" : "application/json",
+        "Content-Type": userData instanceof FormData ? "multipart/form-data" : "application/json",
         Authorization: `Bearer ${token}`,
       },
     };

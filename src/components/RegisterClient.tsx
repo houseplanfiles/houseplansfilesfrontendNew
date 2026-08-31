@@ -322,7 +322,7 @@ const RegisterClient = () => {
             <div><Label>Phone*</Label><Input id="phone" type="tel" required value={formData.phone} onChange={handleChange} /></div>
             <div><Label>Address*</Label><Textarea id="address" required value={formData.address} onChange={handleChange} /></div>
             {renderLocationFields(false)}
-            <div><Label>Pincode*</Label><Input id="pincode" required value={formData.pincode} onChange={handleChange} /></div>
+            <div><Label>Pincode</Label><Input id="pincode" value={formData.pincode} onChange={handleChange} /></div>
             <div>
               <Label>Business Category*</Label>
               <Select onValueChange={(v) => handleSelectChange(v, "businessType")} value={formData.businessType} required>
