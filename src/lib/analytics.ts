@@ -12,6 +12,7 @@ export const trackAnalytics = async (
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ type, id, action }),
+      keepalive: true,
     });
 
     if (!response.ok) {

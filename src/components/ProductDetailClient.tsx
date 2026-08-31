@@ -6,8 +6,8 @@ import { useParams, useRouter, usePathname } from "next/navigation";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-
 import { RootState, AppDispatch } from "@/lib/store";
+import { trackAnalytics } from "@/lib/analytics";
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import {
   createReview as createProductReview,
@@ -298,16 +298,22 @@ const DetailPage = ({ initialProduct }: ProductDetailClientProps = {}) => {
     const fromRedux = singleProduct?._id === productIdFromSlug
       ? singleProduct
       : adminProducts.find((p) => p._id === productIdFromSlug);
-    return fromRedux || initialProduct || null;
+    return initialProduct || fromRedux;
   }, [
     isProfessionalPlan,
-    singleProduct,
     singlePlan,
-    adminProducts,
     professionalPlans,
-    productIdFromSlug,
+    singleProduct,
+    adminProducts,
     initialProduct,
+    productIdFromSlug,
   ]);
+
+  useEffect(() => {
+    if (displayData?._id) {
+      trackAnalytics(isProfessionalPlan ? 'plan' : 'product', displayData._id, 'view');
+    }
+  }, [displayData?._id, isProfessionalPlan]);
 
   if (!displayData && (listStatus === "loading" || listStatus === "idle")) {
     return (

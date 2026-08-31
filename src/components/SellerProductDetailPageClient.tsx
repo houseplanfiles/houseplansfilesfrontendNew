@@ -188,8 +188,11 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
 
   useEffect(() => {
-    if (productId && !initialProduct) {
-      dispatch(fetchPublicProductById(productId as string));
+    if (productId) {
+      if (!initialProduct) {
+        dispatch(fetchPublicProductById(productId as string));
+      }
+      trackAnalytics('sellerProduct', productId as string, 'view');
     }
     // Cleanup: reset product state when leaving this page
     return () => {
@@ -383,6 +386,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
                   <div className="grid grid-cols-2 gap-3">
                     <Button 
                       onClick={() => {
+                        trackAnalytics('user', product.seller._id, 'whatsapp_click');
                         const waLink = `https://wa.me/91${product.seller.phone}?text=${encodeURIComponent(`Hi ${product.seller.businessName}, I am interested in your product: "${product.name}".`)}`;
                         window.open(waLink, "_blank");
                       }}
@@ -391,7 +395,10 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
                       <MessageCircle className="mr-2 sm:mr-3 h-5 w-5" /> WhatsApp
                     </Button>
                     <Button 
-                      onClick={() => window.location.href = `tel:${product.seller.phone}`}
+                      onClick={() => {
+                        trackAnalytics('user', product.seller._id, 'call_click');
+                        window.location.href = `tel:${product.seller.phone}`;
+                      }}
                       className="w-full h-12 sm:h-14 bg-blue-600 hover:bg-blue-700 text-white text-base sm:text-lg font-bold rounded-xl shadow-md transform transition hover:-translate-y-0.5"
                     >
                       <Phone className="mr-2 sm:mr-3 h-5 w-5" /> Call Now
