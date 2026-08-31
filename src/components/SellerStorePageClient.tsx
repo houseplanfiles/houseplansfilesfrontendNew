@@ -371,8 +371,19 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
       <Navbar />
 
       {/* Hero / Header Section */}
-      <div className="bg-gray-900 pt-10 pb-20 px-4">
-        <div className="max-w-7xl mx-auto">
+      <div className="relative bg-gray-900 pt-10 pb-12 px-4">
+        {/* Cover Image Background */}
+        <div className="absolute inset-0 z-0 opacity-40">
+          <Image 
+            src={sellerInfo?.shopImageUrl || "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2071&auto=format&fit=crop"} 
+            alt="Store Cover" 
+            fill 
+            className="object-cover" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent" />
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
           <button 
             onClick={() => router.push("/marketplace")}
             className="text-gray-400 hover:text-white flex items-center gap-2 mb-8 transition-colors"
@@ -381,7 +392,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
           </button>
           
           <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-            <div className="relative w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 border-4 border-white/10">
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 border-4 border-white/20">
               {sellerInfo?.photoUrl ? (
                 <Image src={sellerInfo.photoUrl} alt={sellerInfo.businessName} fill priority sizes="(max-width: 640px) 96px, 128px" className="object-cover" />
               ) : (
@@ -394,16 +405,16 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
               <h1 className="text-3xl md:text-5xl font-black text-white mb-3">
                 {sellerInfo?.businessName || "Verified Seller"}
               </h1>
-              <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 text-gray-300">
-                <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full text-sm">
-                  <MapPin size={16} className="text-orange-500" /> 
+              <div className="flex flex-wrap justify-center md:justify-start items-center gap-3 text-gray-200 mb-4">
+                <span className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm border border-white/10">
+                  <MapPin size={16} className="text-orange-400" /> 
                   {[sellerInfo?.businessAddress, sellerInfo?.address, sellerInfo?.city, sellerInfo?.pincode].filter(Boolean).join(", ") || "India"}
                 </span>
-                <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full text-sm">
-                  <Package size={16} className="text-orange-500" /> {products.length} Products
+                <span className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm border border-white/10">
+                  <Package size={16} className="text-orange-400" /> {products.length} Products
                 </span>
                 {sellerInfo?.businessType && (
-                  <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full text-sm font-bold text-orange-400">
+                  <span className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-orange-400 border border-white/10">
                     {sellerInfo.businessType === "Manufacturer" ? "🏭 Manufacturer" :
                      sellerInfo.businessType === "Supplier" ? "🚛 Supplier" :
                      sellerInfo.businessType === "Both" ? "🏭 Manufacturer & Supplier" :
@@ -412,7 +423,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
                   </span>
                 )}
                 {/* Rating Display */}
-                <div className="flex items-center gap-1 bg-white/10 px-3 py-1.5 rounded-full text-sm">
+                <div className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm border border-white/10">
                   <div className="flex text-yellow-400">
                     {"★".repeat(Math.round(sellerInfo?.rating || 4.5))}
                     {"☆".repeat(5 - Math.round(sellerInfo?.rating || 4.5))}
@@ -422,29 +433,49 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
               </div>
 
               {/* Share Store & Action Buttons */}
-              <div className="flex flex-col gap-4 mt-8">
-                <SocialShare 
-                  url={typeof window !== "undefined" ? window.location.href : ""} 
-                  title={`Check out ${sellerInfo?.businessName}'s store on Houseplans Marketplace!`} 
-                  phone={sellerInfo?.phone} 
-                />
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
+                <div className="flex items-center">
+                  <SocialShare 
+                    url={typeof window !== "undefined" ? window.location.href : ""} 
+                    title={`Check out ${sellerInfo?.businessName}'s store on Houseplans Marketplace!`} 
+                    phone={sellerInfo?.phone} 
+                    heading=""
+                  />
+                </div>
                 
-                {sellerInfo?.contractorType === "Premium" && (
-                  <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                {(sellerInfo?.contractorType === "Premium" || sellerInfo?.phone) && (
+                  <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-2 sm:mt-0">
                     <Button 
                       onClick={() => {
                         const waLink = `https://wa.me/91${sellerInfo.phone}?text=${encodeURIComponent(`Hi ${sellerInfo.businessName}, I saw your shop on Houseplans Marketplace and I am interested in your products.`)}`;
                         window.open(waLink, "_blank");
                       }}
-                      className="bg-[#25D366] hover:bg-[#128C7E] text-white font-bold h-11 px-6 rounded-xl shadow-lg shadow-[#25D366]/20"
+                      className="bg-[#25D366] hover:bg-[#128C7E] text-white font-bold h-9 px-4 rounded-md shadow-sm shadow-[#25D366]/20 text-sm"
                     >
-                      <MessageCircle size={18} className="mr-2" /> WhatsApp
+                      <MessageCircle size={16} className="mr-1.5" /> WhatsApp
                     </Button>
                     <Button 
                       onClick={() => window.location.href = `tel:${sellerInfo.phone}`}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold h-11 px-6 rounded-xl shadow-lg shadow-blue-500/20"
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold h-9 px-4 rounded-md shadow-sm shadow-blue-500/20 text-sm"
                     >
-                      <Phone size={18} className="mr-2" /> Call Now
+                      <Phone size={16} className="mr-1.5" /> Call Now
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        if (navigator.share) {
+                          navigator.share({
+                            title: sellerInfo?.businessName,
+                            text: `Check out ${sellerInfo?.businessName}'s store on Houseplans Marketplace!`,
+                            url: window.location.href,
+                          }).catch(err => console.log("Error sharing", err));
+                        } else {
+                          navigator.clipboard.writeText(window.location.href);
+                          toast.success("Profile link copied to clipboard!");
+                        }
+                      }}
+                      className="bg-white text-gray-900 hover:bg-gray-100 border border-gray-200 font-bold h-9 px-4 rounded-md shadow-sm text-sm"
+                    >
+                      <Send size={16} className="mr-1.5 text-gray-600" /> Share Profile
                     </Button>
                   </div>
                 )}
