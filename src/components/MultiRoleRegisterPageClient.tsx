@@ -1104,21 +1104,40 @@ const MultiRoleRegisterPage = () => {
           <form className="space-y-5" onSubmit={handleSubmit}>
             <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <legend className="sr-only">Select your registration type</legend>
-              {userRoles.map((role) => (
-                <div
-                  key={role.id}
-                  role="button"
-                  onClick={() => handleRoleChange(role.id)}
-                  className={`flex items-center justify-between w-full p-4 h-full rounded-lg cursor-pointer border-2 transition-all duration-300 ${
-                    selectedRole === role.id
-                      ? "bg-accent text-accent-foreground border-transparent shadow-md"
-                      : "bg-input border-border hover:border-primary/50"
-                  }`}
-                >
-                  <span className="font-semibold">{role.label}</span>
-                  {selectedRole === role.id && <CheckCircle size={20} />}
-                </div>
-              ))}
+              <div className="flex flex-col gap-4">
+                {userRoles.slice(0, 4).map((role) => (
+                  <div
+                    key={role.id}
+                    role="button"
+                    onClick={() => handleRoleChange(role.id)}
+                    className={`flex items-center justify-between w-full p-4 h-full rounded-lg cursor-pointer border-2 transition-all duration-300 ${
+                      selectedRole === role.id
+                        ? "bg-accent text-accent-foreground border-transparent shadow-md"
+                        : "bg-input border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <span className="font-semibold">{role.label}</span>
+                    {selectedRole === role.id && <CheckCircle size={20} />}
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col gap-4">
+                {userRoles.slice(4).map((role) => (
+                  <div
+                    key={role.id}
+                    role="button"
+                    onClick={() => handleRoleChange(role.id)}
+                    className={`flex items-center justify-between w-full p-4 h-full rounded-lg cursor-pointer border-2 transition-all duration-300 ${
+                      selectedRole === role.id
+                        ? "bg-accent text-accent-foreground border-transparent shadow-md"
+                        : "bg-input border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <span className="font-semibold">{role.label}</span>
+                    {selectedRole === role.id && <CheckCircle size={20} />}
+                  </div>
+                ))}
+              </div>
             </fieldset>
             <AnimatePresence mode="wait">
               {renderRoleSpecificFields()}
