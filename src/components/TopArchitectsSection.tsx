@@ -366,7 +366,7 @@ const TopArchitectsSection: FC = () => {
                   Hire Your Top City Architects, Interior Designers & Professionals
                 </h2>
                 <p className="mt-4 text-base md:text-lg text-gray-300 max-w-2xl font-medium">
-                  2D, 3D, Structural and Site Engineers
+                  Architect, Civil Design Engineer, Structure Engineer, Interior Designer, Site Engineer, MEP Consultant, Vastu Consultant
                 </p>
               </div>
               <Button

@@ -193,7 +193,7 @@ const ArchitectsPage: FC = () => {
           <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 px-2 leading-tight">
             Hire Your Top City Architects, Interior Designers & Professionals
           </h1>
-          <p className="text-sm sm:text-lg text-gray-300 max-w-2xl mx-auto mb-8 font-medium px-4">2D, 3D, Structural and Site Engineers</p>
+          <p className="text-sm sm:text-lg text-gray-300 max-w-2xl mx-auto mb-8 font-medium px-4">Architect, Civil Design Engineer, Structure Engineer, Interior Designer, Site Engineer, MEP Consultant, Vastu Consultant</p>
           <div className="flex justify-center px-4">
             <Button onClick={() => router.push("/register")} className="w-full max-w-[280px] sm:max-w-none sm:w-auto bg-orange-600 text-white hover:bg-orange-700 font-bold py-5 sm:py-6 px-6 sm:px-8 rounded-full shadow-lg transition-all transform hover:-translate-y-1 text-sm sm:text-lg flex items-center justify-center">
               <UserPlus className="w-5 h-5 mr-2" /> Register as professional
