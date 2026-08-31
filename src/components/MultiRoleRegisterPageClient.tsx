@@ -303,6 +303,19 @@ const MultiRoleRegisterPage = () => {
   };
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const roleFromQuery = urlParams.get('role');
+      if (roleFromQuery) {
+        const roleExists = userRoles.some(r => r.id === roleFromQuery);
+        if (roleExists) {
+          handleRoleChange(roleFromQuery);
+        }
+      }
+    }
+  }, []); // Run once on mount
+
+  useEffect(() => {
     if (actionStatus === "failed" && error) {
       toast.error(String(error));
       dispatch(resetActionStatus());
