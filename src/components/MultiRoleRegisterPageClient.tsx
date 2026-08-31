@@ -38,11 +38,11 @@ import { generateInvoicePDF } from "@/lib/invoiceGenerator";
 const userRoles = [
   { id: "user", label: "Register as a Home owner" },
   { id: "professional", label: "Register as a Architect, engineer, interior designer" },
-  { id: "seller", label: "Register as a manufacturer, supplier or Shop" },
   { id: "Contractor", label: "Register as a Contractor" },
+  { id: "seller", label: "Register as a manufacturer, supplier or Shop" },
   { id: "home_designing", label: "Register for Home Designing & Construction Services" },
-  { id: "industrial", label: "Register for Industrial Construction & Infrastructure Services" },
   { id: "other_services", label: "Register for Other Services" },
+  { id: "industrial", label: "Register for Industrial Construction & Infrastructure Services" },
 ];
 
 const professionalSubRoles = [
