@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SocialShare from "@/components/SocialShare";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -308,6 +309,16 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
                     </Button>
                   </a>
                 )}
+
+                {/* Social Share */}
+                <div className="bg-white/10 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-5 border border-white/10 mt-2">
+                  <SocialShare 
+                    url={typeof window !== 'undefined' ? window.location.href : ''} 
+                    title={`${contractor.name} - HousePlanFiles Profile`} 
+                    phone={contractor.phone} 
+                    heading="Share Profile"
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ interface Package {
   unit: string;
   areaType?: string;
   isPopular: boolean;
-  packageType: "standard" | "premium" | "marketplace" | "city_partner";
+  packageType: "standard" | "premium" | "marketplace" | "city_partner" | "construction";
   features: string[];
   includes?: string[];
   note?: string;

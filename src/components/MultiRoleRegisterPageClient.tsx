@@ -38,11 +38,11 @@ import { generateInvoicePDF } from "@/lib/invoiceGenerator";
 const userRoles = [
   { id: "user", label: "Register as a Home owner" },
   { id: "professional", label: "Register as a Architect, engineer, interior designer" },
-  { id: "seller", label: "Register as a manufacturer, supplier or Shop" },
   { id: "Contractor", label: "Register as a Contractor" },
+  { id: "seller", label: "Register as a manufacturer, supplier or Shop" },
   { id: "home_designing", label: "Register for Home Designing & Construction Services" },
-  { id: "industrial", label: "Register for Industrial Construction & Infrastructure Services" },
   { id: "other_services", label: "Register for Other Services" },
+  { id: "industrial", label: "Register for Industrial Construction & Infrastructure Services" },
 ];
 
 const professionalSubRoles = [
@@ -57,9 +57,7 @@ const professionalSubRoles = [
 
 const contractorProfessions = [
   "Civil Construction Contractor", "Interior Contractor", "Electrical Contractor",
-  "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor",
-  "Swimming Pool Contractor", "Pre Engineering Board / PEB", "Pre Fabricated House Contractor",
-  "Pest Control Contractor", "Landscaping & Garden Contractor"
+  "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor"
 ];
 
 const homeDesigningProfessions = [
@@ -356,6 +354,7 @@ const MultiRoleRegisterPage = () => {
       address: "",
       city: [] as string[],
       selectedStates: [] as string[],
+      isPanIndia: false,
       pincode: "",
       materialType: "",
       category: "",
@@ -487,7 +486,7 @@ const MultiRoleRegisterPage = () => {
               />
             </div>
             <div>
-              <Label>Profession*</Label>
+              <Label>Business or profession*</Label>
               <Select
                 onValueChange={(v) => handleSelectChange(v, "profession")}
                 value={formData.profession}
@@ -528,15 +527,15 @@ const MultiRoleRegisterPage = () => {
                   formatCreateLabel={(input: string) => `Add "${input}"`}
                   isDisabled={formData.isPanIndia}
                 />
-                <div className="flex items-center space-x-2 mt-2">
+                <div className="flex items-center space-x-3 mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
                   <input
                     type="checkbox"
                     id="panIndia_prof"
-                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
                     checked={formData.isPanIndia}
                     onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
                   />
-                  <label htmlFor="panIndia_prof" className="text-sm font-semibold text-gray-700 cursor-pointer">
+                  <label htmlFor="panIndia_prof" className="text-base font-bold text-orange-700 cursor-pointer">
                     Serve PAN India (Flat ₹9,999)
                   </label>
                 </div>
@@ -775,15 +774,15 @@ const MultiRoleRegisterPage = () => {
                   formatCreateLabel={(input: string) => `Add "${input}"`}
                   isDisabled={formData.isPanIndia}
                 />
-                <div className="flex items-center space-x-2 mt-2">
+                <div className="flex items-center space-x-3 mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
                   <input
                     type="checkbox"
-                    id="panIndia_prof"
-                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    id="panIndia_other"
+                    className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
                     checked={formData.isPanIndia}
                     onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
                   />
-                  <label htmlFor="panIndia_prof" className="text-sm font-semibold text-gray-700 cursor-pointer">
+                  <label htmlFor="panIndia_other" className="text-base font-bold text-orange-700 cursor-pointer">
                     Serve PAN India (Flat ₹9,999)
                   </label>
                 </div>
@@ -944,7 +943,7 @@ const MultiRoleRegisterPage = () => {
               />
             </div>
             <div>
-              <Label>Profession*</Label>
+              <Label>Business or profession*</Label>
               <Select
                 onValueChange={(v) => handleSelectChange(v, "profession")}
                 value={formData.profession}
@@ -1105,21 +1104,40 @@ const MultiRoleRegisterPage = () => {
           <form className="space-y-5" onSubmit={handleSubmit}>
             <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <legend className="sr-only">Select your registration type</legend>
-              {userRoles.map((role) => (
-                <div
-                  key={role.id}
-                  role="button"
-                  onClick={() => handleRoleChange(role.id)}
-                  className={`flex items-center justify-between w-full p-4 h-full rounded-lg cursor-pointer border-2 transition-all duration-300 ${
-                    selectedRole === role.id
-                      ? "bg-accent text-accent-foreground border-transparent shadow-md"
-                      : "bg-input border-border hover:border-primary/50"
-                  }`}
-                >
-                  <span className="font-semibold">{role.label}</span>
-                  {selectedRole === role.id && <CheckCircle size={20} />}
-                </div>
-              ))}
+              <div className="flex flex-col gap-4">
+                {userRoles.slice(0, 4).map((role) => (
+                  <div
+                    key={role.id}
+                    role="button"
+                    onClick={() => handleRoleChange(role.id)}
+                    className={`flex items-center justify-between w-full p-4 h-full rounded-lg cursor-pointer border-2 transition-all duration-300 ${
+                      selectedRole === role.id
+                        ? "bg-accent text-accent-foreground border-transparent shadow-md"
+                        : "bg-input border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <span className="font-semibold">{role.label}</span>
+                    {selectedRole === role.id && <CheckCircle size={20} />}
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col gap-4">
+                {userRoles.slice(4).map((role) => (
+                  <div
+                    key={role.id}
+                    role="button"
+                    onClick={() => handleRoleChange(role.id)}
+                    className={`flex items-center justify-between w-full p-4 h-full rounded-lg cursor-pointer border-2 transition-all duration-300 ${
+                      selectedRole === role.id
+                        ? "bg-accent text-accent-foreground border-transparent shadow-md"
+                        : "bg-input border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <span className="font-semibold">{role.label}</span>
+                    {selectedRole === role.id && <CheckCircle size={20} />}
+                  </div>
+                ))}
+              </div>
             </fieldset>
             <AnimatePresence mode="wait">
               {renderRoleSpecificFields()}

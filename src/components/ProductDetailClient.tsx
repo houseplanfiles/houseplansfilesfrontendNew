@@ -6,8 +6,8 @@ import { useParams, useRouter, usePathname } from "next/navigation";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-
 import { RootState, AppDispatch } from "@/lib/store";
+import { trackAnalytics } from "@/lib/analytics";
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import {
   createReview as createProductReview,
@@ -226,7 +226,7 @@ const VideoModal = ({
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.8, y: 50 }}
         className="relative w-full max-w-4xl bg-black rounded-lg overflow-hidden shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e: React.MouseEvent) => e.stopPropagation()}
       >
         <div className="aspect-video">
           {/* Optimization: loading lazy for modal iframe */}
@@ -298,16 +298,22 @@ const DetailPage = ({ initialProduct }: ProductDetailClientProps = {}) => {
     const fromRedux = singleProduct?._id === productIdFromSlug
       ? singleProduct
       : adminProducts.find((p) => p._id === productIdFromSlug);
-    return fromRedux || initialProduct || null;
+    return initialProduct || fromRedux;
   }, [
     isProfessionalPlan,
-    singleProduct,
     singlePlan,
-    adminProducts,
     professionalPlans,
-    productIdFromSlug,
+    singleProduct,
+    adminProducts,
     initialProduct,
+    productIdFromSlug,
   ]);
+
+  useEffect(() => {
+    if (displayData?._id) {
+      trackAnalytics(isProfessionalPlan ? 'plan' : 'product', displayData._id, 'view');
+    }
+  }, [displayData?._id, isProfessionalPlan]);
 
   if (!displayData && (listStatus === "loading" || listStatus === "idle")) {
     return (
