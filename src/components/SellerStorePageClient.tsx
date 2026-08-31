@@ -440,6 +440,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
                     title={`Check out ${sellerInfo?.businessName}'s store on Houseplans Marketplace!`} 
                     phone={sellerInfo?.phone} 
                     heading=""
+                    socialLinks={sellerInfo?.socialLinks}
                   />
                 </div>
                 
