@@ -485,7 +485,7 @@ const MultiRoleRegisterPage = () => {
               />
             </div>
             <div>
-              <Label>Profession*</Label>
+              <Label>Business or profession*</Label>
               <Select
                 onValueChange={(v) => handleSelectChange(v, "profession")}
                 value={formData.profession}
@@ -942,7 +942,7 @@ const MultiRoleRegisterPage = () => {
               />
             </div>
             <div>
-              <Label>Profession*</Label>
+              <Label>Business or profession*</Label>
               <Select
                 onValueChange={(v) => handleSelectChange(v, "profession")}
                 value={formData.profession}
