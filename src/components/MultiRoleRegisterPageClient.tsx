@@ -354,6 +354,7 @@ const MultiRoleRegisterPage = () => {
       address: "",
       city: [] as string[],
       selectedStates: [] as string[],
+      isPanIndia: false,
       pincode: "",
       materialType: "",
       category: "",
