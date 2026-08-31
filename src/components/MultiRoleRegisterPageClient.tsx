@@ -57,9 +57,7 @@ const professionalSubRoles = [
 
 const contractorProfessions = [
   "Civil Construction Contractor", "Interior Contractor", "Electrical Contractor",
-  "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor",
-  "Swimming Pool Contractor", "Pre Engineering Board / PEB", "Pre Fabricated House Contractor",
-  "Pest Control Contractor", "Landscaping & Garden Contractor"
+  "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor"
 ];
 
 const homeDesigningProfessions = [
