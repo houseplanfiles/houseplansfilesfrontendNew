@@ -29,7 +29,7 @@ const DigitalCardClient = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-24 pb-16 md:pt-28 md:pb-24 overflow-hidden bg-white">
+      <section className="relative pt-24 pb-10 md:pt-24 md:pb-12 overflow-hidden bg-white">
         {/* Background diagonal split */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-bl from-gray-900 to-gray-800 transform skew-x-12 translate-x-32 hidden lg:block"></div>
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-gray-900 to-gray-800 lg:hidden -z-10 mt-[600px] sm:mt-[500px]"></div>
@@ -113,54 +113,54 @@ const DigitalCardClient = () => {
             </div>
 
             {/* Right Image (Two Overlapping Golden Cards) */}
-            <div className="w-full lg:w-1/2 flex justify-center lg:justify-end py-10 lg:py-0">
+            <div className="w-full lg:w-1/2 flex justify-center lg:justify-end py-6 lg:py-0">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95, x: 20 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative w-full max-w-[500px] h-[500px] flex items-center justify-center"
+                className="relative w-full max-w-[450px] h-[400px] flex items-center justify-center"
               >
                 {/* Back Card (Right, Tilted Right) */}
-                <div className="absolute right-0 lg:right-4 w-[280px] h-[400px] bg-gradient-to-br from-yellow-100 via-yellow-400 to-yellow-600 rounded-2xl shadow-2xl transform rotate-6 translate-x-8 border border-yellow-300/50 flex flex-col items-center p-6 text-black z-0">
-                  <div className="w-full h-full flex flex-col items-center justify-center space-y-6">
+                <div className="absolute right-4 lg:right-8 w-[240px] h-[340px] bg-gradient-to-br from-yellow-100 via-yellow-400 to-yellow-600 rounded-2xl shadow-2xl transform rotate-6 translate-x-8 border border-yellow-300/50 flex flex-col items-center p-5 text-black z-0">
+                  <div className="w-full h-full flex flex-col items-center justify-center space-y-4">
                     {/* QR Code Mockup */}
-                    <div className="w-32 h-32 bg-white p-2 rounded-lg shadow-inner">
-                      <Image src="/qr-placeholder.png" alt="QR Code" width={128} height={128} className="w-full h-full object-cover rounded opacity-80" unoptimized onError={(e) => { e.currentTarget.src = "https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" }} />
+                    <div className="w-24 h-24 bg-white p-2 rounded-lg shadow-inner">
+                      <Image src="/qr-placeholder.png" alt="QR Code" width={96} height={96} className="w-full h-full object-cover rounded opacity-80" unoptimized onError={(e) => { e.currentTarget.src = "https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" }} />
                     </div>
                     <div className="text-center">
-                      <p className="text-sm font-semibold tracking-wide">Scan or Tap</p>
-                      <p className="text-sm font-semibold tracking-wide">to Connect</p>
+                      <p className="text-xs font-semibold tracking-wide">Scan or Tap</p>
+                      <p className="text-xs font-semibold tracking-wide">to Connect</p>
                     </div>
-                    <div className="w-12 h-12 rounded-full border-2 border-black/80 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full border-2 border-black/80 flex items-center justify-center">
                       <WifiIcon />
                     </div>
-                    <div className="mt-auto pt-4 border-t border-black/20 w-full text-center">
-                      <p className="text-xs font-bold tracking-widest opacity-80">houseplanfiles.com</p>
+                    <div className="mt-auto pt-3 border-t border-black/20 w-full text-center">
+                      <p className="text-[10px] font-bold tracking-widest opacity-80">houseplanfiles.com</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Front Card (Left, Tilted Left) */}
-                <div className="absolute left-0 lg:left-4 w-[320px] h-[450px] bg-gradient-to-br from-yellow-200 via-yellow-400 to-yellow-700 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] transform -rotate-3 -translate-x-4 border border-yellow-300 flex flex-col items-center justify-between p-8 text-black z-10 backdrop-blur-sm">
+                <div className="absolute left-2 lg:left-8 w-[270px] h-[380px] bg-gradient-to-br from-yellow-200 via-yellow-400 to-yellow-700 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] transform -rotate-3 -translate-x-4 border border-yellow-300 flex flex-col items-center justify-between p-6 text-black z-10 backdrop-blur-sm">
                    <div className="text-center mt-2 flex flex-col items-center">
                      <HomeIcon />
-                     <h2 className="text-3xl font-black mt-4 tracking-wide uppercase">YOUR NAME</h2>
+                     <h2 className="text-2xl font-black mt-3 tracking-wide uppercase">YOUR NAME</h2>
                      <div className="h-px w-full bg-black/40 my-2"></div>
-                     <p className="text-[10px] font-bold tracking-[0.2em] opacity-90 uppercase">Architect | Designer | Builder</p>
+                     <p className="text-[9px] font-bold tracking-[0.15em] opacity-90 uppercase">Architect | Designer | Builder</p>
                    </div>
                    
-                   <div className="flex flex-col items-center my-6">
-                     <div className="w-20 h-20 rounded-full border-[3px] border-black flex items-center justify-center mb-4">
+                   <div className="flex flex-col items-center my-4">
+                     <div className="w-16 h-16 rounded-full border-[3px] border-black flex items-center justify-center mb-3">
                         <WifiIcon />
                      </div>
-                     <p className="text-sm font-bold tracking-[0.15em]">TAP TO CONNECT</p>
+                     <p className="text-xs font-bold tracking-[0.15em]">TAP TO CONNECT</p>
                    </div>
 
-                   <div className="flex gap-4 w-full justify-center mb-2">
-                     <div className="w-10 h-10 bg-black text-yellow-500 rounded-full flex items-center justify-center shadow-lg"><PhoneIcon /></div>
-                     <div className="w-10 h-10 bg-black text-yellow-500 rounded-full flex items-center justify-center shadow-lg"><MailIcon /></div>
-                     <div className="w-10 h-10 bg-black text-yellow-500 rounded-full flex items-center justify-center shadow-lg"><GlobeIcon /></div>
-                     <div className="w-10 h-10 bg-black text-yellow-500 rounded-full flex items-center justify-center shadow-lg"><MapPinIcon /></div>
+                   <div className="flex gap-3 w-full justify-center mb-2">
+                     <div className="w-8 h-8 bg-black text-yellow-500 rounded-full flex items-center justify-center shadow-lg"><PhoneIcon /></div>
+                     <div className="w-8 h-8 bg-black text-yellow-500 rounded-full flex items-center justify-center shadow-lg"><MailIcon /></div>
+                     <div className="w-8 h-8 bg-black text-yellow-500 rounded-full flex items-center justify-center shadow-lg"><GlobeIcon /></div>
+                     <div className="w-8 h-8 bg-black text-yellow-500 rounded-full flex items-center justify-center shadow-lg"><MapPinIcon /></div>
                    </div>
                 </div>
               </motion.div>
