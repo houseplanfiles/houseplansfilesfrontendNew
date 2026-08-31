@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SocialShare from "@/components/SocialShare";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -318,10 +319,20 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                 {architect.portfolioUrl && (architect.contractorType === "Premium") && (
                   <a href={getFileUrl(architect.portfolioUrl)} target="_blank" rel="noreferrer" className="block w-full">
                     <Button variant="outline" className="w-full h-14 sm:h-16 rounded-xl sm:rounded-2xl border-2 border-white/20 text-white bg-white/10 hover:bg-white/20 backdrop-blur-md font-extrabold text-base sm:text-lg transition-all">
-                      <Download className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" /> Design Catalog
+                      <Download className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" /> Download Portfolio
                     </Button>
                   </a>
                 )}
+
+                {/* Social Share */}
+                <div className="bg-white/10 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-5 border border-white/10 mt-2">
+                  <SocialShare 
+                    url={typeof window !== 'undefined' ? window.location.href : ''} 
+                    title={`${architect.name} - HousePlanFiles Profile`} 
+                    phone={architect.phone} 
+                    heading="Share Profile"
+                  />
+                </div>
               </div>
             </div>
           </div>

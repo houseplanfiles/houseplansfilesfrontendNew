@@ -35,10 +35,10 @@ const AdminAnalyticsReportPage = () => {
   }, [userInfo]);
 
   const filteredReports = reports.filter(r => 
-    r.name?.toLowerCase().includes(search.toLowerCase()) || 
-    r.email?.toLowerCase().includes(search.toLowerCase()) ||
-    r.companyName?.toLowerCase().includes(search.toLowerCase()) ||
-    r.role?.toLowerCase().includes(search.toLowerCase())
+    (r.name?.toLowerCase() || "").includes(search.toLowerCase()) || 
+    (r.email?.toLowerCase() || "").includes(search.toLowerCase()) ||
+    (r.companyName?.toLowerCase() || "").includes(search.toLowerCase()) ||
+    (r.role?.toLowerCase() || "").includes(search.toLowerCase())
   );
 
   const handleDownloadPDF = () => {
@@ -49,12 +49,12 @@ const AdminAnalyticsReportPage = () => {
       startY: 20,
       head: [["Name / Company", "Role", "Profile Views", "Project Views", "WhatsApp Clicks", "Call Clicks"]],
       body: filteredReports.map(r => [
-        r.companyName ? `${r.name} (${r.companyName})` : r.name,
-        r.role,
-        r.profileViews,
-        r.projectViews,
-        r.whatsappClicks,
-        r.callClicks
+        r.companyName ? `${r.name} (${r.companyName})` : (r.name || 'Unknown'),
+        r.role || 'N/A',
+        r.profileViews || 0,
+        r.projectViews || 0,
+        r.whatsappClicks || 0,
+        r.callClicks || 0
       ]),
     });
     
@@ -78,11 +78,11 @@ const AdminAnalyticsReportPage = () => {
       theme: 'grid',
       head: [["Metric", "Count"]],
       body: [
-        ["Profile Views", user.profileViews.toString()],
-        ["Project/Product Views", user.projectViews.toString()],
-        ["WhatsApp Clicks", user.whatsappClicks.toString()],
-        ["Call Clicks", user.callClicks.toString()],
-        ["Total Engagement", (user.profileViews + user.projectViews + user.whatsappClicks + user.callClicks).toString()]
+        ["Profile Views", (user.profileViews || 0).toString()],
+        ["Project/Product Views", (user.projectViews || 0).toString()],
+        ["WhatsApp Clicks", (user.whatsappClicks || 0).toString()],
+        ["Call Clicks", (user.callClicks || 0).toString()],
+        ["Total Engagement", ((user.profileViews || 0) + (user.projectViews || 0) + (user.whatsappClicks || 0) + (user.callClicks || 0)).toString()]
       ],
       headStyles: { fillColor: [234, 88, 12] }, // orange-600 to match theme
     });
@@ -142,10 +142,10 @@ const AdminAnalyticsReportPage = () => {
                     {r.companyName && <div className="text-xs text-gray-500">{r.companyName}</div>}
                   </td>
                   <td className="px-4 py-3 capitalize text-gray-600">{r.role}</td>
-                  <td className="px-4 py-3 font-semibold">{r.profileViews}</td>
-                  <td className="px-4 py-3 font-semibold">{r.projectViews}</td>
-                  <td className="px-4 py-3 font-bold text-green-600">{r.whatsappClicks}</td>
-                  <td className="px-4 py-3 font-bold text-blue-600">{r.callClicks}</td>
+                  <td className="px-4 py-3 font-semibold">{r.profileViews || 0}</td>
+                  <td className="px-4 py-3 font-semibold">{r.projectViews || 0}</td>
+                  <td className="px-4 py-3 font-bold text-green-600">{r.whatsappClicks || 0}</td>
+                  <td className="px-4 py-3 font-bold text-blue-600">{r.callClicks || 0}</td>
                   <td className="px-4 py-3 text-right">
                     <Button 
                       variant="ghost" 

@@ -526,15 +526,15 @@ const MultiRoleRegisterPage = () => {
                   formatCreateLabel={(input: string) => `Add "${input}"`}
                   isDisabled={formData.isPanIndia}
                 />
-                <div className="flex items-center space-x-2 mt-2">
+                <div className="flex items-center space-x-3 mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
                   <input
                     type="checkbox"
                     id="panIndia_prof"
-                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
                     checked={formData.isPanIndia}
                     onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
                   />
-                  <label htmlFor="panIndia_prof" className="text-sm font-semibold text-gray-700 cursor-pointer">
+                  <label htmlFor="panIndia_prof" className="text-base font-bold text-orange-700 cursor-pointer">
                     Serve PAN India (Flat ₹9,999)
                   </label>
                 </div>
@@ -773,15 +773,15 @@ const MultiRoleRegisterPage = () => {
                   formatCreateLabel={(input: string) => `Add "${input}"`}
                   isDisabled={formData.isPanIndia}
                 />
-                <div className="flex items-center space-x-2 mt-2">
+                <div className="flex items-center space-x-3 mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
                   <input
                     type="checkbox"
-                    id="panIndia_prof"
-                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    id="panIndia_other"
+                    className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
                     checked={formData.isPanIndia}
                     onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
                   />
-                  <label htmlFor="panIndia_prof" className="text-sm font-semibold text-gray-700 cursor-pointer">
+                  <label htmlFor="panIndia_other" className="text-base font-bold text-orange-700 cursor-pointer">
                     Serve PAN India (Flat ₹9,999)
                   </label>
                 </div>
