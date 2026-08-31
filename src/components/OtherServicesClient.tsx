@@ -89,24 +89,12 @@ const getFileUrl = (path: string) => {
 
 const CONTRACTOR_CATEGORIES = [
   "All",
-  "Building",
-  "Interior",
-  "Electrical",
-  "Plumbing",
-  "Tiles & Granite",
-  "Painting & Waterproofing",
-  "Swimming Pool",
-  "Pre Engineering Board / PEB",
-  "Pre Fabricated House",
   "Pest Control",
   "Landscaping & Garden",
-  "Manpower Supply",
   "Modular Kitchen",
   "Lift Services",
-  "Building Inspection",
   "Solar Rooftop Panel",
   "HVAC",
-  "Carpenter",
   "Glass Fabricator"
 ];
 
