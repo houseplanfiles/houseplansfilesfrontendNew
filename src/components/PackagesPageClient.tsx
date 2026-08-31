@@ -22,6 +22,7 @@ import PremiumPackagesSection from "@/components/PremiumPackagesSection";
 import CityPartnerPackagesSection from "@/components/CityPartnerPackagesSection";
 import MarketplacePackagesSection from "@/components/MarketplacePackagesSection";
 import CorporatePackagesSection from "@/components/CorporatePackagesSection";
+import ConstructionPackagesSection from "@/components/ConstructionPackagesSection";
 
 import { Button } from "@/components/ui/button";
 
@@ -152,6 +153,9 @@ const PackagesPage = () => {
   const cityPartnerPackages = safePackages.filter(
     (pkg) => pkg.packageType === "city_partner"
   );
+  const constructionPackages = safePackages.filter(
+    (pkg) => pkg.packageType === "construction"
+  );
 
   return (
     <>
@@ -200,6 +204,7 @@ const PackagesPage = () => {
             <PremiumPackagesSection packages={premiumPackages} />
             <CityPartnerPackagesSection packages={cityPartnerPackages} />
             <MarketplacePackagesSection packages={marketplacePackages} />
+            <ConstructionPackagesSection packages={constructionPackages} />
             <CorporatePackagesSection />
           </>
         )}

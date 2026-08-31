@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Package, DollarSign, Star, PlusCircle, ClipboardList, Briefcase, Eye, MessageSquare, LayoutGrid } from "lucide-react";
+import { Package, DollarSign, Star, PlusCircle, ClipboardList, Briefcase, Eye, MessageSquare, LayoutGrid, Phone } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/store";
 import { fetchMyProducts } from "@/lib/features/products/productSlice";
@@ -100,6 +100,7 @@ const DashboardPage = () => {
     { title: "Active Projects", value: stats.projectsCount, icon: LayoutGrid },
     { title: "Profile Views", value: stats.profileViews, icon: Eye },
     { title: "WhatsApp Clicks", value: stats.whatsappClicks, icon: MessageSquare },
+    { title: "Call Clicks", value: stats.callClicks, icon: Phone },
   ] : [
     {
       title: "Products Listed",
@@ -111,7 +112,7 @@ const DashboardPage = () => {
     { title: "Product Views", value: stats.totalProductViews, icon: Eye },
     { title: "Profile Views", value: stats.profileViews, icon: Eye },
     { title: "WhatsApp Clicks", value: stats.whatsappClicks, icon: MessageSquare },
-    { title: "Call Clicks", value: stats.callClicks, icon: PlusCircle },
+    { title: "Call Clicks", value: stats.callClicks, icon: Phone },
   ];
 
   const rawLabel = userInfo?.profession || userInfo?.role || "Professional";

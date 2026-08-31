@@ -33,6 +33,11 @@ import {
   X,
   Send,
   MessageCircle,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Youtube,
+  Twitter
 } from "lucide-react";
 import { toast } from "sonner";
 import { trackAnalytics } from "@/lib/analytics";
@@ -190,6 +195,37 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
                   </div>
                 )}
               </div>
+
+              {/* Social Media Icons */}
+              {contractor.socialLinks && Object.values(contractor.socialLinks).some(val => val) && (
+                <div className="flex justify-center gap-4 mt-4 mb-2">
+                  {contractor.socialLinks.facebook && (
+                    <a href={contractor.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Facebook className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
+                  {contractor.socialLinks.instagram && (
+                    <a href={contractor.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Instagram className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
+                  {contractor.socialLinks.linkedin && (
+                    <a href={contractor.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
+                  {contractor.socialLinks.youtube && (
+                    <a href={contractor.socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Youtube className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
+                  {contractor.socialLinks.twitter && (
+                    <a href={contractor.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Twitter className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 items-stretch">
@@ -240,6 +276,16 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
                 <Button onClick={() => handleInquiryAction()} className="w-full bg-orange-600 hover:bg-orange-700 h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-extrabold shadow-2xl shadow-orange-600/40 text-white transition-all active:scale-95 border-none">
                   <Phone className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" /> Contact Now
                 </Button>
+
+                {/* Premium -> Call Now */}
+                {(contractor.contractorType === "Premium" || contractor.role === "Premium") && contractor.phone && (
+                  <Button 
+                    onClick={() => { trackAnalytics('user', contractor._id, 'call_click'); window.location.href = `tel:${contractor.phone.replace(/\D/g, '')}`; }} 
+                    className="w-full bg-blue-600 hover:bg-blue-700 h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-extrabold shadow-2xl shadow-blue-600/40 text-white transition-all active:scale-95 border-none"
+                  >
+                    <Phone className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" /> Call Now
+                  </Button>
+                )}
                 
                 {/* WhatsApp Button */}
                 {(contractor.contractorType === "Verified" || contractor.contractorType === "Premium" || contractor.role === "Premium") && (

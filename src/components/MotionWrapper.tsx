@@ -80,7 +80,7 @@ export const motion = {
   main: MotionComponent('main'),
 };
 
-export function AnimatePresence({ children }: { children: React.ReactNode }) {
+export function AnimatePresence({ children, mode, initial, onExitComplete }: { children: React.ReactNode, mode?: string, initial?: boolean, onExitComplete?: () => void }) {
   return <>{children}</>;
 }
 

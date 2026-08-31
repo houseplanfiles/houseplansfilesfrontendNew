@@ -637,35 +637,13 @@ const AddProductPage = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>SEO & Marketing</CardTitle>
+                <CardTitle>Cross-Sell & Up-Sell</CardTitle>
                 <CardDescription>
-                  Improve search visibility for this product.
+                  Recommend other products.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="seoTitle">SEO Title</Label>
-                  <Input id="seoTitle" {...register("seoTitle")} />
-                </div>
-                <div>
-                  <Label htmlFor="seoAltText">Main Image Alt Text</Label>
-                  <Input id="seoAltText" {...register("seoAltText")} />
-                </div>
-                <div>
-                  <Label htmlFor="seoDescription">Meta Description</Label>
-                  <Textarea
-                    id="seoDescription"
-                    rows={3}
-                    {...register("seoDescription")}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="seoKeywords">
-                    Keywords (comma-separated)
-                  </Label>
-                  <Input id="seoKeywords" {...register("seoKeywords")} />
-                </div>
-                <div className="grid grid-cols-2 gap-4 pt-2">
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label>Cross-Sell Products</Label>
                     <MultiSelectForProducts

@@ -161,10 +161,6 @@ const MultiRoleRegisterPage = () => {
         planPrice = 999 * (formData.city.length > 0 ? formData.city.length : 1);
         planName = "Basic Listing";
         break;
-      case "Standard":
-        planPrice = 1499 * (formData.city.length > 0 ? formData.city.length : 1);
-        planName = "Standard Listing";
-        break;
       case "Premium":
         planPrice = 1999 * (formData.city.length > 0 ? formData.city.length : 1);
         planName = "Premium Listing (6 Month)";
@@ -173,17 +169,16 @@ const MultiRoleRegisterPage = () => {
         planPrice = 2999 * (formData.city.length > 0 ? formData.city.length : 1);
         planName = "Premium+ Listing (12 Month)";
         break;
+      case "Seller_Auto": {
+        const isRetail = formData.businessType === "Retail";
+        const basePrice = isRetail ? 2999 : 4999;
+        planPrice = basePrice * (formData.city.length > 0 ? formData.city.length : 1);
+        planName = isRetail ? "Retail Shop (Per City)" : `${formData.businessType} Listing (Per City)`;
+        break;
+      }
       case "Industrial_and_Infra_Services":
         planPrice = 4999;
         planName = "Industrial & Infra Services";
-        break;
-      case "Shop_Per_City":
-        planPrice = 2999 * (formData.city.length > 0 ? formData.city.length : 1);
-        planName = "Shop (Per City)";
-        break;
-      case "Manufacturer_Pan_India":
-        planPrice = 9999;
-        planName = "Manufacturer (Yearly PAN India)";
         break;
       case "Industrial_State":
         planPrice = 4999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1);
@@ -193,11 +188,17 @@ const MultiRoleRegisterPage = () => {
         planPrice = 24999;
         planName = "Industrial Services (Yearly PAN India)";
         break;
-      default:
-        planPrice = selectedRole === "seller" ? 2999 * (formData.city.length > 0 ? formData.city.length : 1) : 
-                    selectedRole === "industrial" ? 4999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1) : 
-                    999 * (formData.city.length > 0 ? formData.city.length : 1);
-        planName = selectedRole === "seller" ? "Shop (Per City)" : selectedRole === "industrial" ? "Industrial Services (Per State)" : "Basic Listing";
+      default: {
+        const isRetailDefault = formData.businessType === "Retail";
+        planPrice = selectedRole === "seller"
+          ? (isRetailDefault ? 2999 : 4999) * (formData.city.length > 0 ? formData.city.length : 1)
+          : selectedRole === "industrial"
+          ? 4999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1)
+          : 999 * (formData.city.length > 0 ? formData.city.length : 1);
+        planName = selectedRole === "seller"
+          ? (isRetailDefault ? "Retail Shop (Per City)" : `${formData.businessType} Listing (Per City)`)
+          : selectedRole === "industrial" ? "Industrial Services (Per State)" : "Basic Listing";
+      }
     }
 
     const items = [{ name: planName, price: planPrice }];
@@ -342,7 +343,7 @@ const MultiRoleRegisterPage = () => {
 
   const handleRoleChange = (value: string) => {
     setSelectedRole(value);
-    setSelectedPlanState(value === "seller" ? "Shop_Per_City" : value === "industrial" ? "Industrial_State" : "Basic");
+    setSelectedPlanState(value === "seller" ? "Seller_Auto" : value === "industrial" ? "Industrial_State" : "Basic");
     setFormData({
       role: value,
       email: formData.email,
@@ -761,10 +762,10 @@ const MultiRoleRegisterPage = () => {
                 />
               </div>
               <div>
-                <Label>Pincode*</Label>
+                <Label>Pincode</Label>
                 <Input
                   id="pincode"
-                  required
+                  name="pincode"
                   value={formData.pincode}
                   onChange={handleChange}
                   placeholder="Enter pincode"
@@ -1123,20 +1124,39 @@ const MultiRoleRegisterPage = () => {
                 </div>
                 
                 {/* Plans Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {(selectedRole === "seller"
-                    ? [
-                        { id: "Shop_Per_City", name: "Shop (Per City)", price: 2999, final: "3,538.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
-                        { id: "Manufacturer_Pan_India", name: "Manufacturer (Yearly PAN India)", price: 9999, final: "11,798.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
-                      ]
-                    : selectedRole === "industrial"
+                {selectedRole === "seller" ? (
+                  // Seller: auto-price based on Business Category
+                  <div className="rounded-xl border-2 border-primary bg-primary/5 p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        {formData.businessType === "Retail" ? "Retail Shop" : formData.businessType || "Manufacturer / Supplier"} — Per City Listing
+                      </span>
+                      <div className="w-4 h-4 rounded-full bg-primary border-primary text-white flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                      </div>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-extrabold text-foreground">
+                        ₹{formData.businessType === "Retail" ? "2,999" : "4,999"}
+                      </span>
+                      <span className="text-xs text-muted-foreground">per city +18% GST</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-1">
+                      {formData.city.length > 1
+                        ? `${formData.city.length} cities selected → ₹${(formData.businessType === "Retail" ? 2999 : 4999) * formData.city.length} +18% GST`
+                        : "Select cities above to see total price"}
+                    </p>
+                    <p className="text-[10px] text-primary font-medium mt-2">✓ Price auto-set based on Business Category</p>
+                  </div>
+                ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {(selectedRole === "industrial"
                     ? [
                         { id: "Industrial_State", name: "Industrial Services (Per State)", price: 4999, final: "5,898.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
                         { id: "Industrial_Pan_India", name: "Industrial Services (Yearly PAN India)", price: 24999, final: "29,498.82", color: "border-red-500 bg-red-500/5 text-red-800" }
                       ]
                     : [
                         { id: "Basic", name: "Basic Listing", price: 999, final: "1,178.82", color: "border-green-500 bg-green-500/5 text-green-800" },
-                        { id: "Standard", name: "Standard Listing", price: 1499, final: "1,768.82", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
                         { id: "Premium", name: "Premium (6 Months)", price: 1999, final: "2,358.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
                         { id: "Premium+", name: "Premium+ (12 Months)", price: 2999, final: "3,538.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
                       ]
@@ -1169,6 +1189,7 @@ const MultiRoleRegisterPage = () => {
                     </div>
                   ))}
                 </div>
+                )}
 
                 {/* Optional Services */}
                 <div className="space-y-3 pt-3 border-t border-dashed border-border">

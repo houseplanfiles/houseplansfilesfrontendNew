@@ -37,7 +37,12 @@ import {
   BookOpen,
   Award,
   Zap,
-  MessageCircle
+  MessageCircle,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Youtube,
+  Twitter
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -200,9 +205,40 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
               <h1 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight mb-2 sm:mb-4">
                 {architect.name}
               </h1>
-              <p className="text-gray-400 font-extrabold flex items-center justify-center gap-2 uppercase tracking-widest text-[9px] sm:text-[10px]">
+              <p className="text-gray-400 font-extrabold flex items-center justify-center gap-2 uppercase tracking-widest text-[9px] sm:text-[10px] mb-4">
                 <MapPin className="w-3 h-3 text-orange-500" /> {architect.city} • {architect.experience || "Expert"} Experience
               </p>
+              
+              {/* Social Media Icons */}
+              {architect.socialLinks && Object.values(architect.socialLinks).some(val => val) && (
+                <div className="flex justify-center gap-4 mt-2 mb-6">
+                  {architect.socialLinks.facebook && (
+                    <a href={architect.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Facebook className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
+                  {architect.socialLinks.instagram && (
+                    <a href={architect.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Instagram className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
+                  {architect.socialLinks.linkedin && (
+                    <a href={architect.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
+                  {architect.socialLinks.youtube && (
+                    <a href={architect.socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Youtube className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
+                  {architect.socialLinks.twitter && (
+                    <a href={architect.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Twitter className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 items-stretch">
@@ -274,7 +310,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
 
                 {/* Premium -> Call Now */}
                 {architect.contractorType === "Premium" && architect.phone && (
-                  <Button onClick={() => window.location.href = `tel:${architect.phone.replace(/\D/g, '')}`} className="w-full bg-blue-600 hover:bg-blue-700 text-white h-14 sm:h-16 rounded-xl sm:rounded-2xl text-sm sm:text-lg font-extrabold shadow-xl transition-all border-none px-0">
+                  <Button onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = `tel:${architect.phone.replace(/\D/g, '')}`; }} className="w-full bg-blue-600 hover:bg-blue-700 text-white h-14 sm:h-16 rounded-xl sm:rounded-2xl text-sm sm:text-lg font-extrabold shadow-xl transition-all border-none px-0">
                     <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" /> Call Now
                   </Button>
                 )}
