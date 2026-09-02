@@ -164,34 +164,19 @@ const Hero = () => {
               Architects
             </Button>
           </Link>
-          <Link href="/house-plans">
-            <Button className="bg-white text-red-500 hover:bg-gray-100 hover:text-red-600 font-bold px-5 sm:px-6 py-5 rounded-xl shadow-xl text-sm sm:text-base transition-transform hover:-translate-y-1">
-              Readymade plans
-            </Button>
-          </Link>
           <Link href="/contractors">
             <Button className="bg-white text-purple-600 hover:bg-gray-100 hover:text-purple-700 font-bold px-5 sm:px-6 py-5 rounded-xl shadow-xl text-sm sm:text-base transition-transform hover:-translate-y-1">
               Contractors
             </Button>
           </Link>
+          <Link href="/industrial-services">
+            <Button className="bg-white text-indigo-600 hover:bg-gray-100 hover:text-indigo-700 font-bold px-5 sm:px-6 py-5 rounded-xl shadow-xl text-sm sm:text-base transition-transform hover:-translate-y-1">
+              Industrial & Infra
+            </Button>
+          </Link>
           <Link href="/marketplace">
             <Button className="bg-green-700 text-white hover:bg-green-800 font-bold px-5 sm:px-6 py-5 rounded-xl shadow-xl text-sm sm:text-base transition-transform hover:-translate-y-1">
               Marketplace
-            </Button>
-          </Link>
-          <Link href="/leads">
-            <Button className="bg-white text-blue-600 hover:bg-gray-100 hover:text-blue-700 font-bold px-5 sm:px-6 py-5 rounded-xl shadow-xl text-sm sm:text-base transition-transform hover:-translate-y-1">
-              Lead Board
-            </Button>
-          </Link>
-          <Link href="/industrial-services">
-            <Button className="bg-white text-indigo-600 hover:bg-gray-100 hover:text-indigo-700 font-bold px-5 sm:px-6 py-5 rounded-xl shadow-xl text-sm sm:text-base transition-transform hover:-translate-y-1">
-              Infra Services
-            </Button>
-          </Link>
-          <Link href="/other-services">
-            <Button className="bg-white text-teal-600 hover:bg-gray-100 hover:text-teal-700 font-bold px-5 sm:px-6 py-5 rounded-xl shadow-xl text-sm sm:text-base transition-transform hover:-translate-y-1">
-              Other Services
             </Button>
           </Link>
         </motion.div>
