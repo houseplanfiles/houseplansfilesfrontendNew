@@ -23,8 +23,8 @@ const INDUSTRIAL_SERVICES = [
   { id: 3, label: "Pre Cast Concrete Material", link: "/industrial-services?profession=Building", icon: Cuboid, color: "bg-stone-500/10 text-stone-600 hover:border-stone-500" },
   { id: 4, label: "Machinery Services", link: "/industrial-services?profession=Building", icon: Settings, color: "bg-gray-500/10 text-gray-600 hover:border-gray-500" },
   { id: 5, label: "Manpower Supply", link: "/industrial-services?profession=Manpower Supply", icon: Users, color: "bg-fuchsia-500/10 text-fuchsia-600 hover:border-fuchsia-500" },
-  { id: 6, label: "Building Inspection Services", link: "/industrial-services?profession=Building Inspection", icon: ClipboardCheck, color: "bg-slate-500/10 text-slate-600 hover:border-slate-500" },
-  { id: 7, label: "Bulk Building Material Services", link: "/industrial-services?profession=Building", icon: Truck, color: "bg-orange-600/10 text-orange-700 hover:border-orange-600" },
+  { id: 6, label: "Project Management Consultancy", link: "/industrial-services?profession=Project Management Consultancy", icon: ClipboardCheck, color: "bg-slate-500/10 text-slate-600 hover:border-slate-500" },
+  { id: 7, label: "Project Manager", link: "/industrial-services?profession=Project Manager", icon: Truck, color: "bg-orange-600/10 text-orange-700 hover:border-orange-600" },
 ];
 
 // Section 3: Other Services

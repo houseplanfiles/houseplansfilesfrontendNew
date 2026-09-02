@@ -91,7 +91,8 @@ const CONTRACTOR_CATEGORIES = [
   "All",
   "Pre Engineering Board / PEB",
   "Pre Fabricated House",
-  "Building Inspection",
+  "Project Management Consultancy",
+  "Project Manager",
   "Manpower Supply"
 ];
 

@@ -64,7 +64,7 @@ const homeDesigningProfessions = [
 ];
 
 const industrialProfessions = [
-  "Pre Engineering Buildings", "Pre Fabricated Buildings", "Pre Cast Concrete Material", "Machinery Services", "Manpower Supply", "Building Inspection Services", "Bulk Building Material Services"
+  "Pre Engineering Buildings", "Pre Fabricated Buildings", "Pre Cast Concrete Material", "Machinery Services", "Manpower Supply", "Project Management Consultancy", "Project Manager"
 ];
 
 const otherServicesProfessions = [
@@ -611,60 +611,6 @@ const MultiRoleRegisterPage = () => {
               />
             </div>
 
-            <div className="pt-4 border-t border-border">
-              <h3 className="text-lg font-semibold mb-4 text-primary">
-                💳 Bank & Payment Details (Optional)
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="bankName">Bank Name</Label>
-                  <Input
-                    id="bankName"
-                    type="text"
-                    placeholder="e.g. HDFC Bank, SBI"
-                    value={formData.bankName}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="bankAccountNumber">Bank Account Number</Label>
-                  <Input
-                    id="bankAccountNumber"
-                    type="text"
-                    placeholder="Enter your account number"
-                    value={formData.bankAccountNumber}
-                    onChange={handleChange}
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    For receiving payments from clients
-                  </p>
-                </div>
-                <div>
-                  <Label htmlFor="ifscCode">IFSC Code</Label>
-                  <Input
-                    id="ifscCode"
-                    type="text"
-                    placeholder="e.g., SBIN0001234"
-                    value={formData.ifscCode}
-                    onChange={handleChange}
-                    style={{ textTransform: "uppercase" }}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="upiId">UPI ID</Label>
-                  <Input
-                    id="upiId"
-                    type="text"
-                    placeholder="yourname@paytm or 9876543210@paytm"
-                    value={formData.upiId}
-                    onChange={handleChange}
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Your UPI ID for quick payments
-                  </p>
-                </div>
-              </div>
-            </div>
 
             <div className="pt-4 border-t border-border">
               <h3 className="text-lg font-semibold mb-4 text-primary">
@@ -1047,18 +993,20 @@ const MultiRoleRegisterPage = () => {
                 formatCreateLabel={(input: string) => `Add "${input}"`}
                 isDisabled={formData.isPanIndia}
               />
-              <div className="flex items-center space-x-2 mt-2">
-                <input
-                  type="checkbox"
-                  id="panIndia_other"
-                  className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-                  checked={formData.isPanIndia}
-                  onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
-                />
-                <label htmlFor="panIndia_other" className="text-sm font-semibold text-gray-700 cursor-pointer">
-                  Serve PAN India (Flat ₹9,999)
-                </label>
-              </div>
+              {selectedRole !== 'industrial' && (
+                <div className="flex items-center space-x-2 mt-2">
+                  <input
+                    type="checkbox"
+                    id="panIndia_other"
+                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    checked={formData.isPanIndia}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
+                  />
+                  <label htmlFor="panIndia_other" className="text-sm font-semibold text-gray-700 cursor-pointer">
+                    Serve PAN India (Flat ₹9,999)
+                  </label>
+                </div>
+              )}
             </div>
             <div>
               <Label>GST Number (Optional)</Label>

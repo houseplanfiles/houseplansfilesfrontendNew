@@ -300,6 +300,7 @@ export const deleteUserByAdmin = createAsyncThunk<
   string,
   { state: RootState }
 >("user/deleteByAdmin", async (userId, { getState, rejectWithValue }) => {
+  
   try {
     const state = getState();
     const token = getToken(state);
