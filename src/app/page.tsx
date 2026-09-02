@@ -55,8 +55,9 @@ export default function HomePage() {
         <Navbar />
         <main>
           <Hero />
-          <ConstructionPartnersSection />
           <TopArchitectsSection />
+          <ConstructionPartnersSection />
+          {/* TODO: Add Industrial & Infra Section here once it exists */}
           <SellersSection />
           <ReadymadePlansSection />
           <RegionalPlansSection />
