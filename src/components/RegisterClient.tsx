@@ -42,7 +42,7 @@ const contractorProfessions = [
   },
   {
     category: "Industrial Construction & Infrastructure",
-    professions: ["Pre Engineering Board / PEB", "Pre Fabricated House", "Building Inspection", "Manpower Supply"]
+    professions: ["Pre Engineering Board / PEB", "Pre Fabricated House", "Project Management Consultancy", "Project Manager", "Manpower Supply"]
   },
   {
     category: "Other Services",
@@ -55,7 +55,7 @@ const contractorProfessions = [
       "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor",
       "Swimming Pool Contractor", "Pre Engineering Board / PEB", "Pre Fabricated House Contractor",
       "Pest Control Contractor", "Landscaping & Garden Contractor", "Manpower Supply",
-      "Modular Kitchen Contractor", "Lift Services Contractor", "Building Inspection Contractor",
+      "Modular Kitchen Contractor", "Lift Services Contractor", "Project Management Consultancy",
       "Solar Rooftop Panel Contractor", "HVAC Contractor", "Carpenter", "Glass Fabricator",
       "Labour Contractor", "Turnkey Contractor"
     ]
@@ -295,15 +295,7 @@ const RegisterClient = () => {
             </div>
             <div><Label>Skills (Comma separated)*</Label><Input id="skills" required value={formData.skills} onChange={handleChange} placeholder="e.g. AutoCAD, Interior Design..." /></div>
             <div><Label>Office / Contact Address*</Label><Textarea id="address" required value={formData.address} onChange={handleChange} placeholder="Full address" /></div>
-            <div className="pt-4 border-t border-border">
-              <h3 className="text-lg font-semibold mb-4 text-primary">💳 Bank & Payment Details (Optional)</h3>
-              <div className="space-y-4">
-                <div><Label htmlFor="bankName">Bank Name</Label><Input id="bankName" placeholder="e.g. HDFC Bank, SBI" value={formData.bankName} onChange={handleChange} /></div>
-                <div><Label htmlFor="bankAccountNumber">Bank Account Number</Label><Input id="bankAccountNumber" value={formData.bankAccountNumber} onChange={handleChange} placeholder="Enter your account number" /></div>
-                <div><Label htmlFor="ifscCode">IFSC Code</Label><Input id="ifscCode" value={formData.ifscCode} onChange={handleChange} placeholder="e.g., SBIN0001234" style={{ textTransform: "uppercase" }} /></div>
-                <div><Label htmlFor="upiId">UPI ID</Label><Input id="upiId" value={formData.upiId} onChange={handleChange} placeholder="yourname@paytm" /></div>
-              </div>
-            </div>
+
             <div className="pt-4 border-t border-border">
               <h3 className="text-lg font-semibold mb-4 text-primary">📄 Portfolio & Documents</h3>
               <div className="space-y-4">

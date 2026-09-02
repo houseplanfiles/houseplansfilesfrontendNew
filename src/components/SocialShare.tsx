@@ -17,6 +17,7 @@ interface SocialShareProps {
   phone?: string;
   heading?: string;
   socialLinks?: any;
+  className?: string;
 }
 
 const SocialShare: React.FC<SocialShareProps> = ({ 
@@ -24,7 +25,8 @@ const SocialShare: React.FC<SocialShareProps> = ({
   title = "Check this out on HousePlanFiles!", 
   phone,
   heading = "Share this plan",
-  socialLinks
+  socialLinks,
+  className = "mt-6"
 }) => {
   const isProfileMode = !!socialLinks;
 
@@ -95,16 +97,16 @@ const SocialShare: React.FC<SocialShareProps> = ({
   ].filter(item => item.show);
 
   return (
-    <div className="mt-6">
+    <div className={className}>
       {heading && <p className="text-sm font-bold text-gray-900 mb-3">{heading}</p>}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap justify-center sm:justify-start gap-1.5 sm:gap-2">
         {shareLinks.map((item, idx) => (
           <a
             key={idx}
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className={`${item.color} text-white w-9 h-9 rounded-md flex items-center justify-center hover:opacity-90 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5`}
+            className={`${item.color} text-white w-8 h-8 sm:w-9 sm:h-9 rounded-md flex items-center justify-center hover:opacity-90 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5`}
             title={item.name}
           >
             {item.icon}
