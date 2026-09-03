@@ -397,7 +397,7 @@ const PartnersPage: FC = () => {
                       {contractor.contractorType === "Premium" && (
                         <>
                           <div className="flex flex-col gap-2">
-                            <Button onClick={() => window.open(waLink)} className="bg-[#25D366] text-[11px] sm:text-xs h-10 px-0 sm:px-2 hover:bg-[#128C7E] w-full">
+                            <Button onClick={() => { trackAnalytics('user', contractor._id, 'whatsapp_click'); window.open(waLink); }} className="bg-[#25D366] text-[11px] sm:text-xs h-10 px-0 sm:px-2 hover:bg-[#128C7E] w-full">
                               <MessageCircle className="w-3 h-3 mr-1" /> WhatsApp
                             </Button>
                             <Button onClick={() => {

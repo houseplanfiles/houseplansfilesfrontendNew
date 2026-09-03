@@ -3,6 +3,7 @@ import { useParams, useRouter } from "next/navigation";
 
 
 import { handleCallClick } from "@/utils/callHelper";
+import { trackAnalytics } from "@/lib/analytics";
 import React, { useState, useEffect, useMemo, FC } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
@@ -137,6 +138,7 @@ const CartModal = ({ items, seller, onClose, onRemove }: { items: any[]; seller:
     message += `Please provide me your best quote for these.`;
 
     const waLink = `https://wa.me/91${seller.phone}?text=${encodeURIComponent(message)}`;
+    trackAnalytics('user', seller._id, 'whatsapp_click');
     window.open(waLink, "_blank");
   };
 
@@ -265,6 +267,7 @@ const ProductCard = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   const waLink = `https://wa.me/91${sellerData.phone}?text=${encodeURIComponent(`Hi ${sellerData.businessName}, I am interested in your product: "${product.name}".`)}`;
+                  trackAnalytics('user', sellerData._id, 'whatsapp_click');
                   window.open(waLink, "_blank");
                 }}
                 className="bg-[#25D366] hover:bg-[#128C7E] text-white rounded-lg px-0 sm:px-2 h-8 sm:h-9 flex items-center justify-center text-[9px] sm:text-xs font-bold w-full overflow-hidden"
@@ -450,6 +453,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
                     <Button 
                       onClick={() => {
                         const waLink = `https://wa.me/91${sellerInfo.phone}?text=${encodeURIComponent(`Hi ${sellerInfo.businessName}, I saw your shop on Houseplans Marketplace and I am interested in your products.`)}`;
+                        trackAnalytics('user', sellerInfo._id, 'whatsapp_click');
                         window.open(waLink, "_blank");
                       }}
                       className="bg-[#25D366] hover:bg-[#128C7E] text-white font-bold h-9 px-4 rounded-md shadow-sm shadow-[#25D366]/20 text-sm"

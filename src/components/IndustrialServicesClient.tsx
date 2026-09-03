@@ -371,7 +371,7 @@ const PartnersPage: FC = () => {
                       {contractor.contractorType === "Premium" && (
                         <>
                           <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2">
-                            <Button onClick={() => window.open(waLink)} className="bg-[#25D366] text-[11px] sm:text-xs h-10 px-0 sm:px-2 hover:bg-[#128C7E] w-full">
+                            <Button onClick={() => { trackAnalytics('user', contractor._id, 'whatsapp_click'); window.open(waLink); }} className="bg-[#25D366] text-[11px] sm:text-xs h-10 px-0 sm:px-2 hover:bg-[#128C7E] w-full">
                               <MessageCircle className="w-3 h-3 mr-1" /> WhatsApp
                             </Button>
                             <Button onClick={() => { trackAnalytics('user', contractor._id, 'call_click'); window.location.href = `tel:${(contractor.phone || '').replace(/\D/g, '')}`; }} className="text-[11px] sm:text-xs h-10 px-0 sm:px-2 w-full bg-blue-600 hover:bg-blue-700 text-white">
