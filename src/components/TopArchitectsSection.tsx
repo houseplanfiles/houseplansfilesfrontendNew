@@ -16,6 +16,7 @@ import {
   createInquiry,
   resetActionStatus,
 } from "@/lib/features/inquiries/inquirySlice";
+import { trackAnalytics } from "@/lib/analytics";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -253,26 +254,25 @@ const ArchitectCard: FC<{
           {type === "Premium" && (
             <div className="flex flex-col gap-2">
               <Button
-                onClick={() => window.open(waLink, "_blank")}
-                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11 px-0"
+                onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
+                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1"
               >
-                <MessageCircle className="w-4 h-4 mr-1.5" />
+                <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />{" "}
                 WhatsApp
               </Button>
               <Button
-                onClick={() => window.location.href = callLink}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors h-11 px-0"
+                onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = `tel:${architect.phone?.replace(/\D/g, '')}`; }}
+                className="w-full bg-blue-600 text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1"
               >
-                <Phone className="w-4 h-4 mr-1.5" />
-                Call
+                <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> Call Now
               </Button>
             </div>
           )}
 
           {type === "Verified" && (
             <Button
-              onClick={() => window.open(waLink, "_blank")}
-              className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11"
+              onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
+              className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-11"
             >
               <MessageCircle className="w-4 h-4 mr-2" />
               WhatsApp Enquiry

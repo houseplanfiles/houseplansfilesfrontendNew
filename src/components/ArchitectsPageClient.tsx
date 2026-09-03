@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
 import { fetchArchitects } from "@/lib/features/users/userSlice";
 import { createInquiry, resetActionStatus } from "@/lib/features/inquiries/inquirySlice";
+import { trackAnalytics } from "@/lib/analytics";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -323,7 +324,7 @@ const ArchitectsPage: FC = () => {
                             {type === "Premium" ? (
                               <>
                                 <div className="flex flex-col gap-2">
-                                  <Button onClick={() => window.open(waLink, "_blank")} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1">
+                                  <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1">
                                     <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> WhatsApp
                                   </Button>
                                   <Button onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = callLink; }} className="w-full bg-blue-600 text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1">
@@ -332,7 +333,7 @@ const ArchitectsPage: FC = () => {
                                 </div>
                               </>
                             ) : type === "Verified" ? (
-                              <Button onClick={() => window.open(waLink, "_blank")} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-11">
+                              <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-11">
                                 <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp Enquiry
                               </Button>
                             ) : (
