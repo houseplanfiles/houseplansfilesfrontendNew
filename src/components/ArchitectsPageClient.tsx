@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
 import { fetchArchitects } from "@/lib/features/users/userSlice";
 import { createInquiry, resetActionStatus } from "@/lib/features/inquiries/inquirySlice";
+import { trackAnalytics } from "@/lib/analytics";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
