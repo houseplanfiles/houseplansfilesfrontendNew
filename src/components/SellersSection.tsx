@@ -340,34 +340,27 @@ const ShopCard = ({ seller, productCount, products }: { seller: any; productCoun
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
+      </div>
 
-        {/* City Badge */}
-        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-full text-xs font-semibold text-gray-700 flex items-center gap-1 shadow-sm z-10 max-w-[85%]">
-          <MapPin size={12} className="text-orange-500 flex-shrink-0" />
-          <span className="truncate">
-            {[seller.businessAddress, seller.address, seller.city, seller.pincode].filter(Boolean).join(", ") || products[0]?.city || "India"}
-          </span>
-        </div>
-
-        {/* Badges Container - stacked vertically to prevent overlap */}
-        <div className="absolute bottom-3 left-3 flex flex-col items-start gap-1.5 z-10 max-w-[calc(100%-1.5rem)]">
-          {/* Business Type Badge */}
+      <div className="p-4 sm:p-5 flex flex-col flex-grow">
+        {/* Badges moved from image overlay to prevent covering logo */}
+        <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
+          <div className="bg-gray-100 border border-gray-200 px-2 py-1 rounded-md text-[10px] font-bold text-gray-700 flex items-center gap-1">
+            <MapPin size={10} className="text-orange-500" /> {products[0]?.city || "India"}
+          </div>
           {seller.businessType && (
-            <div className="bg-green-600 text-white px-2.5 py-1 rounded-md text-[11px] font-bold shadow-lg flex items-center gap-1.5 whitespace-nowrap">
+            <div className="bg-green-600 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
               {seller.businessType === "Manufacturer" && "🏭 Manufacturer"}
               {seller.businessType === "Supplier" && "🚛 Supplier"}
               {seller.businessType === "Both" && "🏭 Manufacturer & Supplier"}
               {seller.businessType === "Retail" && "🏪 Retail Shop"}
             </div>
           )}
-          {/* Product Count Badge */}
-          <div className="bg-orange-600 text-white px-2.5 py-1 rounded-md text-[11px] font-bold shadow-lg flex items-center gap-1.5 whitespace-nowrap">
-            <Package size={13} /> {productCount} Items
+          <div className="bg-orange-600 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
+            <Package size={10} /> {productCount} Items
           </div>
         </div>
-      </div>
 
-      <div className="p-4 sm:p-5 flex flex-col flex-grow">
         <div className="flex items-start justify-between gap-2 mb-1">
           <h3 className="text-base sm:text-xl font-extrabold text-gray-900 leading-tight group-hover:text-orange-600 transition-colors uppercase">
             {seller.businessName || "Verified Shop"}
