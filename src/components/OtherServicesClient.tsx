@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Image from "next/image";
 
 
@@ -380,14 +380,11 @@ const PartnersPage: FC = () => {
                       </Link>
                       {contractor.contractorType === "Premium" && (
                         <>
-                          <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2">
-                            <Button onClick={() => { trackAnalytics('user', contractor._id, 'whatsapp_click'); window.open(waLink); }} className="bg-[#25D366] text-[11px] sm:text-xs h-10 px-0 sm:px-2 hover:bg-[#128C7E] w-full">
+                          <div className="grid grid-cols-2 gap-2"><Button onClick={() => { trackAnalytics('user', contractor._id, 'whatsapp_click'); window.open(waLink); }} className="bg-[#25D366] text-[11px] sm:text-xs h-10 px-0 sm:px-2 hover:bg-[#128C7E] w-full">
                               <MessageCircle className="w-3 h-3 mr-1" /> WhatsApp
-                            </Button>
-                            <Button onClick={() => { trackAnalytics('user', contractor._id, 'call_click'); window.location.href = `tel:${(contractor.phone || '').replace(/\D/g, '')}`; }} className="text-[11px] sm:text-xs h-10 px-0 sm:px-2 w-full bg-blue-600 hover:bg-blue-700 text-white">
+                            </Button><Button onClick={() => { trackAnalytics('user', contractor._id, 'call_click'); window.location.href = `tel:${(contractor.phone || '').replace(/\D/g, '')}`; }} className="text-[11px] sm:text-xs h-10 px-0 sm:px-2 w-full bg-blue-600 hover:bg-blue-700 text-white">
                               <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> Call Now
-                            </Button>
-                          </div>
+                            </Button></div>
                         </>
                       )}
                       {contractor.contractorType === "Verified" && (
@@ -423,7 +420,7 @@ const PartnersPage: FC = () => {
       </main>
       <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} user={selectedContractor} />
 
-      {/* Browse by city section — placed after contractor listings */}
+      {/* Browse by city section â€” placed after contractor listings */}
       <section className="bg-orange-50 border-t border-orange-100 py-10 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-lg font-bold text-gray-900 mb-2">Browse house plans &amp; architects by city</h2>
@@ -451,7 +448,7 @@ const PartnersPage: FC = () => {
                 </span>
                 <span className="text-xs text-gray-500 mt-1">{city.state}</span>
                 <span className="text-xs text-orange-500 mt-3 font-medium group-hover:underline">
-                  House plans &amp; architects →
+                  House plans &amp; architects â†’
                 </span>
               </a>
             ))}
@@ -465,3 +462,4 @@ const PartnersPage: FC = () => {
 };
 
 export default PartnersPage;
+

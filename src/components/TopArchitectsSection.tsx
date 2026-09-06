@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -252,21 +252,18 @@ const ArchitectCard: FC<{
           </Button>
 
           {type === "Premium" && (
-            <div className="flex flex-col gap-2">
-              <Button
+            <div className="grid grid-cols-2 gap-2"><Button
                 onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
                 className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1"
               >
                 <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />{" "}
                 WhatsApp
-              </Button>
-              <Button
+              </Button><Button
                 onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = `tel:${architect.phone?.replace(/\D/g, '')}`; }}
                 className="w-full bg-blue-600 text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1"
               >
                 <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> Call Now
-              </Button>
-            </div>
+              </Button></div>
           )}
 
           {type === "Verified" && (
@@ -468,3 +465,4 @@ const TopArchitectsSection: FC = () => {
 };
 
 export default TopArchitectsSection;
+

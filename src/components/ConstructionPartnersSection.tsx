@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -250,22 +250,19 @@ const PartnerCard: FC<{
         </Link>
 
         {type === "Premium" && (
-          <div className="flex flex-col gap-2">
-            <Button 
+          <div className="grid grid-cols-2 gap-2"><Button 
               onClick={() => { trackAnalytics('user', partner._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
               className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11 px-0"
             >
               <MessageCircle className="w-3.5 h-3.5 mr-1 shrink-0" />
               <span className="text-sm md:text-base sm:text-xs">WhatsApp</span>
-            </Button>
-            <Button 
+            </Button><Button 
               onClick={() => { trackAnalytics('user', partner._id, 'call_click'); window.location.href = callLink; }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors h-11 px-0"
             >
               <Phone className="w-3.5 h-3.5 mr-1 shrink-0" />
               <span className="text-sm md:text-base sm:text-xs">Call Now</span>
-            </Button>
-          </div>
+            </Button></div>
         )}
 
         {type === "Verified" && (
@@ -642,3 +639,4 @@ const ConstructionPartnersSection: FC = () => {
 };
 
 export default ConstructionPartnersSection;
+
