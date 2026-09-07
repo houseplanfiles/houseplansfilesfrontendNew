@@ -264,7 +264,7 @@ const PartnersPage: FC = () => {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <Badge className="bg-orange-500 mb-4">Trusted Network</Badge>
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-4 px-2 leading-tight break-words">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-4 px-2 leading-tight md:whitespace-nowrap">
             Home Designing & Construction Services
           </h1>
           <div className="flex justify-center px-4">

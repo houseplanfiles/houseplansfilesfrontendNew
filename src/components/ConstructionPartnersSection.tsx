@@ -530,7 +530,7 @@ const ConstructionPartnersSection: FC = () => {
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6 sm:gap-8 text-center md:text-left">
               <div className="w-full">
                 <Badge className="bg-orange-500 hover:bg-orange-600 mb-4 px-4 py-1.5 text-sm border-none">Trusted Network</Badge>
-                <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight break-words">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-[42px] font-extrabold text-white tracking-tight md:whitespace-nowrap">
                   City Contractor ( Building & Interior )
                 </h2>
                 <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl px-2 md:px-0 mx-auto md:mx-0">
