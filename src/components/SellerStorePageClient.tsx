@@ -374,7 +374,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
       <Navbar />
 
       {/* Hero / Header Section */}
-      <div className="relative bg-gray-900 pt-6 sm:pt-10 pb-8 sm:pb-12 px-4">
+      <div className="relative bg-gray-900 pt-6 sm:pt-10 pb-16 sm:pb-20 px-4">
         {/* Cover Image Background */}
         <div className="absolute inset-0 z-0 opacity-40">
           <Image 

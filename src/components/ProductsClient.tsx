@@ -975,10 +975,12 @@ const Products = ({
   headerSlot,
   showFooter = true,
   initialData,
+  baseCategory,
 }: {
   headerSlot?: React.ReactNode;
   showFooter?: boolean;
   initialData?: any;
+  baseCategory?: string;
 }) => {
   const dispatch: AppDispatch = useDispatch();
   const searchParams = useSearchParams();
@@ -1041,7 +1043,13 @@ const Products = ({
 
     if (debouncedSearchTerm) params.searchTerm = debouncedSearchTerm;
     if (countryQuery) params.country = countryQuery;
-    if (filters.category !== "all") params.category = filters.category;
+    
+    // If a specific category filter is chosen, use it. Otherwise, use baseCategory if provided.
+    if (filters.category !== "all") {
+      params.category = filters.category;
+    } else if (baseCategory) {
+      params.planCategory = baseCategory;
+    }
     if (filters.plotSize !== "all") params.plotSize = filters.plotSize;
     if (filters.plotArea !== "all") params.plotArea = filters.plotArea;
     if (filters.direction !== "all") params.direction = filters.direction;

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
-import { Loader2, Search, Download } from "lucide-react";
+import { Download, Search, RefreshCw, Loader2, Phone, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -147,14 +147,44 @@ const AdminAnalyticsReportPage = () => {
                   <td className="px-4 py-3 font-bold text-green-600">{r.whatsappClicks || 0}</td>
                   <td className="px-4 py-3 font-bold text-blue-600">{r.callClicks || 0}</td>
                   <td className="px-4 py-3 text-right">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => handleDownloadIndividualPDF(r)}
-                      className="text-orange-600 hover:bg-orange-50 hover:text-orange-700"
-                    >
-                      <Download className="w-4 h-4 mr-2" /> PDF
-                    </Button>
+                    <div className="flex items-center justify-end gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => {
+                          const route = r.role?.toLowerCase() === 'contractor' ? 'contractors' :
+                                        r.role?.toLowerCase() === 'architect' ? 'architects' :
+                                        r.role?.toLowerCase() === 'seller' ? 'sellers' : 'professionals';
+                          window.open(`/${route}/${r._id}`, '_blank');
+                        }}
+                        title="View Profile"
+                        className="text-blue-600 hover:bg-blue-50 hover:text-blue-700 px-2"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </Button>
+                      
+                      {r.phone && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => window.location.href = `tel:${r.phone.replace(/\D/g, '')}`}
+                          title="Call User"
+                          className="text-green-600 hover:bg-green-50 hover:text-green-700 px-2"
+                        >
+                          <Phone className="w-4 h-4" />
+                        </Button>
+                      )}
+
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => handleDownloadIndividualPDF(r)}
+                        title="Download PDF Report"
+                        className="text-orange-600 hover:bg-orange-50 hover:text-orange-700 px-2"
+                      >
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}

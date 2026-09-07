@@ -389,7 +389,7 @@ export default function LeadsPageClient() {
           ) : (
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {leads.filter((lead) => {
-                const matchesCity = !cityFilter || (lead.city && lead.city.toLowerCase().includes(cityFilter.toLowerCase()));
+                const matchesCity = !cityFilter || (lead.city && lead.city.toLowerCase().includes(cityFilter.toLowerCase())) || (lead.city && lead.city.toLowerCase() === "pan india");
                 const matchesCategory = selectedCategories.length === 0 || selectedCategories.some(cat => {
                   const searchStr = cat.toLowerCase();
                   return (

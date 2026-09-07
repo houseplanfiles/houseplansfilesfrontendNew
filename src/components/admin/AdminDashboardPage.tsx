@@ -63,18 +63,18 @@ const AdminDashboardPage = () => {
       iconColor: "text-green-600",
     },
     {
-      title: "PRODUCT VIEWS",
-      value: (analytics?.productViews || 0).toLocaleString(),
-      icon: ShoppingCart,
-      iconBg: "bg-purple-100",
-      iconColor: "text-purple-600",
-    },
-    {
       title: "PLAN VIEWS",
-      value: (analytics?.planViews || 0).toLocaleString(),
+      value: ((analytics?.productViews || 0) + (analytics?.planViews || 0)).toLocaleString(),
       icon: BookOpen,
       iconBg: "bg-orange-100",
       iconColor: "text-orange-500",
+    },
+    {
+      title: "SELLER PRODUCT VIEWS",
+      value: (analytics?.sellerProductViews || 0).toLocaleString(),
+      icon: Store,
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
     },
   ];
 
