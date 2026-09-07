@@ -178,26 +178,26 @@ const PartnerCard: FC<{
     transition={{ duration: 0.3, delay: index * 0.05 }}
     className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group"
   >
-    <div className="h-32 bg-gray-100 relative">
+    <div className="h-24 sm:h-32 bg-gray-100 relative">
       <Image src={getImageUrl(partner.shopImageUrl)} alt={partner.companyName || "Contractor"} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover" loading="lazy" />
       <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
-      <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
+      <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex flex-col gap-1.5 sm:gap-2 items-end">
         {partner.contractorType === "Premium" && (
-          <Badge className="bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white border-none shadow-md">
+          <Badge className="bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white border-none shadow-md text-[10px] sm:text-xs">
             <Star className="w-3 h-3 mr-1 fill-current" /> Premium
           </Badge>
         )}
         {partner.contractorType === "Verified" && (
-          <Badge className="bg-green-500 hover:bg-green-600 gap-1 pl-1 pr-2 shadow-sm">
+          <Badge className="bg-green-500 hover:bg-green-600 gap-1 pl-1 pr-2 shadow-sm text-[10px] sm:text-xs">
             <CheckCircle2 className="w-3 h-3" /> Verified
           </Badge>
         )}
       </div>
     </div>
 
-    <div className="px-5 pb-5 flex flex-col flex-grow relative">
-      <div className="-mt-10 mb-3">
-        <Avatar className="w-14 h-14 border-4 border-white shadow-md">
+    <div className="px-3 sm:px-5 pb-3.5 sm:pb-5 flex flex-col flex-grow relative">
+      <div className="-mt-7 sm:-mt-10 mb-2 sm:mb-3">
+        <Avatar className="w-12 h-12 sm:w-14 sm:h-14 border-2 sm:border-4 border-white shadow-md">
           {partner.photoUrl ? (
             <Image
               src={getImageUrl(partner.photoUrl)}
@@ -210,59 +210,62 @@ const PartnerCard: FC<{
           ) : (
             <AvatarFallback>{partner.name?.charAt(0)}</AvatarFallback>
           )}
-          <AvatarFallback className="text-xl font-bold bg-orange-100 text-orange-700">
+          <AvatarFallback className="text-base sm:text-xl font-bold bg-orange-100 text-orange-700">
             {partner.name?.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
       </div>
 
       <div className="flex-grow">
-        <h3 className="text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors line-clamp-1">
+        <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors line-clamp-1">
           {partner.name}
         </h3>
-        <div className="flex items-center gap-1.5 text-gray-500 text-sm mt-1 mb-4">
-          <Building className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-1.5 text-gray-500 text-xs sm:text-sm mt-0.5 mb-2 sm:mt-1 sm:mb-4">
+          <Building className="w-3.5 h-3.5 shrink-0" />
           <span className="font-medium line-clamp-1">{partner.companyName || "Independent Professional"}</span>
         </div>
 
-        <div className="space-y-2.5">
-          <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
-            <Briefcase className="w-4 h-4 text-orange-500 shrink-0" />
-            <span className="text-sm text-gray-700 font-medium line-clamp-1">{partner.profession}</span>
+        <div className="space-y-1.5 sm:space-y-2.5">
+          <div className="flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2 bg-gray-50 rounded-lg">
+            <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-500 shrink-0" />
+            <span className="text-xs sm:text-sm text-gray-700 font-medium line-clamp-1">{partner.profession}</span>
           </div>
-          <div className="flex items-center gap-3 px-2">
-            <Star className="w-4 h-4 text-orange-500 shrink-0" />
-            <span className="text-sm text-gray-600">{partner.experience} Experience</span>
+          <div className="flex items-center gap-2 sm:gap-3 px-1 sm:px-2">
+            <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-500 shrink-0" />
+            <span className="text-xs sm:text-sm text-gray-600">{partner.experience} Experience</span>
           </div>
-          <div className="flex items-center gap-3 px-2">
-            <MapPin className="w-4 h-4 text-orange-500 shrink-0" />
-            <span className="text-sm text-gray-600 line-clamp-1">{partner.city || "Available locally"}</span>
+          <div className="flex items-center gap-2 sm:gap-3 px-1 sm:px-2">
+            <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-500 shrink-0" />
+            <span className="text-xs sm:text-sm text-gray-600 line-clamp-1">{partner.city || "Available locally"}</span>
           </div>
         </div>
       </div>
 
-      <div className="pt-5 mt-auto flex flex-col gap-2">
+      <div className="pt-3 sm:pt-5 mt-auto flex flex-col gap-1.5 sm:gap-2">
         <Link 
           href={`/contractors/${partner._id}`} 
-          className="w-full h-11 border border-orange-600 text-orange-600 hover:bg-orange-50 font-bold text-xs flex items-center justify-center rounded-lg transition-all"
+          className="w-full h-9 sm:h-11 border border-orange-600 text-orange-600 hover:bg-orange-50 font-bold text-xs flex items-center justify-center rounded-lg transition-all"
         >
           View Profile
         </Link>
 
         {type === "Premium" && (
-          <div className="grid grid-cols-2 gap-2"><Button 
+          <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+            <Button 
               onClick={() => { trackAnalytics('user', partner._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
-              className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-11 px-0"
+              className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-9 sm:h-11 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none"
             >
-              <MessageCircle className="w-3.5 h-3.5 mr-1 shrink-0" />
-              <span className="text-sm md:text-base sm:text-xs">WhatsApp</span>
-            </Button><Button 
+              <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+              <span className="text-[10px] sm:text-xs md:text-sm font-semibold truncate">WhatsApp</span>
+            </Button>
+            <Button 
               onClick={() => { trackAnalytics('user', partner._id, 'call_click'); window.location.href = callLink; }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors h-11 px-0"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors h-9 sm:h-11 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none"
             >
-              <Phone className="w-3.5 h-3.5 mr-1 shrink-0" />
-              <span className="text-sm md:text-base sm:text-xs">Call Now</span>
-            </Button></div>
+              <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+              <span className="text-[10px] sm:text-xs md:text-sm font-semibold truncate">Call Now</span>
+            </Button>
+          </div>
         )}
 
         {type === "Verified" && (
@@ -520,25 +523,25 @@ const ConstructionPartnersSection: FC = () => {
           </div>
 
           {/* --- HERO HEADER --- */}
-          <div className="relative bg-gray-900 p-10 md:p-14 rounded-[2rem] overflow-hidden mb-12 shadow-2xl">
+          <div className="relative bg-gray-900 p-6 sm:p-10 md:p-14 rounded-2xl sm:rounded-[2rem] overflow-hidden mb-12 shadow-2xl">
             <div className="absolute inset-0 opacity-20">
                <Image src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80" alt="bg" fill sizes="100vw" className="object-cover" loading="lazy" />
             </div>
-            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
-              <div>
+            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6 sm:gap-8 text-center md:text-left">
+              <div className="w-full">
                 <Badge className="bg-orange-500 hover:bg-orange-600 mb-4 px-4 py-1.5 text-sm border-none">Trusted Network</Badge>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl whitespace-nowrap font-extrabold text-white tracking-tight">
+                <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight break-words">
                   City Contractor ( Building & Interior )
                 </h2>
-                <p className="mt-4 text-base md:text-lg text-gray-300 max-w-2xl px-2 md:px-0">
+                <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl px-2 md:px-0 mx-auto md:mx-0">
                   Find verified professionals for your dream project. From civil work to interior design, we have the best partners.
                 </p>
               </div>
               <Button
                 onClick={() => router.push("/register?role=Contractor")}
-                className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 px-6 md:py-6 md:px-8 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-base md:text-lg flex items-center gap-2 whitespace-nowrap shrink-0"
+                className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 px-6 sm:py-4 sm:px-6 md:py-6 md:px-8 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-sm sm:text-base md:text-lg flex items-center justify-center gap-2 whitespace-nowrap shrink-0 w-full sm:w-auto"
               >
-                <UserPlus className="w-6 h-6" />
+                <UserPlus className="w-5 h-5 sm:w-6 sm:h-6" />
                 Register With Us
               </Button>
             </div>
