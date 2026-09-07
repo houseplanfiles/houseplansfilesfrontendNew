@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -321,7 +321,7 @@ const TopArchitectsSection: FC = () => {
 
     return (architects as ArchitectType[]).filter((p) => {
       const isApproved = p.status === "Approved";
-      const matchesCity = !cityFilter || p.city?.toLowerCase().includes(cityFilter.toLowerCase());
+      const matchesCity = !cityFilter || p.city?.toLowerCase().includes(cityFilter.toLowerCase()) || p.city?.toLowerCase() === "pan india";
       const matchesProfession =
         professionFilter === "All" ||
         p.profession?.toLowerCase() === professionFilter.toLowerCase();

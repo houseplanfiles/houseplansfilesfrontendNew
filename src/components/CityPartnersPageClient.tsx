@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import Image from "next/image";
 
 
@@ -258,7 +258,7 @@ const PartnersPage: FC = () => {
     if (!Array.isArray(contractors)) return [];
     return (contractors as ContractorType[]).filter((c) => {
       const isApproved = c.status === "Approved";
-      const matchesCity = !cityFilter || c.city?.toLowerCase().includes(cityFilter.toLowerCase());
+      const matchesCity = !cityFilter || c.city?.toLowerCase().includes(cityFilter.toLowerCase()) || c.city?.toLowerCase() === "pan india";
       const lowerCaseProfession = c.profession?.toLowerCase() || "";
       const filter = professionFilter || "All";
       const matchesProfession = filter === "All" ||

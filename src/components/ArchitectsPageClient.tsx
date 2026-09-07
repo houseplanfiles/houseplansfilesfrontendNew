@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -163,7 +163,7 @@ const ArchitectsPage: FC = () => {
     if (!Array.isArray(architects)) return [];
     return (architects as ArchitectType[]).filter((c) => {
       const isApproved = c.status === "Approved";
-      const matchesCity = !cityFilter || c.city?.toLowerCase().includes(cityFilter.toLowerCase());
+      const matchesCity = !cityFilter || c.city?.toLowerCase().includes(cityFilter.toLowerCase()) || c.city?.toLowerCase() === "pan india";
       const matchesProfession = professionFilter === "All" || c.profession?.toLowerCase() === professionFilter.toLowerCase();
       return isApproved && matchesCity && matchesProfession;
     });

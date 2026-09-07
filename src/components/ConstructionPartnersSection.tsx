@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -392,7 +392,7 @@ const ConstructionPartnersSection: FC = () => {
     return (contractors as CityPartnerType[]).filter((p) => {
       const isApproved = p.status === "Approved";
       const isValidType = ["Normal", "Verified", "Premium"].includes(p.contractorType || "");
-      const matchesCity = !cityFilter || p.city?.toLowerCase().includes(cityFilter.toLowerCase());
+      const matchesCity = !cityFilter || p.city?.toLowerCase().includes(cityFilter.toLowerCase()) || p.city?.toLowerCase() === "pan india";
       
       if (!isApproved || !isValidType || !matchesCity) return false;
       const filter = professionFilter || "All";
