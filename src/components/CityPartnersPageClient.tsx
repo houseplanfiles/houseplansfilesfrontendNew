@@ -299,8 +299,8 @@ const PartnersPage: FC = () => {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <Badge className="bg-orange-500 mb-4">Trusted Network</Badge>
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-4 px-2 leading-tight md:whitespace-nowrap">
-            City Contractor ( Building & Interior )
+          <h1 className="text-[17px] min-[380px]:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-4 px-2 leading-tight md:whitespace-nowrap">
+            City Contractor (Building &amp; Interior)
           </h1>
           <div className="flex justify-center px-4">
             <Button onClick={() => router.push("/register?role=Contractor")} className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 py-4 px-6 sm:py-6 sm:px-8 rounded-full shadow-lg transition-transform hover:scale-105">
