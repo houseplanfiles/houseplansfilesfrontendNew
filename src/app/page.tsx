@@ -55,8 +55,8 @@ export default function HomePage() {
         <Navbar />
         <main>
           <Hero />
-          <TopArchitectsSection />
           <ConstructionPartnersSection />
+          <TopArchitectsSection />
           <SellersSection />
           <ReadymadePlansSection />
           <RegionalPlansSection />
