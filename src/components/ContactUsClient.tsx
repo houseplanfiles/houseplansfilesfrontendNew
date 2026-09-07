@@ -23,11 +23,13 @@ const ContactUs = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -126,10 +128,10 @@ const ContactUs = () => {
                     <div>
                       <h4 className="font-bold text-lg">Phone</h4>
                       <a
-                        href="#" onClick={(e) => handleCallClick(e, "+919755248864")}
+                        href="#" onClick={(e) => handleCallClick(e, "+918815939484")}
                         className="text-gray-600 mt-1 hover:text-orange-600 transition-colors"
                       >
-                        +91 97552 48864
+                        +91 88159 39484
                       </a>
                     </div>
                   </div>

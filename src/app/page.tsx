@@ -4,6 +4,7 @@ import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
+import HomeServicesCategoriesSection from "@/components/HomeServicesCategoriesSection";
 import ReadymadePlansSection from "@/components/ReadymadePlansSection";
 import TopArchitectsSection from "@/components/TopArchitectsSection";
 import ConstructionPartnersSection from "@/components/ConstructionPartnersSection";
@@ -55,6 +56,7 @@ export default function HomePage() {
         <Navbar />
         <main>
           <Hero />
+          <HomeServicesCategoriesSection />
           <TopArchitectsSection />
           <ConstructionPartnersSection />
           <SellersSection />

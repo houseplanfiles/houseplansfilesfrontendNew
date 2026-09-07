@@ -42,7 +42,7 @@ const Footer = () => {
     { name: "YouTube", Icon: Youtube, href: "https://www.youtube.com/@houseplansfiles8308" },
     { name: "LinkedIn", Icon: Linkedin, href: "https://www.linkedin.com/company/105681541/" },
     { name: "Pinterest", Icon: PinterestIcon, href: "https://pinterest.com/houseplanfiles/" },
-    { name: "WhatsApp", Icon: WhatsAppIcon, href: "https://wa.me/919755248864" },
+    { name: "WhatsApp", Icon: WhatsAppIcon, href: "https://wa.me/918815939484" },
     { name: "Telegram", Icon: Send, href: "https://t.me/+tPzdohVcUbJiZmNl" },
     { name: "Threads", Icon: ThreadsIcon, href: "https://www.threads.net/@house_plan_files?hl=en" },
     { name: "Koo", Icon: AtSign, href: "#" },
@@ -140,8 +140,8 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="#" onClick={(e) => handleCallClick(e, "+919755248864")} className="text-muted-foreground hover:text-primary transition-colors">
-                  +91 97 552 488 64
+                <a href="tel:+918815939484" className="text-muted-foreground hover:text-primary transition-colors">
+                  +91 88 159 394 84
                 </a>
               </div>
               <div className="flex items-center space-x-3">

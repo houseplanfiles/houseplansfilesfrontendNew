@@ -91,7 +91,7 @@ const localBusinessSchema = {
   url: "https://www.houseplanfiles.com",
   logo: "https://www.houseplanfiles.com/logo1.png",
   image: "https://www.houseplanfiles.com/logo1.png",
-  telephone: "+919755248864",
+  telephone: "+918815939484",
   email: "houseplansdesignsfile@gmail.com",
   address: {
     "@type": "PostalAddress",

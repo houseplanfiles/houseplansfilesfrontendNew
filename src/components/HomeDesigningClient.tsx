@@ -264,11 +264,11 @@ const PartnersPage: FC = () => {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <Badge className="bg-orange-500 mb-4">Trusted Network</Badge>
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl whitespace-nowrap font-extrabold text-white mb-4 px-2 leading-tight">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-4 px-2 leading-tight md:whitespace-nowrap">
             Home Designing & Construction Services
           </h1>
           <div className="flex justify-center px-4">
-            <Button onClick={() => router.push("/register?role=Contractor")} className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 py-6 px-8 rounded-full shadow-lg transition-transform hover:scale-105">
+            <Button onClick={() => router.push("/register?role=Contractor")} className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 py-4 px-6 sm:py-6 sm:px-8 rounded-full shadow-lg transition-transform hover:scale-105">
               <UserPlus className="w-5 h-5 mr-2" /> Register With Us
             </Button>
           </div>
@@ -316,63 +316,77 @@ const PartnersPage: FC = () => {
               const waLink = `https://wa.me/${phoneStr}`;
               return (
                 <div key={contractor._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full group">
-                  <div className="h-28 bg-gray-100 relative">
+                  <div className="h-20 sm:h-28 bg-gray-100 relative">
                     <Image src={contractor.shopImageUrl ? getFileUrl(contractor.shopImageUrl) : "/contractor.jpeg"} className="object-cover" alt="Shop Image" fill sizes="(max-width: 768px) 50vw, 25vw" />
                     <div className="absolute top-2 right-2 flex flex-col gap-1">
                       {contractor.contractorType === "Premium" && <Badge className="bg-orange-500 text-[10px]">Premium</Badge>}
                       {contractor.contractorType === "Verified" && <Badge className="bg-blue-600 text-[10px]">Verified</Badge>}
                     </div>
                   </div>
-                  <div className="px-4 pb-5 flex flex-col flex-grow">
-                    <div className="-mt-10 mb-3 relative z-10">
-                      <Avatar className="w-20 h-20 border-4 border-white shadow-md">
+                  <div className="px-2.5 sm:px-4 pb-3.5 sm:pb-5 flex flex-col flex-grow">
+                    <div className="-mt-6 sm:-mt-8 mb-2 sm:mb-3 relative z-10">
+                      <Avatar className="w-12 h-12 sm:w-16 sm:h-16 border-2 sm:border-4 border-white shadow-md">
                         <AvatarImage src={contractor.photoUrl} />
                         <AvatarFallback>{contractor.name?.[0]}</AvatarFallback>
                       </Avatar>
                     </div>
                     <div className="flex-grow">
-                      <h3 className="font-bold text-lg text-gray-900 line-clamp-1">{contractor.name}</h3>
-                      <div className="flex items-center gap-1.5 text-sm text-gray-600 mb-3">
-                        <Building className="w-4 h-4" /> {contractor.companyName || "Independent"}
+                      <h3 className="font-bold text-sm sm:text-base text-gray-900 line-clamp-1">{contractor.name}</h3>
+                      <div className="flex items-center gap-1 text-[11px] sm:text-xs text-gray-600 mb-2 sm:mb-3">
+                        <Building className="w-3 h-3 shrink-0" /> <span className="line-clamp-1">{contractor.companyName || "Independent"}</span>
                       </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm bg-gray-50 p-2 rounded-md font-medium text-gray-800">
-                          <Briefcase className="w-4 h-4 text-orange-500" /> {contractor.profession}
+                      <div className="space-y-1.5 sm:space-y-2">
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs bg-gray-50 p-1 sm:p-1.5 rounded-md font-medium text-gray-800">
+                          <Briefcase className="w-3.5 h-3.5 text-orange-500 shrink-0" /> <span className="line-clamp-1">{contractor.profession}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600 px-1 font-medium">
-                          <MapPin className="w-4 h-4 text-orange-500" /> {contractor.city}
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-gray-600 px-0.5 sm:px-1 font-medium">
+                          <MapPin className="w-3.5 h-3.5 text-orange-500 shrink-0" /> <span className="line-clamp-1">{contractor.city}</span>
                         </div>
                       </div>
                     </div>
-                    <div className="mt-5 flex flex-col gap-2">
+                    <div className="mt-3 sm:mt-5 flex flex-col gap-1.5 sm:gap-2">
                       <Link href={`/contractors/${contractor._id}`} className="w-full">
                         <Button
                           variant="outline"
-                          className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-10 text-xs font-bold"
+                          className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-8 sm:h-10 text-[11px] sm:text-xs font-bold"
                         >
                           View Profile
                         </Button>
                       </Link>
                       {contractor.contractorType === "Premium" && (
                         <>
-                          <div className="grid grid-cols-2 gap-2"><Button onClick={() => { trackAnalytics('user', contractor._id, 'whatsapp_click'); window.open(waLink); }} className="bg-[#25D366] text-[11px] sm:text-xs h-10 px-0 sm:px-2 hover:bg-[#128C7E] w-full">
-                              <MessageCircle className="w-3 h-3 mr-1" /> WhatsApp
-                            </Button><Button onClick={() => { trackAnalytics('user', contractor._id, 'call_click'); window.location.href = `tel:${(contractor.phone || '').replace(/\D/g, '')}`; }} className="text-[11px] sm:text-xs h-10 px-0 sm:px-2 w-full bg-blue-600 hover:bg-blue-700 text-white">
-                              <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> Call Now
-                            </Button></div>
+                          <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                            <Button 
+                              onClick={() => { trackAnalytics('user', contractor._id, 'whatsapp_click'); window.open(waLink); }} 
+                              className="bg-[#25D366] text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 hover:bg-[#128C7E] w-full flex items-center justify-center gap-1 leading-none shadow-sm"
+                            >
+                              <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                              <span className="truncate">WhatsApp</span>
+                            </Button>
+                            <Button 
+                              onClick={() => { 
+                                trackAnalytics('user', contractor._id, 'call_click'); 
+                                window.location.href = `tel:${(contractor.phone || '').replace(/\D/g, '')}`; 
+                              }} 
+                              className="bg-blue-600 hover:bg-blue-700 text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 w-full flex items-center justify-center gap-1 leading-none shadow-sm"
+                            >
+                              <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                              <span className="truncate">Call Now</span>
+                            </Button>
+                          </div>
                         </>
                       )}
                       {contractor.contractorType === "Verified" && (
                         <Button
                           onClick={() => { trackAnalytics('user', contractor._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
-                          className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-10"
+                          className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-8 sm:h-10 text-[11px] sm:text-xs font-semibold"
                         >
-                          <MessageCircle className="w-4 h-4 mr-2" />
-                          WhatsApp Enquiry
+                          <MessageCircle className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+                          <span className="truncate">WhatsApp Enquiry</span>
                         </Button>
                       )}
                       {(!contractor.contractorType || contractor.contractorType === "Normal") && (
-                        <Button onClick={() => handleContactClick(contractor)} className="w-full bg-gray-800 hover:bg-gray-900 h-10 text-white">
+                        <Button onClick={() => handleContactClick(contractor)} className="w-full bg-gray-800 hover:bg-gray-900 h-8 sm:h-10 text-[11px] sm:text-xs text-white font-medium">
                           Enquiry Now
                         </Button>
                       )}

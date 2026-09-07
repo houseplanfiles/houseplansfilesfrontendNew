@@ -186,7 +186,7 @@ const ArchitectCard: FC<{
       transition={{ duration: 0.3, delay: index * 0.05 }}
       className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full group"
     >
-      <div className="h-32 relative overflow-hidden">
+      <div className="h-24 sm:h-32 bg-gray-100 relative">
         <Image
           src={architect.shopImageUrl ? getFileUrl(architect.shopImageUrl) : "/architect.png"}
           alt="Banner"
@@ -194,76 +194,80 @@ const ArchitectCard: FC<{
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover" loading="lazy" />
         <div className="absolute inset-0 bg-black/10" />
-        <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
+        <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex flex-col gap-1.5 sm:gap-2 items-end">
           {architect.contractorType === "Premium" && (
-            <Badge className="bg-orange-500 hover:bg-orange-600 text-white border-none shadow-md px-3 py-1 font-bold">
+            <Badge className="bg-orange-500 hover:bg-orange-600 text-white border-none shadow-md px-2 sm:px-3 py-0.5 sm:py-1 font-bold text-[10px] sm:text-xs">
               <Zap className="w-3 h-3 mr-1 fill-current" /> Premium
             </Badge>
           )}
           {architect.contractorType === "Verified" && (
-            <Badge className="bg-blue-600 hover:bg-blue-700 gap-1 pl-1 pr-2 shadow-sm">
+            <Badge className="bg-blue-600 hover:bg-blue-700 gap-1 pl-1 pr-2 shadow-sm text-[10px] sm:text-xs">
               <CheckCircle2 className="w-3 h-3" /> Verified
             </Badge>
           )}
         </div>
       </div>
 
-      <div className="px-5 pb-5 flex flex-col flex-grow relative">
-        <div className="-mt-10 mb-3">
-          <Avatar className="w-20 h-20 border-4 border-white shadow-md">
+      <div className="px-3 sm:px-5 pb-3.5 sm:pb-5 flex flex-col flex-grow relative">
+        <div className="-mt-7 sm:-mt-10 mb-2 sm:mb-3">
+          <Avatar className="w-14 h-14 sm:w-20 sm:h-20 border-2 sm:border-4 border-white shadow-md">
             <AvatarImage src={architect.photoUrl} alt={architect.name} />
-            <AvatarFallback className="text-xl font-bold bg-orange-600 text-white">
+            <AvatarFallback className="text-base sm:text-xl font-bold bg-orange-600 text-white">
               {architect.name?.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </div>
 
         <div className="flex-grow">
-          <h3 className="text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors line-clamp-1">
+          <h3 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors line-clamp-1">
             {architect.name}
           </h3>
-          <p className="text-gray-500 text-xs font-medium mb-4 flex items-center gap-1">
-            <BookOpen className="w-3 h-3" /> {architect.qualification || "Expert Designer"}
+          <p className="text-gray-500 text-xs font-medium mb-2 sm:mb-4 flex items-center gap-1">
+            <BookOpen className="w-3 h-3 shrink-0" /> <span className="line-clamp-1">{architect.qualification || "Expert Designer"}</span>
           </p>
 
-          <div className="space-y-2.5">
-            <div className="flex items-center gap-3 p-2 bg-orange-50 rounded-lg">
-              <Briefcase className="w-4 h-4 text-orange-600 shrink-0" />
-              <span className="text-sm text-orange-900 font-medium line-clamp-1">{architect.profession}</span>
+          <div className="space-y-1.5 sm:space-y-2.5">
+            <div className="flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2 bg-orange-50 rounded-lg">
+              <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-600 shrink-0" />
+              <span className="text-xs sm:text-sm text-orange-900 font-medium line-clamp-1">{architect.profession}</span>
             </div>
-            <div className="flex items-center gap-3 px-2">
-              <Star className="w-4 h-4 text-orange-500 shrink-0" />
-              <span className="text-sm text-gray-600">{architect.experience} Experience</span>
+            <div className="flex items-center gap-2 sm:gap-3 px-1 sm:px-2">
+              <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-500 shrink-0" />
+              <span className="text-xs sm:text-sm text-gray-600">{architect.experience} Experience</span>
             </div>
-            <div className="flex items-center gap-3 px-2">
-              <MapPin className="w-4 h-4 text-orange-500 shrink-0" />
-              <span className="text-sm text-gray-600 line-clamp-1">{architect.city || "Available locally"}</span>
+            <div className="flex items-center gap-2 sm:gap-3 px-1 sm:px-2">
+              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-500 shrink-0" />
+              <span className="text-xs sm:text-sm text-gray-600 line-clamp-1">{architect.city || "Available locally"}</span>
             </div>
           </div>
         </div>
 
-        <div className="pt-5 mt-auto flex flex-col gap-2">
+        <div className="pt-3 sm:pt-5 mt-auto flex flex-col gap-1.5 sm:gap-2">
           <Button
             onClick={() => navigate(`/architects/${architect._id}`)}
             variant="outline"
-            className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-11 font-bold text-xs"
+            className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-9 sm:h-11 font-bold text-xs"
           >
             View Profile
           </Button>
 
           {type === "Premium" && (
-            <div className="grid grid-cols-2 gap-2"><Button
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+              <Button
                 onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
-                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1"
+                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none"
               >
-                <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />{" "}
-                WhatsApp
-              </Button><Button
+                <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                <span className="truncate">WhatsApp</span>
+              </Button>
+              <Button
                 onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = `tel:${architect.phone?.replace(/\D/g, '')}`; }}
-                className="w-full bg-blue-600 text-white text-[11px] sm:text-xs h-10 px-0 sm:px-1"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none"
               >
-                <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> Call Now
-              </Button></div>
+                <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                <span className="truncate">Call Now</span>
+              </Button>
+            </div>
           )}
 
           {type === "Verified" && (
@@ -352,25 +356,25 @@ const TopArchitectsSection: FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* --- HERO HEADER --- */}
-          <div className="relative bg-gray-900 p-10 md:p-14 rounded-[2rem] overflow-hidden mb-12 shadow-2xl">
+          <div className="relative bg-gray-900 p-6 sm:p-10 md:p-14 rounded-2xl sm:rounded-[2rem] overflow-hidden mb-12 shadow-2xl">
             <div className="absolute inset-0 opacity-20">
               <Image src="/architect_hero.webp" alt="Architectural Background" fill sizes="100vw" className="object-cover" loading="lazy" />
             </div>
-            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
-              <div>
+            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6 sm:gap-8 text-center md:text-left">
+              <div className="w-full">
                 <Badge className="bg-orange-600 text-white border-none mb-4 px-4 py-1.5 text-sm">Expert Design Team</Badge>
-                <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight break-words">
                   Hire Your Top City Architects, Interior Designers & Professionals
                 </h2>
-                <p className="mt-4 text-base md:text-lg text-gray-300 max-w-2xl font-medium">
+                <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl font-medium mx-auto md:mx-0">
                   Architect, Civil Design Engineer, Structure Engineer, Interior Designer, Site Engineer, MEP Consultant, Vastu Consultant
                 </p>
               </div>
               <Button
                 onClick={() => router.push("/register?role=professional")}
-                className="bg-orange-600 text-white hover:bg-orange-700 font-bold py-8 px-12 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-lg flex items-center gap-3 whitespace-nowrap"
+                className="bg-orange-600 text-white hover:bg-orange-700 font-bold py-3.5 px-6 sm:py-5 sm:px-8 md:py-8 md:px-12 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-sm sm:text-base md:text-lg flex items-center justify-center gap-2 sm:gap-3 whitespace-nowrap shrink-0 w-full sm:w-auto"
               >
-                <UserPlus className="w-6 h-6" />
+                <UserPlus className="w-5 h-5 sm:w-6 sm:h-6" />
                 Join as Architect
               </Button>
             </div>
