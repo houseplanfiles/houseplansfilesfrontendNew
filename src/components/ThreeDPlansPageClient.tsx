@@ -422,11 +422,14 @@ const ProductCard = ({ plan, userOrders, onPlayVideo, index }: any) => {
   const { toast } = useToast();
   const { symbol, rate } = useCurrency();
 
+  if (!plan) return null;
+
+  const planId = plan._id || plan.id || "";
   const productName =
     plan.name || plan.planName || plan.Name || "Untitled Plan";
-  const linkTo = `/house-plans/${slugify(productName)}-${plan._id}`;
+  const linkTo = `/house-plans/${slugify(productName)}-${planId}`;
   const mainImage =
-    plan.mainImage || plan.image || (plan.Images ? plan.Images.split(",")[0].trim() : "") || house1;
+    plan.mainImage || plan.image || (plan.Images ? plan.Images.split(",")[0]?.trim() : "") || house1;
   const plotSize = plan.plotSize || plan["Attribute 1 value(s)"] || "N/A";
   const plotArea =
     plan.plotArea ||
@@ -817,12 +820,12 @@ const ThreeDPlansPage = ({ initialData }: { initialData?: any }) => {
   const combinedProducts = useMemo(
     () => [
       ...(Array.isArray(products)
-        ? products.map((p: any) => ({ ...p, source: "admin" }))
+        ? products.filter(Boolean).map((p: any) => ({ ...p, source: "admin" }))
         : []),
       ...(Array.isArray(professionalPlans)
-        ? professionalPlans.map((p: any) => ({ ...p, source: "professional" }))
+        ? professionalPlans.filter(Boolean).map((p: any) => ({ ...p, source: "professional" }))
         : []),
-    ],
+    ].filter((p: any) => p && (p._id || p.id)),
     [products, professionalPlans]
   );
 
@@ -967,7 +970,7 @@ const ThreeDPlansPage = ({ initialData }: { initialData?: any }) => {
                   >
                     {combinedProducts.map((plan: any, idx: number) => (
                       <ProductCard
-                        key={`${plan.source}-${plan._id}`}
+                        key={`${plan.source || 'plan'}-${plan._id || plan.id || idx}`}
                         plan={plan}
                         userOrders={orders}
                         onPlayVideo={handlePlayVideo}
