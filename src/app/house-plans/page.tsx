@@ -19,7 +19,7 @@ async function getInitialHousePlans(pageNumber: number = 1) {
   try {
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
     const res = await fetch(
-      `${BACKEND_URL}/api/products?pageNumber=${pageNumber}&limit=12`,
+      `${BACKEND_URL}/api/products?pageNumber=${pageNumber}&limit=12&planCategory=floor-plans`,
       { next: { revalidate: 3600 } }
     );
     if (!res.ok) return null;
@@ -36,7 +36,7 @@ export default async function HousePlansPage({ searchParams }: { searchParams: {
 
   return (
     <Suspense fallback={<div className="py-20 text-center text-gray-500">Loading house plans...</div>}>
-      <ProductsClient initialData={initialData} />
+      <ProductsClient initialData={initialData} baseCategory="floor-plans" />
     </Suspense>
   );
 }
