@@ -3,7 +3,7 @@ import ContactUsClient from "@/components/ContactUsClient";
 
 export const metadata: Metadata = {
   title: "Contact Us | HousePlanFiles - House Plans & Architecture",
-  description: "Contact HousePlanFiles for house plan queries, architect connections or custom design requests. Call +91 9755248864 or email us.",
+  description: "Contact HousePlanFiles for house plan queries, architect connections or custom design requests. Call +91 8815939484 or email us.",
   openGraph: {
     title: "Contact HousePlanFiles",
     description: "Get in touch for house plan queries and custom design requests.",

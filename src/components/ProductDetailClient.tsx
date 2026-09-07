@@ -584,7 +584,7 @@ const ProductDetailContent = ({ product }: { product: any }) => {
     ? productImages[selectedImageIndex]
     : `${backendApiUrl}${productImages[selectedImageIndex]}`;
   const encodedImage = encodeURIComponent(absoluteMainImageUrl);
-  const phoneNumber = "+919755248864";
+  const phoneNumber = "+918815939484";
   const whatsappMessage = `Hello, I'm interested in modifying this plan: *${productName}*. \nProduct Link: ${canonicalUrl}`;
   const encodedWhatsappMessage = encodeURIComponent(whatsappMessage);
   const whatsappLink = `https://wa.me/${phoneNumber.replace("+", "")}?text=${encodedWhatsappMessage}`;

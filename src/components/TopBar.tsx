@@ -69,7 +69,7 @@ const ThreadsIcon = () => (
 const TopBar = () => {
   const contactInfo = {
     email: "houseplansdesignsfile@gmail.com",
-    phone: "+919755248864",
+    phone: "+91 8815939484",
   };
 
   const socialLinks = [
@@ -81,7 +81,7 @@ const TopBar = () => {
     {
       name: "WhatsApp",
       icon: <WhatsAppIcon />,
-      href: `https://wa.me/${contactInfo.phone.replace("+", "")}`,
+      href: `https://wa.me/${contactInfo.phone.replace(/[^0-9]/g, "")}`,
     },
     {
       name: "Twitter",
@@ -148,7 +148,7 @@ const TopBar = () => {
               <span>{contactInfo.email}</span>
             </a>
             <a
-              href={`tel:${contactInfo.phone}`}
+              href={`tel:${contactInfo.phone.replace(/\s+/g, "")}`}
               className="flex items-center gap-x-2 transition-colors hover:text-orange-500"
             >
               <Phone size={16} className="text-orange-500" />

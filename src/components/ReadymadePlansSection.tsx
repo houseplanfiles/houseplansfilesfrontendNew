@@ -152,7 +152,7 @@ const ReadymadePlansSection = () => {
 *Requirements:* ${formData.details || "N/A"}`;
 
     const encodedText = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/919755248864?text=${encodedText}`;
+    const whatsappUrl = `https://wa.me/918815939484?text=${encodedText}`;
     window.open(whatsappUrl, "_blank");
   };
 
