@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "@/lib/store";
 import { fetchMyProducts } from "@/lib/features/products/productSlice";
 import { fetchMyProfessionalOrders } from "@/lib/features/professional/professionalOrderSlice";
 import { fetchMyInquiries } from "@/lib/features/inquiries/inquirySlice";
+import { fetchCurrentUser } from "@/lib/features/users/userSlice";
 import axios from "axios";
 
 const DashboardPage = () => {
@@ -29,6 +30,12 @@ const DashboardPage = () => {
   const { inquiries, listStatus: inquiryStatus } = useSelector(
     (state: RootState) => state.inquiries
   );
+
+  useEffect(() => {
+    if (userInfo?._id && userInfo?.token) {
+      dispatch(fetchCurrentUser());
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (isProfessionalPartner) {

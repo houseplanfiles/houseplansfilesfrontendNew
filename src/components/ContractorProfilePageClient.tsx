@@ -58,6 +58,13 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
 
   useEffect(() => {
+    const targetId = id || initialContractor?._id;
+    if (targetId) {
+      trackAnalytics('user', targetId, 'view');
+    }
+  }, [id, initialContractor?._id]);
+
+  useEffect(() => {
     const fetchContractor = async () => {
       if (initialContractor) return;
       try {
@@ -65,7 +72,6 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/contractor/${id}`
         );
         setContractor(data);
-        trackAnalytics('user', id, 'view');
       } catch (error) {
         console.error("Error fetching contractor:", error);
       } finally {

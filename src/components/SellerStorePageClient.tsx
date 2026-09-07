@@ -320,6 +320,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
   useEffect(() => {
     if (sellerId) {
       dispatch(fetchPublicProductsBySeller(sellerId as string));
+      trackAnalytics('user', sellerId as string, 'view');
     }
   }, [dispatch, sellerId]);
 

@@ -64,6 +64,13 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const targetId = (id as string) || initialArchitect?._id;
+    if (targetId) {
+      trackAnalytics('user', targetId, 'view');
+    }
+  }, [id, initialArchitect?._id]);
+
+  useEffect(() => {
     const fetchArchitect = async () => {
       if (initialArchitect) return;
       setLoading(true);
