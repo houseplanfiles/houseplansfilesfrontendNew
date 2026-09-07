@@ -593,9 +593,9 @@ const SellersSection: FC = () => {
           <motion.h2
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-2xl md:text-4xl font-bold text-white tracking-tight mb-4 drop-shadow-md"
+            className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 drop-shadow-md break-words px-2"
           >
-            Marketplace
+            Building Material &amp; Home Decor
           </motion.h2>
           <div className="h-1 w-20 md:w-24 bg-orange-600 mx-auto rounded-full mb-6"></div>
           <motion.p
@@ -764,7 +764,7 @@ const SellersSection: FC = () => {
         ) : (
           <>
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Marketplace Results</h2>
+              <h2 className="text-xl sm:text-2xl font-black text-gray-900 uppercase tracking-tight">Building Material &amp; Home Decor Results</h2>
               <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-bold">{displayItems.length} ITEMS</span>
             </div>
 

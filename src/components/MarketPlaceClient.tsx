@@ -617,9 +617,9 @@ const MarketplacePage: FC = () => {
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-7xl font-black text-white tracking-tighter mb-4"
+            className="text-3xl sm:text-5xl md:text-7xl font-black text-white tracking-tight mb-4 break-words px-2"
           >
-            MARKETPLACE
+            Building Material &amp; Home Decor
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -789,7 +789,7 @@ const MarketplacePage: FC = () => {
         ) : (
           <>
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Marketplace Results</h2>
+              <h2 className="text-xl sm:text-2xl font-black text-gray-900 uppercase tracking-tight">Building Material &amp; Home Decor Results</h2>
               <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-bold">{displayItems.length} ITEMS</span>
             </div>
 
