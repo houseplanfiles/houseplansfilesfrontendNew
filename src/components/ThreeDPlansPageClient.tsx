@@ -413,6 +413,8 @@ const FilterSidebar = ({ filters, setFilters, isOpen, onClose }: any) => (
   </>
 );
 
+const house1 = "/floorplan.jpg";
+
 const ProductCard = ({ plan, userOrders, onPlayVideo, index }: any) => {
   const router = useRouter();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
@@ -424,7 +426,7 @@ const ProductCard = ({ plan, userOrders, onPlayVideo, index }: any) => {
     plan.name || plan.planName || plan.Name || "Untitled Plan";
   const linkTo = `/house-plans/${slugify(productName)}-${plan._id}`;
   const mainImage =
-    plan.mainImage || plan.Images?.split(",")[0].trim() || house1;
+    plan.mainImage || plan.image || (plan.Images ? plan.Images.split(",")[0].trim() : "") || house1;
   const plotSize = plan.plotSize || plan["Attribute 1 value(s)"] || "N/A";
   const plotArea =
     plan.plotArea ||
