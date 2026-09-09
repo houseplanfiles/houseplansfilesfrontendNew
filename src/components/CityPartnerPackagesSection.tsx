@@ -25,6 +25,72 @@ interface Package {
   features?: string[];
 }
 
+const DEFAULT_CITY_PARTNER_PACKAGES: Package[] = [
+  {
+    _id: "cp_city_3m",
+    title: "City Listing (3 Months)",
+    price: "999",
+    unit: "3 Months / City",
+    areaType: "Local City",
+    isPopular: false,
+    features: [
+      "Verified Contractor Profile Page",
+      "Local City Search Visibility",
+      "Showcase Portfolio & Projects",
+      "Direct Call & WhatsApp Inquiries",
+      "+ 18% GST Applicable",
+    ],
+  },
+  {
+    _id: "cp_city_1y",
+    title: "City Listing (1 Year)",
+    price: "2,999",
+    unit: "1 Year / City",
+    areaType: "Local City",
+    isPopular: true,
+    features: [
+      "Verified Contractor Profile Page (1 Full Year)",
+      "Top Priority Placement in City Listings",
+      "Direct Client Phone Calls & WhatsApp Inquiries",
+      "Unlimited Portfolio & Work Gallery Uploads",
+      "Verified Contractor Badge",
+      "+ 18% GST Applicable",
+    ],
+  },
+  {
+    _id: "cp_state_1y",
+    title: "State Level Listing (1 Year)",
+    price: "9,999",
+    unit: "1 Year / State",
+    areaType: "State Level",
+    isPopular: false,
+    features: [
+      "All-Cities Coverage Across Selected State",
+      "Top State-Wide Listing Placement",
+      "High-Value Turnkey & Construction Leads",
+      "Direct Call & WhatsApp Connect Across State",
+      "Dedicated Profile Support",
+      "+ 18% GST Applicable",
+    ],
+  },
+  {
+    _id: "cp_pan_india",
+    title: "PAN INDIA Listing (1 Year)",
+    price: "14,999",
+    unit: "1 Year / All India",
+    areaType: "PAN India",
+    isPopular: false,
+    features: [
+      "Nationwide All-India Profile Placement",
+      "Top Featured on Homepage & Contractor Directories",
+      "Direct Connections with Clients Nationwide",
+      "Full Portfolio & Lead Inquiries Access",
+      "VIP Dedicated Account Manager",
+      "+ 18% GST Applicable",
+    ],
+  },
+];
+
 interface CityPartnerPackagesProps {
   packages: Package[];
 }
@@ -89,7 +155,7 @@ const PackageCard = ({ pkg }: { pkg: Package }) => {
     >
       {pkg.isPopular && (
         <div className="absolute top-0 w-full bg-orange-500 text-white text-[10px] font-bold py-1 text-center uppercase tracking-widest flex items-center justify-center gap-1 shadow-sm z-20">
-          <Star className="w-3 h-3 fill-current" /> Best Value Contractor
+          <Star className="w-3 h-3 fill-current" /> Most Popular
         </div>
       )}
 
@@ -101,7 +167,7 @@ const PackageCard = ({ pkg }: { pkg: Package }) => {
             {pkg.title}
           </h3>
           {pkg.areaType && (
-            <span className="inline-block mt-1 px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded-full uppercase tracking-wide">
+            <span className="inline-block mt-1 px-2 py-0.5 bg-green-50 text-green-600 text-[10px] font-bold rounded-full uppercase tracking-wide">
               {pkg.areaType}
             </span>
           )}
@@ -131,7 +197,7 @@ const PackageCard = ({ pkg }: { pkg: Package }) => {
                 >
                   <CheckCircle
                     size={16}
-                    className="text-blue-500 mt-0.5 flex-shrink-0"
+                    className="text-green-500 mt-0.5 flex-shrink-0"
                   />
                   <span className="text-xs text-gray-700 leading-snug font-medium text-left">
                     {f}
@@ -150,7 +216,7 @@ const PackageCard = ({ pkg }: { pkg: Package }) => {
             >
               {isExpanded
                 ? "Show Less"
-                : `View ${features.length - INITIAL_FEATURE_COUNT} More Benefits`}
+                : `View ${features.length - INITIAL_FEATURE_COUNT} More Features`}
               {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </button>
           ) : (
@@ -170,15 +236,7 @@ const PackageCard = ({ pkg }: { pkg: Package }) => {
                 : "bg-gray-900 hover:bg-gray-800 text-white"
             }`}
           >
-            <Link
-              href="/partner-application"
-              state={{
-                packageName: pkg.title,
-                packageUnit: pkg.unit,
-                packagePrice: pkg.price,
-                category: "City Contractor",
-              }}
-            >
+            <Link href="/register?role=contractor">
               Become a Contractor
             </Link>
           </Button>
@@ -194,13 +252,13 @@ const CityPartnerPackagesSection: React.FC<CityPartnerPackagesProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showAllMobile, setShowAllMobile] = useState(false);
 
-  if (!packages || packages.length === 0) return null;
+  const displayPackages = (packages && packages.length > 0) ? packages : DEFAULT_CITY_PARTNER_PACKAGES;
 
   const initialMobileCount = 4;
   const mobileVisiblePackages = showAllMobile
-    ? packages
-    : packages.slice(0, initialMobileCount);
-  const hasMoreMobile = packages.length > initialMobileCount;
+    ? displayPackages
+    : displayPackages.slice(0, initialMobileCount);
+  const hasMoreMobile = displayPackages.length > initialMobileCount;
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -236,7 +294,7 @@ const CityPartnerPackagesSection: React.FC<CityPartnerPackagesProps> = ({
         </motion.div>
 
         <div className="hidden md:block relative group px-2">
-          {packages.length > 3 && (
+          {displayPackages.length > 3 && (
             <>
               <Button
                 variant="outline"
@@ -262,7 +320,7 @@ const CityPartnerPackagesSection: React.FC<CityPartnerPackagesProps> = ({
             className="flex overflow-x-auto gap-6 px-4 pb-8 pt-4 snap-x snap-mandatory scrollbar-hide items-stretch"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {packages.map((pkg) => (
+            {displayPackages.map((pkg) => (
               <PackageCard key={pkg._id} pkg={pkg} />
             ))}
           </div>

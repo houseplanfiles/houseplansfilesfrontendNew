@@ -32,7 +32,12 @@ const requestLinks = [
   { name: "All Enquiries", path: "/seller/inquiries", icon: Briefcase },
 ];
 
-const SellerSidebar = ({ isOpen, setIsOpen }) => {
+interface SellerSidebarProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+const SellerSidebar = ({ isOpen, setIsOpen }: SellerSidebarProps) => {
   const [openMenus, setOpenMenus] = useState({ products: true, requests: true });
   const dispatch = useDispatch();
   const router = useRouter();
@@ -43,7 +48,7 @@ const SellerSidebar = ({ isOpen, setIsOpen }) => {
     dispatch(logout());
     router.push("/login");
   };
-  const toggleMenu = (menu) =>
+  const toggleMenu = (menu: 'products' | 'requests') =>
     setOpenMenus((prev) => ({ ...prev, [menu]: !prev[menu] }));
 
   const baseLinkClasses =
@@ -51,7 +56,7 @@ const SellerSidebar = ({ isOpen, setIsOpen }) => {
   const inactiveClasses = "text-gray-300 hover:bg-slate-700 hover:text-white";
   const activeClasses = "bg-orange-600 text-white font-semibold shadow-lg";
 
-  const NavItem = ({ link, exact = false }) => {
+  const NavItem = ({ link, exact = false }: { link: { path: string; name: string; icon: any }; exact?: boolean }) => {
     const isActive = exact
       ? pathname === link.path
       : pathname.startsWith(link.path);
@@ -67,7 +72,7 @@ const SellerSidebar = ({ isOpen, setIsOpen }) => {
     );
   };
 
-  const renderSubMenu = (title, icon, menuKey, links) => (
+  const renderSubMenu = (title: string, icon: any, menuKey: 'products' | 'requests', links: any[]) => (
     <div className="mt-2">
       <button
         onClick={() => toggleMenu(menuKey)}

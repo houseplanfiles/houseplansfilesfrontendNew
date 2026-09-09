@@ -261,12 +261,14 @@ const ProductCard = ({
             </div>
           </div>
 
-          {sellerData?.contractorType === "Premium" ? (
+          {sellerData?.contractorType === "Premium" && sellerData?.contractorType !== "Normal" && sellerData?.selectedPlan !== "Basic" ? (
             <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2">
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
-                  const waLink = `https://wa.me/91${sellerData.phone}?text=${encodeURIComponent(`Hi ${sellerData.businessName}, I am interested in your product: "${product.name}".`)}`;
+                  const cleanPhone = sellerData.phone.replace(/\D/g, '');
+                  const waPhone = cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone;
+                  const waLink = `https://wa.me/${waPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
                   trackAnalytics('user', sellerData._id, 'whatsapp_click');
                   window.open(waLink, "_blank");
                 }}
@@ -449,11 +451,13 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
                   />
                 </div>
                 
-                {(sellerInfo?.contractorType === "Premium" || sellerInfo?.phone) && (
+                {(sellerInfo?.contractorType === "Premium" || sellerInfo?.contractorType === "Verified") && sellerInfo?.contractorType !== "Normal" && sellerInfo?.selectedPlan !== "Basic" && sellerInfo?.phone && (
                   <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-2 sm:mt-0">
                     <Button 
                       onClick={() => {
-                        const waLink = `https://wa.me/91${sellerInfo.phone}?text=${encodeURIComponent(`Hi ${sellerInfo.businessName}, I saw your shop on Houseplans Marketplace and I am interested in your products.`)}`;
+                        const cleanPhone = sellerInfo.phone.replace(/\D/g, '');
+                        const waPhone = cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone;
+                        const waLink = `https://wa.me/${waPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
                         trackAnalytics('user', sellerInfo._id, 'whatsapp_click');
                         window.open(waLink, "_blank");
                       }}

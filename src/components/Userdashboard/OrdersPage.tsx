@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Loader2, Download } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-const getStatusBadgeVariant = (isPaid) => {
+const getStatusBadgeVariant = (isPaid: boolean) => {
   return isPaid ? "default" : "destructive";
 };
 
@@ -27,7 +27,7 @@ const MyOrdersPage = () => {
     dispatch(fetchMyOrders());
   }, [dispatch]);
 
-  const handleDownload = (item) => {
+  const handleDownload = (item: any) => {
     
     if (
       !item.productId ||

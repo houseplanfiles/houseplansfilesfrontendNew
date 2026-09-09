@@ -2,9 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter, usePathname } from "next/navigation";
-
 import React, { useState, useEffect, useMemo, useRef } from "react";
-
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
 import { trackAnalytics } from "@/lib/analytics";
@@ -349,7 +347,7 @@ const ProductDetailContent = ({ product }: { product: any }) => {
   const { slug } = useParams<{ slug: string }>();
   const pathname = usePathname();
   const router = useRouter();
-  
+
   const dispatch: AppDispatch = useDispatch();
   const { toast } = useToast();
   const { symbol, rate } = useCurrency();
@@ -547,13 +545,13 @@ const ProductDetailContent = ({ product }: { product: any }) => {
     }
     const reviewAction = isProfessionalPlan
       ? createPlanReview({
-          planId: productIdFromSlug!,
-          reviewData: { rating, comment },
-        })
+        planId: productIdFromSlug!,
+        reviewData: { rating, comment },
+      })
       : createProductReview({
-          productId: productIdFromSlug!,
-          reviewData: { rating, comment },
-        });
+        productId: productIdFromSlug!,
+        reviewData: { rating, comment },
+      });
     dispatch(reviewAction as any)
       .unwrap()
       .then(() => {
@@ -651,7 +649,7 @@ const ProductDetailContent = ({ product }: { product: any }) => {
       className="min-h-screen bg-gray-50"
       onContextMenu={(e) => e.preventDefault()}
     >
-      
+
 
       <Navbar />
 
@@ -766,7 +764,6 @@ const ProductDetailContent = ({ product }: { product: any }) => {
                 ))}
               </div>
             </div>
-
             <div className="lg:col-span-2 space-y-6">
               <div>
                 <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-2">
@@ -922,9 +919,9 @@ const ProductDetailContent = ({ product }: { product: any }) => {
                   </a>
                 </div>
               </div>
-              <SocialShare 
-                url={canonicalUrl} 
-                title={productName} 
+              <SocialShare
+                url={canonicalUrl}
+                title={productName}
                 phone={phoneNumber}
               />
             </div>

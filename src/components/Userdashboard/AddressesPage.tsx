@@ -19,7 +19,7 @@ const userAddresses = {
 };
 
 // A reusable component to display an address card
-const AddressCard = ({ title, address, onEditClick }) => {
+const AddressCard = ({ title, address, onEditClick }: { title: any, address: any, onEditClick: any }) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-3">

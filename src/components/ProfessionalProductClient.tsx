@@ -66,7 +66,7 @@ const ProductDetail = () => {
     await addItem({
       id: product._id,
       name: product.name,
-      price: product.isSale ? product.salePrice : product.price,
+      price: (product.isSale ? product.salePrice : product.price) || 0,
       image: productImages[0],
       size: product.plotSize,
       quantity: quantity,
@@ -95,7 +95,7 @@ const ProductDetail = () => {
     await addItem({
       id: product._id,
       name: product.name,
-      price: product.isSale ? product.salePrice : product.price,
+      price: (product.isSale ? product.salePrice : product.price) || 0,
       image: productImages[0],
       size: product.plotSize,
       quantity: quantity,

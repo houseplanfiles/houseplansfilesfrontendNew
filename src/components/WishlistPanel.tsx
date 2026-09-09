@@ -42,7 +42,7 @@ const WishlistPanel: React.FC<WishlistPanelProps> = ({ isOpen, onClose }) => {
   const { addItem, state: cartState } = useCart();
   const router = useRouter();
 
-  const handleAddToCart = async (item: WishlistItem) => {
+  const handleAddToCart = async (item: any) => {
     // कार्ट में भेजने से पहले डेटा को नॉर्मलाइज करें
     const itemName = item.name || item.Name || "Untitled Plan";
     const regularPrice = item.price ?? item["Regular price"] ?? 0;
@@ -86,7 +86,7 @@ const WishlistPanel: React.FC<WishlistPanelProps> = ({ isOpen, onClose }) => {
           </div>
         ) : (
           <div className="flex-grow overflow-y-auto p-6 space-y-4">
-            {wishlistItems.map((item) => {
+            {wishlistItems.map((item: any) => {
               // हर आइटम के लिए डेटा को सही से पढ़ें
               const itemName = item.name || item.Name || "Untitled Plan";
               const regularPrice = item.price ?? item["Regular price"] ?? 0;

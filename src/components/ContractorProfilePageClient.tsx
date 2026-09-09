@@ -285,7 +285,7 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
                 </Button>
 
                 {/* Premium -> Call Now */}
-                {(contractor.contractorType === "Premium" || contractor.role === "Premium") && contractor.phone && (
+                {(contractor.contractorType === "Premium" || contractor.role === "Premium") && contractor.contractorType !== "Normal" && contractor.selectedPlan !== "Basic" && contractor.phone && (
                   <Button 
                     onClick={() => { trackAnalytics('user', contractor._id, 'call_click'); window.location.href = `tel:${contractor.phone.replace(/\D/g, '')}`; }} 
                     className="w-full bg-blue-600 hover:bg-blue-700 h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-extrabold shadow-2xl shadow-blue-600/40 text-white transition-all active:scale-95 border-none"
@@ -295,12 +295,12 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
                 )}
                 
                 {/* WhatsApp Button */}
-                {(contractor.contractorType === "Verified" || contractor.contractorType === "Premium" || contractor.role === "Premium") && (
+                {(contractor.contractorType === "Verified" || contractor.contractorType === "Premium" || contractor.role === "Premium") && contractor.contractorType !== "Normal" && contractor.selectedPlan !== "Basic" && contractor.phone && (
                   <Button 
                     onClick={() => {
                       trackAnalytics('user', contractor._id, 'whatsapp_click');
                       const phoneStr = contractor.phone ? contractor.phone.replace(/\D/g, '') : '';
-                      window.open(`https://wa.me/${phoneStr}?text=${encodeURIComponent(`Hi ${contractor.name}, I found your profile on HousePlansFiles.`)}`, "_blank");
+                      window.open(`https://wa.me/${phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`, "_blank");
                     }} 
                     className="w-full bg-[#25D366] hover:bg-[#128C7E] h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-extrabold shadow-2xl shadow-green-600/40 text-white transition-all active:scale-95 border-none"
                   >

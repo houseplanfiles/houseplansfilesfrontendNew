@@ -28,7 +28,7 @@ const SellerDashboardPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const { userInfo } = useSelector((state: RootState) => state.user);
   const { stats, recentInquiries, status, error } = useSelector(
-    (state: RootState) => state.sellerDashboard
+    (state: RootState) => state.sellerDashboard as any
   );
 
   useEffect(() => {

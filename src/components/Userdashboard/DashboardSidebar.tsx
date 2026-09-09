@@ -16,7 +16,12 @@ const navItems = [
   { name: "Account Details", path: "/dashboard/account-details", icon: User },
 ];
 
-const DashboardSidebar = ({ isOpen, setIsOpen }) => {
+interface DashboardSidebarProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+const DashboardSidebar = ({ isOpen, setIsOpen }: DashboardSidebarProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch: AppDispatch = useDispatch();

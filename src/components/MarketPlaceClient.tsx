@@ -298,12 +298,12 @@ const ProductCard = ({ product, onInquiryClick, onImageClick }: any) => (
             {(product.seller?.businessType === "Manufacturer" || product.seller?.businessType === "Both") ? "Get Bulk Quote" : "Enquiry"}
           </Button>
 
-          {(product.seller?.contractorType === "Verified" || product.seller?.contractorType === "Premium" || product.seller?.role === "Premium") && (
+          {(product.seller?.contractorType !== "Normal" && product.seller?.selectedPlan !== "Basic" && (product.seller?.contractorType === "Verified" || product.seller?.contractorType === "Premium" || product.seller?.role === "Premium")) && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.open(`https://wa.me/91${product.seller.phone}?text=${encodeURIComponent(`Hi ${product.seller.businessName}, I'm interested in: ${product.name}`)}`, "_blank");
+                  window.open(`https://wa.me/91${product.seller.phone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`, "_blank");
                 }}
                 className="w-full h-8 sm:h-10 text-[11px] sm:text-xs bg-[#25D366] hover:bg-[#128C7E] text-white rounded-lg px-0 transition-colors flex items-center justify-center"
               >
@@ -411,12 +411,22 @@ const MarketplacePage: FC = () => {
   // Filters State
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedShopCategory, setSelectedShopCategory] = useState("All");
+  const [isPanIndiaFilter, setIsPanIndiaFilter] = useState(false);
+  const [selectedState, setSelectedState] = useState("All States");
   const [selectedCity, setSelectedCity] = useState("all-cities");
   const [cityPopoverOpen, setCityPopoverOpen] = useState(false);
   const [citySearchTerm, setCitySearchTerm] = useState("");
   const [selectedPincode, setSelectedPincode] = useState("");
   const [selectedBusinessType, setSelectedBusinessType] = useState("All");
   const [selectedMaterialType, setSelectedMaterialType] = useState("All");
+
+  const INDIAN_STATES = [
+    "All States", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+    "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala",
+    "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha",
+    "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
+    "Uttarakhand", "West Bengal", "Delhi", "Jammu and Kashmir", "Ladakh", "Chandigarh"
+  ];
 
   // Fixed shop categories
   const SHOP_CATEGORIES = [
@@ -490,16 +500,53 @@ const MarketplacePage: FC = () => {
 
   // Display Items Logic
   const displayItems = useMemo(() => {
-    // 1. First filter products by search/category/city/businessType/materialType
+    // 1. First filter products by search/category/city/businessType/materialType/panIndia/state
     let filteredItems = products;
+
+    // PAN India filter
+    if (isPanIndiaFilter) {
+      filteredItems = filteredItems.filter((p) => {
+        const s = p.seller;
+        return s?.isPanIndia || s?.city?.toLowerCase() === "pan india" || s?.selectedPlan?.toLowerCase().includes("pan_india");
+      });
+    }
+
+    // State filter
+    if (selectedState !== "All States") {
+      const sFilter = selectedState.toLowerCase();
+      filteredItems = filteredItems.filter((p) => {
+        const s = p.seller;
+        return (
+          s?.isPanIndia ||
+          s?.city?.toLowerCase() === "pan india" ||
+          s?.selectedPlan?.toLowerCase().includes("pan_india") ||
+          (s?.state && s.state.toLowerCase() === sFilter) ||
+          (p.state && p.state.toLowerCase() === sFilter)
+        );
+      });
+    }
+
+    // City filter
+    if (selectedCity !== "all-cities") {
+      const cFilter = selectedCity.toLowerCase();
+      filteredItems = filteredItems.filter((p) => {
+        const s = p.seller;
+        return (
+          s?.isPanIndia ||
+          s?.city?.toLowerCase() === "pan india" ||
+          s?.selectedPlan?.toLowerCase().includes("pan_india") ||
+          (p.city && p.city.toLowerCase() === cFilter) ||
+          (s?.city && s.city.toLowerCase() === cFilter)
+        );
+      });
+    }
+
     if (selectedShopCategory !== "All")
       filteredItems = filteredItems.filter((p) =>
         p.seller?.category === selectedShopCategory ||
         p.category === selectedShopCategory ||
         p.seller?.materialType?.toLowerCase().includes(selectedShopCategory.toLowerCase())
       );
-    if (selectedCity !== "all-cities")
-      filteredItems = filteredItems.filter((p) => p.city === selectedCity || p.seller?.city === selectedCity);
     if (selectedBusinessType !== "All") {
       filteredItems = filteredItems.filter((p) => {
         const type = p.seller?.businessType;
@@ -592,7 +639,7 @@ const MarketplacePage: FC = () => {
     });
 
     return finalItems;
-  }, [products, searchTerm, selectedShopCategory, selectedCity, selectedBusinessType, selectedMaterialType, selectedPincode]);
+  }, [products, searchTerm, selectedShopCategory, selectedCity, selectedBusinessType, selectedMaterialType, selectedPincode, isPanIndiaFilter, selectedState]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50/50">
@@ -705,7 +752,40 @@ const MarketplacePage: FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+            <div>
+              <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Coverage</Label>
+              <label
+                htmlFor="panIndiaMarketplaceCheck"
+                className={`flex items-center justify-center gap-2 h-12 px-3 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
+                  isPanIndiaFilter ? "bg-orange-600 border-orange-600 text-white shadow-sm" : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <input
+                  id="panIndiaMarketplaceCheck"
+                  type="checkbox"
+                  checked={isPanIndiaFilter}
+                  onChange={(e) => setIsPanIndiaFilter(e.target.checked)}
+                  className="rounded border-gray-300 text-orange-600 focus:ring-orange-500 w-4 h-4 cursor-pointer"
+                />
+                PAN INDIA
+              </label>
+            </div>
+
+            <div>
+              <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">State</Label>
+              <Select value={selectedState} onValueChange={setSelectedState}>
+                <SelectTrigger className="h-12 bg-gray-50 border-gray-200 rounded-xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-72">
+                  {INDIAN_STATES.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div>
               <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">City</Label>
               <Popover open={cityPopoverOpen} onOpenChange={setCityPopoverOpen}>
@@ -772,6 +852,27 @@ const MarketplacePage: FC = () => {
                 className="h-12 bg-gray-50 border-gray-200 text-base rounded-xl focus:ring-orange-500"
               />
             </div>
+
+            <div className="flex items-center">
+              {(isPanIndiaFilter || selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode || searchTerm || selectedBusinessType !== "All" || selectedShopCategory !== "All" || selectedMaterialType !== "All") && (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedShopCategory("All");
+                    setIsPanIndiaFilter(false);
+                    setSelectedState("All States");
+                    setSelectedCity("all-cities");
+                    setSelectedBusinessType("All");
+                    setSelectedMaterialType("All");
+                    setSelectedPincode("");
+                  }}
+                  className="h-12 w-full text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 rounded-xl font-bold text-xs"
+                >
+                  <X className="w-4 h-4 mr-1.5" /> Reset Filters
+                </Button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -824,6 +925,8 @@ const MarketplacePage: FC = () => {
                   onClick={() => {
                     setSearchTerm("");
                     setSelectedShopCategory("All");
+                    setIsPanIndiaFilter(false);
+                    setSelectedState("All States");
                     setSelectedCity("all-cities");
                     setSelectedBusinessType("All");
                     setSelectedMaterialType("All");
