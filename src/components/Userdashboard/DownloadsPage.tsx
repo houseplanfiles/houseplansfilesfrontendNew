@@ -21,7 +21,7 @@ const MyOrdersPage = () => {
   }, [dispatch]);
 
   // This is a placeholder. In a real app, you'd get the download link from the product data.
-  const handleDownload = (item) => {
+  const handleDownload = (item: any) => {
     alert(`Downloading ${item.name}...`);
     // Example: You would need to fetch the full product details to get its planFile URL
     // window.open(item.productId.planFile, '_blank');

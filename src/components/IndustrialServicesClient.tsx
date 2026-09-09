@@ -324,7 +324,8 @@ const PartnersPage: FC = () => {
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
             {paginatedContractors.map((contractor) => {
               const phoneStr = contractor.phone ? (contractor.phone || '').replace(/\D/g, '') : '';
-              const waLink = `https://wa.me/${phoneStr}`;
+              const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
+              const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
 
               return (
                 <div key={contractor._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full group">

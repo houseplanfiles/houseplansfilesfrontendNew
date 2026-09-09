@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 
 // This hook loads one or more external scripts dynamically
-const useExternalScripts = (urls) => {
+const useExternalScripts = (urls: string[]) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let loadedCount = 0;
-    const scripts = [];
+    const scripts: HTMLScriptElement[] = [];
 
     if (urls.length === 0) {
       setLoaded(true);

@@ -29,6 +29,62 @@ interface MarketplacePackagesProps {
   packages: Package[];
 }
 
+const DEFAULT_MARKETPLACE_PACKAGES: Package[] = [
+  {
+    _id: "mkt_city_shop",
+    title: "City Shop Listing",
+    price: "2,999",
+    unit: "1 Year / Per City",
+    areaType: "Local City",
+    isPopular: false,
+    features: [
+      "Online Digital Store / Shop Page",
+      "Unlimited Building Material & Decor Product Listings",
+      "Direct Customer Phone Calls & WhatsApp Inquiries",
+      "Local City Search Visibility",
+      "Verified Seller Badge on Store",
+      "Dedicated Shop QR Code & Direct Link",
+      "+ 18% GST Applicable",
+    ],
+  },
+  {
+    _id: "mkt_state_level",
+    title: "State Level Listing",
+    price: "9,999",
+    unit: "1 Year / Full State",
+    areaType: "State Level",
+    isPopular: true,
+    features: [
+      "All City Shop Listing Features Included",
+      "High Priority Placement in State Searches",
+      "Top Visibility in All Cities Across Selected State",
+      "Direct Inquiries from Buyers Across State",
+      "Bulk Material Quotation Leads",
+      "Priority Verified Supplier / Dealer Badge",
+      "Dedicated Customer Relationship Manager",
+      "+ 18% GST Applicable",
+    ],
+  },
+  {
+    _id: "mkt_pan_india",
+    title: "PAN INDIA Listing",
+    price: "14,999",
+    unit: "1 Year / Nationwide",
+    areaType: "PAN India",
+    isPopular: false,
+    features: [
+      "All State Level Listing Features Included",
+      "Top Ranked All-India Nationwide Visibility",
+      "Nationwide Buyer & Contractor Connections",
+      "Direct Call & WhatsApp Access from Any State in India",
+      "Featured on Homepage & Top Seller Carousels",
+      "Unlimited Product Catalog with SEO Boost",
+      "Priority Verification & Top Customer Support",
+      "+ 18% GST Applicable",
+    ],
+  },
+];
+
 const PackageCard = ({ pkg }: { pkg: Package }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -170,15 +226,7 @@ const PackageCard = ({ pkg }: { pkg: Package }) => {
                 : "bg-gray-900 hover:bg-gray-800 text-white"
             }`}
           >
-            <Link
-              href="/vendor-registration"
-              state={{
-                packageName: pkg.title,
-                packageUnit: pkg.unit,
-                packagePrice: pkg.price,
-                category: "Marketplace",
-              }}
-            >
+            <Link href="/register?role=seller">
               Start Selling
             </Link>
           </Button>
@@ -194,13 +242,13 @@ const MarketplacePackagesSection: React.FC<MarketplacePackagesProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showAllMobile, setShowAllMobile] = useState(false);
 
-  if (!packages || packages.length === 0) return null;
+  const displayPackages = DEFAULT_MARKETPLACE_PACKAGES;
 
   const initialMobileCount = 4;
   const mobileVisiblePackages = showAllMobile
-    ? packages
-    : packages.slice(0, initialMobileCount);
-  const hasMoreMobile = packages.length > initialMobileCount;
+    ? displayPackages
+    : displayPackages.slice(0, initialMobileCount);
+  const hasMoreMobile = displayPackages.length > initialMobileCount;
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -235,7 +283,7 @@ const MarketplacePackagesSection: React.FC<MarketplacePackagesProps> = ({
         </motion.div>
 
         <div className="hidden md:block relative group px-2">
-          {packages.length > 3 && (
+          {displayPackages.length > 3 && (
             <>
               <Button
                 variant="outline"
@@ -261,7 +309,7 @@ const MarketplacePackagesSection: React.FC<MarketplacePackagesProps> = ({
             className="flex overflow-x-auto gap-6 px-4 pb-8 pt-4 snap-x snap-mandatory scrollbar-hide items-stretch"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {packages.map((pkg) => (
+            {displayPackages.map((pkg) => (
               <PackageCard key={pkg._id} pkg={pkg} />
             ))}
           </div>

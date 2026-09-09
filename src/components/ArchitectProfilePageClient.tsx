@@ -310,14 +310,14 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                 )}
 
                 {/* Standard / Verified -> WhatsApp */}
-                {(architect.contractorType === "Verified" || architect.contractorType === "Premium") && architect.phone && (
-                  <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(`https://wa.me/91${architect.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${architect.name}, I am interested in your services.`)}`, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-14 sm:h-16 rounded-xl sm:rounded-2xl text-sm sm:text-lg font-extrabold shadow-xl transition-all border-none px-0">
+                {(architect.contractorType === "Verified" || architect.contractorType === "Premium") && architect.selectedPlan !== "Basic" && architect.phone && (
+                  <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(`https://wa.me/91${architect.phone.replace(/\D/g, '')}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-14 sm:h-16 rounded-xl sm:rounded-2xl text-sm sm:text-lg font-extrabold shadow-xl transition-all border-none px-0">
                     <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" /> WhatsApp Us
                   </Button>
                 )}
 
                 {/* Premium -> Call Now */}
-                {architect.contractorType === "Premium" && architect.phone && (
+                {architect.contractorType === "Premium" && architect.selectedPlan !== "Basic" && architect.phone && (
                   <Button onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = `tel:${architect.phone.replace(/\D/g, '')}`; }} className="w-full bg-blue-600 hover:bg-blue-700 text-white h-14 sm:h-16 rounded-xl sm:rounded-2xl text-sm sm:text-lg font-extrabold shadow-xl transition-all border-none px-0">
                     <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" /> Call Now
                   </Button>

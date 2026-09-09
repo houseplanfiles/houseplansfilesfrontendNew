@@ -108,8 +108,13 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
     // Send contractorType for professional, Contractor and seller roles
     const lowerRole = role?.toLowerCase()?.trim();
     if (lowerRole === "professional" || lowerRole === "contractor" || lowerRole === "seller") {
-      userData.contractorType = contractorType;
-      userData.selectedPlan = selectedPlan === "None" ? null : selectedPlan;
+      if (selectedPlan === "Basic" || contractorType === "Normal") {
+        userData.contractorType = "Normal";
+        userData.selectedPlan = selectedPlan === "None" ? null : (selectedPlan || "Basic");
+      } else {
+        userData.contractorType = contractorType;
+        userData.selectedPlan = selectedPlan === "None" ? null : selectedPlan;
+      }
       userData.paymentStatus = paymentStatus;
     }
 
@@ -223,7 +228,11 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                 <Label>Account Type</Label>
                 <Select
                   value={contractorType}
-                  onValueChange={setContractorType}
+                  onValueChange={(val) => {
+                    setContractorType(val);
+                    if (val === "Normal") setSelectedPlan("Basic");
+                    else if (val === "Premium" && selectedPlan === "Basic") setSelectedPlan("Premium");
+                  }}
                   disabled={isLoading}
                 >
                   <SelectTrigger>
@@ -244,7 +253,12 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                 <Label>Selected Plan</Label>
                 <Select
                   value={selectedPlan}
-                  onValueChange={setSelectedPlan}
+                  onValueChange={(val) => {
+                    setSelectedPlan(val);
+                    if (val === "Basic" || val === "None") setContractorType("Normal");
+                    else if (val === "Standard") setContractorType("Verified");
+                    else setContractorType("Premium");
+                  }}
                   disabled={isLoading}
                 >
                   <SelectTrigger>

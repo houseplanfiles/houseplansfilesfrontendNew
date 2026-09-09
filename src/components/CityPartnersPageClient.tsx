@@ -225,8 +225,11 @@ const PartnersPage: FC = () => {
   const [selectedContractor, setSelectedContractor] = useState<ContractorType | null>(null);
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  // Read ?city= from URL on mount (e.g. /contractors?city=Bhopal)
+  
+  const [isPanIndiaFilter, setIsPanIndiaFilter] = useState(searchParams?.get("panIndia") === "true");
+  const [stateFilter, setStateFilter] = useState(searchParams?.get("state") || "All States");
   const [cityFilter, setCityFilter] = useState(() => searchParams?.get("city") || "");
+  const [pincodeFilter, setPincodeFilter] = useState(searchParams?.get("pincode") || "");
   const [professionFilter, setProfessionFilter] = useState(() => searchParams?.get("profession") || "All");
   const [currentPage, setCurrentPage] = useState(1);
   const [revealedPhoneIds, setRevealedPhoneIds] = useState<Set<string>>(new Set());
@@ -248,47 +251,98 @@ const PartnersPage: FC = () => {
   useEffect(() => {
     setCurrentPage(1);
     const params = new URLSearchParams();
+    if (isPanIndiaFilter) params.set("panIndia", "true");
+    if (stateFilter && stateFilter !== "All States") params.set("state", stateFilter);
     if (cityFilter) params.set("city", cityFilter);
+    if (pincodeFilter) params.set("pincode", pincodeFilter);
     if (professionFilter && professionFilter !== "All") params.set("profession", professionFilter);
     const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(newUrl, { scroll: false });
-  }, [cityFilter, professionFilter, router, pathname]);
+  }, [isPanIndiaFilter, stateFilter, cityFilter, pincodeFilter, professionFilter, router, pathname]);
 
   const approvedContractors = useMemo(() => {
     if (!Array.isArray(contractors)) return [];
-    return (contractors as ContractorType[]).filter((c) => {
+    return (contractors as any[]).filter((c) => {
       const isApproved = c.status === "Approved";
-      const matchesCity = !cityFilter || c.city?.toLowerCase().includes(cityFilter.toLowerCase()) || c.city?.toLowerCase() === "pan india";
+      if (!isApproved) return false;
+
+      // PAN India filter
+      if (isPanIndiaFilter) {
+        const isPan = c.isPanIndia || c.city?.toLowerCase() === "pan india" || c.selectedPlan?.toLowerCase().includes("pan_india");
+        if (!isPan) return false;
+      }
+
+      // State filter
+      if (stateFilter && stateFilter !== "All States") {
+        const sFilter = stateFilter.toLowerCase();
+        const matchesState = 
+          c.isPanIndia ||
+          c.city?.toLowerCase() === "pan india" ||
+          c.selectedPlan?.toLowerCase().includes("pan_india") ||
+          (c.state && c.state.toLowerCase() === sFilter) ||
+          (c.selectedStates && c.selectedStates.some((s: string) => s.toLowerCase() === sFilter));
+        if (!matchesState) return false;
+      }
+
+      // City filter
+      if (cityFilter) {
+        const q = cityFilter.toLowerCase();
+        const matchesCity =
+          c.isPanIndia ||
+          c.city?.toLowerCase() === "pan india" ||
+          c.selectedPlan?.toLowerCase().includes("pan_india") ||
+          (c.city && c.city.toLowerCase().includes(q)) ||
+          (c.selectedCities && c.selectedCities.some((ct: string) => ct.toLowerCase().includes(q)));
+        if (!matchesCity) return false;
+      }
+
+      // Pincode filter
+      if (pincodeFilter) {
+        const pFilter = pincodeFilter.trim();
+        const matchesPincode = c.pincode && c.pincode.toString().includes(pFilter);
+        if (!matchesPincode) return false;
+      }
+
       const lowerCaseProfession = c.profession?.toLowerCase() || "";
       const filter = professionFilter || "All";
       const matchesProfession = filter === "All" ||
         (filter.toLowerCase() === "building" && (
-          lowerCaseProfession.includes("civil") ||
           lowerCaseProfession.includes("building") ||
-          lowerCaseProfession.includes("construction") ||
-          lowerCaseProfession.includes("turnkey") ||
-          lowerCaseProfession.includes("labour")
+          lowerCaseProfession.includes("general") ||
+          lowerCaseProfession.includes("commercial")
         )) ||
-        lowerCaseProfession.includes(filter.toLowerCase()) ||
-        filter.toLowerCase().includes(lowerCaseProfession);
-      return isApproved && matchesCity && matchesProfession;
-    });
-  }, [contractors, cityFilter, professionFilter]);
+        (filter.toLowerCase() === "interior" && (
+          lowerCaseProfession.includes("interior") ||
+          lowerCaseProfession.includes("fit-out") ||
+          lowerCaseProfession.includes("decor")
+        )) ||
+        lowerCaseProfession.includes(filter.toLowerCase());
 
+      return matchesProfession;
+    });
+  }, [contractors, isPanIndiaFilter, stateFilter, cityFilter, pincodeFilter, professionFilter]);
+
+  const totalPages = Math.ceil(approvedContractors.length / itemsPerPage);
   const paginatedContractors = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return approvedContractors.slice(startIndex, startIndex + itemsPerPage);
-  }, [approvedContractors, currentPage]);
+  }, [approvedContractors, currentPage, itemsPerPage]);
 
   const handleContactClick = (contractor: ContractorType) => {
     setSelectedContractor(contractor);
     setIsModalOpen(true);
   };
 
+  const INDIAN_STATES = [
+    "All States", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+    "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala",
+    "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha",
+    "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
+    "Uttarakhand", "West Bengal", "Delhi", "Jammu and Kashmir", "Ladakh", "Chandigarh"
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col w-full overflow-x-hidden">
-
-
       <Navbar />
 
       {/* --- Hero Section --- */}
@@ -312,23 +366,89 @@ const PartnersPage: FC = () => {
 
       <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10 pb-20">
         {/* --- Filters Section --- */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-4 sm:p-6 mb-10 w-full">
-          <div className="flex flex-col gap-4">
-            <div className="w-full">
-              <Label className="text-xs font-bold text-gray-500 uppercase">Find by City</Label>
-              <div className="relative mt-2">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6 mb-10 w-full">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-gray-100">
+            <span className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+              <FilterIcon className="w-3.5 h-3.5 text-orange-600" /> Filter Contractors
+            </span>
+            <div className="flex items-center gap-2">
+              <label 
+                htmlFor="contractorPanIndiaCheck"
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold cursor-pointer transition-all ${
+                  isPanIndiaFilter ? "bg-orange-600 border-orange-600 text-white shadow-sm" : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <input 
+                  id="contractorPanIndiaCheck" 
+                  type="checkbox" 
+                  checked={isPanIndiaFilter} 
+                  onChange={(e) => setIsPanIndiaFilter(e.target.checked)}
+                  className="rounded border-gray-300 text-orange-600 focus:ring-orange-500 w-3.5 h-3.5 cursor-pointer"
+                />
+                PAN INDIA
+              </label>
+              {(isPanIndiaFilter || stateFilter !== "All States" || cityFilter || pincodeFilter || professionFilter !== "All") && (
+                <button 
+                  onClick={() => {
+                    setIsPanIndiaFilter(false);
+                    setStateFilter("All States");
+                    setCityFilter("");
+                    setPincodeFilter("");
+                    setProfessionFilter("All");
+                  }} 
+                  className="text-xs text-red-500 hover:text-red-700 font-semibold underline ml-2"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mt-4">
+            {/* State Filter */}
+            <div>
+              <Label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide">State</Label>
+              <select
+                value={stateFilter}
+                onChange={(e) => setStateFilter(e.target.value)}
+                className="mt-1 w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all cursor-pointer"
+              >
+                {INDIAN_STATES.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* City Filter */}
+            <div>
+              <Label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide">City</Label>
+              <div className="relative mt-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input placeholder="Search City..." value={cityFilter} onChange={(e) => setCityFilter(e.target.value)} className="pl-9 h-12 bg-gray-50 w-full" />
+                <Input 
+                  placeholder="e.g. Bhopal, Indore" 
+                  value={cityFilter} 
+                  onChange={(e) => setCityFilter(e.target.value)} 
+                  className="pl-9 h-11 bg-gray-50 border-gray-200 rounded-xl focus:bg-white text-xs" 
+                />
               </div>
             </div>
 
-            {/* Profession Filter */}
-            <div className="w-full">
-              <Label className="text-xs font-bold text-gray-500 uppercase flex items-center gap-2 mb-2">
-                <FilterIcon className="w-3 h-3" /> Specialization
-              </Label>
+            {/* Pincode Filter */}
+            <div>
+              <Label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide">Pincode</Label>
+              <Input 
+                placeholder="e.g. 462001, 464668" 
+                value={pincodeFilter} 
+                onChange={(e) => setPincodeFilter(e.target.value)} 
+                className="mt-1 h-11 bg-gray-50 border-gray-200 rounded-xl focus:bg-white text-xs" 
+              />
+            </div>
+
+            {/* Specialization Filter */}
+            <div>
+              <Label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide">Specialization</Label>
               <Select value={professionFilter} onValueChange={(val) => setProfessionFilter(val)}>
-                <SelectTrigger className="w-full h-12 bg-gray-50 border-gray-200 text-sm font-semibold text-gray-700">
+                <SelectTrigger className="mt-1 w-full h-11 bg-gray-50 border-gray-200 rounded-xl text-xs font-medium text-gray-800">
                   <SelectValue placeholder="Select Specialization" />
                 </SelectTrigger>
                 <SelectContent className="max-h-[300px]">
@@ -350,7 +470,8 @@ const PartnersPage: FC = () => {
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
             {paginatedContractors.map((contractor) => {
               const phoneStr = contractor.phone ? (contractor.phone || '').replace(/\D/g, '') : '';
-              const waLink = `https://wa.me/${phoneStr}`;
+              const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
+              const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
 
               return (
                 <div key={contractor._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full group">

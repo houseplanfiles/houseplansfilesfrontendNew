@@ -175,7 +175,8 @@ const ArchitectCard: FC<{
 }> = ({ architect, onContact, index, navigate }) => {
   const type = architect.contractorType || "Normal";
   const phoneStr = architect.phone ? architect.phone.replace(/\D/g, '') : '';
-  const waLink = `https://wa.me/${phoneStr}?text=${encodeURIComponent(`Hi ${architect.name}, I found your profile on HousePlansFiles and would like to discuss a design project.`)}`;
+  const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
+  const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
   const callLink = `tel:${phoneStr}`;
 
   return (

@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/select";
 
 // --- INQUIRY MODAL COMPONENT (ISI PAGE MEIN) ---
-const InquiryDetailModal = ({ inquiryId, onClose, onUpdate }) => {
+const InquiryDetailModal = ({ inquiryId, onClose, onUpdate }: { inquiryId: string | null; onClose: () => void; onUpdate: () => void; }) => {
   const dispatch: AppDispatch = useDispatch();
   const { selectedInquiry, actionStatus } = useSelector(
     (state: RootState) => state.sellerInquiries
@@ -169,7 +169,7 @@ const SellerInquiriesPage = () => {
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedInquiryId, setSelectedInquiryId] = useState(null);
+  const [selectedInquiryId, setSelectedInquiryId] = useState<string | null>(null);
 
   const loadInquiries = () => {
     dispatch(fetchMyInquiries());
@@ -179,13 +179,14 @@ const SellerInquiriesPage = () => {
     loadInquiries();
   }, [dispatch]);
 
-  const handleViewDetails = (inquiryId) => {
+  const handleViewDetails = (inquiryId: string) => {
     setSelectedInquiryId(inquiryId);
     setIsModalOpen(true);
   };
 
-  const getStatusVariant = (status) => {
+  const getStatusVariant = (status: string): "default" | "destructive" | "outline" | "secondary" | null | undefined => {
     /* ... switch case ... */
+    return "default";
   };
 
   if (listStatus === "loading")

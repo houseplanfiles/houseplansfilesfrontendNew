@@ -150,53 +150,70 @@ const MultiRoleRegisterPage = () => {
       return;
     }
     
-    // Calculate prices
+    // Calculate prices based on selected role and tier
     let planPrice = 999;
-    let planName = "Basic Listing";
+    let planName = "City Listing (3 Months)";
 
     switch (selectedPlan) {
+      // Architect, Contractor, Other Services
+      case "City_3M":
       case "Basic":
-        planPrice = formData.isPanIndia ? 9999 : 999 * (formData.city.length > 0 ? formData.city.length : 1);
-        planName = formData.isPanIndia ? "PAN India Listing" : "Basic Listing";
+        planPrice = 999;
+        planName = "City Listing (3 Months)";
         break;
+      case "City_6M":
       case "Premium":
-        planPrice = formData.isPanIndia ? 9999 : 1999 * (formData.city.length > 0 ? formData.city.length : 1);
-        planName = formData.isPanIndia ? "PAN India Listing (6 Month)" : "Premium Listing (6 Month)";
+        planPrice = 1999;
+        planName = "City Listing (6 Months)";
         break;
+      case "City_1Y":
       case "Premium+":
-        planPrice = formData.isPanIndia ? 9999 : 2999 * (formData.city.length > 0 ? formData.city.length : 1);
-        planName = formData.isPanIndia ? "PAN India Listing (12 Month)" : "Premium+ Listing (12 Month)";
+        planPrice = 2999;
+        planName = "City Listing (1 Year)";
         break;
+      case "State_1Y":
+        planPrice = 9999;
+        planName = "State Listing (1 Year)";
+        break;
+      case "Pan_India_1Y":
+        planPrice = 14999;
+        planName = "PAN India Listing (1 Year)";
+        break;
+
+      // Marketplace / Building Material (Seller)
+      case "Seller_City":
       case "Seller_Auto": {
-        const isRetail = formData.businessType === "Retail";
-        const basePrice = isRetail ? 2999 : 4999;
-        planPrice = formData.isPanIndia ? 9999 : basePrice * (formData.city.length > 0 ? formData.city.length : 1);
-        planName = formData.isPanIndia ? "PAN India Listing" : (isRetail ? "Retail Shop (Per City)" : `${formData.businessType} Listing (Per City)`);
+        const cityCount = formData.city.length > 0 ? formData.city.length : 1;
+        planPrice = 2999 * cityCount;
+        planName = `Marketplace Shop Listing (${cityCount > 1 ? `${cityCount} Cities` : "Per City"} / 1 Year)`;
         break;
       }
-      case "Industrial_and_Infra_Services":
+      case "Seller_State":
+        planPrice = 9999;
+        planName = "Marketplace State Listing (1 Year)";
+        break;
+      case "Seller_Pan_India":
+        planPrice = 14999;
+        planName = "Marketplace PAN India Listing (1 Year)";
+        break;
+
+      // Infra and Industrial Services
+      case "Industrial_City":
         planPrice = 4999;
-        planName = "Industrial & Infra Services";
+        planName = "Industrial Services (City / 1 Year)";
         break;
       case "Industrial_State":
-        planPrice = formData.isPanIndia ? 9999 : 4999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1);
-        planName = formData.isPanIndia ? "Industrial Services (PAN India)" : "Industrial Services (Per State)";
+        planPrice = 14999;
+        planName = "Industrial Services (State / 1 Year)";
         break;
       case "Industrial_Pan_India":
         planPrice = 24999;
-        planName = "Industrial Services (Yearly PAN India)";
+        planName = "Industrial Services (PAN India / 1 Year)";
         break;
-      default: {
-        const isRetailDefault = formData.businessType === "Retail";
-        planPrice = formData.isPanIndia ? 9999 : (selectedRole === "seller"
-          ? (isRetailDefault ? 2999 : 4999) * (formData.city.length > 0 ? formData.city.length : 1)
-          : selectedRole === "industrial"
-          ? 4999 * (formData.selectedStates.length > 0 ? formData.selectedStates.length : 1)
-          : 999 * (formData.city.length > 0 ? formData.city.length : 1));
-        planName = formData.isPanIndia ? "PAN India Listing" : (selectedRole === "seller"
-          ? (isRetailDefault ? "Retail Shop (Per City)" : `${formData.businessType} Listing (Per City)`)
-          : selectedRole === "industrial" ? "Industrial Services (Per State)" : "Basic Listing");
-      }
+
+      default:
+        planPrice = 999;
+        planName = "Listing Plan";
     }
 
     const items = [{ name: planName, price: planPrice }];
@@ -419,9 +436,17 @@ const MultiRoleRegisterPage = () => {
       }
     }
     if (selectedRole !== "user") {
+      const isPan = Boolean(formData.isPanIndia || selectedPlan.toLowerCase().includes("pan_india"));
+      dataToSubmit.set("isPanIndia", String(isPan));
       dataToSubmit.append("selectedPlan", selectedPlan);
       dataToSubmit.append("profileCreation", String(profileCreation));
       dataToSubmit.append("profileStoreManagement", profileStoreManagement);
+      if (formData.selectedStates && formData.selectedStates.length > 0) {
+        dataToSubmit.set("state", formData.selectedStates[0]);
+      }
+      if (formData.pincode) {
+        dataToSubmit.set("pincode", formData.pincode);
+      }
     }
     (dispatch as AppDispatch)(registerUser(dataToSubmit));
   };
@@ -1139,53 +1164,38 @@ const MultiRoleRegisterPage = () => {
                 </div>
                 
                 {/* Plans Grid */}
-                {selectedRole === "seller" ? (
-                  // Seller: auto-price based on Business Category
-                  <div className="rounded-xl border-2 border-primary bg-primary/5 p-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                        {formData.isPanIndia ? "PAN India Listing" : (formData.businessType === "Retail" ? "Retail Shop — Per City" : (formData.businessType || "Manufacturer / Supplier") + " — Per City")}
-                      </span>
-                      <div className="w-4 h-4 rounded-full bg-primary border-primary text-white flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 bg-white rounded-full" />
-                      </div>
-                    </div>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-extrabold text-foreground">
-                        ₹{formData.isPanIndia ? "9,999" : (formData.businessType === "Retail" ? "2,999" : "4,999")}
-                      </span>
-                      <span className="text-xs text-muted-foreground">{formData.isPanIndia ? "flat rate +18% GST" : "per city +18% GST"}</span>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground mt-1">
-                      {formData.isPanIndia
-                        ? "Serving PAN India → ₹9,999 +18% GST"
-                        : formData.city.length > 1
-                        ? `${formData.city.length} cities selected → ₹${(formData.businessType === "Retail" ? 2999 : 4999) * formData.city.length} +18% GST`
-                        : "Select cities above to see total price"}
-                    </p>
-                    <p className="text-[10px] text-primary font-medium mt-2">✓ Price auto-set based on Business Category</p>
-                  </div>
-                ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {(selectedRole === "industrial"
+                  {(selectedRole === "seller"
                     ? [
-                        { id: "Industrial_State", name: "Industrial Services (Per State)", price: 4999, final: "5,898.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
-                        { id: "Industrial_Pan_India", name: "Industrial Services (Yearly PAN India)", price: 24999, final: "29,498.82", color: "border-red-500 bg-red-500/5 text-red-800" }
+                        { id: "Seller_City", name: "City Shop (1 Year)", price: 2999 * (formData.city.length > 1 ? formData.city.length : 1), final: (2999 * (formData.city.length > 1 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected` : "Per City Shop Listing", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                        { id: "Seller_State", name: "State Listing (1 Year)", price: 9999, final: "11,798.82", note: "Entire State Coverage", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                        { id: "Seller_Pan_India", name: "PAN INDIA (1 Year)", price: 14999, final: "17,698.82", note: "All India Coverage", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
                       ]
-                    : formData.isPanIndia 
-                      ? [
-                          { id: selectedPlan, name: "PAN India Listing (Flat Rate)", price: 9999, final: "11,798.82", color: "border-indigo-500 bg-indigo-500/5 text-indigo-800" }
-                        ]
-                      : [
-                        { id: "Basic", name: "Basic Listing", price: 999, final: "1,178.82", color: "border-green-500 bg-green-500/5 text-green-800" },
-                        { id: "Premium", name: "Premium (6 Months)", price: 1999, final: "2,358.82", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
-                        { id: "Premium+", name: "Premium+ (12 Months)", price: 2999, final: "3,538.82", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
+                    : selectedRole === "industrial"
+                    ? [
+                        { id: "Industrial_City", name: "City Level (1 Year)", price: 4999, final: "5,898.82", note: "City Level Listing", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                        { id: "Industrial_State", name: "State Level (1 Year)", price: 14999, final: "17,698.82", note: "State Level Listing", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                        { id: "Industrial_Pan_India", name: "PAN INDIA (1 Year)", price: 24999, final: "29,498.82", note: "All India Coverage", color: "border-red-500 bg-red-500/5 text-red-800" }
+                      ]
+                    : [
+                        { id: "City_3M", name: "City (3 Months)", price: 999, final: "1,178.82", note: "City Listing", color: "border-green-500 bg-green-500/5 text-green-800" },
+                        { id: "City_6M", name: "City (6 Months)", price: 1999, final: "2,358.82", note: "Verified Profile", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                        { id: "City_1Y", name: "City (1 Year)", price: 2999, final: "3,538.82", note: "Premium Full Year", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                        { id: "State_1Y", name: "State (1 Year)", price: 9999, final: "11,798.82", note: "State-wide Coverage", color: "border-indigo-500 bg-indigo-500/5 text-indigo-800" },
+                        { id: "Pan_India_1Y", name: "PAN INDIA (1 Year)", price: 14999, final: "17,698.82", note: "All India Top Listing", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
                       ]
                   ).map((p) => (
                     <div
                       key={p.id}
                       role="button"
-                      onClick={() => setSelectedPlanState(p.id)}
+                      onClick={() => {
+                        setSelectedPlanState(p.id);
+                        if (p.id.toLowerCase().includes("pan_india")) {
+                          setFormData((prev) => ({ ...prev, isPanIndia: true }));
+                        } else {
+                          setFormData((prev) => ({ ...prev, isPanIndia: false }));
+                        }
+                      }}
                       className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                         selectedPlan === p.id 
                           ? `${p.color} ring-2 ring-primary border-primary` 
@@ -1201,16 +1211,16 @@ const MultiRoleRegisterPage = () => {
                         </div>
                       </div>
                       <div className="mt-2 flex items-baseline">
-                        <span className="text-xl font-extrabold text-foreground">₹{p.price}</span>
+                        <span className="text-xl font-extrabold text-foreground">₹{p.price.toLocaleString()}</span>
                         <span className="text-xs text-muted-foreground ml-1">+18% GST</span>
                       </div>
                       <div className="mt-1 text-[11px] text-muted-foreground">
                         Final Amount: <strong className="text-foreground">₹{p.final}</strong>
                       </div>
+                      <p className="text-[10px] text-muted-foreground mt-1.5">{p.note}</p>
                     </div>
                   ))}
                 </div>
-                )}
 
                 {/* Optional Services */}
                 <div className="space-y-3 pt-3 border-t border-dashed border-border">
