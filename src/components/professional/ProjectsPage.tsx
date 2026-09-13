@@ -193,7 +193,12 @@ const ProjectsPage = () => {
       await dispatch(updateProfile(formData)).unwrap();
       toast.success("Portfolio published successfully!");
     } catch (err: any) {
-      toast.error(err || "Failed to update projects");
+      if (err === "SESSION_EXPIRED" || err === "Session expired. Please login again.") {
+        toast.error("Session expire ho gayi hai. Dobara login karein.");
+        setTimeout(() => { window.location.href = "/login"; }, 1500);
+      } else {
+        toast.error(err || "Failed to update projects");
+      }
     }
   };
 

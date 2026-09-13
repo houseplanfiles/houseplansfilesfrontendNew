@@ -182,6 +182,13 @@ export const fetchCurrentUser = createAsyncThunk<UserInfo, void, { state: RootSt
       const { data } = await axios.get(`${API_URL}/${userId}`, config);
       return data;
     } catch (error: any) {
+      // Token expired ya invalid — localStorage clear karo
+      if (error.response?.status === 401) {
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("userInfo");
+        }
+        return rejectWithValue("SESSION_EXPIRED");
+      }
       return rejectWithValue(error.response?.data?.message || "Failed to fetch profile");
     }
   }
@@ -221,6 +228,13 @@ export const updateProfile = createAsyncThunk<
     const updatedUserInfo = { ...state.user.userInfo, ...data };
     return updatedUserInfo;
   } catch (error: any) {
+    // Token expired ya invalid — SESSION_EXPIRED bhejo
+    if (error.response?.status === 401) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("userInfo");
+      }
+      return rejectWithValue("SESSION_EXPIRED");
+    }
     return rejectWithValue(
       error.response?.data?.message || "Failed to update profile"
     );
@@ -429,7 +443,14 @@ const userSlice = createSlice({
         typeof window !== "undefined" && localStorage.setItem("userInfo", JSON.stringify(user));
       })
       .addCase(fetchCurrentUser.pending, (state) => { state.profileLoading = true; })
-      .addCase(fetchCurrentUser.rejected, (state) => { state.profileLoading = false; })
+      .addCase(fetchCurrentUser.rejected, (state, action: AnyAction) => {
+        state.profileLoading = false;
+        // Session expire hone pe auto-logout
+        if (action.payload === "SESSION_EXPIRED") {
+          state.userInfo = null;
+          typeof window !== "undefined" && localStorage.removeItem("userInfo");
+        }
+      })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.profileLoading = false;
         const user = { ...action.payload };
@@ -437,7 +458,17 @@ const userSlice = createSlice({
         state.userInfo = user;
         typeof window !== "undefined" && localStorage.setItem("userInfo", JSON.stringify(user));
       })
-      .addCase(updateProfile.rejected, actionRejected)
+      .addCase(updateProfile.rejected, (state, action: AnyAction) => {
+        state.actionStatus = "failed";
+        // Session expire hone pe auto-logout
+        if (action.payload === "SESSION_EXPIRED") {
+          state.userInfo = null;
+          typeof window !== "undefined" && localStorage.removeItem("userInfo");
+          state.error = "Session expired. Please login again.";
+        } else {
+          state.error = action.payload;
+        }
+      })
       .addCase(forgotPassword.pending, actionPending)
       .addCase(forgotPassword.fulfilled, (state) => {
         state.actionStatus = "succeeded";
