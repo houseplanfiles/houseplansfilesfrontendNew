@@ -45,17 +45,16 @@ const userRoles = [
 
 const professionalSubRoles = [
   "Architect",
-  "Civil Design Engineer",
-  "Structure Engineer",
-  "Interior Designer",
-  "Site Engineer",
-  "MEP Consultant",
+  "Civil Engineers",
+  "Interior Designers",
+  "Structural Engineers",
+  "Site Engineers",
   "Vastu Consultant",
 ];
 
 const contractorProfessions = [
-  "Civil Construction Contractor", "Interior Contractor", "Electrical Contractor",
-  "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor"
+  "Building Contractors", "Interior Contractor", "Electrical Contractor",
+  "Plumbing Contractor", "Tiles Contractor", "Painting Contractor"
 ];
 
 const homeDesigningProfessions = [
@@ -64,12 +63,12 @@ const homeDesigningProfessions = [
 ];
 
 const industrialProfessions = [
-  "Pre Engineering Buildings", "Pre Fabricated Buildings", "Pre Cast Concrete Material", "Machinery Services", "Manpower Supply", "Project Management Consultancy", "Project Manager"
+  "Pre Engineered Buildings", "Pre Fabricated Buildings", "Pre Cast Materials", "Structural Engineers", "Machinary Rental Services", "Manpower Supply", "Project Managers", "Flooring Service", "Roofing Services"
 ];
 
 const otherServicesProfessions = [
-  "Pest Control Service", "HVAC System Installation", "Lift Installation Services", "Solar Panel Installation", 
-  "Home Automation", "Water Proofing Installation", "Garden & Landscaping Contractor", "Modular Kitchen Services", "Swimming Pool Contractor", "Fire safety services", "Fabricator"
+  "Pest Control", "Garden and Landscaping", "Glass Fabricator", "HVAC Services", 
+  "Lift Installation Services", "Solar Installation Services", "Home Automation", "Water Proffing Service", "Modular Kitchen Services", "Swimming Pool Contractor", "Fire Safety Service", "Carpenter"
 ];
 
 const materialTypes = [
@@ -733,6 +732,18 @@ const MultiRoleRegisterPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
+                <div className="flex items-center space-x-3 mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <input
+                    type="checkbox"
+                    id="panIndia_other"
+                    className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                    checked={formData.isPanIndia}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
+                  />
+                  <label htmlFor="panIndia_other" className="text-base font-bold text-orange-700 cursor-pointer">
+                    Serve PAN India (Flat ₹9,999)
+                  </label>
+                </div>
                 <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
                 <CreatableSelect
                   isMulti
@@ -754,18 +765,6 @@ const MultiRoleRegisterPage = () => {
                   formatCreateLabel={(input: string) => `Add "${input}"`}
                   isDisabled={formData.isPanIndia}
                 />
-                <div className="flex items-center space-x-3 mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                  <input
-                    type="checkbox"
-                    id="panIndia_other"
-                    className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
-                    checked={formData.isPanIndia}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
-                  />
-                  <label htmlFor="panIndia_other" className="text-base font-bold text-orange-700 cursor-pointer">
-                    Serve PAN India (Flat ₹9,999)
-                  </label>
-                </div>
               </div>
               <div>
                 <Label>Pincode</Label>
@@ -791,8 +790,8 @@ const MultiRoleRegisterPage = () => {
                 <SelectContent>
                   <SelectItem value="Manufacturer">Manufacturer</SelectItem>
                   <SelectItem value="Supplier">Supplier</SelectItem>
+                  <SelectItem value="Local Shop">Local Shop</SelectItem>
                   <SelectItem value="Both">Manufacturer &amp; Supplier Both</SelectItem>
-                  <SelectItem value="Retail">Retail Shop</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -997,6 +996,21 @@ const MultiRoleRegisterPage = () => {
               )}
             </div>
             <div>
+            <div>
+              {selectedRole !== 'industrial' && (
+                <div className="flex items-center space-x-2 mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <input
+                    type="checkbox"
+                    id="panIndia_other"
+                    className="w-4 h-4 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                    checked={formData.isPanIndia}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
+                  />
+                  <label htmlFor="panIndia_other" className="text-sm font-bold text-orange-700 cursor-pointer">
+                    Serve PAN India (Flat ₹9,999)
+                  </label>
+                </div>
+              )}
               <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
               <CreatableSelect
                 isMulti
@@ -1018,20 +1032,6 @@ const MultiRoleRegisterPage = () => {
                 formatCreateLabel={(input: string) => `Add "${input}"`}
                 isDisabled={formData.isPanIndia}
               />
-              {selectedRole !== 'industrial' && (
-                <div className="flex items-center space-x-2 mt-2">
-                  <input
-                    type="checkbox"
-                    id="panIndia_other"
-                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-                    checked={formData.isPanIndia}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
-                  />
-                  <label htmlFor="panIndia_other" className="text-sm font-semibold text-gray-700 cursor-pointer">
-                    Serve PAN India (Flat ₹9,999)
-                  </label>
-                </div>
-              )}
             </div>
             <div>
               <Label>GST Number (Optional)</Label>
