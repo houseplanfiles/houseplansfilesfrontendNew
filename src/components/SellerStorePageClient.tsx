@@ -268,7 +268,7 @@ const ProductCard = ({
                   e.stopPropagation();
                   const cleanPhone = sellerData.phone.replace(/\D/g, '');
                   const waPhone = cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone;
-                  const waLink = `https://wa.me/${waPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
+                  const waLink = `https://wa.me/${waPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
                   trackAnalytics('user', sellerData._id, 'whatsapp_click');
                   window.open(waLink, "_blank");
                 }}
@@ -457,7 +457,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
                       onClick={() => {
                         const cleanPhone = sellerInfo.phone.replace(/\D/g, '');
                         const waPhone = cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone;
-                        const waLink = `https://wa.me/${waPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
+                        const waLink = `https://wa.me/${waPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
                         trackAnalytics('user', sellerInfo._id, 'whatsapp_click');
                         window.open(waLink, "_blank");
                       }}

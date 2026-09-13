@@ -311,7 +311,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
 
                 {/* Standard / Verified -> WhatsApp */}
                 {(architect.contractorType === "Verified" || architect.contractorType === "Premium") && architect.selectedPlan !== "Basic" && architect.phone && (
-                  <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(`https://wa.me/91${architect.phone.replace(/\D/g, '')}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-14 sm:h-16 rounded-xl sm:rounded-2xl text-sm sm:text-lg font-extrabold shadow-xl transition-all border-none px-0">
+                  <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(`https://wa.me/91${architect.phone.replace(/\D/g, '')}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-14 sm:h-16 rounded-xl sm:rounded-2xl text-sm sm:text-lg font-extrabold shadow-xl transition-all border-none px-0">
                     <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" /> WhatsApp Us
                   </Button>
                 )}

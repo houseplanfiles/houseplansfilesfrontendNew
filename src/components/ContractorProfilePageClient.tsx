@@ -300,7 +300,7 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
                     onClick={() => {
                       trackAnalytics('user', contractor._id, 'whatsapp_click');
                       const phoneStr = contractor.phone ? contractor.phone.replace(/\D/g, '') : '';
-                      window.open(`https://wa.me/${phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`, "_blank");
+                      window.open(`https://wa.me/${phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`, "_blank");
                     }} 
                     className="w-full bg-[#25D366] hover:bg-[#128C7E] h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-extrabold shadow-2xl shadow-green-600/40 text-white transition-all active:scale-95 border-none"
                   >

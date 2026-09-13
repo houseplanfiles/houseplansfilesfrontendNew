@@ -371,7 +371,7 @@ const ArchitectsPage: FC = () => {
                     const type = architect.contractorType || "Normal";
                     const phoneStr = architect.phone ? architect.phone.replace(/\D/g, '') : '';
                     const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
-                    const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
+                    const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
                     const callLink = `tel:${phoneStr}`;
 
                     return (
