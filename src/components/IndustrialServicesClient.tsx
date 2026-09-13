@@ -89,15 +89,13 @@ const getFileUrl = (path: string) => {
 
 const CONTRACTOR_CATEGORIES = [
   "All",
-  "Pre Engineering Board / PEB",
-  "Pre Fabricated House",
+  "Pre Engineering Buildings",
+  "Pre Fabricated Buildings",
   "Pre Cast Concrete Material",
   "Machinery Services",
   "Manpower Supply",
-  "Building Inspection",
-  "Bulk Building Material",
-  "Project Management Consultancy",
-  "Project Manager",
+  "Building Inspection Services",
+  "Bulk Building Material Services",
   "Flooring Services",
   "Roofing",
   "Structural Designers"
