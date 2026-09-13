@@ -996,7 +996,6 @@ const MultiRoleRegisterPage = () => {
               )}
             </div>
             <div>
-            <div>
               {selectedRole !== 'industrial' && (
                 <div className="flex items-center space-x-2 mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
                   <input
