@@ -95,7 +95,15 @@ const CONTRACTOR_CATEGORIES = [
   "Lift Services",
   "Solar Rooftop Panel",
   "HVAC",
-  "Glass Fabricator"
+  "Glass Fabricator",
+  "Manpower Supply",
+  "Pre Engineering Board / PEB",
+  "Pre Fabricated House",
+  "Building Inspection",
+  "Swimming Pool",
+  "Carpenter",
+  "Labour Contractor",
+  "Turnkey Contractor",
 ];
 
 // --- Contact Modal Component ---

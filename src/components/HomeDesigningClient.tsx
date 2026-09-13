@@ -80,21 +80,9 @@ const CONTRACTOR_CATEGORIES = [
   "Interior",
   "Electrical",
   "Plumbing",
-  "Tiles & Granite",
-  "Painting & Waterproofing",
-  "Swimming Pool",
-  "Pre Engineering Board / PEB",
-  "Pre Fabricated House",
-  "Pest Control",
-  "Landscaping & Garden",
-  "Manpower Supply",
-  "Modular Kitchen",
-  "Lift Services",
-  "Building Inspection",
-  "Solar Rooftop Panel",
-  "HVAC",
-  "Carpenter",
-  "Glass Fabricator"
+  "Tiles & Marble",
+  "Painting",
+  "Other Services",
 ];
 const ContactModal: FC<{
   isOpen: boolean;

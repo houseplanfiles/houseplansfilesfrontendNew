@@ -250,20 +250,16 @@ const VideoModal = ({
     </motion.div>
   );
 };
-
 interface ProductDetailClientProps {
   initialProduct?: any;
 }
-
 const DetailPage = ({ initialProduct }: ProductDetailClientProps = {}) => {
   const params = useParams<{ slug: string }>();
   const slug = params?.slug;
   const pathname = usePathname();
   const dispatch: AppDispatch = useDispatch();
-
   const isProfessionalPlan = pathname.includes("/professional-plan/");
   const productIdFromSlug = slug?.split("-").pop();
-
   const {
     product: singleProduct,
     listStatus: adminListStatus,
