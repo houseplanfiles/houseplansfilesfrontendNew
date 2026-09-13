@@ -29,6 +29,10 @@ import {
   Waves,
   Flame,
   Wrench,
+  Briefcase,
+  UserCheck,
+  LayoutDashboard,
+  Home
 } from "lucide-react";
 
 // Section 1: Home Designing and Construction Services
@@ -47,13 +51,18 @@ const HOME_SERVICES = [
 
 // Section 2: Industrial Construction and Infrastructure Services
 const INDUSTRIAL_SERVICES = [
-  { id: 1, label: "Pre Engineering Buildings", link: "/industrial-services?profession=Pre Engineering Board / PEB", icon: Factory, color: "bg-emerald-500/10 text-emerald-600 hover:border-emerald-500" },
-  { id: 2, label: "Pre Fabricated Buildings", link: "/industrial-services?profession=Pre Fabricated House", icon: PackageOpen, color: "bg-violet-500/10 text-violet-600 hover:border-violet-500" },
-  { id: 3, label: "Pre Cast Concrete Material", link: "/industrial-services?profession=Building", icon: Cuboid, color: "bg-stone-500/10 text-stone-600 hover:border-stone-500" },
-  { id: 4, label: "Machinery Services", link: "/industrial-services?profession=Building", icon: Settings, color: "bg-gray-500/10 text-gray-600 hover:border-gray-500" },
+  { id: 1, label: "Pre Engineering Board / PEB", link: "/industrial-services?profession=Pre Engineering Board / PEB", icon: Factory, color: "bg-emerald-500/10 text-emerald-600 hover:border-emerald-500" },
+  { id: 2, label: "Pre Fabricated House", link: "/industrial-services?profession=Pre Fabricated House", icon: PackageOpen, color: "bg-violet-500/10 text-violet-600 hover:border-violet-500" },
+  { id: 3, label: "Pre Cast Concrete Material", link: "/industrial-services?profession=Pre Cast Concrete Material", icon: Cuboid, color: "bg-stone-500/10 text-stone-600 hover:border-stone-500" },
+  { id: 4, label: "Machinery Services", link: "/industrial-services?profession=Machinery Services", icon: Settings, color: "bg-gray-500/10 text-gray-600 hover:border-gray-500" },
   { id: 5, label: "Manpower Supply", link: "/industrial-services?profession=Manpower Supply", icon: Users, color: "bg-fuchsia-500/10 text-fuchsia-600 hover:border-fuchsia-500" },
-  { id: 6, label: "Building Inspection Services", link: "/industrial-services?profession=Building Inspection", icon: ClipboardCheck, color: "bg-slate-500/10 text-slate-600 hover:border-slate-500" },
-  { id: 7, label: "Bulk Building Material Services", link: "/industrial-services?profession=Building", icon: Truck, color: "bg-orange-600/10 text-orange-700 hover:border-orange-600" },
+  { id: 6, label: "Building Inspection", link: "/industrial-services?profession=Building Inspection", icon: ClipboardCheck, color: "bg-slate-500/10 text-slate-600 hover:border-slate-500" },
+  { id: 7, label: "Bulk Building Material", link: "/industrial-services?profession=Bulk Building Material", icon: Truck, color: "bg-orange-600/10 text-orange-700 hover:border-orange-600" },
+  { id: 8, label: "Project Management Consultancy", link: "/industrial-services?profession=Project Management Consultancy", icon: Briefcase, color: "bg-blue-500/10 text-blue-600 hover:border-blue-500" },
+  { id: 9, label: "Project Manager", link: "/industrial-services?profession=Project Manager", icon: UserCheck, color: "bg-indigo-500/10 text-indigo-600 hover:border-indigo-500" },
+  { id: 10, label: "Flooring Services", link: "/industrial-services?profession=Flooring Services", icon: LayoutDashboard, color: "bg-teal-500/10 text-teal-600 hover:border-teal-500" },
+  { id: 11, label: "Roofing", link: "/industrial-services?profession=Roofing", icon: Home, color: "bg-red-500/10 text-red-600 hover:border-red-500" },
+  { id: 12, label: "Structural Designers", link: "/industrial-services?profession=Structural Designers", icon: HardHat, color: "bg-amber-500/10 text-amber-600 hover:border-amber-500" },
 ];
 
 // Section 3: Other Services

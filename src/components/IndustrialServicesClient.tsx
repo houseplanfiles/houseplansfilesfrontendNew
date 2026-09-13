@@ -91,9 +91,16 @@ const CONTRACTOR_CATEGORIES = [
   "All",
   "Pre Engineering Board / PEB",
   "Pre Fabricated House",
+  "Pre Cast Concrete Material",
+  "Machinery Services",
+  "Manpower Supply",
+  "Building Inspection",
+  "Bulk Building Material",
   "Project Management Consultancy",
   "Project Manager",
-  "Manpower Supply"
+  "Flooring Services",
+  "Roofing",
+  "Structural Designers"
 ];
 
 // --- Contact Modal Component ---
