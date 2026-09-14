@@ -167,8 +167,14 @@ const ProfilePageProf = () => {
       dispatch(resetActionStatus());
     }
     if (actionStatus === "failed") {
-      toast.error(String(error || "Failed to update profile."));
-      dispatch(resetActionStatus());
+      if (error === "Session expired. Please login again." || error === "SESSION_EXPIRED") {
+        toast.error("Session expire ho gayi hai. Dobara login karein.");
+        dispatch(resetActionStatus());
+        setTimeout(() => { window.location.href = "/login"; }, 1500);
+      } else {
+        toast.error(String(error || "Failed to update profile."));
+        dispatch(resetActionStatus());
+      }
     }
   }, [actionStatus, error, dispatch]);
 

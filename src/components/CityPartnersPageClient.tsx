@@ -90,30 +90,9 @@ const CONTRACTOR_CATEGORIES = [
   "Interior",
   "Electrical",
   "Plumbing",
-  "Tiles & Granite",
-  "Painting & Waterproofing",
-  "Carpenter",
-  "Swimming Pool",
-  "Civil Construction Contractor",
-  "Interior Contractor",
-  "Electrical Contractor",
-  "Plumbing Contractor",
-  "Tiles & Granite Contractor",
-  "Painting & Waterproofing Contractor",
-  "Swimming Pool Contractor",
-  "Pre Engineering Board / PEB",
-  "Pre Fabricated House Contractor",
-  "Pest Control Contractor",
-  "Landscaping & Garden Contractor",
-  "Manpower Supply",
-  "Modular Kitchen Contractor",
-  "Lift Services Contractor",
-  "Building Inspection Contractor",
-  "Solar Rooftop Panel Contractor",
-  "HVAC Contractor",
-  "Glass Fabricator",
-  "Labour Contractor",
-  "Turnkey Contractor"
+  "Tiles & Marble",
+  "Painting",
+  "Other Services",
 ];
 const ContactModal: FC<{
   isOpen: boolean;
@@ -471,7 +450,7 @@ const PartnersPage: FC = () => {
             {paginatedContractors.map((contractor) => {
               const phoneStr = contractor.phone ? (contractor.phone || '').replace(/\D/g, '') : '';
               const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
-              const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
+              const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
 
               return (
                 <div key={contractor._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full group">

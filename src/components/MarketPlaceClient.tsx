@@ -303,7 +303,7 @@ const ProductCard = ({ product, onInquiryClick, onImageClick }: any) => (
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.open(`https://wa.me/91${product.seller.phone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`, "_blank");
+                  window.open(`https://wa.me/91${product.seller.phone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`, "_blank");
                 }}
                 className="w-full h-8 sm:h-10 text-[11px] sm:text-xs bg-[#25D366] hover:bg-[#128C7E] text-white rounded-lg px-0 transition-colors flex items-center justify-center"
               >

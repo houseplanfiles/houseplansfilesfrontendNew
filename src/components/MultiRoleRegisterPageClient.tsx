@@ -45,17 +45,16 @@ const userRoles = [
 
 const professionalSubRoles = [
   "Architect",
-  "Civil Design Engineer",
-  "Structure Engineer",
-  "Interior Designer",
-  "Site Engineer",
-  "MEP Consultant",
+  "Civil Engineers",
+  "Interior Designers",
+  "Structural Engineers",
+  "Site Engineers",
   "Vastu Consultant",
 ];
 
 const contractorProfessions = [
-  "Civil Construction Contractor", "Interior Contractor", "Electrical Contractor",
-  "Plumbing Contractor", "Tiles & Granite Contractor", "Painting & Waterproofing Contractor"
+  "Building Contractors", "Interior Contractor", "Electrical Contractor",
+  "Plumbing Contractor", "Tiles Contractor", "Painting Contractor"
 ];
 
 const homeDesigningProfessions = [
@@ -64,12 +63,12 @@ const homeDesigningProfessions = [
 ];
 
 const industrialProfessions = [
-  "Pre Engineering Buildings", "Pre Fabricated Buildings", "Pre Cast Concrete Material", "Machinery Services", "Manpower Supply", "Project Management Consultancy", "Project Manager"
+  "Pre Engineered Buildings", "Pre Fabricated Buildings", "Pre Cast Materials", "Structural Engineers", "Machinary Rental Services", "Manpower Supply", "Project Managers", "Flooring Service", "Roofing Services"
 ];
 
 const otherServicesProfessions = [
-  "Pest Control Service", "HVAC System Installation", "Lift Installation Services", "Solar Panel Installation", 
-  "Home Automation", "Water Proofing Installation", "Garden & Landscaping Contractor", "Modular Kitchen Services", "Swimming Pool Contractor", "Fire safety services", "Fabricator"
+  "Pest Control", "Garden and Landscaping", "Glass Fabricator", "HVAC Services", 
+  "Lift Installation Services", "Solar Installation Services", "Home Automation", "Water Proffing Service", "Modular Kitchen Services", "Swimming Pool Contractor", "Fire Safety Service", "Carpenter"
 ];
 
 const materialTypes = [
@@ -157,20 +156,26 @@ const MultiRoleRegisterPage = () => {
     switch (selectedPlan) {
       // Architect, Contractor, Other Services
       case "City_3M":
-      case "Basic":
-        planPrice = 999;
-        planName = "City Listing (3 Months)";
+      case "Basic": {
+        const cCount = formData.city.length > 0 ? formData.city.length : 1;
+        planPrice = 999 * cCount;
+        planName = `City Listing (3 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
+      }
       case "City_6M":
-      case "Premium":
-        planPrice = 1999;
-        planName = "City Listing (6 Months)";
+      case "Premium": {
+        const cCount = formData.city.length > 0 ? formData.city.length : 1;
+        planPrice = 1999 * cCount;
+        planName = `City Listing (6 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
+      }
       case "City_1Y":
-      case "Premium+":
-        planPrice = 2999;
-        planName = "City Listing (1 Year)";
+      case "Premium+": {
+        const cCount = formData.city.length > 0 ? formData.city.length : 1;
+        planPrice = 2999 * cCount;
+        planName = `City Listing (1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
+      }
       case "State_1Y":
         planPrice = 9999;
         planName = "State Listing (1 Year)";
@@ -198,10 +203,12 @@ const MultiRoleRegisterPage = () => {
         break;
 
       // Infra and Industrial Services
-      case "Industrial_City":
-        planPrice = 4999;
-        planName = "Industrial Services (City / 1 Year)";
+      case "Industrial_City": {
+        const cCount = formData.city.length > 0 ? formData.city.length : 1;
+        planPrice = 4999 * cCount;
+        planName = `Industrial Services (City / 1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
+      }
       case "Industrial_State":
         planPrice = 14999;
         planName = "Industrial Services (State / 1 Year)";
@@ -349,6 +356,20 @@ const MultiRoleRegisterPage = () => {
       }
     }
   }, [actionStatus, userInfo, error, router, dispatch, isRazorpayLoaded, selectedPlan, profileCreation, profileStoreManagement]);
+
+  useEffect(() => {
+    if (formData.city.length > 2 && !formData.isPanIndia) {
+      setFormData((prev) => ({ ...prev, isPanIndia: true, city: [] }));
+      if (selectedRole === "seller") {
+        setSelectedPlanState("Seller_Pan_India");
+      } else if (selectedRole === "industrial") {
+        setSelectedPlanState("Industrial_Pan_India");
+      } else {
+        setSelectedPlanState("Pan_India_1Y");
+      }
+      toast.info("Switched to PAN INDIA plan automatically as you selected more than 2 cities.");
+    }
+  }, [formData.city, selectedRole, formData.isPanIndia]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -733,6 +754,18 @@ const MultiRoleRegisterPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
+                <div className="flex items-center space-x-3 mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <input
+                    type="checkbox"
+                    id="panIndia_other"
+                    className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                    checked={formData.isPanIndia}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
+                  />
+                  <label htmlFor="panIndia_other" className="text-base font-bold text-orange-700 cursor-pointer">
+                    Serve PAN India (Flat ₹9,999)
+                  </label>
+                </div>
                 <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
                 <CreatableSelect
                   isMulti
@@ -754,18 +787,6 @@ const MultiRoleRegisterPage = () => {
                   formatCreateLabel={(input: string) => `Add "${input}"`}
                   isDisabled={formData.isPanIndia}
                 />
-                <div className="flex items-center space-x-3 mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                  <input
-                    type="checkbox"
-                    id="panIndia_other"
-                    className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
-                    checked={formData.isPanIndia}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
-                  />
-                  <label htmlFor="panIndia_other" className="text-base font-bold text-orange-700 cursor-pointer">
-                    Serve PAN India (Flat ₹9,999)
-                  </label>
-                </div>
               </div>
               <div>
                 <Label>Pincode</Label>
@@ -791,8 +812,8 @@ const MultiRoleRegisterPage = () => {
                 <SelectContent>
                   <SelectItem value="Manufacturer">Manufacturer</SelectItem>
                   <SelectItem value="Supplier">Supplier</SelectItem>
+                  <SelectItem value="Local Shop">Local Shop</SelectItem>
                   <SelectItem value="Both">Manufacturer &amp; Supplier Both</SelectItem>
-                  <SelectItem value="Retail">Retail Shop</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -997,6 +1018,20 @@ const MultiRoleRegisterPage = () => {
               )}
             </div>
             <div>
+              {selectedRole !== 'industrial' && (
+                <div className="flex items-center space-x-2 mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <input
+                    type="checkbox"
+                    id="panIndia_other"
+                    className="w-4 h-4 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                    checked={formData.isPanIndia}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
+                  />
+                  <label htmlFor="panIndia_other" className="text-sm font-bold text-orange-700 cursor-pointer">
+                    Serve PAN India (Flat ₹9,999)
+                  </label>
+                </div>
+              )}
               <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
               <CreatableSelect
                 isMulti
@@ -1018,20 +1053,6 @@ const MultiRoleRegisterPage = () => {
                 formatCreateLabel={(input: string) => `Add "${input}"`}
                 isDisabled={formData.isPanIndia}
               />
-              {selectedRole !== 'industrial' && (
-                <div className="flex items-center space-x-2 mt-2">
-                  <input
-                    type="checkbox"
-                    id="panIndia_other"
-                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-                    checked={formData.isPanIndia}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
-                  />
-                  <label htmlFor="panIndia_other" className="text-sm font-semibold text-gray-700 cursor-pointer">
-                    Serve PAN India (Flat ₹9,999)
-                  </label>
-                </div>
-              )}
             </div>
             <div>
               <Label>GST Number (Optional)</Label>
@@ -1173,14 +1194,14 @@ const MultiRoleRegisterPage = () => {
                       ]
                     : selectedRole === "industrial"
                     ? [
-                        { id: "Industrial_City", name: "City Level (1 Year)", price: 4999, final: "5,898.82", note: "City Level Listing", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                        { id: "Industrial_City", name: "City Level (1 Year)", price: 4999 * (formData.city.length > 1 ? formData.city.length : 1), final: (4999 * (formData.city.length > 1 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected` : "City Level Listing", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
                         { id: "Industrial_State", name: "State Level (1 Year)", price: 14999, final: "17,698.82", note: "State Level Listing", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
                         { id: "Industrial_Pan_India", name: "PAN INDIA (1 Year)", price: 24999, final: "29,498.82", note: "All India Coverage", color: "border-red-500 bg-red-500/5 text-red-800" }
                       ]
                     : [
-                        { id: "City_3M", name: "City (3 Months)", price: 999, final: "1,178.82", note: "City Listing", color: "border-green-500 bg-green-500/5 text-green-800" },
-                        { id: "City_6M", name: "City (6 Months)", price: 1999, final: "2,358.82", note: "Verified Profile", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
-                        { id: "City_1Y", name: "City (1 Year)", price: 2999, final: "3,538.82", note: "Premium Full Year", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                        { id: "City_3M", name: "City (3 Months)", price: 999 * (formData.city.length > 1 ? formData.city.length : 1), final: (999 * (formData.city.length > 1 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected` : "City Listing", color: "border-green-500 bg-green-500/5 text-green-800" },
+                        { id: "City_6M", name: "City (6 Months)", price: 1999 * (formData.city.length > 1 ? formData.city.length : 1), final: (1999 * (formData.city.length > 1 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected` : "Verified Profile", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                        { id: "City_1Y", name: "City (1 Year)", price: 2999 * (formData.city.length > 1 ? formData.city.length : 1), final: (2999 * (formData.city.length > 1 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected` : "Premium Full Year", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
                         { id: "State_1Y", name: "State (1 Year)", price: 9999, final: "11,798.82", note: "State-wide Coverage", color: "border-indigo-500 bg-indigo-500/5 text-indigo-800" },
                         { id: "Pan_India_1Y", name: "PAN INDIA (1 Year)", price: 14999, final: "17,698.82", note: "All India Top Listing", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
                       ]

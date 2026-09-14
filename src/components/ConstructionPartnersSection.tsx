@@ -168,7 +168,7 @@ const PartnerCard: FC<{
   const type = partner.contractorType || "Normal";
   const phoneStr = partner.phone ? partner.phone.replace(/\D/g, '') : '';
   const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
-  const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
+  const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
   const callLink = `tel:${phoneStr}`;
 
   return (
@@ -298,30 +298,9 @@ const CONTRACTOR_CATEGORIES = [
   "Interior",
   "Electrical",
   "Plumbing",
-  "Tiles & Granite",
-  "Painting & Waterproofing",
-  "Carpenter",
-  "Swimming Pool",
-  "Civil Construction Contractor",
-  "Interior Contractor",
-  "Electrical Contractor",
-  "Plumbing Contractor",
-  "Tiles & Granite Contractor",
-  "Painting & Waterproofing Contractor",
-  "Swimming Pool Contractor",
-  "Pre Engineering Board / PEB",
-  "Pre Fabricated House Contractor",
-  "Pest Control Contractor",
-  "Landscaping & Garden Contractor",
-  "Manpower Supply",
-  "Modular Kitchen Contractor",
-  "Lift Services Contractor",
-  "Building Inspection Contractor",
-  "Solar Rooftop Panel Contractor",
-  "HVAC Contractor",
-  "Glass Fabricator",
-  "Labour Contractor",
-  "Turnkey Contractor"
+  "Tiles & Marble",
+  "Painting",
+  "Other Services",
 ];
 
 // --- MAIN COMPONENT: ConstructionPartnersSection ---

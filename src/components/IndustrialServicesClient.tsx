@@ -89,11 +89,16 @@ const getFileUrl = (path: string) => {
 
 const CONTRACTOR_CATEGORIES = [
   "All",
-  "Pre Engineering Board / PEB",
-  "Pre Fabricated House",
-  "Project Management Consultancy",
-  "Project Manager",
-  "Manpower Supply"
+  "Pre Engineering Buildings",
+  "Pre Fabricated Buildings",
+  "Pre Cast Concrete Material",
+  "Machinery Services",
+  "Manpower Supply",
+  "Building Inspection Services",
+  "Bulk Building Material Services",
+  "Flooring Services",
+  "Roofing",
+  "Structural Designers"
 ];
 
 // --- Contact Modal Component ---
@@ -325,7 +330,7 @@ const PartnersPage: FC = () => {
             {paginatedContractors.map((contractor) => {
               const phoneStr = contractor.phone ? (contractor.phone || '').replace(/\D/g, '') : '';
               const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
-              const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
+              const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
 
               return (
                 <div key={contractor._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full group">

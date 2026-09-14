@@ -95,7 +95,15 @@ const CONTRACTOR_CATEGORIES = [
   "Lift Services",
   "Solar Rooftop Panel",
   "HVAC",
-  "Glass Fabricator"
+  "Glass Fabricator",
+  "Manpower Supply",
+  "Pre Engineering Board / PEB",
+  "Pre Fabricated House",
+  "Building Inspection",
+  "Swimming Pool",
+  "Carpenter",
+  "Labour Contractor",
+  "Turnkey Contractor",
 ];
 
 // --- Contact Modal Component ---
@@ -335,7 +343,7 @@ const PartnersPage: FC = () => {
             {paginatedContractors.map((contractor) => {
               const phoneStr = contractor.phone ? (contractor.phone || '').replace(/\D/g, '') : '';
               const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
-              const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
+              const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
 
               return (
                 <div key={contractor._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full group">

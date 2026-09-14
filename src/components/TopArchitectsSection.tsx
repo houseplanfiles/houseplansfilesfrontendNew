@@ -176,7 +176,7 @@ const ArchitectCard: FC<{
   const type = architect.contractorType || "Normal";
   const phoneStr = architect.phone ? architect.phone.replace(/\D/g, '') : '';
   const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
-  const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("hello i found your profile on Houseplanfiles.com")}`;
+  const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
   const callLink = `tel:${phoneStr}`;
 
   return (
@@ -243,53 +243,46 @@ const ArchitectCard: FC<{
           </div>
         </div>
 
-        <div className="pt-3 sm:pt-5 mt-auto flex flex-col gap-1.5 sm:gap-2">
-          <Button
-            onClick={() => navigate(`/architects/${architect._id}`)}
-            variant="outline"
-            className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-9 sm:h-11 font-bold text-xs"
-          >
-            View Profile
-          </Button>
-
-          {type === "Premium" && (
+          <div className="pt-3 sm:pt-4 mt-auto flex flex-col gap-1.5 sm:gap-2">
+            <Button
+              onClick={() => navigate(`/architects/${architect._id}`)}
+              variant="outline"
+              className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-8 sm:h-10 text-[11px] sm:text-xs font-bold"
+            >
+              View Profile
+            </Button>
+            
             <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-              <Button
-                onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
-                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none"
-              >
-                <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-                <span className="truncate">WhatsApp</span>
+              <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
+                <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> <span className="truncate">WhatsApp</span>
               </Button>
-              <Button
-                onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = `tel:${architect.phone?.replace(/\D/g, '')}`; }}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none"
-              >
-                <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-                <span className="truncate">Call Now</span>
+              <Button onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = `tel:${architect.phone?.replace(/\D/g, '')}`; }} className="w-full bg-blue-600 hover:bg-blue-700 text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
+                <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> <span className="truncate">Call Now</span>
               </Button>
             </div>
-          )}
-
-          {type === "Verified" && (
-            <Button
-              onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
-              className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-11"
-            >
-              <MessageCircle className="w-4 h-4 mr-2" />
-              WhatsApp Enquiry
-            </Button>
-          )}
-
-          {type === "Normal" && (
-            <Button
-              onClick={() => onContact(architect)}
-              className="w-full bg-gray-900 hover:opacity-90 text-white transition-colors h-11 rounded-xl"
-            >
-              Request Quote
-            </Button>
-          )}
-        </div>
+            
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+              <Button onClick={() => onContact(architect)} className="w-full bg-gray-800 hover:bg-gray-900 text-white h-8 sm:h-10 text-[10px] sm:text-xs font-medium px-1 flex items-center justify-center gap-1">
+                <span className="truncate">Req Quote</span>
+              </Button>
+              <Button 
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({
+                      title: `${architect.name} - HousePlanFiles`,
+                      url: `${window.location.origin}/architects/${architect._id}`,
+                    }).catch(err => console.log("Error sharing", err));
+                  } else {
+                    navigator.clipboard.writeText(`${window.location.origin}/architects/${architect._id}`);
+                    toast.success("Profile link copied!");
+                  }
+                }}
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 h-8 sm:h-10 text-[10px] sm:text-xs font-medium px-1 flex items-center justify-center gap-1"
+              >
+                <Send className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-gray-600" /> <span className="truncate">Share</span>
+              </Button>
+            </div>
+          </div>
       </div>
     </motion.div>
   )
