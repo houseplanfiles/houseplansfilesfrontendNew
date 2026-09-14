@@ -245,7 +245,7 @@ const ArchitectCard: FC<{
 
           <div className="pt-3 sm:pt-4 mt-auto flex flex-col gap-1.5 sm:gap-2">
             <Button
-              onClick={() => router.push(`/architects/${architect._id}`)}
+              onClick={() => navigate(`/architects/${architect._id}`)}
               variant="outline"
               className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-8 sm:h-10 text-[11px] sm:text-xs font-bold"
             >
