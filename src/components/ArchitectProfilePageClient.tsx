@@ -331,6 +331,24 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                   </a>
                 )}
 
+                {/* Native Share Button */}
+                <Button 
+                  onClick={() => {
+                    if (navigator.share) {
+                      navigator.share({
+                        title: `${architect.name} - HousePlanFiles Profile`,
+                        url: window.location.href,
+                      }).catch(err => console.log("Error sharing", err));
+                    } else {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success("Profile link copied to clipboard!");
+                    }
+                  }} 
+                  className="w-full bg-gray-100 hover:bg-gray-200 h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-extrabold shadow-lg text-gray-900 transition-all active:scale-95 border-none"
+                >
+                  <Send className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-gray-700" /> Share Profile
+                </Button>
+
                 {/* Social Share */}
                 <div className="bg-white/10 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-5 border border-white/10 mt-2">
                   <SocialShare 
