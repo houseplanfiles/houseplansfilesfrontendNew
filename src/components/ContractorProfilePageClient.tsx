@@ -280,9 +280,6 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
 
               {/* Action Buttons Column */}
               <div className="flex flex-col gap-3 sm:gap-4">
-                <Button onClick={() => handleInquiryAction()} className="w-full bg-orange-600 hover:bg-orange-700 h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-extrabold shadow-2xl shadow-orange-600/40 text-white transition-all active:scale-95 border-none">
-                  <Phone className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" /> Contact Now
-                </Button>
 
                 {/* Premium -> Call Now */}
                 {(contractor.contractorType === "Premium" || contractor.role === "Premium") && contractor.contractorType !== "Normal" && contractor.selectedPlan !== "Basic" && contractor.phone && (
@@ -315,6 +312,24 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
                     </Button>
                   </a>
                 )}
+
+                {/* Native Share Button */}
+                <Button 
+                  onClick={() => {
+                    if (navigator.share) {
+                      navigator.share({
+                        title: `${contractor.name} - HousePlanFiles Profile`,
+                        url: window.location.href,
+                      }).catch(err => console.log("Error sharing", err));
+                    } else {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success("Profile link copied to clipboard!");
+                    }
+                  }} 
+                  className="w-full bg-gray-100 hover:bg-gray-200 h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-extrabold shadow-lg text-gray-900 transition-all active:scale-95 border-none"
+                >
+                  <Send className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-gray-700" /> Share Profile
+                </Button>
 
                 {/* Social Share */}
                 <div className="bg-white/10 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-5 border border-white/10 mt-2">
