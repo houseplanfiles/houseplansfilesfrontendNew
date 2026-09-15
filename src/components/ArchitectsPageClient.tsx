@@ -177,6 +177,19 @@ const ArchitectsPage: FC = () => {
         if (!isPan) return false;
       }
 
+      // City filter
+      let matchesCity = true;
+      if (cityFilter) {
+        const q = cityFilter.toLowerCase();
+        matchesCity =
+          c.isPanIndia ||
+          c.city?.toLowerCase() === "pan india" ||
+          c.selectedPlan?.toLowerCase().includes("pan_india") ||
+          (c.city && c.city.toLowerCase().includes(q)) ||
+          (c.selectedCities && c.selectedCities.some((ct: string) => ct.toLowerCase().includes(q)));
+        if (!matchesCity) return false;
+      }
+
       // State filter
       if (stateFilter && stateFilter !== "All States") {
         const sFilter = stateFilter.toLowerCase();
@@ -186,19 +199,12 @@ const ArchitectsPage: FC = () => {
           c.selectedPlan?.toLowerCase().includes("pan_india") ||
           (c.state && c.state.toLowerCase() === sFilter) ||
           (c.selectedStates && c.selectedStates.some((s: string) => s.toLowerCase() === sFilter));
-        if (!matchesState) return false;
-      }
-
-      // City filter
-      if (cityFilter) {
-        const q = cityFilter.toLowerCase();
-        const matchesCity =
-          c.isPanIndia ||
-          c.city?.toLowerCase() === "pan india" ||
-          c.selectedPlan?.toLowerCase().includes("pan_india") ||
-          (c.city && c.city.toLowerCase().includes(q)) ||
-          (c.selectedCities && c.selectedCities.some((ct: string) => ct.toLowerCase().includes(q)));
-        if (!matchesCity) return false;
+          
+        // If state doesn't match, but city was explicitly searched and matched, we let it pass
+        // to handle profiles that have a city but missing state data.
+        if (!matchesState && !(cityFilter && matchesCity)) {
+          return false;
+        }
       }
 
       // Pincode filter

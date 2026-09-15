@@ -251,6 +251,19 @@ const PartnersPage: FC = () => {
         if (!isPan) return false;
       }
 
+      // City filter
+      let matchesCity = true;
+      if (cityFilter) {
+        const q = cityFilter.toLowerCase();
+        matchesCity =
+          c.isPanIndia ||
+          c.city?.toLowerCase() === "pan india" ||
+          c.selectedPlan?.toLowerCase().includes("pan_india") ||
+          (c.city && c.city.toLowerCase().includes(q)) ||
+          (c.selectedCities && c.selectedCities.some((ct: string) => ct.toLowerCase().includes(q)));
+        if (!matchesCity) return false;
+      }
+
       // State filter
       if (stateFilter && stateFilter !== "All States") {
         const sFilter = stateFilter.toLowerCase();
@@ -260,19 +273,10 @@ const PartnersPage: FC = () => {
           c.selectedPlan?.toLowerCase().includes("pan_india") ||
           (c.state && c.state.toLowerCase() === sFilter) ||
           (c.selectedStates && c.selectedStates.some((s: string) => s.toLowerCase() === sFilter));
-        if (!matchesState) return false;
-      }
-
-      // City filter
-      if (cityFilter) {
-        const q = cityFilter.toLowerCase();
-        const matchesCity =
-          c.isPanIndia ||
-          c.city?.toLowerCase() === "pan india" ||
-          c.selectedPlan?.toLowerCase().includes("pan_india") ||
-          (c.city && c.city.toLowerCase().includes(q)) ||
-          (c.selectedCities && c.selectedCities.some((ct: string) => ct.toLowerCase().includes(q)));
-        if (!matchesCity) return false;
+          
+        if (!matchesState && !(cityFilter && matchesCity)) {
+          return false;
+        }
       }
 
       // Pincode filter
