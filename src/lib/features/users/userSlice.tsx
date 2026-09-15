@@ -439,6 +439,12 @@ const userSlice = createSlice({
         state.actionStatus = "succeeded";
         const user = { ...action.payload };
         if (user.role) user.role = user.role.toLowerCase();
+
+        // Preserve token if the backend response doesn't include it
+        if (state.userInfo?.token && !user.token) {
+          user.token = state.userInfo.token;
+        }
+
         state.userInfo = user;
         typeof window !== "undefined" && localStorage.setItem("userInfo", JSON.stringify(user));
       })
@@ -455,6 +461,12 @@ const userSlice = createSlice({
         state.profileLoading = false;
         const user = { ...action.payload };
         if (user.role) user.role = user.role.toLowerCase();
+        
+        // Preserve token if the backend response doesn't include it
+        if (state.userInfo?.token && !user.token) {
+          user.token = state.userInfo.token;
+        }
+
         state.userInfo = user;
         typeof window !== "undefined" && localStorage.setItem("userInfo", JSON.stringify(user));
       })
