@@ -312,7 +312,7 @@ const ProjectsPage = () => {
                       workSamples.map((sample, idx) => (
                         <TableRow key={idx} className="hover:bg-gray-50/50 transition-colors">
                            <TableCell>
-                              <div className="w-16 h-12 rounded-lg bg-gray-100 overflow-hidden border border-gray-200">
+                              <div className="relative w-16 h-12 rounded-lg bg-gray-100 overflow-hidden border border-gray-200">
                                  {sample.imageUrl ? (
                                    <Image src={sample.imageUrl.startsWith("http") ? sample.imageUrl : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${sample.imageUrl}`} alt="Project" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                                  ) : (sample.imageFiles?.length > 0) ? (
