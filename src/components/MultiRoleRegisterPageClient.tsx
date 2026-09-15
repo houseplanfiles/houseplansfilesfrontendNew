@@ -68,7 +68,7 @@ const industrialProfessions = [
 
 const otherServicesProfessions = [
   "Pest Control", "Garden and Landscaping", "Glass Fabricator", "HVAC Services", 
-  "Lift Installation Services", "Solar Installation Services", "Home Automation", "Water Proffing Service", "Modular Kitchen Services", "Swimming Pool Contractor", "Fire Safety Service", "Carpenter"
+  "Lift Installation Services", "Solar Installation Services", "Home Automation", "Water Proffing Service", "Modular Kitchen Services", "Swimming Pool Contractor", "Fire Safety Service", "Carpenter", "False Ceiling Contractor"
 ];
 
 const materialTypes = [
