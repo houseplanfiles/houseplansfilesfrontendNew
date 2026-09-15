@@ -448,7 +448,7 @@ const MultiRoleRegisterPage = () => {
         } else if (key === "city" && Array.isArray(value)) {
           dataToSubmit.append(key, formData.isPanIndia ? "PAN India" : value.join(", "));
         } else if (key === "selectedStates" && Array.isArray(value)) {
-          value.forEach((v) => dataToSubmit.append("selectedStates", v));
+          dataToSubmit.append(key, JSON.stringify(value));
         } else if (key === "role" && ["home_designing", "industrial", "other_services"].includes(value as string)) {
           dataToSubmit.append("role", "Contractor");
         } else {

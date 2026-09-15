@@ -164,6 +164,7 @@ const AllUsersPage = () => {
         email: selectedUser.email,
         phone: selectedUser.phone,
         city: selectedUser.city,
+        state: selectedUser.state,
         upiId: selectedUser.upiId,
         bankName: selectedUser.bankName,
         bankAccountNumber: selectedUser.bankAccountNumber,
@@ -757,6 +758,16 @@ const AllUsersPage = () => {
                 <Input
                   id="city"
                   {...register("city")}
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="state">State</Label>
+                <Input
+                  id="state"
+                  placeholder="e.g. Rajasthan"
+                  {...register("state")}
                   disabled={isSubmitting}
                 />
               </div>
