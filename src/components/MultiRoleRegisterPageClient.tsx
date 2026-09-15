@@ -591,7 +591,7 @@ const MultiRoleRegisterPage = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
                   />
                   <label htmlFor="panIndia_prof" className="text-base font-bold text-orange-700 cursor-pointer">
-                    Serve PAN India (Flat ₹9,999)
+                    Serve PAN India
                   </label>
                 </div>
               </div>
@@ -763,7 +763,7 @@ const MultiRoleRegisterPage = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
                   />
                   <label htmlFor="panIndia_other" className="text-base font-bold text-orange-700 cursor-pointer">
-                    Serve PAN India (Flat ₹9,999)
+                    Serve PAN India
                   </label>
                 </div>
                 <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
@@ -1028,7 +1028,7 @@ const MultiRoleRegisterPage = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
                   />
                   <label htmlFor="panIndia_other" className="text-sm font-bold text-orange-700 cursor-pointer">
-                    Serve PAN India (Flat ₹9,999)
+                    Serve PAN India
                   </label>
                 </div>
               )}
