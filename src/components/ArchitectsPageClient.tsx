@@ -151,7 +151,7 @@ const ArchitectsPage: FC = () => {
     });
   };
 
-  useEffect(() => { dispatch(fetchArchitects({ page: 1, limit: 100 })); }, [dispatch]);
+  useEffect(() => { dispatch(fetchArchitects({ page: 1, limit: 1000 })); }, [dispatch]);
   
   useEffect(() => {
     setCurrentPage(1);
