@@ -90,7 +90,7 @@ const cityOptions = (City.getCitiesOfCountry("IN") || []).map(c => ({ value: c.n
 
 const MultiRoleRegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("user");
+  const [selectedRole, setSelectedRole] = useState("professional");
   const [selectedPlan, setSelectedPlanState] = useState<string>("Basic");
   const [profileCreation, setProfileCreation] = useState<boolean>(false);
   const [profileStoreManagement, setProfileStoreManagement] = useState<string>("None");
@@ -107,7 +107,7 @@ const MultiRoleRegisterPage = () => {
   );
 
   const [formData, setFormData] = useState({
-    role: "user",
+    role: "professional",
     email: "",
     password: "",
     phone: "",
