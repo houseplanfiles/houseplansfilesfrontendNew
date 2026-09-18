@@ -41,16 +41,18 @@ const initialState: PackageState = {
 
 export const createPackage = createAsyncThunk<
   Package,
-  Omit<Package, "_id">,
+  FormData | Omit<Package, "_id">,
   { state: RootState }
 >(
   "packages/createAdmin",
   async (packageData, { getState, rejectWithValue }) => {
     try {
       const token = getToken(getState());
+      
+      const isFormData = packageData instanceof FormData;
       const config = {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": isFormData ? "multipart/form-data" : "application/json",
           Authorization: `Bearer ${token}`,
         },
       };
@@ -83,21 +85,24 @@ export const fetchAllPackages = createAsyncThunk<
 
 export const updatePackage = createAsyncThunk<
   Package,
-  Package,
+  { id: string; packageData: FormData | Package },
   { state: RootState }
 >(
   "packages/updateAdmin",
-  async (packageData, { getState, rejectWithValue }) => {
+  async ({ id, packageData }, { getState, rejectWithValue }) => {
     try {
       const token = getToken(getState());
+      
+      const isFormData = packageData instanceof FormData;
       const config = {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": isFormData ? "multipart/form-data" : "application/json",
           Authorization: `Bearer ${token}`,
         },
       };
+      
       const { data } = await axios.put(
-        `${API_URL}/${packageData._id}`,
+        `${API_URL}/${id}`,
         packageData,
         config
       );

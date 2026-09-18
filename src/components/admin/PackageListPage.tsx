@@ -82,7 +82,7 @@ const PackageListPage = () => {
                 </td>
                 <td className="p-4">{pkg.isPopular ? "Yes" : "No"}</td>
                 <td className="p-4 flex gap-2 justify-end">
-                  <Link href={`/admin/packages/edit/${pkg._id}`}>
+                  <Link href={`/admin/packages/${pkg._id}`}>
                     <Button variant="outline" size="icon">
                       <Edit className="h-4 w-4" />
                     </Button>
