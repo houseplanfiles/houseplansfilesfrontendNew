@@ -1,8 +1,6 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-
 import React, { useState, useEffect } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/store";
 import {
@@ -41,7 +39,9 @@ const PackageEditPage = () => {
   );
 
   const [formData, setFormData] = useState(defaultFormData);
-  const isEditMode = Boolean(id);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isEditMode = Boolean(id) && id !== "add";
 
   useEffect(() => {
     if (isEditMode && packages.length === 0) {
@@ -50,19 +50,31 @@ const PackageEditPage = () => {
   }, [isEditMode, packages.length, dispatch]);
 
   useEffect(() => {
-    if (actionStatus === "succeeded") {
+    if (actionStatus === "succeeded" && isSubmitting) {
       toast({
         title: `Package ${isEditMode ? "updated" : "created"} successfully!`,
       });
-      router.push("/admin/packages");
+      if (isEditMode) {
+        router.push("/admin/packages");
+      } else {
+        // Clear form for adding more
+        setFormData(defaultFormData);
+        setImageFile(null);
+        const fileInput = document.getElementById("image") as HTMLInputElement;
+        if (fileInput) fileInput.value = "";
+      }
+      setIsSubmitting(false);
     }
-    if (actionStatus === "failed") {
+    if (actionStatus === "failed" && isSubmitting) {
       toast({ title: "Error", description: error, variant: "destructive" });
+      setIsSubmitting(false);
     }
     return () => {
-      dispatch(resetActionStatus());
+      if (actionStatus !== "loading") {
+        dispatch(resetActionStatus());
+      }
     };
-  }, [actionStatus, error, router, dispatch, isEditMode, toast]);
+  }, [actionStatus, error, router, dispatch, isEditMode, toast, isSubmitting]);
 
   useEffect(() => {
     if (isEditMode && packages.length > 0) {
@@ -80,7 +92,7 @@ const PackageEditPage = () => {
           includes: existingPackage.includes?.join(", ") || "",
         });
       }
-    } else {
+    } else if (!isEditMode) {
       setFormData(defaultFormData);
     }
   }, [id, packages, isEditMode]);
@@ -99,33 +111,52 @@ const PackageEditPage = () => {
     }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const packageData = {
-      ...formData,
-      features: formData.features
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean),
-      includes: formData.includes
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean),
-    };
+    setIsSubmitting(true);
+    
+    const submitData = new FormData();
+    submitData.append("title", formData.title);
+    submitData.append("price", formData.price);
+    submitData.append("unit", formData.unit);
+    submitData.append("areaType", formData.areaType);
+    submitData.append("packageType", formData.packageType);
+    submitData.append("isPopular", String(formData.isPopular));
+    submitData.append("note", formData.note);
+    
+    const featuresArray = formData.features.split(",").map((item) => item.trim()).filter(Boolean);
+    featuresArray.forEach(f => submitData.append("features", f));
+    
+    const includesArray = formData.includes.split(",").map((item) => item.trim()).filter(Boolean);
+    includesArray.forEach(i => submitData.append("includes", i));
+
+    if (imageFile) {
+      submitData.append("image", imageFile);
+    }
+
     if (isEditMode) {
-      // @ts-ignore
-      dispatch(updatePackage({ ...packageData, _id: id! }));
+      dispatch(updatePackage({ id: id as string, packageData: submitData }));
     } else {
-      // @ts-ignore
-      dispatch(createPackage(packageData));
+      dispatch(createPackage(submitData));
     }
   };
 
   return (
     <div className="container mx-auto p-4 max-w-3xl">
-      <h1 className="text-3xl font-bold mb-6">
-        {isEditMode ? "Edit Package" : "Add New Package"}
-      </h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">
+          {isEditMode ? "Edit Package" : "Add New Package"}
+        </h1>
+        <Button variant="outline" onClick={() => router.push("/admin/packages")}>
+          Back to List
+        </Button>
+      </div>
 
       <form
         onSubmit={handleSubmit}
@@ -175,21 +206,34 @@ const PackageEditPage = () => {
             placeholder="e.g. Residential, District, etc."
           />
         </div>
-        <div>
-          <Label htmlFor="packageType">Package Type</Label>
-          <select
-            name="packageType"
-            id="packageType"
-            value={formData.packageType}
-            onChange={handleChange}
-            className="w-full mt-1 p-2 border rounded-md bg-background"
-          >
-            <option value="standard">Standard</option>
-            <option value="premium">Premium</option>
-            <option value="marketplace">Marketplace</option>
-            <option value="city_partner">City Partner</option>
-            <option value="construction">Construction</option>
-          </select>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <Label htmlFor="packageType">Package Type</Label>
+            <select
+              name="packageType"
+              id="packageType"
+              value={formData.packageType}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 border rounded-md bg-background"
+            >
+              <option value="standard">Standard</option>
+              <option value="premium">Premium</option>
+              <option value="marketplace">Marketplace</option>
+              <option value="city_partner">City Partner</option>
+              <option value="construction">Construction</option>
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="image">Package Image (Optional)</Label>
+            <Input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="mt-1"
+            />
+          </div>
         </div>
         <div>
           <Label htmlFor="features">Features (comma separated)</Label>
@@ -218,6 +262,7 @@ const PackageEditPage = () => {
             name="note"
             value={formData.note}
             onChange={handleChange}
+            placeholder="e.g. Best value, Most popular"
           />
         </div>
         <div className="flex items-center gap-3 pt-2">
@@ -248,7 +293,7 @@ const PackageEditPage = () => {
             ) : isEditMode ? (
               "Update Package"
             ) : (
-              "Create Package"
+              "Save and Add More"
             )}
           </Button>
         </div>
