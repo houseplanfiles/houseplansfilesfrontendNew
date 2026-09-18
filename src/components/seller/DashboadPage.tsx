@@ -1,28 +1,45 @@
 "use client";
 import Link from "next/link";
-
 import React, { useEffect } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/store";
 import { fetchSellerDashboardData } from "@/lib/features/sellerdashboard/sellerDashboardSlice";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import {
   MessageSquare,
   Users,
   Package,
   Loader2,
   ServerCrash,
+  Eye
 } from "lucide-react";
+
+// Reusable stat card — matches the Admin dashboard style exactly
+const StatCard = ({
+  title,
+  value,
+  icon: Icon,
+  iconBg,
+  iconColor,
+}: {
+  title: string;
+  value: string;
+  icon: React.ElementType;
+  iconBg: string;
+  iconColor: string;
+}) => (
+  <div className="bg-white border border-gray-200 rounded-2xl p-5 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="space-y-1">
+      <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-none">
+        {title}
+      </p>
+      <p className="text-3xl font-black text-gray-900 leading-tight">{value}</p>
+    </div>
+    <div className={`${iconBg} ${iconColor} p-3 rounded-xl flex-shrink-0`}>
+      <Icon className="h-6 w-6" strokeWidth={1.8} />
+    </div>
+  </div>
+);
 
 const SellerDashboardPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -37,7 +54,7 @@ const SellerDashboardPage = () => {
 
   if (status === "loading") {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-80px)]">
+      <div className="flex items-center justify-center h-[calc(100vh-10rem)]">
         <Loader2 className="h-12 w-12 animate-spin text-orange-500" />
       </div>
     );
@@ -66,116 +83,109 @@ const SellerDashboardPage = () => {
       title: "Total Products",
       value: stats?.totalProducts?.toLocaleString() || "0",
       icon: Package,
+      iconBg: "bg-blue-100",
+      iconColor: "text-blue-600",
     },
     {
       title: "Total Inquiries",
       value: stats?.totalInquiries?.toLocaleString() || "0",
       icon: MessageSquare,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
     },
     {
       title: "Unique Buyers",
       value: stats?.totalBuyers?.toLocaleString() || "0",
       icon: Users,
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
     },
+    {
+      title: "Profile Views",
+      value: (userInfo?.profileViews || 0).toLocaleString(),
+      icon: Eye,
+      iconBg: "bg-orange-100",
+      iconColor: "text-orange-500",
+    }
   ];
 
   return (
-    <div className="space-y-8 p-4 md:p-6">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">Seller Dashboard</h1>
-          <p className="mt-1 text-gray-600">
-            Welcome back, {userInfo?.businessName || userInfo?.name || "Seller"}
-            !
+          <h1 className="text-3xl font-bold text-gray-900">Seller Dashboard</h1>
+          <p className="mt-1 text-gray-500 text-sm">
+            Welcome back, {userInfo?.businessName || userInfo?.name || "Seller"}! Here&apos;s a summary of your store.
           </p>
         </div>
         <Link href="/seller/products/add">
-          <Button className="bg-orange-500 hover:bg-orange-600 w-full sm:w-auto">
+          <Button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 rounded-lg shadow-none">
             Add New Product
           </Button>
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Row 1 — 4 stat cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {summaryCards.map((card) => (
-          <div
-            key={card.title}
-            className="bg-white border rounded-xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-1"
-          >
-            <div className="flex justify-between items-start">
-              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                {card.title}
-              </h3>
-              <card.icon className="h-6 w-6 text-orange-500" />
-            </div>
-            <p className="text-3xl font-bold text-gray-800 mt-2">
-              {card.value}
-            </p>
-          </div>
+          <StatCard key={card.title} {...card} />
         ))}
       </div>
 
+      {/* Recent Inquiries Table */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          Recent Inquiries
-        </h2>
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-          <Table>
-            <TableHeader className="bg-gray-50">
-              <TableRow>
-                <TableHead>Customer</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Inquiries</h2>
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-100">
+                <th className="text-left px-6 py-4 text-gray-500 font-medium">Customer</th>
+                <th className="text-left px-6 py-4 text-gray-500 font-medium">Product</th>
+                <th className="text-left px-6 py-4 text-gray-500 font-medium">Date</th>
+                <th className="text-left px-6 py-4 text-gray-500 font-medium">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
               {recentInquiries && recentInquiries.length > 0 ? (
-                recentInquiries.map((inquiry) => (
-                  <TableRow key={inquiry._id} className="hover:bg-gray-50">
-                    <TableCell>
-                      <div className="font-medium text-gray-900">
-                        {inquiry.name}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {inquiry.email}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-gray-600">
+                recentInquiries.map((inquiry: any) => (
+                  <tr key={inquiry._id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="font-medium text-gray-800">{inquiry.name}</div>
+                      <div className="text-xs text-gray-500">{inquiry.email}</div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">
                       {inquiry.product?.name || "N/A"}
-                    </TableCell>
-                    <TableCell className="text-gray-600">
-                      {new Date(inquiry.createdAt).toLocaleDateString("en-IN")}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          inquiry.status === "Pending"
-                            ? "destructive"
-                            : "default"
-                        }
-                      >
-                        {inquiry.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                    <td className="px-6 py-4 text-gray-500">
+                      {new Date(inquiry.createdAt).toLocaleDateString("en-GB").replace(/\//g, "/")}
+                    </td>
+                    <td className="px-6 py-4">
+                      {inquiry.status === "Pending" ? (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                          Pending
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                          {inquiry.status}
+                        </span>
+                      )}
+                    </td>
+                  </tr>
                 ))
               ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={4}
-                    className="text-center py-10 text-gray-500"
-                  >
+                <tr>
+                  <td colSpan={4} className="text-center py-12 text-gray-400">
                     No recent inquiries found.
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               )}
-            </TableBody>
-          </Table>
-          <div className="mt-4 p-4 text-center border-t">
+            </tbody>
+          </table>
+          <div className="px-6 py-4 border-t border-gray-100">
             <Link href="/seller/inquiries">
-              <Button variant="link" className="text-orange-600 font-semibold">
-                View All Inquiries
+              <Button variant="link" className="text-orange-500 hover:text-orange-600 p-0 h-auto font-medium">
+                View All Inquiries →
               </Button>
             </Link>
           </div>
