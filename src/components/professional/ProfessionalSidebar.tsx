@@ -34,19 +34,19 @@ const ProfessionalSidebar = ({ isOpen, setIsOpen }: ProfessionalSidebarProps) =>
 
   const handleLogout = () => { dispatch(logout()); router.push("/login"); };
 
-  const baseClasses = "flex items-center w-full p-3.5 rounded-lg text-sm font-medium transition-colors duration-200";
-  const activeClasses = "bg-primary text-white";
-  const inactiveClasses = "text-gray-200 hover:bg-slate-700";
+  const baseClasses = "flex items-center w-full p-3 rounded-xl text-sm font-semibold transition-all duration-200 tracking-tight";
+  const activeClasses = "bg-orange-500 text-white shadow-md shadow-orange-500/20";
+  const inactiveClasses = "text-gray-500 hover:bg-orange-50 hover:text-orange-600";
 
   const isProPartner = ["contractor", "architect", "professional"].includes(userInfo?.role?.toLowerCase() || "");
 
   return (
-    <aside style={{ top: "80px" }} className={`fixed md:sticky left-0 bg-slate-900 text-white p-4 flex flex-col w-64 transition-transform duration-300 ease-in-out z-50 h-[calc(100vh-80px)] md:shrink-0 overflow-y-auto ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-700">
-        <h2 className="text-xl font-bold text-white capitalize">{isProPartner ? userInfo?.role : "Professional"}</h2>
-        <button onClick={() => setIsOpen(false)} className="md:hidden text-gray-400 hover:text-white transition-colors" aria-label="Close sidebar"><X className="h-6 w-6" /></button>
+    <aside style={{ top: "80px" }} className={`fixed md:sticky left-0 bg-white border-r border-gray-100 p-4 flex flex-col w-64 transition-transform duration-300 ease-in-out z-50 h-[calc(100vh-80px)] md:shrink-0 overflow-y-auto ${isOpen ? "translate-x-0 shadow-2xl md:shadow-none" : "-translate-x-full md:translate-x-0"}`}>
+      <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+        <h2 className="text-xl font-black text-gray-900 capitalize tracking-tight">{isProPartner ? userInfo?.role : "Professional"}</h2>
+        <button onClick={() => setIsOpen(false)} className="md:hidden text-gray-400 hover:text-gray-900 transition-colors" aria-label="Close sidebar"><X className="h-6 w-6" /></button>
       </div>
-      <nav className="flex flex-col space-y-2 flex-1 min-h-0 overflow-y-auto">
+      <nav className="flex flex-col space-y-1.5 flex-1 min-h-0 overflow-y-auto pr-1">
         {navLinks
           .filter((link) => !link.roles || (userInfo?.role && link.roles.includes(userInfo.role)))
           .map((link) => {
@@ -63,8 +63,8 @@ const ProfessionalSidebar = ({ isOpen, setIsOpen }: ProfessionalSidebarProps) =>
             );
           })}
       </nav>
-      <div className="mt-4 pt-4 border-t border-slate-700 shrink-0">
-        <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-gray-300 hover:bg-red-500/20 hover:text-red-300 transition-colors">
+      <div className="mt-4 pt-4 border-t border-gray-100 shrink-0">
+        <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-red-500 hover:bg-red-50 hover:text-red-600 font-bold transition-colors rounded-xl p-3">
           <LogOut className="mr-3 h-5 w-5" /><span>Logout</span>
         </Button>
       </div>
