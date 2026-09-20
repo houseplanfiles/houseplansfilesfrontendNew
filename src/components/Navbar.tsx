@@ -132,7 +132,6 @@ const Navbar = () => {
       </header>
     );
   }
-
   return (
     <>
       <header
@@ -155,7 +154,6 @@ const Navbar = () => {
                 />
               </Link>
             </div>
-
             <nav className="hidden lg:flex items-center gap-3 ml-8 mr-4">
               {navLinks.map((link) => (
                 link.submenu ? (
@@ -216,7 +214,6 @@ const Navbar = () => {
                 )
               ))}
             </nav>
-
             <div className="flex items-center gap-1.5 flex-shrink-0">
               <div className="hidden md:flex items-center gap-1.5 border-r border-gray-200 pr-1.5 mr-0.5">
                 {showCartAndWishlist && (
@@ -248,7 +245,6 @@ const Navbar = () => {
                   </>
                 )}
               </div>
-
               <div className="hidden md:flex items-center gap-3">
                 <Button
                   onClick={() => setIsPostRequirementModalOpen(true)}
