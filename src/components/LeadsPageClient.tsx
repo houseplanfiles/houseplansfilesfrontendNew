@@ -32,6 +32,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PostRequirementModal } from "@/components/PostRequirementModal";
 
 declare global {
   interface Window { Razorpay: any; }
@@ -108,6 +109,7 @@ export default function LeadsPageClient() {
   const [purchasingId, setPurchasingId] = useState<string | null>(null);
   const [razorpayReady, setRazorpayReady] = useState(false);
   const [shareLeadModal, setShareLeadModal] = useState<LeadType | null>(null);
+  const [isRequirementModalOpen, setIsRequirementModalOpen] = useState(false);
 
   const [cityFilter, setCityFilter] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -146,6 +148,14 @@ export default function LeadsPageClient() {
   }, [userInfo, getAuthConfig]);
 
   useEffect(() => { fetchLeads(); }, [fetchLeads]);
+
+  useEffect(() => {
+    // Pop up the lead form every 20 seconds
+    const interval = setInterval(() => {
+      setIsRequirementModalOpen(true);
+    }, 20000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleUnlockLead = async (lead: LeadType) => {
     if (!userInfo) {
@@ -632,6 +642,11 @@ export default function LeadsPageClient() {
       )}
 
       <Footer />
+
+      <PostRequirementModal 
+        isOpen={isRequirementModalOpen} 
+        onClose={() => setIsRequirementModalOpen(false)} 
+      />
     </>
   );
 }
