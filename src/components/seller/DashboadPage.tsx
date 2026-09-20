@@ -56,8 +56,7 @@ const StatCard = ({
 );
 
 // Helper to format actual dailyAnalytics from backend
-const formatRealChartData = (dailyAnalytics: any[] = []) => {
-  const data = [];
+const formatRealChartData = (dailyAnalytics: any[] = [], dailyStats: any[] = []) => {
   const today = new Date();
   
   // Create last 15 days map
@@ -70,20 +69,28 @@ const formatRealChartData = (dailyAnalytics: any[] = []) => {
      
      datesMap[dateString] = {
        name: formattedName,
-       "Products": 0, // Need product views
+       "Products": 0, // In full implementation, map daily product views
        "Inquiries": 0, 
        "Buyers": 0,
        "Profile Views": 0,
      };
   }
   
-  // Fill in actual data
+  // Fill in profile views from user daily analytics
   if (Array.isArray(dailyAnalytics)) {
     dailyAnalytics.forEach(entry => {
       if (datesMap[entry.date]) {
          datesMap[entry.date]["Profile Views"] = entry.profileViews || 0;
-         // In a full implementation, we'd pull products/inquiries timeseries here too.
-         // For now, mapping the available user analytics.
+      }
+    });
+  }
+
+  // Fill in inquiries and buyers from seller dailyStats
+  if (Array.isArray(dailyStats)) {
+    dailyStats.forEach(stat => {
+      if (datesMap[stat.date]) {
+         datesMap[stat.date]["Inquiries"] = stat.inquiries || 0;
+         datesMap[stat.date]["Buyers"] = stat.buyers || 0;
       }
     });
   }
@@ -103,8 +110,8 @@ const SellerDashboardPage = () => {
   }, [dispatch]);
 
   const chartData = useMemo(() => {
-    return formatRealChartData(userInfo?.dailyAnalytics || []);
-  }, [userInfo]);
+    return formatRealChartData(userInfo?.dailyAnalytics || [], stats?.dailyStats || []);
+  }, [userInfo, stats]);
 
   if (status === "loading") {
     return (

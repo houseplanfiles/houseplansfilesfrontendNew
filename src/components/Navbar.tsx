@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,8 +8,10 @@ import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import WishlistPanel from "@/components/WishlistPanel";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/lib/store";
+import { AppDispatch, RootState } from "@/lib/store";
 import { logout } from "@/lib/features/users/userSlice";
+import { toast } from "sonner";
+import { PostRequirementModal } from "./PostRequirementModal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,34 +22,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
-
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
   const [mounted, setMounted] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-
+  const [isPostRequirementModalOpen, setIsPostRequirementModalOpen] = useState(false);
   const { state: cartState } = useCart();
   const { items: wishlistItems } = useSelector((state: RootState) => state.wishlist);
 
   const pathname = usePathname();
-  const dispatch = useDispatch();
   const router = useRouter();
-
   const { userInfo } = useSelector((state: RootState) => state.user);
-
-  // Use mounted guard to prevent hydration mismatch:
-  // Redux userInfo is null on server, may differ on client after rehydration
   const isUserAllowed =
     mounted &&
     userInfo &&
     ["user", "admin", "professional", "seller", "contractor", "architect"].includes(
       userInfo.role?.toLowerCase() || ""
     );
-
   const showCartAndWishlist = mounted && (!userInfo || userInfo?.role === "user");
-
   const getDashboardPath = () => {
     if (!userInfo) return "/login";
     switch (userInfo.role?.toLowerCase()) {
@@ -60,13 +54,11 @@ const Navbar = () => {
       default: return "/dashboard";
     }
   };
-
   const handleLogout = () => {
     dispatch(logout());
     setIsMenuOpen(false);
     router.push("/login");
   };
-
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
@@ -81,21 +73,16 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
   useEffect(() => {
     setMounted(true);
   }, []);
-
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
-
   useEffect(() => {
     document.body.style.overflow = isMenuOpen || isWishlistOpen ? "hidden" : "auto";
     return () => { document.body.style.overflow = "auto"; };
   }, [isMenuOpen, isWishlistOpen]);
-
-  // Navigation configuration links with submenu dropdown
   const navLinks = [
     { name: "Home", path: "/" },
     {
@@ -263,6 +250,12 @@ const Navbar = () => {
               </div>
 
               <div className="hidden md:flex items-center gap-3">
+                <Button
+                  onClick={() => setIsPostRequirementModalOpen(true)}
+                  className="bg-[#25D366] hover:bg-[#128C7E] text-white font-bold h-9 px-4 text-xs shadow-sm hover:shadow-md transition-all"
+                >
+                  Post Requirement
+                </Button>
                 {isUserAllowed ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -451,6 +444,7 @@ const Navbar = () => {
       </AnimatePresence>
 
       <WishlistPanel isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
+      <PostRequirementModal isOpen={isPostRequirementModalOpen} onClose={() => setIsPostRequirementModalOpen(false)} />
     </>
   );
 };

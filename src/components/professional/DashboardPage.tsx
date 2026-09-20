@@ -54,8 +54,7 @@ const StatCard = ({
 );
 
 // Helper to format actual dailyAnalytics from backend
-const formatRealChartData = (dailyAnalytics: any[] = [], isProfessionalPartner: boolean) => {
-  const data = [];
+const formatRealChartData = (dailyAnalytics: any[] = [], isProfessionalPartner: boolean, orders: any[] = [], myProducts: any[] = []) => {
   const today = new Date();
   
   // Create last 15 days map
@@ -72,11 +71,11 @@ const formatRealChartData = (dailyAnalytics: any[] = [], isProfessionalPartner: 
        "WhatsApp Clicks": 0,
        "Call Clicks": 0,
        "Product Views": 0,
-       "Sales": 0, // Sales not tracked daily yet, keep 0
+       "Sales": 0,
      };
   }
   
-  // Fill in actual data
+  // Fill in profile views, whatsapp, and call clicks from user
   if (Array.isArray(dailyAnalytics)) {
     dailyAnalytics.forEach(entry => {
       if (datesMap[entry.date]) {
@@ -85,6 +84,37 @@ const formatRealChartData = (dailyAnalytics: any[] = [], isProfessionalPartner: 
          datesMap[entry.date]["Call Clicks"] = entry.callClicks || 0;
       }
     });
+  }
+
+  // If standard seller/user, map sales and product views
+  if (!isProfessionalPartner) {
+    // Map Sales
+    if (Array.isArray(orders)) {
+      orders.forEach(order => {
+        if (order.isPaid) {
+          const date = new Date(order.createdAt);
+          const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+          if (datesMap[dateString]) {
+            order.orderItems.forEach((item: any) => {
+              datesMap[dateString]["Sales"] += item.price * item.quantity;
+            });
+          }
+        }
+      });
+    }
+
+    // Map Product Views
+    if (Array.isArray(myProducts)) {
+      myProducts.forEach(product => {
+        if (Array.isArray(product.dailyAnalytics)) {
+          product.dailyAnalytics.forEach((entry: any) => {
+            if (datesMap[entry.date]) {
+              datesMap[entry.date]["Product Views"] += entry.views || 0;
+            }
+          });
+        }
+      });
+    }
   }
 
   return Object.values(datesMap);
@@ -205,8 +235,8 @@ const DashboardPage = () => {
   ];
 
   const chartData = useMemo(() => {
-    return formatRealChartData(userInfo?.dailyAnalytics || [], isProfessionalPartner);
-  }, [userInfo, isProfessionalPartner]);
+    return formatRealChartData(userInfo?.dailyAnalytics || [], isProfessionalPartner, orders || [], myProducts || []);
+  }, [userInfo, isProfessionalPartner, orders, myProducts]);
 
   const isLoadingData = productStatus === "loading" || orderStatus === "loading" || inquiryStatus === "loading";
   const rawLabel = userInfo?.profession || userInfo?.role || "Professional";
