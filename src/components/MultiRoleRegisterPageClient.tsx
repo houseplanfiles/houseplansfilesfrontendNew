@@ -570,13 +570,6 @@ const MultiRoleRegisterPage = () => {
                 />
               </div>
             </div>
-                  id="qualification"
-                  value={formData.qualification}
-                  onChange={handleChange}
-                  placeholder="e.g. B.Arch, M.Tech"
-                />
-              </div>
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label>Experience*</Label>
