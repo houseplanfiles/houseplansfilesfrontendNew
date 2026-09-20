@@ -561,43 +561,15 @@ const MultiRoleRegisterPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
-                <CreatableSelect
-                  isMulti
-                  options={stateOptions}
-                  value={(formData.selectedStates as string[]).map(s => ({ value: s, label: s }))}
-                  onChange={(vals: any) => setFormData(prev => ({ ...prev, selectedStates: vals ? vals.map((v: any) => v.value) : [] }))}
-                  placeholder="Search or select state..."
-                  className="text-sm mb-4"
-                  formatCreateLabel={(input: string) => `Add "${input}"`}
-                />
-                <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
-                <CreatableSelect
-                  isMulti
-                  options={cityOptions}
-                  value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
-                  onChange={(vals: any) => setFormData(prev => ({ ...prev, city: vals ? vals.map((v: any) => v.value) : [] }))}
-                  placeholder="Search or select city name..."
-                  className="text-sm"
-                  formatCreateLabel={(input: string) => `Add "${input}"`}
-                  isDisabled={formData.isPanIndia}
-                />
-                <div className="flex items-center space-x-3 mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                  <input
-                    type="checkbox"
-                    id="panIndia_prof"
-                    className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
-                    checked={formData.isPanIndia}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
-                  />
-                  <label htmlFor="panIndia_prof" className="text-base font-bold text-orange-700 cursor-pointer">
-                    Serve PAN India
-                  </label>
-                </div>
-              </div>
-              <div>
                 <Label>Qualification (Optional)</Label>
                 <Input
+                  id="qualification"
+                  value={formData.qualification}
+                  onChange={handleChange}
+                  placeholder="e.g. B.Arch, M.Tech"
+                />
+              </div>
+            </div>
                   id="qualification"
                   value={formData.qualification}
                   onChange={handleChange}
@@ -753,41 +725,6 @@ const MultiRoleRegisterPage = () => {
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <div className="flex items-center space-x-3 mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                  <input
-                    type="checkbox"
-                    id="panIndia_other"
-                    className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
-                    checked={formData.isPanIndia}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
-                  />
-                  <label htmlFor="panIndia_other" className="text-base font-bold text-orange-700 cursor-pointer">
-                    Serve PAN India
-                  </label>
-                </div>
-                <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
-                <CreatableSelect
-                  isMulti
-                  options={stateOptions}
-                  value={(formData.selectedStates as string[]).map(s => ({ value: s, label: s }))}
-                  onChange={(vals: any) => setFormData(prev => ({ ...prev, selectedStates: vals ? vals.map((v: any) => v.value) : [] }))}
-                  placeholder="Search or select state..."
-                  className="text-sm mb-4"
-                  formatCreateLabel={(input: string) => `Add "${input}"`}
-                />
-                <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
-                <CreatableSelect
-                  isMulti
-                  options={cityOptions}
-                  value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
-                  onChange={(vals: any) => setFormData(prev => ({ ...prev, city: vals ? vals.map((v: any) => v.value) : [] }))}
-                  placeholder="Search or select city name..."
-                  className="text-sm"
-                  formatCreateLabel={(input: string) => `Add "${input}"`}
-                  isDisabled={formData.isPanIndia}
-                />
-              </div>
               <div>
                 <Label>Pincode</Label>
                 <Input
@@ -1018,43 +955,6 @@ const MultiRoleRegisterPage = () => {
               )}
             </div>
             <div>
-              {selectedRole !== 'industrial' && (
-                <div className="flex items-center space-x-2 mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                  <input
-                    type="checkbox"
-                    id="panIndia_other"
-                    className="w-4 h-4 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
-                    checked={formData.isPanIndia}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
-                  />
-                  <label htmlFor="panIndia_other" className="text-sm font-bold text-orange-700 cursor-pointer">
-                    Serve PAN India
-                  </label>
-                </div>
-              )}
-              <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
-              <CreatableSelect
-                isMulti
-                options={stateOptions}
-                value={(formData.selectedStates as string[]).map(s => ({ value: s, label: s }))}
-                onChange={(vals: any) => setFormData(prev => ({ ...prev, selectedStates: vals ? vals.map((v: any) => v.value) : [] }))}
-                placeholder="Search or select state..."
-                className="text-sm mb-4"
-                formatCreateLabel={(input: string) => `Add "${input}"`}
-              />
-              <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
-              <CreatableSelect
-                isMulti
-                options={cityOptions}
-                value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
-                onChange={(vals: any) => setFormData(prev => ({ ...prev, city: vals ? vals.map((v: any) => v.value) : [] }))}
-                placeholder="Search or select city name..."
-                className="text-sm"
-                formatCreateLabel={(input: string) => `Add "${input}"`}
-                isDisabled={formData.isPanIndia}
-              />
-            </div>
-            <div>
               <Label>GST Number (Optional)</Label>
               <Input
                 id="gstNumber"
@@ -1179,6 +1079,61 @@ const MultiRoleRegisterPage = () => {
             {/* Subscription & Addons Panel */}
             {selectedRole !== "user" && (
               <div className="space-y-6 pt-4 border-t border-border mt-4">
+                {/* Unified Location Selector */}
+                <div className="bg-orange-50/50 p-6 rounded-xl border border-orange-100">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-bold text-foreground">Select Operating Region</h3>
+                    <p className="text-xs text-muted-foreground">Select your coverage area to see suitable plans</p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
+                      <CreatableSelect
+                        isMulti
+                        options={stateOptions}
+                        value={(formData.selectedStates as string[]).map(s => ({ value: s, label: s }))}
+                        onChange={(vals: any) => {
+                           const newStates = vals ? vals.map((v: any) => v.value) : [];
+                           setFormData(prev => ({ ...prev, selectedStates: newStates }));
+                        }}
+                        placeholder="Search or select state..."
+                        className="text-sm mb-4"
+                        formatCreateLabel={(input: string) => `Add "${input}"`}
+                      />
+                      <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
+                      <CreatableSelect
+                        isMulti
+                        options={cityOptions}
+                        value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
+                        onChange={(vals: any) => {
+                           const newCities = vals ? vals.map((v: any) => v.value) : [];
+                           setFormData(prev => ({ ...prev, city: newCities }));
+                        }}
+                        placeholder="Search or select city name..."
+                        className="text-sm"
+                        formatCreateLabel={(input: string) => `Add "${input}"`}
+                        isDisabled={formData.isPanIndia}
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center h-full">
+                        <div className="flex items-center space-x-3 w-full p-4 bg-white border border-orange-200 rounded-lg shadow-sm">
+                          <input
+                            type="checkbox"
+                            id="panIndia_unified"
+                            className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                            checked={formData.isPanIndia}
+                            onChange={(e) => setFormData(prev => ({ ...prev, isPanIndia: e.target.checked, city: e.target.checked ? [] : prev.city }))}
+                          />
+                          <label htmlFor="panIndia_unified" className="text-base font-bold text-orange-700 cursor-pointer">
+                            Serve PAN India
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div>
                   <h3 className="text-lg font-bold text-foreground">Choose your Listing Plan</h3>
                   <p className="text-xs text-muted-foreground">Select the right plan to grow your business</p>
@@ -1205,7 +1160,17 @@ const MultiRoleRegisterPage = () => {
                         { id: "State_1Y", name: "State (1 Year)", price: 9999, final: "11,798.82", note: "State-wide Coverage", color: "border-indigo-500 bg-indigo-500/5 text-indigo-800" },
                         { id: "Pan_India_1Y", name: "PAN INDIA (1 Year)", price: 14999, final: "17,698.82", note: "All India Top Listing", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
                       ]
-                  ).map((p) => (
+                  ).filter(p => {
+                    const isPanIndiaPlan = p.id.toLowerCase().includes("pan_india");
+                    const isStatePlan = p.id.toLowerCase().includes("state");
+                    const isCityPlan = p.id.toLowerCase().includes("city");
+
+                    if (formData.isPanIndia) return isPanIndiaPlan;
+                    if (formData.city && formData.city.length > 0) return isCityPlan;
+                    if (formData.selectedStates && formData.selectedStates.length > 0) return isStatePlan;
+                    
+                    return true;
+                  }).map((p) => (
                     <div
                       key={p.id}
                       role="button"
