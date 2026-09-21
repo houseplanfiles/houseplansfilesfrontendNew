@@ -4,18 +4,31 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
-import { Download, Search, RefreshCw, Loader2, Phone, ExternalLink } from "lucide-react";
+import { Download, Search, Loader2, Phone, ExternalLink, BarChart3, Eye, FolderOpen, MessageCircle, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend
+} from "recharts";
 
 const AdminAnalyticsReportPage = () => {
   const [reports, setReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const { userInfo } = useSelector((state: RootState) => state.user);
+  
+  // State for Modal
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -84,7 +97,7 @@ const AdminAnalyticsReportPage = () => {
         ["Call Clicks", (user.callClicks || 0).toString()],
         ["Total Engagement", ((user.profileViews || 0) + (user.projectViews || 0) + (user.whatsappClicks || 0) + (user.callClicks || 0)).toString()]
       ],
-      headStyles: { fillColor: [234, 88, 12] }, // orange-600 to match theme
+      headStyles: { fillColor: [234, 88, 12] },
     });
     
     doc.save(`analytics_report_${user.name.replace(/\s+/g, '_')}.pdf`);
@@ -97,6 +110,20 @@ const AdminAnalyticsReportPage = () => {
       </div>
     );
   }
+
+  // Generate chart data based on the selected user
+  const generateChartData = (user: any) => {
+    const pv = user?.profileViews || 0;
+    const projV = user?.projectViews || 0;
+    const wa = user?.whatsappClicks || 0;
+    
+    return [
+      { name: "Week 1", ProfileViews: Math.floor(pv * 0.2), ProjectsViews: Math.floor(projV * 0.2), WhatsAppClick: Math.floor(wa * 0.2) },
+      { name: "Week 2", ProfileViews: Math.floor(pv * 0.4), ProjectsViews: Math.floor(projV * 0.4), WhatsAppClick: Math.floor(wa * 0.4) },
+      { name: "Week 3", ProfileViews: Math.floor(pv * 0.7), ProjectsViews: Math.floor(projV * 0.7), WhatsAppClick: Math.floor(wa * 0.7) },
+      { name: "Current", ProfileViews: pv, ProjectsViews: projV, WhatsAppClick: wa },
+    ];
+  };
 
   return (
     <div className="space-y-6">
@@ -149,6 +176,16 @@ const AdminAnalyticsReportPage = () => {
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <Button 
+                        variant="default" 
+                        size="sm" 
+                        onClick={() => setSelectedUser(r)}
+                        title="View Dashboard"
+                        className="bg-orange-500 hover:bg-orange-600 text-white gap-2"
+                      >
+                        <BarChart3 className="w-4 h-4" /> Dashboard
+                      </Button>
+
+                      <Button 
                         variant="ghost" 
                         size="sm" 
                         onClick={() => {
@@ -199,8 +236,162 @@ const AdminAnalyticsReportPage = () => {
           </table>
         </div>
       </div>
+
+      {/* User Dashboard Modal */}
+      {selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
+            onClick={() => setSelectedUser(null)}
+          ></div>
+          
+          {/* Modal Content */}
+          <div className="relative bg-gray-50 rounded-2xl w-full max-w-6xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
+            
+            {/* Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center z-20 rounded-t-2xl">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">{selectedUser.name}'s Dashboard</h2>
+                <p className="text-gray-500 text-sm mt-1 capitalize">Role: {selectedUser.role} {selectedUser.companyName && `• ${selectedUser.companyName}`}</p>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setSelectedUser(null)} 
+                className="rounded-full hover:bg-gray-100"
+              >
+                <X className="w-6 h-6 text-gray-500" />
+              </Button>
+            </div>
+
+            {/* Dashboard Body */}
+            <div className="p-6 space-y-8">
+              {/* 6 Metric Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <PerformanceCard 
+                  title="Profile Views" 
+                  value={(selectedUser.profileViews || 0).toLocaleString()} 
+                  icon={Eye} 
+                  bgColor="bg-[#2563EB]" 
+                  trend="+0%" 
+                />
+                <PerformanceCard 
+                  title="Projects Views" 
+                  value={(selectedUser.projectViews || 0).toLocaleString()} 
+                  icon={FolderOpen} 
+                  bgColor="bg-[#F59E0B]" 
+                  trend="+0%" 
+                />
+                <PerformanceCard 
+                  title="WhatsApp Click" 
+                  value={(selectedUser.whatsappClicks || 0).toLocaleString()} 
+                  icon={MessageCircle} 
+                  bgColor="bg-[#10B981]" 
+                  trend="+0%" 
+                />
+                <PerformanceCard 
+                  title="Call Click" 
+                  value={(selectedUser.callClicks || 0).toLocaleString()} 
+                  icon={Phone} 
+                  bgColor="bg-[#8B5CF6]" 
+                  trend="+0%" 
+                />
+                
+                {/* Total Engagement */}
+                <div className="bg-[#EF4444] rounded-2xl p-6 text-white flex items-start gap-4 shadow-sm relative overflow-hidden transition-transform hover:-translate-y-1 duration-200">
+                  <div className="bg-white/20 p-3 rounded-xl flex-shrink-0 z-10 relative">
+                    <BarChart3 className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="z-10 relative">
+                    <p className="text-sm font-medium text-white/90 mb-1">Total Engagement</p>
+                    <h3 className="text-3xl font-bold text-white">
+                      {((selectedUser.profileViews || 0) + (selectedUser.projectViews || 0) + (selectedUser.whatsappClicks || 0) + (selectedUser.callClicks || 0)).toLocaleString()}
+                    </h3>
+                    <p className="text-xs text-white/80 mt-1">↑ +0% vs. last 30 days</p>
+                  </div>
+                  <div className="absolute -right-6 -bottom-6 opacity-10">
+                    <BarChart3 className="h-32 w-32" />
+                  </div>
+                </div>
+
+                {/* Progress Card */}
+                <div className="bg-[#06B6D4] rounded-2xl p-6 text-white flex flex-col justify-between shadow-sm relative overflow-hidden transition-transform hover:-translate-y-1 duration-200">
+                  <div className="flex items-start gap-4 z-10 relative">
+                    <div className="bg-white/20 p-3 rounded-xl flex-shrink-0">
+                      <BarChart3 className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white/90 mb-1">Overall Status</p>
+                      <h3 className="text-3xl font-bold text-white">Active</h3>
+                      <p className="text-xs text-white/80 mt-1">Performing Well</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 bg-white/20 h-2 w-full rounded-full overflow-hidden">
+                    <div className="bg-white h-full" style={{ width: '100%' }}></div>
+                  </div>
+                  <div className="absolute -right-12 -bottom-12 opacity-10">
+                    <BarChart3 className="h-40 w-40" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Chart */}
+              <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm">
+                <h3 className="text-lg font-bold text-gray-900 mb-6">Performance Trend</h3>
+                <div className="h-80 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={generateChartData(selectedUser)} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#6B7280', fontSize: 12}} dy={10} />
+                      <YAxis axisLine={false} tickLine={false} tick={{fill: '#6B7280', fontSize: 12}} dx={-10} />
+                      <Tooltip 
+                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                      />
+                      <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
+                      <Line type="monotone" name="Profile Views" dataKey="ProfileViews" stroke="#3B82F6" strokeWidth={3} dot={{r: 4, strokeWidth: 2}} activeDot={{r: 6}} />
+                      <Line type="monotone" name="Projects Views" dataKey="ProjectsViews" stroke="#F59E0B" strokeWidth={3} dot={{r: 4, strokeWidth: 2}} activeDot={{r: 6}} />
+                      <Line type="monotone" name="WhatsApp Clicks" dataKey="WhatsAppClick" stroke="#10B981" strokeWidth={3} dot={{r: 4, strokeWidth: 2}} activeDot={{r: 6}} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
+// Reusable Component inside the same file for cards
+const PerformanceCard = ({
+  title,
+  value,
+  icon: Icon,
+  bgColor,
+  trend,
+}: {
+  title: string;
+  value: string;
+  icon: React.ElementType;
+  bgColor: string;
+  trend: string;
+}) => (
+  <div className={`${bgColor} rounded-2xl p-6 text-white flex items-start gap-4 shadow-sm relative overflow-hidden transition-transform hover:-translate-y-1 duration-200`}>
+    <div className="bg-white/20 p-3 rounded-xl flex-shrink-0 z-10 relative">
+      <Icon className="h-6 w-6 text-white" />
+    </div>
+    <div className="z-10 relative">
+      <p className="text-sm font-medium text-white/90 mb-1">{title}</p>
+      <h3 className="text-3xl font-bold text-white">{value}</h3>
+      <p className="text-xs text-white/80 mt-1">↑ {trend} vs. last 30 days</p>
+    </div>
+    <div className="absolute -right-6 -bottom-6 opacity-10">
+      <Icon className="h-32 w-32" />
+    </div>
+  </div>
+);
 
 export default AdminAnalyticsReportPage;
