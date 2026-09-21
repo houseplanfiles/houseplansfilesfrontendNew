@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Package, DollarSign, Star, PlusCircle, ClipboardList, Briefcase, Eye, MessageSquare, LayoutGrid, Phone, Loader2 } from "lucide-react";
+import { Package, DollarSign, Star, PlusCircle, ClipboardList, Briefcase, Eye, MessageSquare, LayoutGrid, Phone, Loader2, Calendar, FileText } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/store";
 import { fetchMyProducts } from "@/lib/features/products/productSlice";
@@ -10,6 +10,8 @@ import { fetchMyProfessionalOrders } from "@/lib/features/professional/professio
 import { fetchMyInquiries } from "@/lib/features/inquiries/inquirySlice";
 import { fetchCurrentUser } from "@/lib/features/users/userSlice";
 import axios from "axios";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import {
   LineChart,
   Line,
@@ -20,7 +22,7 @@ import {
   ResponsiveContainer,
   Legend
 } from "recharts";
-// Reusable stat card — matched to the provided mockup style
+
 const StatCard = ({
   title,
   value,
@@ -53,13 +55,32 @@ const StatCard = ({
   </div>
 );
 
-// Helper to format actual dailyAnalytics from backend
-const formatRealChartData = (dailyAnalytics: any[] = [], isProfessionalPartner: boolean, orders: any[] = [], myProducts: any[] = []) => {
+const getDateThreshold = (range: string) => {
+  const d = new Date();
+  d.setHours(0,0,0,0);
+  if (range === 'today') return d;
+  if (range === '7d') d.setDate(d.getDate() - 7);
+  else if (range === '1m') d.setMonth(d.getMonth() - 1);
+  else if (range === '3m') d.setMonth(d.getMonth() - 3);
+  else if (range === '6m') d.setMonth(d.getMonth() - 6);
+  else if (range === '1y') d.setFullYear(d.getFullYear() - 1);
+  else return null;
+  return d;
+};
+
+const formatRealChartData = (dailyAnalytics: any[] = [], isProfessionalPartner: boolean, orders: any[] = [], myProducts: any[] = [], thresholdDate: Date | null) => {
   const today = new Date();
-  
-  // Create last 15 days map
   const datesMap: any = {};
-  for(let i = 14; i >= 0; i--) {
+  
+  // Decide how many days to show in chart based on threshold
+  let daysToShow = 14; 
+  if (thresholdDate) {
+      const diffTime = Math.abs(today.getTime() - thresholdDate.getTime());
+      daysToShow = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if (daysToShow > 30) daysToShow = 30; // Max 30 points on chart for readability
+  }
+  
+  for(let i = daysToShow; i >= 0; i--) {
      const date = new Date();
      date.setDate(today.getDate() - i);
      const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -75,7 +96,6 @@ const formatRealChartData = (dailyAnalytics: any[] = [], isProfessionalPartner: 
      };
   }
   
-  // Fill in profile views, whatsapp, and call clicks from user
   if (Array.isArray(dailyAnalytics)) {
     dailyAnalytics.forEach(entry => {
       if (datesMap[entry.date]) {
@@ -86,9 +106,7 @@ const formatRealChartData = (dailyAnalytics: any[] = [], isProfessionalPartner: 
     });
   }
 
-  // If standard seller/user, map sales and product views
   if (!isProfessionalPartner) {
-    // Map Sales
     if (Array.isArray(orders)) {
       orders.forEach(order => {
         if (order.isPaid) {
@@ -103,7 +121,6 @@ const formatRealChartData = (dailyAnalytics: any[] = [], isProfessionalPartner: 
       });
     }
 
-    // Map Product Views
     if (Array.isArray(myProducts)) {
       myProducts.forEach(product => {
         if (Array.isArray(product.dailyAnalytics)) {
@@ -126,6 +143,7 @@ const DashboardPage = () => {
   const { userInfo } = useSelector((state: RootState) => state.user);
 
   const [unlockedLeadsCount, setUnlockedLeadsCount] = useState(0);
+  const [timeRange, setTimeRange] = useState("all");
   const isProfessionalPartner = ["professional", "contractor", "architect"].includes(userInfo?.role?.toLowerCase() || "");
 
   const { myProducts, listStatus: productStatus } = useSelector(
@@ -160,14 +178,32 @@ const DashboardPage = () => {
     }
   }, [dispatch, isProfessionalPartner, userInfo]);
 
+  const thresholdDate = useMemo(() => getDateThreshold(timeRange), [timeRange]);
+
   const stats = useMemo(() => {
+    let profileViews = 0, whatsappClicks = 0, callClicks = 0;
+    
+    if (thresholdDate && userInfo?.dailyAnalytics) {
+        userInfo.dailyAnalytics.forEach((d: any) => {
+            if (new Date(d.date) >= thresholdDate) {
+                profileViews += (d.profileViews || 0);
+                whatsappClicks += (d.whatsappClicks || 0);
+                callClicks += (d.callClicks || 0);
+            }
+        });
+    } else {
+        profileViews = userInfo?.profileViews || 0;
+        whatsappClicks = userInfo?.whatsappClicks || 0;
+        callClicks = userInfo?.callClicks || 0;
+    }
+
     if (isProfessionalPartner) {
       return {
         enquiriesCount: inquiries?.length || 0,
         unlockedLeads: unlockedLeadsCount,
-        profileViews: userInfo?.profileViews || 0,
-        whatsappClicks: userInfo?.whatsappClicks || 0,
-        callClicks: userInfo?.callClicks || 0,
+        profileViews,
+        whatsappClicks,
+        callClicks,
         portfolioCount: userInfo?.workSamples?.length || 0,
         projectsCount: userInfo?.projects?.length || 0,
         totalSales: 0,
@@ -184,14 +220,26 @@ const DashboardPage = () => {
 
     orders?.forEach((order) => {
       if (order.isPaid) {
-        order.orderItems.forEach((item) => {
-          totalSales += item.price * item.quantity;
-        });
+          const orderDate = new Date(order.createdAt);
+          if (!thresholdDate || orderDate >= thresholdDate) {
+            order.orderItems.forEach((item) => {
+                totalSales += item.price * item.quantity;
+            });
+          }
       }
     });
 
     myProducts?.forEach((product) => {
-      totalProductViews += (product.views || 0);
+        if (thresholdDate && product.dailyAnalytics) {
+            product.dailyAnalytics.forEach((d: any) => {
+                if (new Date(d.date) >= thresholdDate) {
+                    totalProductViews += (d.views || 0);
+                }
+            });
+        } else {
+            totalProductViews += (product.views || 0);
+        }
+
       if (product.rating && product.rating > 0) {
         totalRating += product.rating;
         reviewCount += 1;
@@ -203,10 +251,10 @@ const DashboardPage = () => {
     return {
       productsListed: myProducts?.length || 0,
       totalProductViews,
-      profileViews: userInfo?.profileViews || 0,
-      whatsappClicks: userInfo?.whatsappClicks || 0,
-      callClicks: userInfo?.callClicks || 0,
-      totalSales: totalSales, // Keep as number for chart
+      profileViews,
+      whatsappClicks,
+      callClicks,
+      totalSales: totalSales, 
       formattedTotalSales: `₹${totalSales.toLocaleString()}`,
       averageRating: averageRating,
       enquiriesCount: 0,
@@ -214,7 +262,7 @@ const DashboardPage = () => {
       portfolioCount: 0,
       projectsCount: 0
     };
-  }, [orders, myProducts, isProfessionalPartner, inquiries, userInfo, unlockedLeadsCount]);
+  }, [orders, myProducts, isProfessionalPartner, inquiries, userInfo, unlockedLeadsCount, thresholdDate]);
 
   const summaryCards = isProfessionalPartner ? [
     { title: "Direct Enquiries", value: String(stats.enquiriesCount), icon: MessageSquare, iconBg: "bg-blue-100", iconColor: "text-blue-500" },
@@ -235,12 +283,31 @@ const DashboardPage = () => {
   ];
 
   const chartData = useMemo(() => {
-    return formatRealChartData(userInfo?.dailyAnalytics || [], isProfessionalPartner, orders || [], myProducts || []);
-  }, [userInfo, isProfessionalPartner, orders, myProducts]);
+    return formatRealChartData(userInfo?.dailyAnalytics || [], isProfessionalPartner, orders || [], myProducts || [], thresholdDate);
+  }, [userInfo, isProfessionalPartner, orders, myProducts, thresholdDate]);
 
   const isLoadingData = productStatus === "loading" || orderStatus === "loading" || inquiryStatus === "loading";
   const rawLabel = userInfo?.profession || userInfo?.role || "Professional";
   const professionLabel = rawLabel.charAt(0).toUpperCase() + rawLabel.slice(1);
+
+  const generatePDFReport = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text(`${professionLabel} Performance Report`, 14, 20);
+    doc.setFontSize(12);
+    doc.setTextColor(100);
+    doc.text(`Time Range: ${timeRange === 'all' ? 'All Time' : timeRange.toUpperCase()}`, 14, 30);
+    
+    autoTable(doc, {
+        startY: 40,
+        head: [["Metric", "Value"]],
+        body: summaryCards.map(c => [c.title, c.value]),
+        theme: 'grid',
+        headStyles: { fillColor: [249, 115, 22] }
+    });
+    
+    doc.save(`${userInfo?.name || 'Dashboard'}_Report_${timeRange}.pdf`);
+  };
 
   return (
     <div className="space-y-8 bg-[#f8f9fc] min-h-screen p-4 sm:p-6 lg:p-8 -m-6 sm:-m-8 rounded-xl">
@@ -254,12 +321,34 @@ const DashboardPage = () => {
             Manage your {isProfessionalPartner ? "profile and leads" : "products and orders"} from here.
           </p>
         </div>
-        <Link href={isProfessionalPartner ? "/professional/portfolio" : "/professional/add-product"}>
-          <Button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-5 rounded-xl shadow-sm flex items-center gap-2 transition-all">
-            <PlusCircle size={18} />
-            {isProfessionalPartner ? "Update Portfolio" : "Upload New Product"}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative flex items-center bg-white border border-gray-300 rounded-lg shadow-sm px-3 py-2">
+            <Calendar className="w-4 h-4 text-gray-500 mr-2" />
+            <select
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value)}
+              className="bg-transparent border-none outline-none text-sm font-medium text-gray-700 cursor-pointer"
+            >
+              <option value="today">Today</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="1m">This Month</option>
+              <option value="3m">3 Months</option>
+              <option value="1y">1 Year</option>
+              <option value="all">All Time</option>
+            </select>
+          </div>
+
+          <Button onClick={generatePDFReport} variant="outline" className="bg-white hover:bg-gray-50 text-gray-700 border-gray-300 shadow-sm gap-2">
+            <FileText className="w-4 h-4" /> Export Report
           </Button>
-        </Link>
+
+          <Link href={isProfessionalPartner ? "/professional/portfolio" : "/professional/add-product"}>
+            <Button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 h-[42px] rounded-lg shadow-sm flex items-center gap-2 transition-all">
+              <PlusCircle size={18} />
+              {isProfessionalPartner ? "Update Portfolio" : "Upload New Product"}
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -270,7 +359,7 @@ const DashboardPage = () => {
 
       {/* Performance Graph Section */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
-        <h2 className="text-xl font-bold text-gray-900 mb-6 tracking-tight">Performance Overview</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6 tracking-tight">Performance Overview ({timeRange === 'all' ? 'All Time' : timeRange})</h2>
         <div className="h-[350px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
