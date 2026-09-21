@@ -23,6 +23,7 @@ import {
   Edit2,
   Search,
   FileText,
+  Eye,
 } from "lucide-react";
 import {
   Dialog,
@@ -334,21 +335,27 @@ const ProjectsPage = () => {
                               </div>
                            </TableCell>
                            <TableCell className="text-right">
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-gray-900">
-                                    <MoreVertical className="w-4 h-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-40">
-                                  <DropdownMenuItem onClick={() => handleOpenProjectModal(idx)} className="gap-2 font-bold cursor-pointer">
-                                    <Edit2 className="w-4 h-4" /> Edit Details
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleRemoveWorkSample(idx)} className="gap-2 font-bold text-red-600 cursor-pointer hover:bg-red-50">
-                                    <Trash2 className="w-4 h-4" /> Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
+                              <div className="flex items-center justify-end gap-3">
+                                <div className="flex items-center gap-1.5 text-gray-500 bg-gray-50 px-2 py-1 rounded-md border border-gray-100" title="Project Views">
+                                  <Eye className="w-4 h-4 text-orange-500" />
+                                  <span className="text-xs font-bold">{sample.views || 0}</span>
+                                </div>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-gray-900">
+                                      <MoreVertical className="w-4 h-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end" className="w-40">
+                                    <DropdownMenuItem onClick={() => handleOpenProjectModal(idx)} className="gap-2 font-bold cursor-pointer">
+                                      <Edit2 className="w-4 h-4" /> Edit Details
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleRemoveWorkSample(idx)} className="gap-2 font-bold text-red-600 cursor-pointer hover:bg-red-50">
+                                      <Trash2 className="w-4 h-4" /> Delete
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
                            </TableCell>
                         </TableRow>
                       ))
