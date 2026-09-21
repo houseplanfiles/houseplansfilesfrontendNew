@@ -26,6 +26,8 @@ const AdminAnalyticsReportPage = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [timeRange, setTimeRange] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const { userInfo } = useSelector((state: RootState) => state.user);
   
   // State for Modal
@@ -58,6 +60,17 @@ const AdminAnalyticsReportPage = () => {
       (r.role?.toLowerCase() || "").includes(search.toLowerCase())
     );
   }, [reports, search]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, timeRange]);
+
+  const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredReports.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const topProfiles = useMemo(() => {
     return [...filteredReports].sort((a, b) => {
@@ -254,7 +267,7 @@ const AdminAnalyticsReportPage = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {filteredReports.map((r) => (
+                  {currentItems.map((r) => (
                     <tr key={r._id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-3">
                         <div className="font-semibold text-gray-900">{r.name}</div>
@@ -307,7 +320,7 @@ const AdminAnalyticsReportPage = () => {
                       </td>
                     </tr>
                   ))}
-                  {filteredReports.length === 0 && (
+                  {currentItems.length === 0 && (
                     <tr>
                       <td colSpan={7} className="text-center py-12 text-gray-400">
                         No matching records found.
@@ -317,6 +330,55 @@ const AdminAnalyticsReportPage = () => {
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-between items-center mt-6 px-2">
+                <div className="text-sm text-gray-500">
+                  Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, filteredReports.length)} of {filteredReports.length} entries
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => paginate(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  
+                  {/* Page Numbers */}
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter(num => num === 1 || num === totalPages || Math.abs(currentPage - num) <= 1)
+                      .map((num, i, arr) => (
+                        <React.Fragment key={num}>
+                          {i > 0 && arr[i - 1] !== num - 1 && (
+                            <span className="text-gray-400 px-1">...</span>
+                          )}
+                          <Button
+                            variant={currentPage === num ? "default" : "outline"}
+                            size="sm"
+                            className={currentPage === num ? "bg-orange-500 hover:bg-orange-600 text-white" : ""}
+                            onClick={() => paginate(num)}
+                          >
+                            {num}
+                          </Button>
+                        </React.Fragment>
+                      ))}
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => paginate(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </>
       )}
