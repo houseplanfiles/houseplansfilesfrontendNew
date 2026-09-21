@@ -91,7 +91,7 @@ const SetPriceModal = ({
         // Update existing admin lead
         await axios.put(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads/${lead._id}`,
-          { ...form, price },
+          { ...form, price, status: "Available" },
           config
         );
         toast.success("Lead updated successfully!");
