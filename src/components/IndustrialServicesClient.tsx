@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import Link from "next/link";
 import { useRouter, usePathname, useParams, useSearchParams } from "next/navigation";
+import { getContractorProfileUrl } from "@/utils/profileUrls";
 
 
 import React, { useState, useEffect, useMemo, FC, FormEvent } from "react";
@@ -366,7 +367,7 @@ const PartnersPage: FC = () => {
                     </div>
 
                     <div className="mt-3 sm:mt-5 flex flex-col gap-1.5 sm:gap-2">
-                      <Link href={`/contractor/${encodeURIComponent((contractor.profession || 'expert').toLowerCase())}/${encodeURIComponent((contractor.city || 'india').toLowerCase().replace(/\s+/g, '-'))}/${encodeURIComponent((contractor.name || 'pro').toLowerCase().replace(/\s+/g, '-'))}`} className="w-full">
+                      <Link href={getContractorProfileUrl(contractor)} className="w-full">
                         <Button
                           variant="outline"
                           className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-8 sm:h-10 text-[11px] sm:text-xs font-bold"

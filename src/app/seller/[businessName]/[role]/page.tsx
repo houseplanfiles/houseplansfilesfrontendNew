@@ -4,7 +4,7 @@ import SellerStorePageClient from "@/components/SellerStorePageClient";
 
 export async function generateMetadata({ params }: { params: Promise<{ role: string, businessName: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
-  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
   try {
     const res = await fetch(`${BACKEND_URL}/api/users/store/seo/${encodeURIComponent(resolvedParams.role)}/${encodeURIComponent(resolvedParams.businessName)}`, { next: { revalidate: 3600 } });
     const data = await res.json();
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ role: str
 
 export default async function SellerStorePage({ params }: { params: Promise<{ role: string, businessName: string }> }) {
   const resolvedParams = await params;
-  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
   let seller = null;
   try {
     const res = await fetch(`${BACKEND_URL}/api/users/store/seo/${encodeURIComponent(resolvedParams.role)}/${encodeURIComponent(resolvedParams.businessName)}`, { next: { revalidate: 3600 } });
@@ -48,7 +48,7 @@ export default async function SellerStorePage({ params }: { params: Promise<{ ro
   return (
     <>
       <main>
-        <SellerStorePageClient initialSeller={seller} />
+        <SellerStorePageClient initialSeller={seller} sellerId={seller?._id} />
       </main>
     </>
   );

@@ -20,6 +20,7 @@ import {
   ResponsiveContainer,
   Legend
 } from "recharts";
+import { getArchitectProfileUrl, getContractorProfileUrl, getSellerStoreUrl } from "@/utils/profileUrls";
 
 const AdminAnalyticsReportPage = () => {
   const [reports, setReports] = useState<any[]>([]);
@@ -294,10 +295,11 @@ const AdminAnalyticsReportPage = () => {
                             variant="ghost" 
                             size="sm" 
                             onClick={() => {
-                              const route = r.role?.toLowerCase() === 'contractor' ? 'contractors' :
-                                            r.role?.toLowerCase() === 'architect' ? 'architects' :
-                                            r.role?.toLowerCase() === 'seller' ? 'sellers' : 'professionals';
-                              window.open(`/${route}/${r._id}`, '_blank');
+                              const role = r.role?.toLowerCase();
+                              const url = role === 'seller' ? getSellerStoreUrl(r) :
+                                          role === 'architect' ? getArchitectProfileUrl(r) :
+                                          getContractorProfileUrl(r);
+                              window.open(url, '_blank');
                             }}
                             title="View Profile"
                             className="text-blue-600 hover:bg-blue-50 hover:text-blue-700 px-2"

@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
 
 const BASE_URL = "https://www.houseplanfiles.com";
 

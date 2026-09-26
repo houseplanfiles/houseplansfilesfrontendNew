@@ -4,7 +4,7 @@ import ArchitectProfilePageClient from "@/components/ArchitectProfilePageClient"
 
 export async function generateMetadata({ params }: { params: Promise<{ city: string, name: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
-  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
   try {
     const res = await fetch(`${BACKEND_URL}/api/users/contractor/seo/architect/${encodeURIComponent(resolvedParams.city)}/${encodeURIComponent(resolvedParams.name)}`, { next: { revalidate: 3600 } });
     const data = await res.json();
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
 
 export default async function ArchitectProfilePage({ params }: { params: Promise<{ city: string, name: string }> }) {
   const resolvedParams = await params;
-  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
   let architect = null;
   try {
     const res = await fetch(`${BACKEND_URL}/api/users/contractor/seo/architect/${encodeURIComponent(resolvedParams.city)}/${encodeURIComponent(resolvedParams.name)}`, { next: { revalidate: 3600 } });

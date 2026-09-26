@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, ArrowLeft, Search, Save, Globe } from "lucide-react";
+import { getSellerStoreUrl, getArchitectProfileUrl, getContractorProfileUrl } from "@/utils/profileUrls";
 
 const SellerSEOPage = () => {
   const { id } = useParams();
@@ -91,11 +92,12 @@ const SellerSEOPage = () => {
     ? "Contractor Profile SEO"
     : "Profile SEO";
 
+  const baseFrontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || "https://www.houseplanfiles.com";
   const profileUrl = isSeller
-    ? `${process.env.NEXT_PUBLIC_FRONTEND_URL || "https://www.houseplanfiles.com"}/seller-shop/${id}`
+    ? `${baseFrontendUrl}${getSellerStoreUrl(seller || { _id: id as string })}`
     : isProfessional
-    ? `${process.env.NEXT_PUBLIC_FRONTEND_URL || "https://www.houseplanfiles.com"}/architects/${id}`
-    : `${process.env.NEXT_PUBLIC_FRONTEND_URL || "https://www.houseplanfiles.com"}/contractors/${id}`;
+    ? `${baseFrontendUrl}${getArchitectProfileUrl(seller || { _id: id as string })}`
+    : `${baseFrontendUrl}${getContractorProfileUrl(seller || { _id: id as string })}`;
 
   const displayName = seller?.businessName || seller?.companyName || seller?.name || "User";
 

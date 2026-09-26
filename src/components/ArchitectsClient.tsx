@@ -21,6 +21,7 @@ import {
   MapPin, Phone, X, Send, Loader2, Star, Briefcase,
   Search, CheckCircle2, ChevronLeft, ChevronRight,
 } from "lucide-react";
+import { getArchitectProfileUrl } from "@/utils/profileUrls";
 
 export default function ArchitectsClient() {
   const dispatch: AppDispatch = useDispatch();
@@ -139,7 +140,7 @@ export default function ArchitectsClient() {
                     <Button
                       size="sm"
                       className="flex-1 btn-primary"
-                      onClick={() => router.push(`/architects/${arch._id}`)}
+                      onClick={() => router.push(getArchitectProfileUrl(arch))}
                     >
                       View Profile
                     </Button>

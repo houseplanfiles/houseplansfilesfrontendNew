@@ -28,6 +28,7 @@ import {
   Info,
   Youtube
 } from "lucide-react";
+import { getSellerStoreUrl } from "@/utils/profileUrls";
 
 const getYouTubeID = (url: string) => {
   if (!url) return null;
@@ -264,7 +265,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
            <span>/</span>
            {product?.seller && (
              <>
-               <Link href={`/seller-shop/${product.seller._id}`} className="hover:text-orange-600 transition-colors">
+               <Link href={getSellerStoreUrl(product.seller)} className="hover:text-orange-600 transition-colors">
                  {product.seller.businessName}
                </Link>
                <span>/</span>
@@ -416,7 +417,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
                 {product.seller && (
                   <Button 
                     variant="outline"
-                    onClick={() => router.push(`/seller-shop/${product.seller._id}`)}
+                    onClick={() => router.push(getSellerStoreUrl(product.seller))}
                     className="w-full h-12 sm:h-14 border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white text-base sm:text-lg font-bold rounded-xl transition-all"
                   >
                     <Store className="mr-2 sm:mr-3 h-5 w-5" /> Visit Seller Shop
@@ -500,7 +501,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
                   <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Location</p>
                   <p className="text-sm font-bold text-gray-700">{product.seller.businessAddress || product.seller.address || product.seller.city || "India"}</p>
                </div>
-               <Link href={`/seller-shop/${product.seller._id}`}
+               <Link href={getSellerStoreUrl(product.seller)}
                 className="bg-gray-100 hover:bg-orange-600 hover:text-white text-gray-900 px-6 py-3 rounded-xl font-bold transition-all text-sm"
                >
                  View Store

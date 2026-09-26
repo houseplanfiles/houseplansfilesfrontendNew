@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { trackAnalytics } from "@/lib/analytics";
+import { getContractorProfileUrl } from "@/utils/profileUrls";
 // --- Icon Components (same as ProductDetail) ---
 const FacebookIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -297,7 +298,7 @@ const ProjectDetailPage = () => {
                      ))}
                    </div>
                    <p className="text-sm font-bold text-gray-400 text-center italic mt-4">Interested in similar work?</p>
-                   <Button onClick={() => router.push(`/contractors/${id}`)} className="w-full h-14 rounded-2xl bg-orange-600 hover:bg-orange-700 text-lg font-extrabold shadow-xl shadow-orange-600/30 transition-all active:scale-95">
+                   <Button onClick={() => router.push(getContractorProfileUrl(contractor || { _id: id as string }))} className="w-full h-14 rounded-2xl bg-orange-600 hover:bg-orange-700 text-lg font-extrabold shadow-xl shadow-orange-600/30 transition-all active:scale-95">
                       Hiring Details
                    </Button>
                 </div>
@@ -436,7 +437,7 @@ const ProjectDetailPage = () => {
             </div>
             <Button 
                variant="outline" 
-               onClick={() => router.push(`/contractors/${id}`)}
+               onClick={() => router.push(getContractorProfileUrl(contractor || { _id: id as string }))}
                className="hidden md:flex rounded-full px-6 h-10 border-gray-200 font-black text-gray-500 hover:border-orange-600 hover:text-orange-600 gap-2 transition-all text-xs uppercase tracking-widest"
             >
                View All Work <ArrowRight className="w-4 h-4" />

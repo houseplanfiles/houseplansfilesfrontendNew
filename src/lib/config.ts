@@ -12,7 +12,7 @@
  */
 export const config = {
   backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000",
-  shareBackendUrl: process.env.NEXT_PUBLIC_SHARE_BACKEND_URL || "https://houseplansfiles-backend.vercel.app",
+  shareBackendUrl: process.env.NEXT_PUBLIC_SHARE_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app",
   razorpayKeyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
   paypalClientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
   aisensyApiKey: process.env.NEXT_PUBLIC_AISENSY_API_KEY || "",
