@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { toast } from "sonner";
 import { MapPin, Building, Phone, X, Send, Loader2, Star, Briefcase, CheckCircle2, UserPlus, Search, Filter, HardHat, Paintbrush, MessageCircle, Home, Compass, Zap, Droplet, Grid, Waves, Building2, Layers, Bug, Leaf, Users, ChefHat, ArrowUpDown, Boxes, ClipboardCheck, Sun, Wind, Hammer, Wrench, Shield, Settings, Flame, PencilRuler, Sofa, LayoutGrid, PaintRoller, AppWindow, Factory, PackageOpen, Cuboid, Truck, Fan, Cpu, Umbrella, TreePine, Utensils } from "lucide-react";
+import { getContractorProfileUrl } from "@/utils/profileUrls";
 import { trackAnalytics } from "@/lib/analytics";
 
 
@@ -244,7 +245,7 @@ const PartnerCard: FC<{
 
       <div className="pt-3 sm:pt-5 mt-auto flex flex-col gap-1.5 sm:gap-2">
         <Link 
-          href={`/contractor/${encodeURIComponent((partner.profession || 'expert').toLowerCase())}/${encodeURIComponent((partner.city || 'india').toLowerCase().replace(/\s+/g, '-'))}/${encodeURIComponent((partner.name || 'pro').toLowerCase().replace(/\s+/g, '-'))}`} 
+          href={getContractorProfileUrl(partner)} 
           className="w-full h-9 sm:h-11 border border-orange-600 text-orange-600 hover:bg-orange-50 font-bold text-xs flex items-center justify-center rounded-lg transition-all"
         >
           View Profile

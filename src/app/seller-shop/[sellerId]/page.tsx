@@ -1,20 +1,19 @@
 import { redirect, notFound } from "next/navigation";
 import { getSellerStoreUrl } from "@/utils/profileUrls";
 
-export default async function SellerLegacyRedirectPage({ params }: { params: Promise<{ role: string, businessName: string }> }) {
+export default async function SellerShopByIdPage({ params }: { params: Promise<{ sellerId: string }> }) {
   const resolvedParams = await params;
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
   let seller = null;
   try {
-    const res = await fetch(`${BACKEND_URL}/api/users/store/seo/${encodeURIComponent(resolvedParams.role)}/${encodeURIComponent(resolvedParams.businessName)}`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${BACKEND_URL}/api/users/store/${resolvedParams.sellerId}`, { next: { revalidate: 3600 } });
     if (!res.ok) notFound();
-    const data = await res.json();
-    seller = data?.seller || data;
+    seller = await res.json();
     if (!seller || (!seller.businessName && !seller.companyName && !seller.name)) notFound();
   } catch {
     notFound();
   }
 
-  // Redirect to new clean SEO store URL where seller name is at the end
+  // Redirect immediately so that no ID is ever visible in the browser address bar
   redirect(getSellerStoreUrl(seller));
 }

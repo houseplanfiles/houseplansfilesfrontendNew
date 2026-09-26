@@ -44,6 +44,7 @@ import {
   Zap,
   BookOpen
 } from "lucide-react";
+import { getArchitectProfileUrl } from "@/utils/profileUrls";
 // --- Types ---
 type ArchitectType = {
   _id: string;
@@ -245,7 +246,7 @@ const ArchitectCard: FC<{
 
           <div className="pt-3 sm:pt-4 mt-auto flex flex-col gap-1.5 sm:gap-2">
             <Button
-              onClick={() => navigate(`/architects/${architect._id}`)}
+              onClick={() => navigate(getArchitectProfileUrl(architect))}
               variant="outline"
               className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-8 sm:h-10 text-[11px] sm:text-xs font-bold"
             >
@@ -267,13 +268,14 @@ const ArchitectCard: FC<{
               </Button>
               <Button 
                 onClick={() => {
+                  const shareUrl = `${window.location.origin}${getArchitectProfileUrl(architect)}`;
                   if (navigator.share) {
                     navigator.share({
                       title: `${architect.name} - HousePlanFiles`,
-                      url: `${window.location.origin}/architects/${architect._id}`,
+                      url: shareUrl,
                     }).catch(err => console.log("Error sharing", err));
                   } else {
-                    navigator.clipboard.writeText(`${window.location.origin}/architects/${architect._id}`);
+                    navigator.clipboard.writeText(shareUrl);
                     toast.success("Profile link copied!");
                   }
                 }}

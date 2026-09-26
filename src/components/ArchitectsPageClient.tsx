@@ -25,6 +25,7 @@ import {
   CheckCircle2, Filter as FilterIcon, SlidersHorizontal, UserPlus,
   ChevronLeft, ChevronRight, MessageCircle, BookOpen, Zap,
 } from "lucide-react";
+import { getArchitectProfileUrl } from "@/utils/profileUrls";
 
 type ArchitectType = {
   _id: string;
@@ -428,7 +429,7 @@ const ArchitectsPage: FC = () => {
 
                           {/* Buttons */}
                           <div className="pt-3 sm:pt-5 mt-auto flex flex-col gap-1.5 sm:gap-2">
-                            <Button onClick={() => router.push(`/architects/${architect._id}`)} variant="outline" className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-8 sm:h-10 text-[11px] sm:text-xs font-bold">View Profile</Button>
+                            <Button onClick={() => router.push(getArchitectProfileUrl(architect))} variant="outline" className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-8 sm:h-10 text-[11px] sm:text-xs font-bold">View Profile</Button>
                             
                             <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                               <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
@@ -445,13 +446,14 @@ const ArchitectsPage: FC = () => {
                               </Button>
                               <Button 
                                 onClick={() => {
+                                  const shareUrl = `${window.location.origin}${getArchitectProfileUrl(architect)}`;
                                   if (navigator.share) {
                                     navigator.share({
                                       title: `${architect.name} - HousePlanFiles`,
-                                      url: `${window.location.origin}/architects/${architect._id}`,
+                                      url: shareUrl,
                                     }).catch(err => console.log("Error sharing", err));
                                   } else {
-                                    navigator.clipboard.writeText(`${window.location.origin}/architects/${architect._id}`);
+                                    navigator.clipboard.writeText(shareUrl);
                                     toast.success("Profile link copied!");
                                   }
                                 }}

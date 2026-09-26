@@ -306,11 +306,15 @@ const ProductCard = ({
 // --- 4. MAIN PAGE ---
 interface SellerStorePageClientProps {
   sellerId?: string;
+  initialSeller?: any;
 }
 
-const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdProp } = {}) => {
+const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdProp, initialSeller } = {}) => {
   const params = useParams();
-  const sellerId = sellerIdProp || (Array.isArray(params?.sellerId) ? params.sellerId[0] : params?.sellerId as string);
+  const sellerId =
+    sellerIdProp ||
+    initialSeller?._id ||
+    (Array.isArray(params?.sellerId) ? params.sellerId[0] : (params?.sellerId as string));
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
 
@@ -327,11 +331,14 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
   }, [dispatch, sellerId]);
 
   const sellerInfo = useMemo(() => {
+    if (initialSeller) {
+      return initialSeller;
+    }
     if (products && Array.isArray(products) && products.length > 0 && products[0].seller) {
       return products[0].seller;
     }
     return null;
-  }, [products]);
+  }, [products, initialSeller]);
 
   const toggleCartItem = (product: any) => {
     const isAlreadyIn = cartItems.find(item => item._id === product._id);

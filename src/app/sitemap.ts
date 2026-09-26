@@ -1,7 +1,8 @@
 import { MetadataRoute } from "next";
+import { getArchitectProfileUrl, getContractorProfileUrl, getSellerStoreUrl } from "@/utils/profileUrls";
 
 const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
 
 const BASE_URL = "https://www.houseplanfiles.com";
 
@@ -95,7 +96,7 @@ async function getBlogSlugs(): Promise<MetadataRoute.Sitemap> {
 }
 async function getArchitects(): Promise<MetadataRoute.Sitemap> {
   try {
-    const res = await fetch(`${BACKEND_URL}/api/users?role=professional&limit=5000&fields=_id,updatedAt`, {
+    const res = await fetch(`${BACKEND_URL}/api/users?role=professional&limit=5000&fields=_id,updatedAt,name,city,companyName,businessName`, {
       next: { revalidate: 0 },
       headers: { "User-Agent": "HousePlanFiles-NextJS" },
     });
@@ -104,8 +105,8 @@ async function getArchitects(): Promise<MetadataRoute.Sitemap> {
     const items = data.users || data || [];
     return items
       .filter((a: { _id?: string }) => a._id)
-      .map((a: { _id: string; updatedAt?: string }) => ({
-        url: `${BASE_URL}/architects/${a._id}`,
+      .map((a: { _id: string; updatedAt?: string; name?: string; city?: string }) => ({
+        url: `${BASE_URL}${getArchitectProfileUrl(a)}`,
         lastModified: a.updatedAt ? new Date(a.updatedAt) : new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.7,
@@ -116,7 +117,7 @@ async function getArchitects(): Promise<MetadataRoute.Sitemap> {
 }
 async function getContractors(): Promise<MetadataRoute.Sitemap> {
   try {
-    const res = await fetch(`${BACKEND_URL}/api/users?role=contractor&limit=5000&fields=_id,updatedAt`, {
+    const res = await fetch(`${BACKEND_URL}/api/users?role=contractor&limit=5000&fields=_id,updatedAt,name,city,profession`, {
       next: { revalidate: 0 },
       headers: { "User-Agent": "HousePlanFiles-NextJS" },
     });
@@ -125,8 +126,8 @@ async function getContractors(): Promise<MetadataRoute.Sitemap> {
     const items = data.users || data || [];
     return items
       .filter((c: { _id?: string }) => c._id)
-      .map((c: { _id: string; updatedAt?: string }) => ({
-        url: `${BASE_URL}/contractor/${encodeURIComponent((c.profession || 'expert').toLowerCase())}/${encodeURIComponent((c.city || 'india').toLowerCase().replace(/\s+/g, '-'))}/${encodeURIComponent((c.name || 'pro').toLowerCase().replace(/\s+/g, '-'))}`,
+      .map((c: { _id: string; updatedAt?: string; profession?: string; city?: string; name?: string }) => ({
+        url: `${BASE_URL}${getContractorProfileUrl(c)}`,
         lastModified: c.updatedAt ? new Date(c.updatedAt) : new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.7,
@@ -138,7 +139,7 @@ async function getContractors(): Promise<MetadataRoute.Sitemap> {
 
 async function getSellers(): Promise<MetadataRoute.Sitemap> {
   try {
-    const res = await fetch(`${BACKEND_URL}/api/users?role=seller&limit=5000&fields=_id,updatedAt`, {
+    const res = await fetch(`${BACKEND_URL}/api/users?role=seller&limit=5000&fields=_id,updatedAt,businessName,companyName,name,city`, {
       next: { revalidate: 0 },
       headers: { "User-Agent": "HousePlanFiles-NextJS" },
     });
@@ -147,8 +148,8 @@ async function getSellers(): Promise<MetadataRoute.Sitemap> {
     const items = data.users || data || [];
     return items
       .filter((s: { _id?: string }) => s._id)
-      .map((s: { _id: string; updatedAt?: string }) => ({
-        url: `${BASE_URL}/seller/${encodeURIComponent((s.companyName || 'store').toLowerCase().replace(/\s+/g, '-'))}/${encodeURIComponent((s.role || 'seller').toLowerCase())}`,
+      .map((s: { _id: string; updatedAt?: string; businessName?: string; companyName?: string; name?: string; city?: string }) => ({
+        url: `${BASE_URL}${getSellerStoreUrl(s)}`,
         lastModified: s.updatedAt ? new Date(s.updatedAt) : new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.7,
