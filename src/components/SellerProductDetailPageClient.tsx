@@ -231,7 +231,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
           <ServerCrash className="h-16 w-16 text-red-500 mb-4" />
           <h3 className="text-xl font-bold">Product not found</h3>
           <p className="text-gray-500 mb-6">{String(error || "The product you're looking for doesn't exist.")}</p>
-          <Button onClick={() => router.push("/marketplace")} variant="outline">Back to Marketplace</Button>
+          <Button onClick={() => router.push("/building-material-marketplace")} variant="outline">Back to Marketplace</Button>
         </div>
         <Footer />
       </div>
@@ -260,7 +260,7 @@ const SellerProductDetailPage: FC<SellerProductProps> = ({ initialProduct }) => 
       <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs / Back */}
         <div className="flex items-center gap-2 text-sm text-gray-500 mb-8">
-           <Link href="/marketplace" className="hover:text-orange-600 transition-colors">Marketplace</Link>
+           <Link href="/building-material-marketplace" className="hover:text-orange-600 transition-colors">Marketplace</Link>
            <span>/</span>
            {product?.seller && (
              <>

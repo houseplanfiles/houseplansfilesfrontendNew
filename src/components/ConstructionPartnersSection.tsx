@@ -244,7 +244,7 @@ const PartnerCard: FC<{
 
       <div className="pt-3 sm:pt-5 mt-auto flex flex-col gap-1.5 sm:gap-2">
         <Link 
-          href={`/contractors/${partner._id}`} 
+          href={`/contractor/${encodeURIComponent((partner.profession || 'expert').toLowerCase())}/${encodeURIComponent((partner.city || 'india').toLowerCase().replace(/\s+/g, '-'))}/${encodeURIComponent((partner.name || 'pro').toLowerCase().replace(/\s+/g, '-'))}`} 
           className="w-full h-9 sm:h-11 border border-orange-600 text-orange-600 hover:bg-orange-50 font-bold text-xs flex items-center justify-center rounded-lg transition-all"
         >
           View Profile

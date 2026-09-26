@@ -13,7 +13,7 @@ const HOME_SERVICES = [
   { id: 7, label: "Painting Contractor", link: "/home-designing-services?profession=Painting %26 Waterproofing", icon: PaintRoller, color: "bg-rose-500/10 text-rose-600 hover:border-rose-500" },
   { id: 9, label: "Carpenter Services", link: "/home-designing-services?profession=Carpenter", icon: Hammer, color: "bg-orange-500/10 text-orange-600 hover:border-orange-500" },
   { id: 16, label: "False Ceiling Contractor", link: "/home-designing-services?profession=Interior", icon: AppWindow, color: "bg-fuchsia-500/10 text-fuchsia-600 hover:border-fuchsia-500" },
-  { id: 21, label: "Building material", link: "/marketplace?category=Building Material", icon: Cuboid, color: "bg-emerald-500/10 text-emerald-600 hover:border-emerald-500" },
+  { id: 21, label: "Building material", link: "/building-material-marketplace?category=Building Material", icon: Cuboid, color: "bg-emerald-500/10 text-emerald-600 hover:border-emerald-500" },
 ];
 
 // Section 2: Industrial Construction and Infrastructure Services

@@ -398,14 +398,24 @@ const AdminAnalyticsReportPage = () => {
                 <h2 className="text-2xl font-bold text-gray-900">{selectedUser.name}'s Analytics ({timeRange === 'all' ? 'All Time' : timeRange})</h2>
                 <p className="text-gray-500 text-sm mt-1 capitalize">Role: {selectedUser.role} {selectedUser.companyName && `• ${selectedUser.companyName}`}</p>
               </div>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => setSelectedUser(null)} 
-                className="rounded-full hover:bg-gray-100"
-              >
-                <X className="w-6 h-6 text-gray-500" />
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => handleDownloadIndividualPDF(selectedUser)}
+                  className="gap-2"
+                >
+                  <Download className="w-4 h-4" /> Export PDF
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setSelectedUser(null)} 
+                  className="rounded-full hover:bg-gray-100"
+                >
+                  <X className="w-6 h-6 text-gray-500" />
+                </Button>
+              </div>
             </div>
 
             <div className="p-6 space-y-8">
@@ -458,6 +468,70 @@ const AdminAnalyticsReportPage = () => {
                   </ResponsiveContainer>
                 </div>
               </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Whatsapp & Call Clicks Dates */}
+                <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">Click History (Dates)</h3>
+                  <div className="max-h-64 overflow-y-auto pr-2">
+                    {selectedUser.dailyAnalytics && selectedUser.dailyAnalytics.filter((d: any) => (d.whatsappClicks > 0 || d.callClicks > 0)).length > 0 ? (
+                      <table className="w-full text-sm text-left">
+                        <thead className="sticky top-0 bg-white shadow-sm text-gray-600 font-medium">
+                          <tr>
+                            <th className="py-2 px-1">Date</th>
+                            <th className="py-2 px-1 text-center text-green-600">WhatsApp</th>
+                            <th className="py-2 px-1 text-center text-blue-600">Call</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {selectedUser.dailyAnalytics
+                            .filter((d: any) => (d.whatsappClicks > 0 || d.callClicks > 0))
+                            .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                            .map((d: any, idx: number) => (
+                            <tr key={idx} className="hover:bg-gray-50">
+                              <td className="py-2 px-1 font-medium">{new Date(d.date).toLocaleDateString("en-GB").replace(/\//g, "-")}</td>
+                              <td className="py-2 px-1 text-center font-semibold text-green-600">{d.whatsappClicks || 0}</td>
+                              <td className="py-2 px-1 text-center font-semibold text-blue-600">{d.callClicks || 0}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <p className="text-sm text-gray-500 py-4 text-center">No click history available.</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Top 10 Project Views */}
+                <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">Top 10 Viewed Projects</h3>
+                  <div className="max-h-64 overflow-y-auto pr-2">
+                    {selectedUser.workSamples && selectedUser.workSamples.length > 0 ? (
+                      <div className="space-y-3">
+                        {[...selectedUser.workSamples]
+                          .sort((a, b) => (b.views || 0) - (a.views || 0))
+                          .slice(0, 10)
+                          .map((ws: any, idx: number) => (
+                          <div key={ws._id || idx} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <div className="flex items-center gap-3">
+                              <span className="font-bold text-gray-400">#{idx + 1}</span>
+                              <div className="max-w-[150px] sm:max-w-[200px]">
+                                <p className="text-sm font-semibold text-gray-900 truncate" title={ws.title}>{ws.title || "Untitled"}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-1 font-bold text-orange-600">
+                              <Eye className="w-4 h-4" /> {ws.views || 0}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-500 py-4 text-center">No projects found.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

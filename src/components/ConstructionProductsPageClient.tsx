@@ -367,7 +367,7 @@ const MarketplacePage = () => {
       <main className="container mx-auto px-4 pt-8 pb-12">
         <div
           className="relative h-50 md:h-96 rounded-xl overflow-hidden mb-12 bg-cover bg-center"
-          style={{ backgroundImage: "url(/marketplace.jpg)" }}
+          style={{ backgroundImage: "url(/building-material-marketplace.jpg)" }}
         >
           <div className="absolute inset-0 bg-black/50" />
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white p-4">

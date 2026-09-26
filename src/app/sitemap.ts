@@ -126,7 +126,7 @@ async function getContractors(): Promise<MetadataRoute.Sitemap> {
     return items
       .filter((c: { _id?: string }) => c._id)
       .map((c: { _id: string; updatedAt?: string }) => ({
-        url: `${BASE_URL}/contractors/${c._id}`,
+        url: `${BASE_URL}/contractor/${encodeURIComponent((c.profession || 'expert').toLowerCase())}/${encodeURIComponent((c.city || 'india').toLowerCase().replace(/\s+/g, '-'))}/${encodeURIComponent((c.name || 'pro').toLowerCase().replace(/\s+/g, '-'))}`,
         lastModified: c.updatedAt ? new Date(c.updatedAt) : new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.7,
@@ -148,7 +148,7 @@ async function getSellers(): Promise<MetadataRoute.Sitemap> {
     return items
       .filter((s: { _id?: string }) => s._id)
       .map((s: { _id: string; updatedAt?: string }) => ({
-        url: `${BASE_URL}/seller-shop/${s._id}`,
+        url: `${BASE_URL}/seller/${encodeURIComponent((s.companyName || 'store').toLowerCase().replace(/\s+/g, '-'))}/${encodeURIComponent((s.role || 'seller').toLowerCase())}`,
         lastModified: s.updatedAt ? new Date(s.updatedAt) : new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.7,

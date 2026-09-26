@@ -331,7 +331,7 @@ const ShopCard = ({ seller, productCount, products }: { seller: any; productCoun
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       className="group bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden h-full cursor-pointer"
-      onClick={() => router.push(`/seller-shop/${seller._id}`)}
+      onClick={() => router.push(`/seller/${encodeURIComponent((seller.companyName || 'store').toLowerCase().replace(/\s+/g, '-'))}/${encodeURIComponent((seller.role || 'seller').toLowerCase())}`)}
     >
       <div className="relative h-48 sm:h-64 overflow-hidden bg-gray-100">
         <img

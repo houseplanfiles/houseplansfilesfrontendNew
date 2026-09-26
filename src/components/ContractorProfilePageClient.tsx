@@ -235,7 +235,7 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 items-start">
               {/* Business Info Column */}
               <div className="bg-white/10 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-white/10 text-white shadow-2xl">
                 <h3 className="text-lg sm:text-xl font-extrabold mb-5 sm:mb-8 flex items-center gap-2 sm:gap-3">

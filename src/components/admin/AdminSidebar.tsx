@@ -144,7 +144,7 @@ const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
       {/* ✅ suppressHydrationWarning prevents aside class mismatch complaints */}
       <aside
         suppressHydrationWarning
-        className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-100 p-4 shadow-2xl flex flex-col z-40 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-100 p-4 shadow-2xl flex flex-col z-40 transition-transform duration-300 ease-in-out lg:translate-x-0 print:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
