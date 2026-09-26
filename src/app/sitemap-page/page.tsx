@@ -24,7 +24,7 @@ const sections = [
   { title: "Professionals", links: [
     { name: "Architects & Interior Designers", href: "/architects" },
     { name: "City Contractors", href: "/city-partners" },
-    { name: "Marketplace", href: "/marketplace" },
+    { name: "Marketplace", href: "/building-material-marketplace" },
   ]},
   { title: "Services", links: [
     { name: "Our Services", href: "/services" },

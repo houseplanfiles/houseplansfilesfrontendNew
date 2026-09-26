@@ -272,7 +272,7 @@ const AdminContractorsPage = () => {
                             variant="ghost"
                             size="icon"
                             title="View Public Profile"
-                            onClick={() => window.open(`/contractors/${user._id}`, '_blank')}
+                            onClick={() => window.open(`/contractor/${encodeURIComponent((user.profession || 'expert').toLowerCase())}/${encodeURIComponent((user.city || 'india').toLowerCase().replace(/\s+/g, '-'))}/${encodeURIComponent((user.name || 'pro').toLowerCase().replace(/\s+/g, '-'))}`, '_blank')}
                             className="text-gray-400 hover:text-blue-600"
                           >
                             <ExternalLink className="h-4 w-4" />

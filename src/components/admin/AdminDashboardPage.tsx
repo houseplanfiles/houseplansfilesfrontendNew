@@ -39,19 +39,51 @@ const AdminDashboardPage = () => {
   const { summary, status } = useSelector((state: RootState) => state.admin);
   const { userInfo } = useSelector((state: RootState) => state.user);
   const [analytics, setAnalytics] = useState<any>(null);
+  const [timeRange, setTimeRange] = useState("all");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [userReports, setUserReports] = useState<any[]>([]);
+  const [reportLoading, setReportLoading] = useState(false);
 
   useEffect(() => {
     dispatch(fetchDashboardSummary());
     const fetchAnalytics = async () => {
       try {
+        const params = { 
+          timeRange: timeRange === "all" ? "" : timeRange,
+          startDate: timeRange === "custom" ? startDate : "",
+          endDate: timeRange === "custom" ? endDate : ""
+        };
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/analytics/admin`, {
+          params,
           headers: { Authorization: `Bearer ${userInfo?.token}` }
         });
         setAnalytics(data);
       } catch (err) {}
     };
-    if (userInfo?.token) fetchAnalytics();
-  }, [dispatch, userInfo?.token]);
+
+    const fetchUserReports = async () => {
+      setReportLoading(true);
+      try {
+        const params = { 
+          timeRange: timeRange === "all" ? "" : timeRange,
+          startDate: timeRange === "custom" ? startDate : "",
+          endDate: timeRange === "custom" ? endDate : ""
+        };
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/analytics/admin/user-reports`, {
+          params,
+          headers: { Authorization: `Bearer ${userInfo?.token}` }
+        });
+        setUserReports(data);
+      } catch (err) {}
+      setReportLoading(false);
+    };
+    if (userInfo?.token) {
+      if (timeRange === "custom" && (!startDate || !endDate)) return;
+      fetchAnalytics();
+      fetchUserReports();
+    }
+  }, [dispatch, userInfo?.token, timeRange, startDate, endDate]);
 
   if (status === "loading" || !summary) {
     return (
@@ -129,33 +161,38 @@ const AdminDashboardPage = () => {
   const callClicks = analytics?.callClicks || 0;
   const leadPurchases = summary.totalOrders || 0;
 
-  // Since we don't have historical view data from backend, we map what we have or show a trend
-  // using salesOverTime if we had it, but here we just create a static/dummy representation to match the UI.
-  // The user wanted real data, but historical view data does not exist in the DB.
-  // We'll show a flat line for the current total as a fallback for today, and 0 for previous, to reflect reality.
-  const chartData = [
-    { name: "1 Sep", ProfileViews: Math.floor(profileViews * 0.1), ProjectsViews: Math.floor(projectViews * 0.1), WhatsAppClick: Math.floor(whatsappClicks * 0.1) },
-    { name: "7 Sep", ProfileViews: Math.floor(profileViews * 0.3), ProjectsViews: Math.floor(projectViews * 0.3), WhatsAppClick: Math.floor(whatsappClicks * 0.3) },
-    { name: "14 Sep", ProfileViews: Math.floor(profileViews * 0.5), ProjectsViews: Math.floor(projectViews * 0.5), WhatsAppClick: Math.floor(whatsappClicks * 0.5) },
-    { name: "21 Sep", ProfileViews: Math.floor(profileViews * 0.8), ProjectsViews: Math.floor(projectViews * 0.8), WhatsAppClick: Math.floor(whatsappClicks * 0.8) },
-    { name: "Today", ProfileViews: profileViews, ProjectsViews: projectViews, WhatsAppClick: whatsappClicks },
-  ];
+  // Use real historical data for chart if available, format date nicely
+  const chartData = analytics?.dailyData?.length > 0 
+    ? analytics.dailyData.map((d: any) => ({
+        name: new Date(d.date).toLocaleDateString("en-GB", { day: 'numeric', month: 'short' }),
+        ProfileViews: d.profileViews || 0,
+        ProjectsViews: d.projectViews || 0,
+        WhatsAppClick: d.whatsappClicks || 0,
+      }))
+    : [
+        { name: "Today", ProfileViews: profileViews, ProjectsViews: projectViews, WhatsAppClick: whatsappClicks },
+      ];
 
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="mt-1 text-gray-500 text-sm">
+          <h1 className="text-3xl font-bold text-gray-900 print:hidden">Dashboard</h1>
+          <p className="mt-1 text-gray-500 text-sm print:hidden">
             Welcome back, {userInfo?.name || "Houseplanfiles.com"}! Here&apos;s a summary of your store.
           </p>
         </div>
-        <Link href="/admin/reports">
-          <Button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 rounded-lg shadow-none">
-            Generate Report
+        <div className="flex gap-2 print:hidden">
+          <Button onClick={() => window.print()} className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 rounded-lg shadow-none">
+            Export PDF
           </Button>
-        </Link>
+          <Link href="/admin/reports">
+            <Button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 rounded-lg shadow-none">
+              Generate Report
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Row 1 — 4 stat cards */}
@@ -173,7 +210,36 @@ const AdminDashboardPage = () => {
       </div>
 
       <div className="pt-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Performance Dashboard</h2>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+          <h2 className="text-2xl font-bold text-gray-900">Performance Dashboard</h2>
+          
+          <div className="flex flex-col sm:flex-row gap-2">
+            {timeRange === 'custom' && (
+              <div className="flex items-center gap-2">
+                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="bg-white border border-gray-300 rounded-lg px-2 py-1 text-sm" />
+                <span>-</span>
+                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="bg-white border border-gray-300 rounded-lg px-2 py-1 text-sm" />
+              </div>
+            )}
+            <div className="relative flex items-center bg-white border border-gray-300 rounded-lg shadow-sm px-3 py-2">
+              <select
+                value={timeRange}
+                onChange={(e) => setTimeRange(e.target.value)}
+                className="bg-transparent border-none outline-none text-sm font-medium text-gray-700 cursor-pointer w-full"
+              >
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="7d">Last 7 Days</option>
+                <option value="1m">1 Month</option>
+                <option value="3m">3 Months</option>
+                <option value="6m">6 Months</option>
+                <option value="1y">1 Year</option>
+                <option value="all">All Time</option>
+                <option value="custom">Custom Date Range</option>
+              </select>
+            </div>
+          </div>
+        </div>
         
         {/* Colorful 6 Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -232,7 +298,84 @@ const AdminDashboardPage = () => {
           </div>
         </div>
 
+        
+        {/* Profile Stats Tables */}
+        {!reportLoading && userReports.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            {/* Contacted Profiles */}
+            <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Contacted Profiles</h3>
+              <div className="flex-1 overflow-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 sticky top-0">
+                    <tr><th className="text-left px-4 py-2 font-medium text-gray-500">Profile</th><th className="text-right px-4 py-2 font-medium text-gray-500">Contact Clicks</th></tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {userReports
+                      .filter(u => (u.contactClicks || 0) + (u.whatsappClicks || 0) + (u.callClicks || 0) > 0)
+                      .sort((a,b) => ((b.contactClicks||0) + (b.whatsappClicks||0) + (b.callClicks||0)) - ((a.contactClicks||0) + (a.whatsappClicks||0) + (a.callClicks||0)))
+                      .slice(0, 10).map(u => (
+                      <tr key={u._id} className="hover:bg-gray-50">
+                        <td className="px-4 py-2 font-medium text-gray-800">{u.name || u.companyName || u.businessName}</td>
+                        <td className="px-4 py-2 text-right text-gray-600">{(u.contactClicks||0) + (u.whatsappClicks||0) + (u.callClicks||0)}</td>
+                      </tr>
+                    ))}
+                    {userReports.filter(u => (u.contactClicks || 0) + (u.whatsappClicks || 0) + (u.callClicks || 0) > 0).length === 0 && (
+                      <tr><td colSpan={2} className="text-center py-4 text-gray-400">No data found</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Top Visited Profiles */}
+            <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Top Visited Profiles</h3>
+              <div className="flex-1 overflow-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 sticky top-0">
+                    <tr><th className="text-left px-4 py-2 font-medium text-gray-500">Profile</th><th className="text-right px-4 py-2 font-medium text-gray-500">Views</th></tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {userReports
+                      .sort((a,b) => (b.profileViews||0) - (a.profileViews||0))
+                      .slice(0, 10).map(u => (
+                      <tr key={u._id} className="hover:bg-gray-50">
+                        <td className="px-4 py-2 font-medium text-gray-800">{u.name || u.companyName || u.businessName}</td>
+                        <td className="px-4 py-2 text-right text-gray-600">{u.profileViews || 0}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Low Performance Profiles */}
+            <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Low Performance Profiles</h3>
+              <div className="flex-1 overflow-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 sticky top-0">
+                    <tr><th className="text-left px-4 py-2 font-medium text-gray-500">Profile</th><th className="text-right px-4 py-2 font-medium text-gray-500">Views</th></tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {userReports
+                      .sort((a,b) => (a.profileViews||0) - (b.profileViews||0))
+                      .slice(0, 10).map(u => (
+                      <tr key={u._id} className="hover:bg-gray-50">
+                        <td className="px-4 py-2 font-medium text-gray-800">{u.name || u.companyName || u.businessName}</td>
+                        <td className="px-4 py-2 text-right text-gray-600">{u.profileViews || 0}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Chart and Table Section */}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Chart */}
           <div className="lg:col-span-2 bg-white border border-gray-200 p-6 rounded-2xl shadow-sm">

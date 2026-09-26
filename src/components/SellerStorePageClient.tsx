@@ -133,7 +133,7 @@ const CartModal = ({ items, seller, onClose, onRemove }: { items: any[]; seller:
     let message = `Hi ${seller.businessName}, I am interested in following products from your store on Houseplans Marketplace:\n\n`;
     items.forEach((item, index) => {
       message += `${index + 1}. ${item.name} - ₹${item.price.toLocaleString()}${item.unit ? ` / ${item.unit}` : ""}\n`;
-      message += `Link: ${process.env.NEXT_PUBLIC_SITE_URL || "https://www.houseplanfiles.com"}/marketplace/product/${item._id}\n\n`;
+      message += `Link: ${process.env.NEXT_PUBLIC_SITE_URL || "https://www.houseplanfiles.com"}/building-material-marketplace/product/${item._id}\n\n`;
     });
     message += `Please provide me your best quote for these.`;
 
@@ -228,7 +228,7 @@ const ProductCard = ({
       animate={{ opacity: 1, y: 0 }}
       className="group bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden h-full"
     >
-      <div className="relative h-48 sm:h-64 w-full overflow-hidden bg-gray-100 cursor-pointer" onClick={() => router.push(`/marketplace/product/${product._id}`)}>
+      <div className="relative h-48 sm:h-64 w-full overflow-hidden bg-gray-100 cursor-pointer" onClick={() => router.push(`/building-material-marketplace/product/${product._id}`)}>
         <Image src={product.image} alt={product.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
         <div className="absolute top-3 left-3 bg-orange-600 text-white px-2 py-1 rounded text-[10px] font-bold uppercase z-10">
           {product.category}
@@ -248,7 +248,7 @@ const ProductCard = ({
       <div className="p-4 flex flex-col flex-grow">
         <h3 
           className="text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors line-clamp-1 cursor-pointer"
-          onClick={() => router.push(`/marketplace/product/${product._id}`)}
+          onClick={() => router.push(`/building-material-marketplace/product/${product._id}`)}
         >
           {product.name}
         </h3>
@@ -364,7 +364,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
           <ServerCrash className="h-16 w-16 text-red-500 mb-4" />
           <h3 className="text-xl font-bold">Failed to load store</h3>
           <p className="text-gray-500 mb-6">{String(error)}</p>
-          <Button onClick={() => router.push("/marketplace")} variant="outline">Back to Marketplace</Button>
+          <Button onClick={() => router.push("/building-material-marketplace")} variant="outline">Back to Marketplace</Button>
         </div>
         <Footer />
       </div>
@@ -391,7 +391,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
 
         <div className="max-w-7xl mx-auto relative z-10">
           <button 
-            onClick={() => router.push("/marketplace")}
+            onClick={() => router.push("/building-material-marketplace")}
             className="text-gray-400 hover:text-white flex items-center gap-2 mb-8 transition-colors"
           >
             <ArrowLeft size={20} /> Back to Marketplace

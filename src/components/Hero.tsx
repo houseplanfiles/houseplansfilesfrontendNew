@@ -173,7 +173,7 @@ const Hero = () => {
               Industrial &amp; Infra
             </Button>
           </Link>
-          <Link href="/marketplace" className="w-full md:w-auto">
+          <Link href="/building-material-marketplace" className="w-full md:w-auto">
             <Button className="w-full md:w-auto bg-green-700 text-white hover:bg-green-800 font-bold h-11 sm:h-12 md:h-auto md:px-6 md:py-5 rounded-xl shadow-lg text-xs sm:text-sm md:text-base transition-all transform hover:-translate-y-1 whitespace-nowrap">
               Marketplace
             </Button>

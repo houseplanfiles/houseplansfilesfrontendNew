@@ -97,7 +97,7 @@ const Navbar = () => {
     },
     { name: "Architect & Interior Designer", path: "/architects" },
     { name: "City Contractor", path: "/city-partners" },
-    { name: "Marketplace", path: "/marketplace" },
+    { name: "Marketplace", path: "/building-material-marketplace" },
     { name: "Package", path: "/packages" },
     { name: "Gallery", path: "/gallery" },
     { name: "Digital Card", path: "/digital-card" },

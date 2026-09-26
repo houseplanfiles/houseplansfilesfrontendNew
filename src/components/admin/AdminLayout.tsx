@@ -17,8 +17,8 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
         <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       )}
 
-      <div className="flex-1 flex flex-col w-full lg:ml-64">
-        <header className="lg:hidden sticky top-0 bg-white shadow-sm z-20 p-4 flex items-center">
+      <div className="flex-1 flex flex-col w-full lg:ml-64 print:ml-0">
+        <header className="lg:hidden sticky top-0 bg-white shadow-sm z-20 p-4 flex items-center print:hidden">
           <button
             onClick={() => setIsSidebarOpen(true)}
             className="text-gray-700"

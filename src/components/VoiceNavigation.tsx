@@ -29,7 +29,7 @@ const commandMap: Record<string, string> = {
     "career": "/careers", "job": "/careers", "naukri": "/careers", "kaam": "/careers",
     "package": "/packages", "packages": "/packages", "offer": "/packages", "special": "/packages", "plans": "/packages",
     "gallery": "/gallery", "photo": "/gallery", "tasveer": "/gallery", "images": "/gallery", "photu": "/gallery",
-    "marketplace": "/marketplace", "bazaar": "/marketplace", "market": "/marketplace",
+    "marketplace": "/building-material-marketplace", "bazaar": "/building-material-marketplace", "market": "/building-material-marketplace",
     "contact": "/contact", "support": "/contact", "help": "/contact", "madad": "/contact", "sarkaar": "/contact",
     "cart": "/cart", "tokri": "/cart", "bag": "/cart", "shopping bag": "/cart",
     "about": "/about", "hamaare baare mein": "/about", "info": "/about",
