@@ -1,38 +1,7 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import SellerStorePageClient from "@/components/SellerStorePageClient";
+import { redirect, notFound } from "next/navigation";
+import { getSellerStoreUrl } from "@/utils/profileUrls";
 
-export async function generateMetadata({ params }: { params: Promise<{ role: string, businessName: string }> }): Promise<Metadata> {
-  const resolvedParams = await params;
-  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
-  try {
-    const res = await fetch(`${BACKEND_URL}/api/users/store/seo/${encodeURIComponent(resolvedParams.role)}/${encodeURIComponent(resolvedParams.businessName)}`, { next: { revalidate: 3600 } });
-    const data = await res.json();
-    const seller = data?.seller || data;
-    if (!seller || !seller.companyName) return { title: "Seller Store | HousePlanFiles" };
-    
-    const imageUrl = seller.shopImageUrl || seller.photoUrl;
-    const ogImage = imageUrl 
-      ? (imageUrl.startsWith("http") ? imageUrl : `${BACKEND_URL}/${imageUrl.replace(/\\/g, "/")}`) 
-      : "https://www.houseplanfiles.com/logo1.png";
-
-    const urlPath = `/seller/${resolvedParams.businessName}/${resolvedParams.role}`;
-
-    return {
-      title: `${seller.companyName} - ${seller.city || "India"} Seller | HousePlanFiles`,
-      description: `Shop from ${seller.companyName}${seller.city ? ` based in ${seller.city}` : ""}. Explore their building materials and products.`,
-      openGraph: {
-        title: `${seller.companyName} | HousePlanFiles Seller`,
-        description: `Building materials by ${seller.companyName}.`,
-        url: `https://www.houseplanfiles.com${urlPath}`,
-        images: [{ url: ogImage, width: 800, height: 600, alt: seller.companyName }],
-      },
-      alternates: { canonical: `https://www.houseplanfiles.com${urlPath}` },
-    };
-  } catch { return { title: "Seller Store | HousePlanFiles" }; }
-}
-
-export default async function SellerStorePage({ params }: { params: Promise<{ role: string, businessName: string }> }) {
+export default async function SellerLegacyRedirectPage({ params }: { params: Promise<{ role: string, businessName: string }> }) {
   const resolvedParams = await params;
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
   let seller = null;
@@ -41,15 +10,11 @@ export default async function SellerStorePage({ params }: { params: Promise<{ ro
     if (!res.ok) notFound();
     const data = await res.json();
     seller = data?.seller || data;
-    if (!seller || !seller.companyName) notFound();
+    if (!seller || (!seller.businessName && !seller.companyName && !seller.name)) notFound();
   } catch {
     notFound();
   }
-  return (
-    <>
-      <main>
-        <SellerStorePageClient initialSeller={seller} sellerId={seller?._id} />
-      </main>
-    </>
-  );
+
+  // Redirect to new clean SEO store URL where seller name is at the end
+  redirect(getSellerStoreUrl(seller));
 }

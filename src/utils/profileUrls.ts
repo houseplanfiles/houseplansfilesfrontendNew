@@ -9,14 +9,12 @@ export function slugify(text?: string): string {
     .replace(/-+/g, "-"); // collapse dashes
 }
 
-export function getArchitectProfileUrl(architect?: { _id?: string; city?: string; name?: string } | null): string {
+export function getArchitectProfileUrl(architect?: { _id?: string; city?: string; name?: string; businessName?: string } | null): string {
   if (!architect) return "/architects";
-  if (architect.name) {
-    const city = slugify(architect.city) || "india";
-    const name = slugify(architect.name) || "architect";
-    return `/architect/${encodeURIComponent(city)}/${encodeURIComponent(name)}`;
-  }
-  return architect._id ? `/architects/${architect._id}` : "/architects";
+  const city = slugify(architect.city) || "india";
+  const rawName = architect.name || architect.businessName || "architect";
+  const name = slugify(rawName) || "architect";
+  return `/architect/${encodeURIComponent(city)}/${encodeURIComponent(name)}`;
 }
 
 export function getContractorProfileUrl(contractor?: {
@@ -25,6 +23,7 @@ export function getContractorProfileUrl(contractor?: {
   city?: string;
   name?: string;
   role?: string;
+  businessName?: string;
 } | null): string {
   if (!contractor) return "/contractors";
   const role = (contractor.role || "").toLowerCase();
@@ -34,28 +33,27 @@ export function getContractorProfileUrl(contractor?: {
     return getArchitectProfileUrl(contractor);
   }
 
-  if (contractor.name) {
-    const profSlug = slugify(contractor.profession) || "contractor";
-    const citySlug = slugify(contractor.city) || "india";
-    const nameSlug = slugify(contractor.name) || "pro";
-    return `/contractor/${encodeURIComponent(profSlug)}/${encodeURIComponent(citySlug)}/${encodeURIComponent(nameSlug)}`;
-  }
-
-  return contractor._id ? `/contractors/${contractor._id}` : "/contractors";
+  const profSlug = slugify(contractor.profession) || "contractor";
+  const citySlug = slugify(contractor.city) || "india";
+  const rawName = contractor.name || contractor.businessName || "expert";
+  const nameSlug = slugify(rawName) || "expert";
+  return `/contractor/${encodeURIComponent(profSlug)}/${encodeURIComponent(citySlug)}/${encodeURIComponent(nameSlug)}`;
 }
 
 export function getSellerStoreUrl(seller?: {
   _id?: string;
   companyName?: string;
   businessName?: string;
+  name?: string;
+  city?: string;
   role?: string;
 } | null): string {
   if (!seller) return "/building-material-marketplace";
-  const name = seller.companyName || seller.businessName;
-  if (name) {
-    const businessSlug = slugify(name) || "seller";
-    const roleSlug = slugify(seller.role) || "seller";
-    return `/seller/${encodeURIComponent(businessSlug)}/${encodeURIComponent(roleSlug)}`;
+  const rawName = seller.businessName || seller.companyName || seller.name || "seller";
+  const nameSlug = slugify(rawName) || "seller";
+  const citySlug = slugify(seller.city);
+  if (citySlug) {
+    return `/seller-shop/${encodeURIComponent(citySlug)}/${encodeURIComponent(nameSlug)}`;
   }
-  return seller._id ? `/seller-shop/${seller._id}` : "/building-material-marketplace";
+  return `/seller-shop/${encodeURIComponent(nameSlug)}`;
 }
