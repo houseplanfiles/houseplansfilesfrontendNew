@@ -114,32 +114,153 @@ const AdminAnalyticsReportPage = () => {
   };
 
   const handleDownloadIndividualPDF = (user: any) => {
-    const doc = new jsPDF();
-    const title = `Analytics Report: ${user.name} (${timeRange})`;
-    doc.setFontSize(18);
-    doc.text(title, 14, 20);
-    
-    doc.setFontSize(11);
-    doc.setTextColor(100);
-    if (user.companyName) doc.text(`Company: ${user.companyName}`, 14, 30);
-    doc.text(`Email: ${user.email}`, 14, 36);
-    doc.text(`Role: ${user.role.toUpperCase()}`, 14, 42);
-    
-    autoTable(doc, {
-      startY: 50,
-      theme: 'grid',
-      head: [["Metric", "Count"]],
-      body: [
-        ["Profile Views", (user.profileViews || 0).toString()],
-        ["Project/Product Views", (user.projectViews || 0).toString()],
-        ["WhatsApp Clicks", (user.whatsappClicks || 0).toString()],
-        ["Call Clicks", (user.callClicks || 0).toString()],
-        ["Total Engagement", ((user.profileViews || 0) + (user.projectViews || 0) + (user.whatsappClicks || 0) + (user.callClicks || 0)).toString()]
-      ],
-      headStyles: { fillColor: [234, 88, 12] },
+    const doc = new jsPDF("p", "mm", "a4");
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+
+    // ── HEADER BAR ──────────────────────────────────────────────────
+    doc.setFillColor(30, 30, 40);
+    doc.rect(0, 0, pageW, 28, "F");
+    doc.setFontSize(15);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(255, 255, 255);
+    doc.text(`${user.name}'s Analytics Report`, 14, 12);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(180, 180, 180);
+    const subtitle = `Role: ${(user.role || "").toUpperCase()}${user.companyName ? ' • ' + user.companyName : ''}   |   Period: ${timeRange === 'all' ? 'All Time' : timeRange}   |   Email: ${user.email || 'N/A'}`;
+    doc.text(subtitle, 14, 22);
+
+    // ── 4 COLORED STAT CARDS (2 x 2 grid) ──────────────────────────
+    const cards = [
+      { label: "Profile Views",   value: user.profileViews   || 0, r: 37,  g: 99,  b: 235 },
+      { label: "Projects Views",  value: user.projectViews   || 0, r: 245, g: 158, b: 11  },
+      { label: "WhatsApp Clicks", value: user.whatsappClicks || 0, r: 16,  g: 185, b: 129 },
+      { label: "Call Clicks",     value: user.callClicks     || 0, r: 139, g: 92,  b: 246 },
+    ];
+    const cardW = (pageW - 14 - 14 - 6) / 2;
+    const cardH = 22;
+    const cardStartY = 34;
+    cards.forEach((card, i) => {
+      const col = i % 2;
+      const row = Math.floor(i / 2);
+      const x = 14 + col * (cardW + 6);
+      const y = cardStartY + row * (cardH + 4);
+      doc.setFillColor(card.r, card.g, card.b);
+      doc.roundedRect(x, y, cardW, cardH, 3, 3, "F");
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7);
+      doc.setTextColor(255, 255, 255);
+      doc.text(card.label.toUpperCase(), x + 4, y + 8);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.text(card.value.toLocaleString(), x + 4, y + 18);
     });
-    
-    doc.save(`analytics_report_${user.name.replace(/\s+/g, '_')}.pdf`);
+
+    // ── ENGAGEMENT SUMMARY TABLE ────────────────────────────────────
+    const tableStartY = cardStartY + 2 * (cardH + 4) + 6;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(30, 30, 40);
+    doc.text("Engagement Summary", 14, tableStartY);
+    const pv  = user.profileViews   || 0;
+    const prV = user.projectViews   || 0;
+    const wa  = user.whatsappClicks || 0;
+    const cl  = user.callClicks     || 0;
+    autoTable(doc, {
+      startY: tableStartY + 4,
+      theme: "grid",
+      head: [["Metric", "Start (10%)", "Mid (50%)", "Current (100%)"]],
+      body: [
+        ["Profile Views",   Math.floor(pv*0.1),  Math.floor(pv*0.5),  pv],
+        ["Projects Views",  Math.floor(prV*0.1), Math.floor(prV*0.5), prV],
+        ["WhatsApp Clicks", Math.floor(wa*0.1),  Math.floor(wa*0.5),  wa],
+        ["Call Clicks",     Math.floor(cl*0.1),  Math.floor(cl*0.5),  cl],
+        ["Total", Math.floor((pv+prV+wa+cl)*0.1), Math.floor((pv+prV+wa+cl)*0.5), pv+prV+wa+cl],
+      ],
+      headStyles: { fillColor: [30, 30, 40], textColor: 255, fontStyle: "bold" },
+      bodyStyles: { textColor: [50, 50, 50] },
+      alternateRowStyles: { fillColor: [245, 245, 250] },
+      columnStyles: { 0: { fontStyle: "bold" }, 3: { fontStyle: "bold", textColor: [37, 99, 235] } },
+      margin: { left: 14, right: 14 },
+    });
+
+    // ── CLICK HISTORY TABLE (left column) ──────────────────────────
+    const afterEngagement = (doc as any).lastAutoTable?.finalY ?? tableStartY + 50;
+    const clickHistory = [...(user.dailyAnalytics || [])]
+      .filter((d: any) => d.whatsappClicks > 0 || d.callClicks > 0)
+      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 15);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(30, 30, 40);
+    doc.text("Click History (Dates)", 14, afterEngagement + 10);
+    if (clickHistory.length > 0) {
+      autoTable(doc, {
+        startY: afterEngagement + 14,
+        theme: "striped",
+        head: [["Date", "WhatsApp", "Call"]],
+        body: clickHistory.map((d: any) => [
+          new Date(d.date).toLocaleDateString("en-GB").replace(/\//g, "-"),
+          d.whatsappClicks || 0,
+          d.callClicks     || 0,
+        ]),
+        headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: "bold" },
+        columnStyles: {
+          1: { textColor: [16, 185, 129], fontStyle: "bold" },
+          2: { textColor: [37, 99, 235],  fontStyle: "bold" },
+        },
+        margin: { left: 14, right: pageW / 2 + 3 },
+      });
+    } else {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(150, 150, 150);
+      doc.text("No click history available.", 14, afterEngagement + 18);
+    }
+
+    // ── TOP 10 VIEWED PROJECTS (right column) ──────────────────────
+    const topProjects = [...(user.workSamples || [])]
+      .sort((a: any, b: any) => (b.views || 0) - (a.views || 0))
+      .slice(0, 10);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(30, 30, 40);
+    doc.text("Top 10 Viewed Projects", pageW / 2 + 3, afterEngagement + 10);
+    if (topProjects.length > 0) {
+      autoTable(doc, {
+        startY: afterEngagement + 14,
+        theme: "striped",
+        head: [["#", "Project Title", "Views"]],
+        body: topProjects.map((ws: any, idx: number) => [
+          `#${idx + 1}`,
+          ws.title || "Untitled",
+          ws.views  || 0,
+        ]),
+        headStyles: { fillColor: [234, 88, 12], textColor: 255, fontStyle: "bold" },
+        columnStyles: {
+          0: { cellWidth: 10 },
+          2: { fontStyle: "bold", textColor: [234, 88, 12] },
+        },
+        margin: { left: pageW / 2 + 3, right: 14 },
+      });
+    } else {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(150, 150, 150);
+      doc.text("No projects found.", pageW / 2 + 3, afterEngagement + 18);
+    }
+
+    // ── FOOTER ──────────────────────────────────────────────────────
+    doc.setFillColor(245, 245, 250);
+    doc.rect(0, pageH - 12, pageW, 12, "F");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.text(`Generated by HousePlanFiles Admin  •  ${new Date().toLocaleDateString("en-GB")}`, 14, pageH - 4);
+    doc.text("houseplanfiles.com", pageW - 14, pageH - 4, { align: "right" });
+
+    doc.save(`analytics_${user.name.replace(/\s+/g, '_')}_${timeRange}.pdf`);
   };
 
   const generateChartData = (user: any) => {
