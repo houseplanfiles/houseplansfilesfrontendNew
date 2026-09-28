@@ -53,18 +53,38 @@ const AdminAnalyticsReportPage = () => {
     if (userInfo?.token) fetchReports();
   }, [userInfo, timeRange]);
 
+  const [activeFilter, setActiveFilter] = useState("all");
+
   const filteredReports = useMemo(() => {
-    return reports.filter(r => 
+    let result = reports.filter(r => 
       (r.name?.toLowerCase() || "").includes(search.toLowerCase()) || 
       (r.email?.toLowerCase() || "").includes(search.toLowerCase()) ||
       (r.companyName?.toLowerCase() || "").includes(search.toLowerCase()) ||
       (r.role?.toLowerCase() || "").includes(search.toLowerCase())
     );
-  }, [reports, search]);
+
+    if (activeFilter === "top-searched") {
+      result = result.sort((a, b) => (b.profileViews || 0) - (a.profileViews || 0));
+    } else if (activeFilter === "top-contacted") {
+      result = result.sort((a, b) => {
+        const aScore = (a.whatsappClicks || 0) + (a.callClicks || 0);
+        const bScore = (b.whatsappClicks || 0) + (b.callClicks || 0);
+        return bScore - aScore;
+      });
+    } else if (activeFilter === "low-performing") {
+      result = result.sort((a, b) => {
+        const aScore = (a.profileViews || 0) + (a.whatsappClicks || 0) + (a.callClicks || 0);
+        const bScore = (b.profileViews || 0) + (b.whatsappClicks || 0) + (b.callClicks || 0);
+        return aScore - bScore;
+      });
+    }
+
+    return result;
+  }, [reports, search, activeFilter]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, timeRange]);
+  }, [search, timeRange, activeFilter]);
 
   const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -72,22 +92,6 @@ const AdminAnalyticsReportPage = () => {
   const currentItems = filteredReports.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  const topProfiles = useMemo(() => {
-    return [...filteredReports].sort((a, b) => {
-      const aScore = (a.profileViews || 0) + (a.whatsappClicks || 0) + (a.callClicks || 0);
-      const bScore = (b.profileViews || 0) + (b.whatsappClicks || 0) + (b.callClicks || 0);
-      return bScore - aScore;
-    }).slice(0, 10);
-  }, [filteredReports]);
-
-  const lowProfiles = useMemo(() => {
-    return [...filteredReports].sort((a, b) => {
-      const aScore = (a.profileViews || 0) + (a.whatsappClicks || 0) + (a.callClicks || 0);
-      const bScore = (b.profileViews || 0) + (b.whatsappClicks || 0) + (b.callClicks || 0);
-      return aScore - bScore;
-    }).slice(0, 10);
-  }, [filteredReports]);
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
@@ -189,61 +193,43 @@ const AdminAnalyticsReportPage = () => {
         </div>
       ) : (
         <>
-          {/* Top Performance Overview */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <h3 className="text-lg font-bold text-green-700 flex items-center gap-2 mb-4">
-                <BarChart3 className="w-5 h-5" /> Top Contacted Profiles
-              </h3>
-              <div className="space-y-3">
-                {topProfiles.map((p, i) => (
-                  <div key={p._id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors" onClick={() => setSelectedUser(p)}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 text-gray-400 font-bold">#{i + 1}</div>
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm">{p.name} {p.companyName && <span className="text-xs text-gray-500 font-normal">({p.companyName})</span>}</p>
-                        <p className="text-xs text-gray-500 capitalize">{p.role}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-gray-900">{((p.whatsappClicks||0) + (p.callClicks||0) + (p.profileViews||0)).toLocaleString()} pts</p>
-                      <div className="flex gap-2 text-xs text-gray-500 justify-end">
-                        <span className="flex items-center gap-1 text-green-600"><MessageCircle className="w-3 h-3"/> {p.whatsappClicks || 0}</span>
-                        <span className="flex items-center gap-1 text-blue-600"><Phone className="w-3 h-3"/> {p.callClicks || 0}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {topProfiles.length === 0 && <p className="text-sm text-gray-500">No data available for this time range.</p>}
-              </div>
-            </div>
-
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <h3 className="text-lg font-bold text-red-600 flex items-center gap-2 mb-4">
-                <BarChart3 className="w-5 h-5" /> Low Performance Profiles
-              </h3>
-              <div className="space-y-3">
-                {lowProfiles.map((p, i) => (
-                  <div key={p._id} className="flex justify-between items-center p-3 bg-red-50 rounded-lg hover:bg-red-100 cursor-pointer transition-colors" onClick={() => setSelectedUser(p)}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 text-red-400 font-bold">#{i + 1}</div>
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm">{p.name} {p.companyName && <span className="text-xs text-red-500 font-normal">({p.companyName})</span>}</p>
-                        <p className="text-xs text-red-500 capitalize">{p.role}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-red-900">{((p.whatsappClicks||0) + (p.callClicks||0) + (p.profileViews||0)).toLocaleString()} pts</p>
-                      <p className="text-xs text-red-600">{p.profileViews || 0} Views</p>
-                    </div>
-                  </div>
-                ))}
-                 {lowProfiles.length === 0 && <p className="text-sm text-gray-500">No data available for this time range.</p>}
-              </div>
-            </div>
-          </div>
-
           <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+            {/* Filter Tabs */}
+            <div className="flex flex-wrap gap-2 mb-4">
+              <Button 
+                variant={activeFilter === "all" ? "default" : "outline"} 
+                onClick={() => setActiveFilter("all")}
+                className={activeFilter === "all" ? "bg-gray-800 hover:bg-gray-900" : ""}
+                size="sm"
+              >
+                All Profiles
+              </Button>
+              <Button 
+                variant={activeFilter === "top-searched" ? "default" : "outline"} 
+                onClick={() => setActiveFilter("top-searched")}
+                className={activeFilter === "top-searched" ? "bg-orange-500 hover:bg-orange-600 text-white" : ""}
+                size="sm"
+              >
+                Top Searched Profiles
+              </Button>
+              <Button 
+                variant={activeFilter === "top-contacted" ? "default" : "outline"} 
+                onClick={() => setActiveFilter("top-contacted")}
+                className={activeFilter === "top-contacted" ? "bg-pink-500 hover:bg-pink-600 text-white" : ""}
+                size="sm"
+              >
+                Top Contacted Profiles
+              </Button>
+              <Button 
+                variant={activeFilter === "low-performing" ? "default" : "outline"} 
+                onClick={() => setActiveFilter("low-performing")}
+                className={activeFilter === "low-performing" ? "bg-purple-500 hover:bg-purple-600 text-white" : ""}
+                size="sm"
+              >
+                Low Performing Profiles
+              </Button>
+            </div>
+
             <div className="relative max-w-md mb-4">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input 
