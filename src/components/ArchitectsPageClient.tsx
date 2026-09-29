@@ -275,16 +275,21 @@ const ArchitectsPage: FC = () => {
             <div className="flex items-center gap-2">
               <label 
                 htmlFor="panIndiaCheck"
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold cursor-pointer transition-all ${
-                  isPanIndiaFilter ? "bg-orange-600 border-orange-600 text-white shadow-sm" : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all ${
+                  (stateFilter !== "All States" || cityFilter || pincodeFilter) 
+                    ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60" 
+                    : isPanIndiaFilter 
+                      ? "bg-orange-600 border-orange-600 text-white shadow-sm cursor-pointer" 
+                      : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 cursor-pointer"
                 }`}
               >
                 <input 
                   id="panIndiaCheck" 
                   type="checkbox" 
                   checked={isPanIndiaFilter} 
+                  disabled={stateFilter !== "All States" || cityFilter !== "" || pincodeFilter !== ""}
                   onChange={(e) => setIsPanIndiaFilter(e.target.checked)}
-                  className="rounded border-gray-300 text-orange-600 focus:ring-orange-500 w-3.5 h-3.5 cursor-pointer"
+                  className="rounded border-gray-300 text-orange-600 focus:ring-orange-500 w-3.5 h-3.5 cursor-pointer disabled:cursor-not-allowed"
                 />
                 PAN INDIA
               </label>
@@ -312,7 +317,8 @@ const ArchitectsPage: FC = () => {
               <select
                 value={stateFilter}
                 onChange={(e) => setStateFilter(e.target.value)}
-                className="mt-1 w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all cursor-pointer"
+                disabled={isPanIndiaFilter}
+                className="mt-1 w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {INDIAN_STATES.map((s) => (
                   <option key={s} value={s}>{s}</option>
@@ -330,7 +336,8 @@ const ArchitectsPage: FC = () => {
                   placeholder="e.g. Delhi, Lucknow" 
                   value={cityFilter} 
                   onChange={(e) => setCityFilter(e.target.value)} 
-                  className="pl-9 h-11 bg-gray-50 border-gray-200 rounded-xl focus:bg-white text-xs" 
+                  disabled={isPanIndiaFilter}
+                  className="pl-9 h-11 bg-gray-50 border-gray-200 rounded-xl focus:bg-white text-xs disabled:opacity-50 disabled:cursor-not-allowed" 
                 />
               </div>
             </div>
@@ -343,7 +350,8 @@ const ArchitectsPage: FC = () => {
                 placeholder="e.g. 110001, 464668" 
                 value={pincodeFilter} 
                 onChange={(e) => setPincodeFilter(e.target.value)} 
-                className="mt-1 h-11 bg-gray-50 border-gray-200 rounded-xl focus:bg-white text-xs" 
+                disabled={isPanIndiaFilter}
+                className="mt-1 h-11 bg-gray-50 border-gray-200 rounded-xl focus:bg-white text-xs disabled:opacity-50 disabled:cursor-not-allowed" 
               />
             </div>
 

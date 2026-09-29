@@ -758,16 +758,21 @@ const MarketplacePage: FC = () => {
               <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Coverage</Label>
               <label
                 htmlFor="panIndiaMarketplaceCheck"
-                className={`flex items-center justify-center gap-2 h-12 px-3 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
-                  isPanIndiaFilter ? "bg-orange-600 border-orange-600 text-white shadow-sm" : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
+                className={`flex items-center justify-center gap-2 h-12 px-3 rounded-xl border text-xs font-bold transition-all ${
+                  (selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode !== "")
+                    ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60"
+                    : isPanIndiaFilter 
+                      ? "bg-orange-600 border-orange-600 text-white shadow-sm cursor-pointer" 
+                      : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 cursor-pointer"
                 }`}
               >
                 <input
                   id="panIndiaMarketplaceCheck"
                   type="checkbox"
                   checked={isPanIndiaFilter}
+                  disabled={selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode !== ""}
                   onChange={(e) => setIsPanIndiaFilter(e.target.checked)}
-                  className="rounded border-gray-300 text-orange-600 focus:ring-orange-500 w-4 h-4 cursor-pointer"
+                  className="rounded border-gray-300 text-orange-600 focus:ring-orange-500 w-4 h-4 cursor-pointer disabled:cursor-not-allowed"
                 />
                 PAN INDIA
               </label>
@@ -775,8 +780,8 @@ const MarketplacePage: FC = () => {
 
             <div>
               <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">State</Label>
-              <Select value={selectedState} onValueChange={setSelectedState}>
-                <SelectTrigger className="h-12 bg-gray-50 border-gray-200 rounded-xl">
+              <Select value={selectedState} onValueChange={setSelectedState} disabled={isPanIndiaFilter}>
+                <SelectTrigger className="h-12 bg-gray-50 border-gray-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="max-h-72">
@@ -795,7 +800,8 @@ const MarketplacePage: FC = () => {
                     variant="outline"
                     role="combobox"
                     aria-expanded={cityPopoverOpen}
-                    className="h-12 w-full justify-between bg-gray-50 border-gray-200 rounded-xl text-sm font-normal hover:bg-white transition-colors"
+                    disabled={isPanIndiaFilter}
+                    className="h-12 w-full justify-between bg-gray-50 border-gray-200 rounded-xl text-sm font-normal hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {selectedCity === "all-cities" ? "All Cities" : selectedCity}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -850,7 +856,8 @@ const MarketplacePage: FC = () => {
                 placeholder="e.g. 110001"
                 value={selectedPincode}
                 onChange={(e) => setSelectedPincode(e.target.value)}
-                className="h-12 bg-gray-50 border-gray-200 text-base rounded-xl focus:ring-orange-500"
+                disabled={isPanIndiaFilter}
+                className="h-12 bg-gray-50 border-gray-200 text-base rounded-xl focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
