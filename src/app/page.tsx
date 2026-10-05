@@ -5,13 +5,17 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import HomeServicesCategoriesSection from "@/components/HomeServicesCategoriesSection";
-import ReadymadePlansSection from "@/components/ReadymadePlansSection";
 import TopArchitectsSection from "@/components/TopArchitectsSection";
 import ConstructionPartnersSection from "@/components/ConstructionPartnersSection";
 import SellersSection from "@/components/SellersSection";
 import RegionalPlansSection from "@/components/RegionalPlansSection";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
+import CityExplorer from "@/components/CityExplorer";
+import WhyChooseUs from "@/components/WhyChooseUs";
+import JourneyProcess from "@/components/JourneyProcess";
+import LeadBoardHowItWorks from "@/components/LeadBoardHowItWorks";
+import RegistrationPrompts from "@/components/RegistrationPrompts";
 
 export const metadata: Metadata = {
   title: "Readymade houseplans, Architects, interior designer, contractor, Building material and Home decor",
@@ -57,56 +61,33 @@ export default function HomePage() {
         <main>
           <Hero />
           <HomeServicesCategoriesSection />
-          <TopArchitectsSection />
-          <ConstructionPartnersSection />
-          <SellersSection />
-          <ReadymadePlansSection />
-          <RegionalPlansSection />
+          <WhyChooseUs />
+          <CityExplorer />
+          <JourneyProcess />
 
-          {/* Browse by City — geo SEO entry point for users */}
-          <section className="bg-white border-t border-gray-100 py-12 px-4">
-            <div className="max-w-7xl mx-auto">
-              <div className="mb-6">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900">House plans, Architects, contractors. And shops in cities</h2>
-                <p className="text-sm text-gray-500 mt-1">Find plans suited to your city's plot sizes, local architects, and construction costs.</p>
+          <section className="bg-white py-10 md:py-16">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-6">
+                <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-3">
+                  Kuch Khaas <span className="text-orange-600">Aapke Liye</span>
+                </h2>
+                <p className="text-lg text-gray-500 font-medium">
+                  Explore our top professionals, contractors, and shops
+                </p>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {[
-                  { slug: "bhopal",    display: "Bhopal",    state: "Madhya Pradesh" },
-                  { slug: "indore",    display: "Indore",    state: "Madhya Pradesh" },
-                  { slug: "lucknow",   display: "Lucknow",   state: "Uttar Pradesh"  },
-                  { slug: "jaipur",    display: "Jaipur",    state: "Rajasthan"      },
-                  { slug: "nagpur",    display: "Nagpur",    state: "Maharashtra"    },
-                  { slug: "pune",      display: "Pune",      state: "Maharashtra"    },
-                  { slug: "hyderabad", display: "Hyderabad", state: "Telangana"      },
-                  { slug: "chennai",   display: "Chennai",   state: "Tamil Nadu"     },
-                  { slug: "mumbai",    display: "Mumbai",    state: "Maharashtra"    },
-                  { slug: "bengaluru", display: "Bengaluru", state: "Karnataka"      },
-                  { slug: "delhi",     display: "Delhi",     state: "Delhi"          },
-                  { slug: "kolkata",   display: "Kolkata",   state: "West Bengal"    },
-                  { slug: "ahmedabad", display: "Ahmedabad", state: "Gujarat"        },
-                  { slug: "chandigarh",display: "Chandigarh",state: "Chandigarh"     },
-                  { slug: "patna",     display: "Patna",     state: "Bihar"          },
-                  { slug: "ranchi",    display: "Ranchi",    state: "Jharkhand"      },
-                ].map((city) => (
-                  <Link
-                    key={city.slug}
-                    href={`/city/${city.slug}`}
-                    className="flex flex-col p-5 rounded-xl border border-gray-200 hover:border-orange-400 hover:bg-orange-50 hover:shadow-md transition-all group"
-                  >
-                    <span className="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{city.display}</span>
-                    <span className="text-xs text-gray-500 mt-1">{city.state}</span>
-                    <span className="text-xs text-orange-500 mt-3 font-medium group-hover:underline">Plans &amp; architects →</span>
-                  </Link>
-                ))}
-              </div>
-              <div className="mt-5">
-                <Link href="/city-partners" className="text-sm text-orange-600 hover:underline font-medium">
-                  View all city contractors →
-                </Link>
-              </div>
+              <TopArchitectsSection />
+              <ConstructionPartnersSection />
+              <SellersSection />
+              
+              {/* Added Lead Board How it Works per client feedback */}
+              <LeadBoardHowItWorks />
             </div>
           </section>
+
+          {/* Added Registration Prompts per client feedback */}
+          <RegistrationPrompts />
+
+          <RegionalPlansSection />
 
           <Testimonials />
           <CTA />

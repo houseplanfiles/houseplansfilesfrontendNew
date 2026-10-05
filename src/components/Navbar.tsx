@@ -86,7 +86,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
     {
-      name: "Readymade Home Design",
+      name: "Readymade Designs",
       path: "/house-plans",
       submenu: [
         { name: "Floor Plan", path: "/house-plans" },
@@ -95,13 +95,10 @@ const Navbar = () => {
         { name: "Digital Products (Download)", path: "/download" },
       ],
     },
-    { name: "Architect & Interior Designer", path: "/architects" },
-    { name: "City Contractor", path: "/city-partners" },
+    { name: "Architects & Engineers", path: "/architects" },
+    { name: "Contractors", path: "/city-partners" },
+    { name: "Other Services", path: "/packages" },
     { name: "Marketplace", path: "/building-material-marketplace" },
-    { name: "Package", path: "/packages" },
-    { name: "Gallery", path: "/gallery" },
-    { name: "Digital Card", path: "/digital-card" },
-    { name: "Contact", path: "/contact" },
   ];
 
   const isActive = (path: string) => pathname === path;
@@ -118,9 +115,9 @@ const Navbar = () => {
                 <Image
                   src="/logo1.png"
                   alt="HousePlanFiles Logo"
-                  width={180}
-                  height={56}
-                  className="h-14 w-auto object-contain"
+                  width={220}
+                  height={72}
+                  className="h-16 sm:h-20 w-auto object-contain"
                   priority
                 />
               </div>
@@ -147,9 +144,9 @@ const Navbar = () => {
                 <Image
                   src="/logo1.png"
                   alt="HousePlanFiles Logo"
-                  width={180}
-                  height={56}
-                  className="h-14 w-auto object-contain"
+                  width={220}
+                  height={72}
+                  className="h-16 sm:h-20 w-auto object-contain"
                   priority
                 />
               </Link>
@@ -165,9 +162,9 @@ const Navbar = () => {
                   >
                     <Link
                       href={link.path}
-                      className={`text-[13px] font-medium flex items-center gap-1 relative transition-colors duration-300 ${isActive(link.path) || link.submenu.some(sub => isActive(sub.path))
+                      className={`text-[15px] font-medium flex items-center gap-1 relative transition-colors duration-300 ${isActive(link.path) || link.submenu.some(sub => isActive(sub.path))
                         ? "text-orange-600"
-                        : "text-gray-600 hover:text-orange-600"
+                        : "text-gray-700 hover:text-orange-600"
                         }`}
                     >
                       {link.name}
@@ -186,7 +183,7 @@ const Navbar = () => {
                             <Link
                               key={sub.name}
                               href={sub.path}
-                              className={`block px-4 py-2.5 text-xs font-semibold transition-colors ${isActive(sub.path) ? "bg-orange-50 text-orange-600" : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
+                              className={`block px-4 py-3 text-sm font-medium transition-colors ${isActive(sub.path) ? "bg-orange-50 text-orange-600" : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
                                 }`}
                             >
                               {sub.name}
@@ -200,9 +197,9 @@ const Navbar = () => {
                   <Link
                     key={link.name}
                     href={link.path}
-                    className={`text-[13px] font-medium relative transition-colors duration-300 group whitespace-nowrap ${isActive(link.path)
+                    className={`text-[15px] font-medium relative transition-colors duration-300 group whitespace-nowrap ${isActive(link.path)
                       ? "text-orange-600"
-                      : "text-gray-600 hover:text-orange-600"
+                      : "text-gray-700 hover:text-orange-600"
                       }`}
                   >
                     {link.name}
@@ -215,9 +212,37 @@ const Navbar = () => {
               ))}
             </nav>
             <div className="flex items-center gap-1.5 flex-shrink-0">
-              <div className="hidden md:flex items-center gap-1.5 border-r border-gray-200 pr-1.5 mr-0.5">
+              <div className="hidden md:flex items-center gap-4">
+                {/* Location Dropdown */}
+                <div className="relative flex items-center bg-gray-50 rounded-full border border-gray-200 hover:border-orange-300 transition-colors">
+                  <div className="flex items-center pl-3 pr-1 pointer-events-none">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  </div>
+                  <select 
+                    className="bg-transparent border-none focus:ring-0 text-xs font-semibold text-gray-700 py-1.5 pl-1 pr-6 cursor-pointer appearance-none outline-none hover:text-orange-600 transition-colors"
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        router.push(`/city/${e.target.value.toLowerCase()}`);
+                      }
+                    }}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>Select City</option>
+                    {["Bhopal", "Indore", "Lucknow", "Jaipur", "Nagpur", "Pune", "Hyderabad", "Chennai", "Mumbai", "Bengaluru", "Delhi", "Kolkata", "Ahmedabad", "Chandigarh", "Patna", "Ranchi"].map(city => (
+                      <option key={city} value={city}>{city}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-3.5 h-3.5 absolute right-2 text-gray-500 pointer-events-none" />
+                </div>
+
+                {/* Search Icon */}
+                <button className="text-gray-600 hover:text-orange-600 p-2 rounded-full hover:bg-gray-50 transition-colors">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+
+                {/* Wishlist/Cart Icons */}
                 {showCartAndWishlist && (
-                  <>
+                  <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => setIsWishlistOpen(true)}
                       className="relative text-gray-600 hover:text-orange-600 transition-colors p-1"
@@ -232,7 +257,7 @@ const Navbar = () => {
                     </button>
                     <Link
                       href="/cart"
-                      className="relative text-gray-600 hover:text-orange-600 transition-colors p-1"
+                      className="relative text-gray-600 hover:text-orange-600 transition-colors p-1 mr-2 border-r border-gray-200 pr-4"
                       aria-label="Cart"
                     >
                       <ShoppingCart className="w-[17px] h-[17px]" />
@@ -242,30 +267,19 @@ const Navbar = () => {
                         </span>
                       )}
                     </Link>
-                  </>
+                  </div>
                 )}
-              </div>
-              <div className="hidden md:flex items-center gap-3">
-                <Button
-                  onClick={() => setIsPostRequirementModalOpen(true)}
-                  className="bg-[#25D366] hover:bg-[#128C7E] text-white font-bold h-9 px-4 text-xs shadow-sm hover:shadow-md transition-all"
-                >
-                  Post Requirement
-                </Button>
+
+                {/* Authentication / Profile */}
                 {isUserAllowed ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button className="flex items-center gap-2 outline-none">
-                        <Avatar className="w-10 h-10 border-2 border-orange-100 hover:border-orange-500 transition-colors">
+                        <Avatar className="w-9 h-9 border-2 border-orange-100 hover:border-orange-500 transition-colors">
                           <AvatarFallback className="bg-orange-500 text-white font-bold">
                             {avatarFallback}
                           </AvatarFallback>
                         </Avatar>
-                        <div className="flex flex-col items-start text-sm">
-                          <span className="font-semibold text-gray-800 leading-tight max-w-[100px] truncate">
-                            {displayName}
-                          </span>
-                        </div>
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56 mt-2">
@@ -287,17 +301,14 @@ const Navbar = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-2">
                     <Link href="/login">
-                      <Button className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-[10px] h-[30px] text-[10.5px] shadow-md shadow-orange-500/20">
+                      <Button variant="outline" className="rounded-full border-gray-300 text-gray-700 hover:bg-gray-50 px-5 h-9 text-xs font-semibold">
                         Login
                       </Button>
                     </Link>
                     <Link href="/register">
-                      <Button
-                        variant="outline"
-                        className="rounded-full border-orange-500 text-orange-600 hover:bg-orange-50 px-[10px] h-[30px] text-[10.5px]"
-                      >
+                      <Button className="rounded-full bg-orange-500 hover:bg-orange-600 text-white px-5 h-9 text-xs font-semibold shadow-md shadow-orange-500/20">
                         Register
                       </Button>
                     </Link>

@@ -109,13 +109,24 @@ const Hero = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const handleSearch = () => {
+  const handleSearch = (overrideTerm?: string) => {
+    const termToSearch = typeof overrideTerm === 'string' ? overrideTerm : searchTerm;
     const queryParams = new URLSearchParams();
+    
     if (selectedCategory) queryParams.append("category", selectedCategory);
-    if (searchTerm) queryParams.append("search", searchTerm);
+    if (termToSearch) queryParams.append("search", termToSearch);
+    
     setSuggestions([]);
-    // ✅ Updated URL: /house-plans instead of /products
-    router.push(`/house-plans?${queryParams.toString()}`);
+    
+    const st = termToSearch.toLowerCase();
+    // Smart routing based on search intent
+    if (st.includes("architect") || st.includes("contractor") || st.includes("engineer") || st.includes("plumber")) {
+      router.push(`/architects?${queryParams.toString()}`);
+    } else if (st.includes("tile") || st.includes("decor") || st.includes("cement") || st.includes("paint") || st.includes("material")) {
+      router.push(`/building-material-marketplace?${queryParams.toString()}`);
+    } else {
+      router.push(`/house-plans?${queryParams.toString()}`);
+    }
   };
 
   const handleSuggestionClick = (suggestion: any) => {
@@ -125,7 +136,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-[80vh] h-auto py-24 md:h-screen md:min-h-[700px] flex items-center justify-center text-white overflow-hidden">
+    <section className="relative min-h-[60vh] h-auto py-20 md:min-h-[550px] flex items-center text-white overflow-hidden">
       {/* Background Slider */}
       <div className="absolute inset-0">
         <Image
@@ -139,99 +150,44 @@ const Hero = () => {
           className="object-cover object-center transition-opacity duration-700"
           style={{ opacity: 1 }}
         />
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-black/50" />
       </div>
 
       {/* Hero Content */}
-      <div className="relative z-10 text-center max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center h-full pt-10 md:pt-0">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 leading-[1.3] sm:leading-[1.2] tracking-wide max-w-5xl mx-auto drop-shadow-2xl text-white px-4">
-          Find Readymade Home design, Architect, contractor and marketplace shop in your city
-        </h2>
-
-        <p
-          className="text-sm sm:text-lg md:text-xl mb-6 md:mb-8 text-white/90 font-light max-w-lg mx-auto md:max-w-none drop-shadow-md"
-        >
-          Discover amazing architectural designs for your dream home
-        </p>
-
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 md:mb-10 grid grid-cols-2 gap-2.5 sm:gap-3 w-full max-w-sm sm:max-w-md mx-auto md:max-w-none md:flex md:flex-wrap md:justify-center md:gap-3.5"
-        >
-          <Link href="/architects" className="w-full md:w-auto">
-            <Button className="w-full md:w-auto bg-white text-gray-900 hover:bg-gray-100 font-bold h-11 sm:h-12 md:h-auto md:px-6 md:py-5 rounded-xl shadow-lg text-xs sm:text-sm md:text-base transition-all transform hover:-translate-y-1 whitespace-nowrap">
-              Architects
-            </Button>
-          </Link>
-          <Link href="/contractors" className="w-full md:w-auto">
-            <Button className="w-full md:w-auto bg-white text-purple-600 hover:bg-gray-100 hover:text-purple-700 font-bold h-11 sm:h-12 md:h-auto md:px-6 md:py-5 rounded-xl shadow-lg text-xs sm:text-sm md:text-base transition-all transform hover:-translate-y-1 whitespace-nowrap">
-              Contractors
-            </Button>
-          </Link>
-          <Link href="/industrial-services" className="w-full md:w-auto">
-            <Button className="w-full md:w-auto bg-white text-indigo-600 hover:bg-gray-100 hover:text-indigo-700 font-bold h-11 sm:h-12 md:h-auto md:px-6 md:py-5 rounded-xl shadow-lg text-xs sm:text-sm md:text-base transition-all transform hover:-translate-y-1 whitespace-nowrap">
-              Industrial &amp; Infra
-            </Button>
-          </Link>
-          <Link href="/building-material-marketplace" className="w-full md:w-auto">
-            <Button className="w-full md:w-auto bg-green-700 text-white hover:bg-green-800 font-bold h-11 sm:h-12 md:h-auto md:px-6 md:py-5 rounded-xl shadow-lg text-xs sm:text-sm md:text-base transition-all transform hover:-translate-y-1 whitespace-nowrap">
-              Marketplace
-            </Button>
-          </Link>
-          <Link href="/house-plans" className="w-full md:w-auto">
-            <Button className="w-full md:w-auto bg-white text-red-500 hover:bg-gray-100 hover:text-red-600 font-bold h-11 sm:h-12 md:h-auto md:px-6 md:py-5 rounded-xl shadow-lg text-xs sm:text-sm md:text-base transition-all transform hover:-translate-y-1 whitespace-nowrap">
-              Readymade plans
-            </Button>
-          </Link>
-          <Link href="/leads" className="w-full md:w-auto">
-            <Button className="w-full md:w-auto bg-white text-blue-600 hover:bg-gray-100 hover:text-blue-700 font-bold h-11 sm:h-12 md:h-auto md:px-6 md:py-5 rounded-xl shadow-lg text-xs sm:text-sm md:text-base transition-all transform hover:-translate-y-1 whitespace-nowrap">
-              Lead Board
-            </Button>
-          </Link>
-          <Link href="/other-services" className="col-span-2 w-full md:w-auto flex justify-center">
-            <Button className="w-full max-w-[200px] md:max-w-none md:w-auto bg-white text-teal-600 hover:bg-gray-100 hover:text-teal-700 font-bold h-11 sm:h-12 md:h-auto md:px-6 md:py-5 rounded-xl shadow-lg text-xs sm:text-sm md:text-base transition-all transform hover:-translate-y-1 whitespace-nowrap">
-              Other Services
-            </Button>
-          </Link>
-        </motion.div>
-
-        {/* Search Bar */}
-        <div
-          ref={searchContainerRef}
-          className="bg-white rounded-xl md:rounded-2xl p-2 sm:p-4 shadow-large max-w-2xl w-full mx-auto relative"
-        >
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-            <div className="flex-1">
-              <Select
-                onValueChange={setSelectedCategory}
-                disabled={listStatus === "loading"}
-              >
-                <SelectTrigger className="w-full h-12 text-base text-gray-700 font-medium border-2 border-transparent bg-gray-50 focus:border-orange-500 focus:ring-0 transition-all duration-300 hover:bg-gray-100 rounded-xl px-4">
-                  <SelectValue
-                    placeholder={
-                      listStatus === "loading" ? "Loading..." : "Category"
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      <div className="relative z-10 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div className="flex justify-between items-start pt-10">
+          <div className="max-w-4xl w-full">
+            <div className="inline-block bg-orange-500 text-white font-bold px-4 py-1.5 rounded-full text-xs sm:text-sm tracking-widest uppercase mb-6 shadow-lg">
+              India's Premium Platform
             </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-extrabold text-white leading-[1.2] tracking-tight mb-5 drop-shadow-2xl">
+              Home Design &<br />
+              Construction Ka<br />
+              <span className="text-orange-500">Digital Bazar</span>
+            </h1>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-200 mb-8 max-w-2xl font-medium drop-shadow-lg leading-relaxed">
+              Ek hi platform par paaiye ghar se judi har zaroorat — Readymade Designs, Architects, Contractors, aur Marketplace.
+            </p>
 
-            <div className="flex-1 relative">
-              <Input
-                placeholder="Search plot size e.g. 25x40"
-                className="h-12 text-base border-2 border-transparent bg-gray-50 focus:border-orange-500 focus:ring-0 text-gray-700 transition-all duration-300 hover:bg-gray-100 rounded-xl px-4"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onFocus={handleSearchFocus}
-                autoComplete="off"
-              />
+            {/* Search Bar */}
+            <div className="w-full max-w-4xl relative mb-8" ref={searchContainerRef}>
+              <div className="relative flex items-center bg-white rounded-full p-2 shadow-2xl border border-gray-100 transition-all focus-within:shadow-[0_8px_40px_rgb(0,0,0,0.2)] w-full">
+                <Search className="w-6 h-6 text-gray-400 ml-4 absolute left-2" />
+                <Input
+                  placeholder="Search by city, service, design, professional, product..."
+                  className="flex-1 h-12 sm:h-14 pl-14 pr-2 sm:pr-6 text-sm sm:text-lg border-none focus-visible:ring-0 text-gray-800 bg-transparent rounded-full shadow-none font-medium placeholder:text-gray-400 min-w-0"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onFocus={handleSearchFocus}
+                  autoComplete="off"
+                />
+                <Button
+                  className="bg-orange-500 hover:bg-orange-600 text-white rounded-full h-12 sm:h-14 w-14 sm:w-16 flex items-center justify-center shrink-0 shadow-md transition-colors"
+                  onClick={() => handleSearch()}
+                >
+                  <Search className="w-5 h-5 sm:w-6 sm:h-6" />
+                </Button>
+              </div>
 
               {/* Autocomplete Suggestions */}
               <AnimatePresence>
@@ -240,22 +196,21 @@ const Hero = () => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl z-50 text-left border border-gray-100 max-h-48 overflow-y-auto"
+                    className="absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-2xl z-50 text-left border border-gray-100 max-h-60 overflow-y-auto"
                   >
-                    <ul className="py-1">
+                    <ul className="py-2">
                       {suggestions.map((s: any) => (
                         <li
                           key={s._id}
-                          className="px-3 py-2 cursor-pointer text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-50 last:border-none"
+                          className="px-5 py-3 cursor-pointer text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 border-b border-gray-50 last:border-none transition-colors"
                           onClick={() => handleSuggestionClick(s)}
                         >
-                          <span className="font-semibold">{s.plotSize}</span> —{" "}
-                          {s.name}
+                          <span className="font-semibold">{s.plotSize}</span> — {s.name}
                         </li>
                       ))}
                       <li
-                        className="px-3 py-2 cursor-pointer text-sm text-orange-600 font-semibold hover:bg-gray-100 text-center"
-                        onClick={handleSearch}
+                        className="px-5 py-3 cursor-pointer text-sm text-orange-600 font-bold hover:bg-orange-50 text-center transition-colors"
+                        onClick={() => handleSearch()}
                       >
                         View all for &quot;{searchTerm}&quot;
                       </li>
@@ -265,22 +220,26 @@ const Hero = () => {
               </AnimatePresence>
             </div>
 
-            <Button
-              className="bg-orange-500 hover:bg-orange-600 text-white font-bold w-full sm:w-auto sm:px-8 h-12 rounded-xl transition-all duration-300 shadow-md group"
-              onClick={handleSearch}
-            >
-              <Search className="w-5 h-5 sm:mr-2 group-hover:rotate-12 transition-transform duration-300" />
-              <span className="inline text-base">Search</span>
-            </Button>
+            {/* Popular Searches */}
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-sm font-semibold text-white drop-shadow-md">Popular Searches:</span>
+              <div className="flex flex-wrap gap-2">
+                {["30x40 House Plan", "Architect in Bhopal", "Contractor in Indore", "Tiles Supplier", "Home Decor"].map((tag) => (
+                  <button 
+                    key={tag} 
+                    onClick={() => {
+                      setSearchTerm(tag);
+                      handleSearch(tag);
+                    }}
+                    className="text-xs font-semibold bg-black/40 hover:bg-orange-500 backdrop-blur-sm border border-white/20 text-white px-3 py-1.5 rounded-full transition-colors"
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </div>
+            </div>
           </div>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-2 md:gap-8 mt-8 md:mt-12 max-w-lg mx-auto w-full">
-          <AnimatedStat end={1000} suffix="+" label="House Plans" />
-          <AnimatedStat end={1000} suffix="+" label="Happy Clients" />
-          <AnimatedStat end={10} suffix="+" label="Years Exp." />
-        </div>
       </div>
     </section>
   );
