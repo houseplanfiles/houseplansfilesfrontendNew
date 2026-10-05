@@ -584,42 +584,19 @@ const SellersSection: FC = () => {
   return (
     <div className="flex flex-col bg-gray-50/50 pt-10">
 
-      {/* --- Banner --- */}
-      <div className="relative py-16 sm:py-24 overflow-hidden">
-        <div className="absolute inset-0">
-          <Image src="/marketplace_banner.png" alt="Marketplace" fill className="object-cover" sizes="100vw" />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/70 to-gray-900/30" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 text-center z-10 flex flex-col justify-center items-center">
-          <motion.h2
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 drop-shadow-md break-words px-2"
-          >
-            Building Material &amp; Home Decor
-          </motion.h2>
-          <div className="h-1 w-20 md:w-24 bg-orange-600 mx-auto rounded-full mb-6"></div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-gray-200 text-sm md:text-base max-w-2xl mx-auto mb-8 font-medium"
-          >
-            Discover verified building material stores and interior showrooms.
-          </motion.p>
-
-          <Button
-            onClick={() => router.push("/register?role=seller")}
-            className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-5 px-8 rounded-full shadow-lg hover:shadow-orange-500/20 transition-all transform hover:-translate-y-1 text-base flex items-center gap-2"
-          >
-            <Store className="w-5 h-5" /> Register Your Shop
-          </Button>
-        </div>
+      {/* --- HERO HEADER --- */}
+      <div className="text-center mb-10 px-4">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">
+          Top <span className="text-orange-600">Material & Decor Shops</span>
+        </h2>
+        <p className="text-lg text-gray-500 font-medium">
+          Discover verified building material stores and interior showrooms
+        </p>
       </div>
 
-      <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 md:-mt-16 relative z-20 pb-20 w-full">
+      <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pb-20 w-full">
         {/* --- Filters Card --- */}
-        <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 md:p-8 mb-8 space-y-4">
+        <div className="mb-8 space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
             <div className="lg:col-span-2">
               <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Search Shop or Product</Label>

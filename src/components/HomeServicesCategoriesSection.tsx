@@ -1,175 +1,167 @@
 "use client";
 import React, { FC } from "react";
-import { useRouter } from "next/navigation";
-import {
-  PencilRuler,
-  Sofa,
-  HardHat,
-  Zap,
-  Droplet,
-  LayoutGrid,
-  PaintRoller,
-  Hammer,
-  AppWindow,
-  Cuboid,
-  Factory,
-  PackageOpen,
-  Settings,
-  Users,
-  ClipboardCheck,
-  Truck,
-  Bug,
-  Fan,
-  ArrowUpDown,
-  Sun,
-  Cpu,
-  Umbrella,
-  TreePine,
-  Utensils,
-  Waves,
-  Flame,
-  Wrench,
-  Briefcase,
-  UserCheck,
-  LayoutDashboard,
-  Home
-} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Home, PencilRuler, HardHat, Wrench, ShoppingCart, ArrowRight, Users, ShieldCheck, MapPin, Star, Globe } from "lucide-react";
 
-// Section 1: Home Designing and Construction Services
-const HOME_SERVICES = [
-  { id: 1, label: "Architects & engineers", link: "/architects", icon: PencilRuler, color: "bg-blue-500/10 text-blue-600 hover:border-blue-500" },
-  { id: 2, label: "Interior designer", link: "/home-designing-services?profession=Interior", icon: Sofa, color: "bg-indigo-500/10 text-indigo-600 hover:border-indigo-500" },
-  { id: 3, label: "Contractors Buildind & Interior", link: "/home-designing-services?profession=Building", icon: HardHat, color: "bg-amber-500/10 text-amber-600 hover:border-amber-500" },
-  { id: 4, label: "Electrical Contractor", link: "/home-designing-services?profession=Electrical", icon: Zap, color: "bg-yellow-500/10 text-yellow-600 hover:border-yellow-500" },
-  { id: 5, label: "Plumbing Contractor", link: "/home-designing-services?profession=Plumbing", icon: Droplet, color: "bg-sky-500/10 text-sky-600 hover:border-sky-500" },
-  { id: 6, label: "Tiles & Stone Contractor", link: "/home-designing-services?profession=Tiles %26 Granite", icon: LayoutGrid, color: "bg-teal-500/10 text-teal-600 hover:border-teal-500" },
-  { id: 7, label: "Painting Contractor", link: "/home-designing-services?profession=Painting %26 Waterproofing", icon: PaintRoller, color: "bg-rose-500/10 text-rose-600 hover:border-rose-500" },
-  { id: 9, label: "Carpenter Services", link: "/home-designing-services?profession=Carpenter", icon: Hammer, color: "bg-orange-500/10 text-orange-600 hover:border-orange-500" },
-  { id: 16, label: "False Ceiling Contractor", link: "/home-designing-services?profession=Interior", icon: AppWindow, color: "bg-fuchsia-500/10 text-fuchsia-600 hover:border-fuchsia-500" },
-  { id: 21, label: "Building material", link: "/building-material-marketplace?category=Building Material", icon: Cuboid, color: "bg-emerald-500/10 text-emerald-600 hover:border-emerald-500" },
-];
-
-// Section 2: Industrial Construction and Infrastructure Services
-const INDUSTRIAL_SERVICES = [
-  { id: 1, label: "Pre Engineering Buildings", link: "/industrial-services?profession=Pre Engineering Buildings", icon: Factory, color: "bg-emerald-500/10 text-emerald-600 hover:border-emerald-500" },
-  { id: 2, label: "Pre Fabricated Buildings", link: "/industrial-services?profession=Pre Fabricated Buildings", icon: PackageOpen, color: "bg-violet-500/10 text-violet-600 hover:border-violet-500" },
-  { id: 3, label: "Pre Cast Concrete Material", link: "/industrial-services?profession=Pre Cast Concrete Material", icon: Cuboid, color: "bg-stone-500/10 text-stone-600 hover:border-stone-500" },
-  { id: 4, label: "Machinery Services", link: "/industrial-services?profession=Machinery Services", icon: Settings, color: "bg-gray-500/10 text-gray-600 hover:border-gray-500" },
-  { id: 5, label: "Manpower Supply", link: "/industrial-services?profession=Manpower Supply", icon: Users, color: "bg-fuchsia-500/10 text-fuchsia-600 hover:border-fuchsia-500" },
-  { id: 6, label: "Building Inspection Services", link: "/industrial-services?profession=Building Inspection Services", icon: ClipboardCheck, color: "bg-slate-500/10 text-slate-600 hover:border-slate-500" },
-  { id: 7, label: "Bulk Building Material Services", link: "/industrial-services?profession=Bulk Building Material Services", icon: Truck, color: "bg-orange-600/10 text-orange-700 hover:border-orange-600" },
-  { id: 8, label: "Flooring Services", link: "/industrial-services?profession=Flooring Services", icon: LayoutDashboard, color: "bg-teal-500/10 text-teal-600 hover:border-teal-500" },
-  { id: 9, label: "Roofing", link: "/industrial-services?profession=Roofing", icon: Home, color: "bg-red-500/10 text-red-600 hover:border-red-500" },
-  { id: 10, label: "Structural Designers", link: "/industrial-services?profession=Structural Designers", icon: HardHat, color: "bg-amber-500/10 text-amber-600 hover:border-amber-500" },
-];
-
-// Section 3: Other Services
-const OTHER_SERVICES = [
-  { id: 14, label: "Pest Control Service", link: "/other-services?profession=Pest Control", icon: Bug, color: "bg-red-500/10 text-red-600 hover:border-red-500" },
-  { id: 10, label: "HVAC System Installation", link: "/other-services?profession=HVAC", icon: Fan, color: "bg-blue-600/10 text-blue-700 hover:border-blue-600" },
-  { id: 11, label: "Lift Installation Services", link: "/other-services?profession=Lift Services", icon: ArrowUpDown, color: "bg-purple-500/10 text-purple-600 hover:border-purple-500" },
-  { id: 13, label: "Solar Panel Installation", link: "/other-services?profession=Solar Rooftop Panel", icon: Sun, color: "bg-amber-600/10 text-amber-700 hover:border-amber-600" },
-  { id: 18, label: "Home Automation", link: "/other-services?profession=Electrical", icon: Cpu, color: "bg-yellow-600/10 text-yellow-700 hover:border-yellow-600" },
-  { id: 15, label: "Water Proofing Installation", link: "/other-services?profession=Painting %26 Waterproofing", icon: Umbrella, color: "bg-sky-600/10 text-sky-700 hover:border-sky-600" },
-  { id: 8, label: "Garden & Landscaping Contractor", link: "/other-services?profession=Landscaping %26 Garden", icon: TreePine, color: "bg-green-500/10 text-green-600 hover:border-green-500" },
-  { id: 17, label: "Modular Kitchen Services", link: "/other-services?profession=Modular Kitchen", icon: Utensils, color: "bg-orange-500/10 text-orange-600 hover:border-orange-500" },
-  { id: 12, label: "Swimming Pool Contractor", link: "/other-services?profession=Swimming Pool", icon: Waves, color: "bg-cyan-500/10 text-cyan-600 hover:border-cyan-500" },
-  { id: 22, label: "Fire safety services", link: "/other-services?profession=Building", icon: Flame, color: "bg-red-500/10 text-red-600 hover:border-red-500" },
-  { id: 23, label: "Fabricator", link: "/other-services?profession=Glass Fabricator", icon: Wrench, color: "bg-gray-500/10 text-gray-600 hover:border-gray-500" },
+const CATEGORIES = [
+  {
+    id: 1,
+    title: "Readymade Home Designs",
+    desc: "Ready to use house plans for every plot size & budget",
+    link: "/house-plans",
+    icon: Home,
+    btnText: "Explore Designs",
+    image: "/b11.webp",
+    color: "bg-orange-500",
+    lightColor: "bg-orange-50",
+    textColor: "text-orange-500",
+  },
+  {
+    id: 2,
+    title: "Architects & Engineers",
+    desc: "Design, planning & structural experts",
+    link: "/architects",
+    icon: PencilRuler,
+    btnText: "Find Experts",
+    image: "/b12.webp",
+    color: "bg-blue-500",
+    lightColor: "bg-blue-50",
+    textColor: "text-blue-500",
+  },
+  {
+    id: 3,
+    title: "Contractors",
+    desc: "Verified contractors for your dream project",
+    link: "/contractors",
+    icon: HardHat,
+    btnText: "Find Contractors",
+    image: "/b13.webp",
+    color: "bg-green-500",
+    lightColor: "bg-green-50",
+    textColor: "text-green-500",
+  },
+  {
+    id: 4,
+    title: "Other Services",
+    desc: "Plumbing, electrical, painting, waterproofing & more",
+    link: "/other-services",
+    icon: Wrench,
+    btnText: "Explore Services",
+    image: "/b14.webp",
+    color: "bg-purple-500",
+    lightColor: "bg-purple-50",
+    textColor: "text-purple-500",
+  },
+  {
+    id: 5,
+    title: "Marketplace",
+    desc: "Building materials, home decor, furniture & more",
+    link: "/building-material-marketplace",
+    icon: ShoppingCart,
+    btnText: "Shop Now",
+    image: "/b11.webp",
+    color: "bg-red-500",
+    lightColor: "bg-red-50",
+    textColor: "text-red-500",
+  },
 ];
 
 const HomeServicesCategoriesSection: FC = () => {
-  const router = useRouter();
-
   return (
-    <section id="services-categories" className="bg-gray-50 pt-16 pb-6 md:pt-20 md:pb-8 border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* --- WHAT ARE YOU LOOKING FOR? GRID SECTION 1 --- */}
-        <div className="mb-16">
-          <div className="text-center pt-2 mb-10 animate-fade-in">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">
-              Home Designing &amp; Construction <span className="text-orange-600">Services</span>
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
-              Click on any category below to instantly find and connect with verified local professionals registered in your city.
-            </p>
-          </div>
+    <section className="bg-gray-50 py-10">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header */}
+        <div className="mb-10">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+            Aap Kya Dhoondh Rahe Hain?
+          </h2>
+          <p className="text-gray-500 font-medium mt-2 text-lg">
+            Apni zaroorat ke hisaab se category select karein
+          </p>
+        </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-6">
-            {HOME_SERVICES.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => router.push(option.link)}
-                className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100/80 rounded-2xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:-translate-y-1 group text-center min-h-[120px]"
-              >
-                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                  <option.icon size={40} strokeWidth={2} />
+        {/* 5 Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-16">
+          {CATEGORIES.map((cat) => (
+            <Link 
+              key={cat.id} 
+              href={cat.link}
+              className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-gray-100 transition-all duration-300 group flex flex-col h-full"
+            >
+              <div className="relative h-40 w-full overflow-hidden">
+                <Image 
+                  src={cat.image} 
+                  alt={cat.title} 
+                  fill 
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="p-6 flex flex-col flex-grow relative">
+                {/* Floating Icon Badge */}
+                <div className={`absolute -top-8 left-6 w-14 h-14 ${cat.color} rounded-2xl flex items-center justify-center text-white shadow-lg border-4 border-white`}>
+                  <cat.icon className="w-6 h-6" />
                 </div>
-                <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
-                  {option.label}
-                </span>
-              </button>
-            ))}
+                
+                <h3 className="text-lg font-bold text-gray-900 mt-6 mb-2 leading-tight group-hover:text-orange-600 transition-colors">
+                  {cat.title}
+                </h3>
+                <p className="text-sm text-gray-500 mb-6 flex-grow">
+                  {cat.desc}
+                </p>
+                <div className={`w-full py-3 rounded-xl flex items-center justify-center gap-2 font-bold transition-colors ${cat.lightColor} ${cat.textColor} group-hover:${cat.color} group-hover:text-white`}>
+                  {cat.btnText}
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Stats Bar */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 py-8 px-6 lg:px-12">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center divide-x divide-gray-100">
+            <div className="flex items-center justify-center gap-4 px-4">
+              <Users className="w-10 h-10 text-gray-800" />
+              <div>
+                <p className="font-extrabold text-xl text-gray-900">1000+</p>
+                <p className="text-xs font-semibold text-gray-500">Happy Customers</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-4 px-4">
+              <ShieldCheck className="w-10 h-10 text-gray-800" />
+              <div>
+                <p className="font-extrabold text-xl text-gray-900">500+</p>
+                <p className="text-xs font-semibold text-gray-500">Verified Professionals</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-4 px-4">
+              <MapPin className="w-10 h-10 text-gray-800" />
+              <div>
+                <p className="font-extrabold text-xl text-gray-900">50+</p>
+                <p className="text-xs font-semibold text-gray-500">Cities Across India</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-4 px-4">
+              <div className="flex -space-x-2">
+                <Star className="w-10 h-10 text-orange-500 fill-orange-500" />
+              </div>
+              <div>
+                <p className="font-extrabold text-xl text-gray-900">4.8/5</p>
+                <p className="text-xs font-semibold text-gray-500">Google Rating (40+ Reviews)</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-4 px-4 hidden md:flex">
+              <Globe className="w-10 h-10 text-gray-800" />
+              <div>
+                <p className="font-extrabold text-xl text-gray-900">50+ Countries</p>
+                <p className="text-xs font-semibold text-gray-500">Serving Across</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* --- WHAT ARE YOU LOOKING FOR? GRID SECTION 2 --- */}
-        <div className="mb-16">
-          <div className="text-center mb-10 animate-fade-in">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">
-              Other <span className="text-orange-600">Services</span>
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
-              Discover a wide range of additional maintenance and finishing services.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-6">
-            {OTHER_SERVICES.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => router.push(option.link)}
-                className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100/80 rounded-2xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:-translate-y-1 group text-center min-h-[120px]"
-              >
-                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                  <option.icon size={40} strokeWidth={2} />
-                </div>
-                <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
-                  {option.label}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* --- WHAT ARE YOU LOOKING FOR? GRID SECTION 3 --- */}
-        <div className="mb-8">
-          <div className="text-center mb-10 animate-fade-in">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight mb-4">
-              Industrial Construction &amp; <span className="text-orange-600">Infrastructure Services</span>
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto font-medium">
-              Explore specialized services and experts for large scale industrial and infrastructure projects.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-6">
-            {INDUSTRIAL_SERVICES.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => router.push(option.link)}
-                className="flex flex-col items-center justify-center p-4 bg-white border border-gray-100/80 rounded-2xl shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 hover:-translate-y-1 group text-center min-h-[120px]"
-              >
-                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 ${option.color.split(" ")[0]} ${option.color.split(" ")[1]}`}>
-                  <option.icon size={40} strokeWidth={2} />
-                </div>
-                <span className="text-sm md:text-base font-bold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2 px-1 leading-snug">
-                  {option.label}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

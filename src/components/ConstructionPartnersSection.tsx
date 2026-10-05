@@ -371,33 +371,18 @@ const ConstructionPartnersSection: FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* --- HERO HEADER --- */}
-          <div className="relative bg-gray-900 p-4 sm:p-10 md:p-14 rounded-2xl sm:rounded-[2rem] overflow-hidden mb-12 shadow-2xl">
-            <div className="absolute inset-0 opacity-20">
-               <Image src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80" alt="bg" fill sizes="100vw" className="object-cover" loading="lazy" />
-            </div>
-            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6 sm:gap-8 text-center md:text-left">
-              <div className="w-full">
-                <Badge className="bg-orange-500 hover:bg-orange-600 mb-4 px-4 py-1.5 text-sm border-none">Trusted Network</Badge>
-                <h2 className="text-[13px] min-[350px]:text-[15px] min-[390px]:text-[17px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[42px] font-extrabold text-white tracking-tight whitespace-nowrap">
-                  City Contractor (Building &amp; Interior)
-                </h2>
-                <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl px-2 md:px-0 mx-auto md:mx-0">
-                  Find verified professionals for your dream project. From civil work to interior design, we have the best partners.
-                </p>
-              </div>
-              <Button
-                onClick={() => router.push("/register?role=Contractor")}
-                className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 px-6 sm:py-4 sm:px-6 md:py-6 md:px-8 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-sm sm:text-base md:text-lg flex items-center justify-center gap-2 whitespace-nowrap shrink-0 w-full sm:w-auto"
-              >
-                <UserPlus className="w-5 h-5 sm:w-6 sm:h-6" />
-                Register With Us
-              </Button>
-            </div>
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">
+              Top <span className="text-orange-600">Contractors</span>
+            </h2>
+            <p className="text-lg text-gray-500 font-medium">
+              Hire verified local contractors for construction and interiors
+            </p>
           </div>
 
           <main className="relative z-10">
             {/* --- FILTERS SECTION (Restored) --- */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-10 -mt-10 md:-mt-20">
+            <div className="mb-10">
                 <div className="flex flex-col md:flex-row gap-6 items-end">
                   {/* City Search */}
                   <div className="w-full md:w-1/2 text-left">

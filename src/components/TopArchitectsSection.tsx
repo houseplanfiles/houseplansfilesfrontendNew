@@ -352,33 +352,18 @@ const TopArchitectsSection: FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* --- HERO HEADER --- */}
-          <div className="relative bg-gray-900 p-6 sm:p-10 md:p-14 rounded-2xl sm:rounded-[2rem] overflow-hidden mb-12 shadow-2xl">
-            <div className="absolute inset-0 opacity-20">
-              <Image src="/architect_hero.webp" alt="Architectural Background" fill sizes="100vw" className="object-cover" loading="lazy" />
-            </div>
-            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6 sm:gap-8 text-center md:text-left">
-              <div className="w-full">
-                <Badge className="bg-orange-600 text-white border-none mb-4 px-4 py-1.5 text-sm">Expert Design Team</Badge>
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight break-words">
-                  Hire Your Top City Architects, Interior Designers & Professionals
-                </h2>
-                <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl font-medium mx-auto md:mx-0">
-                  Architect, Civil Design Engineer, Structure Engineer, Interior Designer, Site Engineer, MEP Consultant, Vastu Consultant
-                </p>
-              </div>
-              <Button
-                onClick={() => router.push("/register?role=professional")}
-                className="bg-orange-600 text-white hover:bg-orange-700 font-bold py-3.5 px-6 sm:py-5 sm:px-8 md:py-8 md:px-12 rounded-full shadow-2xl transition-all transform hover:-translate-y-1 text-sm sm:text-base md:text-lg flex items-center justify-center gap-2 sm:gap-3 whitespace-nowrap shrink-0 w-full sm:w-auto"
-              >
-                <UserPlus className="w-5 h-5 sm:w-6 sm:h-6" />
-                Join as Architect
-              </Button>
-            </div>
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">
+              Top <span className="text-orange-600">Architects & Designers</span>
+            </h2>
+            <p className="text-lg text-gray-500 font-medium">
+              Find the best experts to design your dream project
+            </p>
           </div>
 
           <main className="relative z-10">
             {/* --- FILTERS SECTION --- */}
-            <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-6 mb-10 -mt-10 md:-mt-20">
+            <div className="mb-10">
               <div className="flex flex-col lg:flex-row gap-6 items-end">
                 {/* City Search */}
                 <div className="w-full lg:w-1/3 text-left">
