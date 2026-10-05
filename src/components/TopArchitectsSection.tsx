@@ -253,14 +253,16 @@ const ArchitectCard: FC<{
               View Profile
             </Button>
             
-            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-              <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
-                <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> <span className="truncate">WhatsApp</span>
-              </Button>
-              <Button onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = `tel:${architect.phone?.replace(/\D/g, '')}`; }} className="w-full bg-blue-600 hover:bg-blue-700 text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
-                <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> <span className="truncate">Call Now</span>
-              </Button>
-            </div>
+            {architect.contractorType === "Premium" && (
+              <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
+                  <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> <span className="truncate">WhatsApp</span>
+                </Button>
+                <Button onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = `tel:${architect.phone?.replace(/\D/g, '')}`; }} className="w-full bg-blue-600 hover:bg-blue-700 text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
+                  <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> <span className="truncate">Call Now</span>
+                </Button>
+              </div>
+            )}
             
             <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
               <Button onClick={() => onContact(architect)} className="w-full bg-gray-800 hover:bg-gray-900 text-white h-8 sm:h-10 text-[10px] sm:text-xs font-medium px-1 flex items-center justify-center gap-1">
