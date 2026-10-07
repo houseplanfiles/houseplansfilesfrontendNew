@@ -13,30 +13,30 @@ const CTA = () => {
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="flex justify-center items-center gap-4 mb-6">
-          <Building2 className="w-8 h-8 text-orange-500" />
-          <div className="h-0.5 w-12 bg-gray-700" />
-          <Globe2 className="w-8 h-8 text-orange-500" />
+        <div className="flex justify-center items-center gap-4 mb-4 md:mb-6">
+          <Building2 className="w-6 h-6 md:w-8 md:h-8 text-orange-500" />
+          <div className="h-0.5 w-10 md:w-12 bg-gray-700" />
+          <Globe2 className="w-6 h-6 md:w-8 md:h-8 text-orange-500" />
         </div>
         
-        <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">
+        <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 md:mb-6 leading-tight md:tracking-tight">
           Local to Digital <span className="text-orange-500">→</span> Digital to <span className="text-orange-500">Global</span>
         </h2>
-        <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-3xl mx-auto font-medium">
+        <p className="text-base md:text-xl text-gray-400 mb-8 md:mb-10 max-w-3xl mx-auto font-medium px-2">
           Take your construction business to the next level. Join India's fastest growing digital platform for architects, contractors, and building material suppliers.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link href="/register?role=professional">
-            <Button className="bg-orange-600 text-white hover:bg-orange-700 font-bold px-10 py-7 text-lg rounded-full shadow-2xl transition-transform hover:-translate-y-1 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
+          <Link href="/register?role=professional" className="w-full sm:w-auto">
+            <Button className="bg-orange-600 text-white hover:bg-orange-700 font-bold px-6 py-6 md:px-10 md:py-7 text-base md:text-lg rounded-full shadow-2xl transition-transform hover:-translate-y-1 w-full">
               Join as Professional
-              <ArrowRight className="ml-2 w-5 h-5" />
+              <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5" />
             </Button>
           </Link>
-          <Link href="/contact">
+          <Link href="/contact" className="w-full sm:w-auto">
             <Button
               variant="outline"
-              className="border-2 border-gray-700 text-gray-300 bg-gray-800 hover:bg-gray-700 hover:text-white font-bold px-10 py-7 text-lg rounded-full transition-colors w-full sm:w-auto"
+              className="border-2 border-gray-700 text-gray-300 bg-gray-800 hover:bg-gray-700 hover:text-white font-bold px-6 py-6 md:px-10 md:py-7 text-base md:text-lg rounded-full transition-colors w-full"
             >
               Contact Support
             </Button>
@@ -44,22 +44,22 @@ const CTA = () => {
         </div>
 
         {/* Trust Indicators */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 max-w-3xl mx-auto pt-10 border-t border-gray-800">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mt-12 md:mt-16 max-w-3xl mx-auto pt-8 md:pt-10 border-t border-gray-800">
           <div className="text-center">
-            <div className="text-4xl font-extrabold text-white mb-1">5K+</div>
-            <div className="text-gray-500 text-sm font-bold uppercase tracking-wider">Professionals</div>
+            <div className="text-3xl md:text-4xl font-extrabold text-white mb-1">5K+</div>
+            <div className="text-gray-500 text-xs md:text-sm font-bold uppercase tracking-wider">Professionals</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-extrabold text-white mb-1">10K+</div>
-            <div className="text-gray-500 text-sm font-bold uppercase tracking-wider">House Plans</div>
+            <div className="text-3xl md:text-4xl font-extrabold text-white mb-1">10K+</div>
+            <div className="text-gray-500 text-xs md:text-sm font-bold uppercase tracking-wider">House Plans</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-extrabold text-white mb-1">50+</div>
-            <div className="text-gray-500 text-sm font-bold uppercase tracking-wider">Cities Active</div>
+            <div className="text-3xl md:text-4xl font-extrabold text-white mb-1">50+</div>
+            <div className="text-gray-500 text-xs md:text-sm font-bold uppercase tracking-wider">Cities Active</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-extrabold text-white mb-1">1M+</div>
-            <div className="text-gray-500 text-sm font-bold uppercase tracking-wider">Happy Users</div>
+            <div className="text-3xl md:text-4xl font-extrabold text-white mb-1">1M+</div>
+            <div className="text-gray-500 text-xs md:text-sm font-bold uppercase tracking-wider">Happy Users</div>
           </div>
         </div>
       </div>

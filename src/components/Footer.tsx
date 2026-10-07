@@ -51,7 +51,7 @@ const Footer = () => {
   return (
     <footer className="bg-gray-950 text-gray-300 border-t border-gray-800">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 lg:gap-16">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-8 gap-y-12 lg:gap-12">
 
           {/* About Section */}
           <div className="col-span-2 lg:col-span-1">
@@ -108,6 +108,27 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* Explore / Resources */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-bold mb-6 text-white uppercase tracking-wider">Explore</h3>
+            <ul className="space-y-4">
+              {[
+                { name: "Gallery", href: "/gallery" },
+                { name: "Downloads", href: "/downloads" },
+                { name: "Blogs", href: "/blogs" },
+                { name: "Careers", href: "/careers" },
+                { name: "Leads Board", href: "/leads" },
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="text-gray-400 font-medium hover:text-orange-500 transition-colors flex items-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500/0 mr-2 transition-all hover:bg-orange-500"></span>
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Support */}
           <div className="col-span-1">
             <h3 className="text-lg font-bold mb-6 text-white uppercase tracking-wider">Support</h3>
@@ -118,9 +139,6 @@ const Footer = () => {
                 { name: "Refund Policy", href: "/refund-policy" },
                 { name: "Terms of Service", href: "/terms-and-conditions" },
                 { name: "Privacy Policy", href: "/privacy-policy" },
-                { name: "Blogs", href: "/blogs" },
-                { name: "Careers", href: "/careers" },
-                { name: "Leads Board", href: "/leads" },
               ].map((item) => (
                 <li key={item.name}>
                   <Link href={item.href} className="text-gray-400 font-medium hover:text-orange-500 transition-colors flex items-center">
@@ -154,8 +172,8 @@ const Footer = () => {
                 <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center shrink-0">
                   <Mail className="w-5 h-5 text-orange-500" />
                 </div>
-                <a href="mailto:houseplansdesignsfile@gmail.com" className="text-gray-400 font-medium hover:text-orange-500 transition-colors break-all">
-                  houseplansdesignsfile@gmail.com
+                <a href="mailto:Info@houseplanfiles.com" className="text-gray-400 font-medium hover:text-orange-500 transition-colors break-all">
+                  Info@houseplanfiles.com
                 </a>
               </div>
             </div>

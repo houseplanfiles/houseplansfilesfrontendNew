@@ -19,9 +19,14 @@ import {
   ZoomIn,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
+  ChevronDown,
   Store,
   MessageCircle,
   Phone,
+  Filter,
+  Check,
+  ChevronsUpDown,
 } from "lucide-react";
 
 
@@ -61,7 +66,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Check, ChevronsUpDown } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 // --- 1. FULL SCREEN IMAGE VIEWER ---
@@ -420,6 +425,7 @@ const MarketplacePage: FC = () => {
   const [selectedPincode, setSelectedPincode] = useState("");
   const [selectedBusinessType, setSelectedBusinessType] = useState("All");
   const [selectedMaterialType, setSelectedMaterialType] = useState("All");
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const INDIAN_STATES = [
     "All States", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
@@ -661,7 +667,7 @@ const MarketplacePage: FC = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-gray-900/60" />
         </div>
-        <div className="relative z-10 h-full max-w-7xl mx-auto px-4 flex flex-col justify-center items-center text-center">
+        <div className="relative z-10 h-full max-w-[1600px] mx-auto px-4 flex flex-col justify-center items-center text-center">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -691,9 +697,32 @@ const MarketplacePage: FC = () => {
         </div>
       </div>
 
-      <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 md:-mt-16 relative z-20 pb-20 w-full">
+      <main className="flex-grow max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 -mt-10 md:-mt-16 relative z-20 pb-20 w-full">
         {/* --- Filters Card --- */}
-        <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 md:p-8 mb-8 space-y-4">
+        {/* Mobile Filter Toggle Button */}
+        <div className="md:hidden mb-3 flex items-center gap-3">
+          <button
+            onClick={() => setShowMobileFilters(!showMobileFilters)}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm ${
+              showMobileFilters
+                ? "bg-orange-600 text-white border-orange-600"
+                : "bg-white text-gray-700 border-gray-200"
+            }`}
+          >
+            <Filter className="w-4 h-4" />
+            {showMobileFilters ? "Hide Filters" : "Show Filters"}
+            {showMobileFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+          {(isPanIndiaFilter || selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode || searchTerm || selectedBusinessType !== "All" || selectedShopCategory !== "All" || selectedMaterialType !== "All") && (
+            <span className="text-xs text-orange-600 font-bold bg-orange-50 px-2 py-1 rounded-full border border-orange-200">
+              Filters Active
+            </span>
+          )}
+        </div>
+
+        <div className={`bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 md:p-8 mb-8 space-y-4 ${
+          showMobileFilters ? "block" : "hidden md:block"
+        }`}>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
             <div className="lg:col-span-2">
               <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Search Shop or Product</Label>

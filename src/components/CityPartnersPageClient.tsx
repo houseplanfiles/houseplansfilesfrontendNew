@@ -335,7 +335,7 @@ const PartnersPage: FC = () => {
           <Image src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80" className="object-cover opacity-20" alt="Hero" fill priority sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent" />
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 text-center">
+        <div className="relative max-w-[1600px] mx-auto px-4 text-center">
           <Badge className="bg-orange-500 mb-4">Trusted Network</Badge>
           <h1 className="text-[13px] min-[350px]:text-[15px] min-[390px]:text-[17px] sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-4 px-1 leading-tight whitespace-nowrap">
             City Contractor (Building &amp; Interior)
@@ -348,7 +348,7 @@ const PartnersPage: FC = () => {
         </div>
       </div>
 
-      <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10 pb-20">
+      <main className="flex-grow w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10 pb-20">
         {/* --- Filters Section --- */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6 mb-10 w-full">
           <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-gray-100">

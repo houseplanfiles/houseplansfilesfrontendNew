@@ -92,7 +92,7 @@ const localBusinessSchema = {
   logo: "https://www.houseplanfiles.com/logo1.png",
   image: "https://www.houseplanfiles.com/logo1.png",
   telephone: "+918815939484",
-  email: "houseplansdesignsfile@gmail.com",
+  email: "Info@houseplanfiles.com",
   address: {
     "@type": "PostalAddress",
     addressCountry: "IN",

@@ -21,6 +21,9 @@ import {
   Store,
   MessageCircle,
   Phone,
+  Filter,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 
 // Helmet ko import kiya gaya hai
@@ -404,6 +407,7 @@ const SellersSection: FC = () => {
   const [selectedPincode, setSelectedPincode] = useState("");
   const [selectedBusinessType, setSelectedBusinessType] = useState("All");
   const [selectedMaterialType, setSelectedMaterialType] = useState("All");
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Fixed shop categories
   const SHOP_CATEGORIES = [
@@ -582,7 +586,7 @@ const SellersSection: FC = () => {
   }, [products, searchTerm, selectedShopCategory, selectedCity, selectedBusinessType, selectedMaterialType, selectedPincode]);
 
   return (
-    <div className="flex flex-col bg-gray-50/50 pt-10">
+    <div className="flex flex-col bg-[#FAF9F6] pt-10">
 
       {/* --- HERO HEADER --- */}
       <div className="text-center mb-10 px-4">
@@ -594,9 +598,32 @@ const SellersSection: FC = () => {
         </p>
       </div>
 
-      <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pb-20 w-full">
+      <main className="flex-grow max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pb-20 w-full">
         {/* --- Filters Card --- */}
-        <div className="mb-8 space-y-4">
+        {/* Mobile Filter Toggle Button */}
+        <div className="md:hidden mb-3 flex items-center gap-3">
+          <button
+            onClick={() => setShowMobileFilters(!showMobileFilters)}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm ${
+              showMobileFilters
+                ? "bg-orange-600 text-white border-orange-600"
+                : "bg-white text-gray-700 border-gray-200"
+            }`}
+          >
+            <Filter className="w-4 h-4" />
+            {showMobileFilters ? "Hide Filters" : "Show Filters"}
+            {showMobileFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+          {(selectedCity !== "all-cities" || selectedPincode || searchTerm || selectedBusinessType !== "All" || selectedShopCategory !== "All" || selectedMaterialType !== "All") && (
+            <span className="text-xs text-orange-600 font-bold bg-orange-50 px-2 py-1 rounded-full border border-orange-200">
+              Filters Active
+            </span>
+          )}
+        </div>
+
+        <div className={`mb-8 space-y-4 ${
+          showMobileFilters ? "block" : "hidden md:block"
+        }`}>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
             <div className="lg:col-span-2">
               <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Search Shop or Product</Label>
@@ -724,6 +751,25 @@ const SellersSection: FC = () => {
                 onChange={(e) => setSelectedPincode(e.target.value)}
                 className="h-12 bg-gray-50 border-gray-200 text-base rounded-xl focus:ring-orange-500"
               />
+            </div>
+
+            <div className="flex items-center">
+              {(selectedCity !== "all-cities" || selectedPincode || searchTerm || selectedBusinessType !== "All" || selectedShopCategory !== "All" || selectedMaterialType !== "All") && (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedShopCategory("All");
+                    setSelectedCity("all-cities");
+                    setSelectedBusinessType("All");
+                    setSelectedMaterialType("All");
+                    setSelectedPincode("");
+                  }}
+                  className="h-12 w-full text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 rounded-xl font-bold text-xs"
+                >
+                  <X className="w-4 h-4 mr-1.5" /> Reset Filters
+                </Button>
+              )}
             </div>
           </div>
         </div>

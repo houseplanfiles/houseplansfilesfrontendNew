@@ -187,7 +187,7 @@ const TermsAndConditions = () => {
               <h2 className="text-2xl font-bold">17. Contact Information</h2>
               <p>For listing support, verification, or business inquiries, you can reach out to us:</p>
               <ul className="list-disc space-y-2 pl-6">
-                <li><strong>Email:</strong> houseplansdesignsfile@gmail.com</li>
+                <li><strong>Email:</strong> Info@houseplanfiles.com</li>
                 <li><strong>Phone:</strong> +91 8815939484</li>
               </ul>
 

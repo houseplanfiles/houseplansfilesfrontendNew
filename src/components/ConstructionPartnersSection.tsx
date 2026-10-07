@@ -367,8 +367,8 @@ const ConstructionPartnersSection: FC = () => {
 
   return (
     <>
-      <section id="city-partners" className="bg-gray-50 py-16 md:py-24 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="city-partners" className="bg-[#FAF9F6] py-16 md:py-24 border-b">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* --- HERO HEADER --- */}
           <div className="text-center mb-10">

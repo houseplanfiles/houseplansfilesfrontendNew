@@ -68,7 +68,7 @@ const ThreadsIcon = () => (
 
 const TopBar = () => {
   const contactInfo = {
-    email: "houseplansdesignsfile@gmail.com",
+    email: "Info@houseplanfiles.com",
     phone: "+91 8815939484",
   };
 

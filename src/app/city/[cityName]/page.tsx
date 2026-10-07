@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import ProductsClientWrapper from "@/components/ProductsClientWrapper";
 import Footer from "@/components/Footer";
-
+import HomeServicesCategoriesSection from "@/components/HomeServicesCategoriesSection";
 const CITY_DATA: Record<string, {
   display: string; state: string; description: string;
   constructionNote: string; plotSizes: string[];
@@ -145,7 +145,6 @@ const CITY_DATA: Record<string, {
     faqs: [],
   },
 };
-
 export async function generateMetadata({ params }: { params: Promise<{ cityName: string }> }): Promise<Metadata> {
   const { cityName } = await params;
   const data = CITY_DATA[cityName];
@@ -160,7 +159,6 @@ export async function generateMetadata({ params }: { params: Promise<{ cityName:
     alternates: { canonical: `https://www.houseplanfiles.com/city/${cityName}` },
   };
 }
-
 export default async function CityPage({ params }: { params: Promise<{ cityName: string }> }) {
   const { cityName } = await params;
   const data = CITY_DATA[cityName];
@@ -176,12 +174,10 @@ export default async function CityPage({ params }: { params: Promise<{ cityName:
       { "@type": "ListItem", position: 2, name: `House Plans in ${displayCity}`, item: `https://www.houseplanfiles.com/city/${cityName}` },
     ],
   };
-
   const faqSchema = faqs.length > 0 ? {
     "@context": "https://schema.org", "@type": "FAQPage",
     mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   } : null;
-
   const localCitySchema = {
     "@context": "https://schema.org", "@type": "LocalBusiness",
     name: `HousePlanFiles — ${displayCity}`,
@@ -190,51 +186,68 @@ export default async function CityPage({ params }: { params: Promise<{ cityName:
     areaServed: { "@type": "City", name: displayCity, containedInPlace: { "@type": "State", name: state, containedInPlace: { "@type": "Country", name: "India" } } },
     parentOrganization: { "@type": "Organization", name: "HousePlanFiles", url: "https://www.houseplanfiles.com" },
   };
-
   // Renders below the Navbar that ProductsClient owns
   const header = (
-    <div className="bg-white border-b border-gray-100 py-6 px-4">
-      <div className="max-w-7xl mx-auto">
-        <nav className="text-sm text-gray-500 mb-3" aria-label="Breadcrumb">
-          <ol className="flex items-center gap-2 flex-wrap">
-            <li><Link href="/" className="hover:text-orange-500 transition-colors">Home</Link></li>
-            <li className="text-gray-400">/</li>
-            <li><Link href="/house-plans" className="hover:text-orange-500 transition-colors">House Plans</Link></li>
-            <li className="text-gray-400">/</li>
-            <li className="text-orange-500 font-medium">House Plans in {displayCity}</li>
-          </ol>
-        </nav>
-
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-          House Plans in {displayCity}, {state}
-        </h1>
-        {data?.description && (
-          <p className="mt-2 text-gray-600 max-w-3xl leading-relaxed text-sm md:text-base">{data.description}</p>
-        )}
-        {data?.constructionNote && (
-          <p className="mt-1 text-sm text-gray-500 italic">{data.constructionNote}</p>
-        )}
-
-        {/* CTA buttons */}
-        <div className="mt-5 flex flex-wrap gap-3">
-          <Link href={`/architects?city=${displayCity}`}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 text-white text-sm font-medium hover:bg-orange-600 transition-colors">
-            Find Architects in {displayCity} →
-          </Link>
-          <Link href={`/city-partners?city=${displayCity}`}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-orange-300 text-orange-700 text-sm font-medium hover:bg-orange-50 transition-colors">
-            Contractors in {displayCity}
-          </Link>
-          <Link href="/customize/floor-plans"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors">
-            Get Custom Plan
-          </Link>
+    <>
+      <div className="relative overflow-hidden bg-[#f4f7f9] pt-10 pb-16 lg:pt-20 lg:pb-24 border-b border-gray-100">
+        {/* Premium Background Image Container */}
+        <div className="absolute top-0 right-0 w-full lg:w-[60%] h-full z-0 hidden lg:block">
+          {/* Smooth gradient fade to blend the image seamlessly into the background color */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#f4f7f9] via-[#f4f7f9]/90 to-transparent z-10 w-[70%]" />
+          <img 
+            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2075&q=80" 
+            alt={`${displayCity} House Plans`} 
+            className="w-full h-full object-cover object-left-top"
+          />
         </div>
 
-      </div>
-    </div>
-  );
+        <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="text-sm text-slate-500 mb-6" aria-label="Breadcrumb">
+            <ol className="flex items-center gap-2 flex-wrap">
+              <li><Link href="/" className="hover:text-[#ff6b00] transition-colors">Home</Link></li>
+              <li className="text-slate-400">/</li>
+              <li><Link href="/house-plans" className="hover:text-[#ff6b00] transition-colors">House Plans</Link></li>
+              <li className="text-slate-400">/</li>
+              <li className="text-[#ff6b00] font-semibold">House Plans in {displayCity}</li>
+            </ol>
+          </nav>
 
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#0f172a] tracking-tight mb-4">
+            House Plans in {displayCity}, {state}
+          </h1>
+          
+          {data?.description && (
+            <p className="text-slate-600 max-w-2xl leading-relaxed text-base lg:text-lg mb-2">
+              {data.description}
+            </p>
+          )}
+          
+          {data?.constructionNote && (
+            <p className="text-sm text-slate-500 italic max-w-2xl mb-8">
+              {data.constructionNote}
+            </p>
+          )}
+
+          {/* Premium CTA Buttons (Pill shaped as per screenshot) */}
+          <div className="flex flex-wrap gap-4 items-center">
+            <Link href={`/architects?city=${displayCity}`}
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#ff6b00] text-white text-sm font-semibold hover:bg-[#e66000] hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300">
+              Find Architects in {displayCity} →
+            </Link>
+            <Link href={`/city-partners?city=${displayCity}`}
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border-2 border-[#ff6b00]/30 text-[#ff6b00] bg-white/80 backdrop-blur-sm text-sm font-semibold hover:bg-orange-50 hover:border-[#ff6b00]/50 transition-all duration-300">
+              Contractors in {displayCity}
+            </Link>
+            <Link href="/customize/floor-plans"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-slate-300 text-slate-600 bg-white/80 backdrop-blur-sm text-sm font-medium hover:bg-slate-50 hover:border-slate-400 transition-all duration-300 shadow-sm">
+              Get Custom Plan
+            </Link>
+          </div>
+        </div>
+      </div>
+      <HomeServicesCategoriesSection hideHeader={true} className="bg-white pt-2 pb-6" />
+    </>
+  );
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
@@ -243,7 +256,7 @@ export default async function CityPage({ params }: { params: Promise<{ cityName:
 
       {/* ProductsClient owns the Navbar — header renders right below it */}
       <Suspense fallback={<div className="py-20 text-center text-gray-500">Loading house plans for {displayCity}...</div>}>
-        <ProductsClientWrapper region={displayCity} headerSlot={header}   showFooter={false} />
+        <ProductsClientWrapper region={displayCity} headerSlot={header} showFooter={false} />
       </Suspense>
 
       {/* FAQs */}
@@ -264,7 +277,6 @@ export default async function CityPage({ params }: { params: Promise<{ cityName:
           </div>
         </section>
       )}
-
       {/* Cross-link to other cities */}
       <section className="bg-white border-t border-gray-100 py-10 px-4">
         <div className="max-w-7xl mx-auto">

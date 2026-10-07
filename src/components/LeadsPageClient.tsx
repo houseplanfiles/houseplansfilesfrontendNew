@@ -214,7 +214,7 @@ export default function LeadsPageClient() {
     <>
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-orange-50/40 via-white to-gray-50 py-14 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1600px] mx-auto">
 
           {/* Header */}
           <div className="text-center mb-14">
@@ -425,187 +425,111 @@ export default function LeadsPageClient() {
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: idx * 0.04 }}
-                    className={`bg-white border rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between ${
+                    className={`bg-white border rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between ${
                       revealed ? "border-green-300 ring-2 ring-green-400/15"
                       : soldToOthers ? "border-red-200"
                       : "border-gray-200 hover:border-orange-200"
                     }`}
                   >
-                    <div>
-                      {/* Badges */}
-                      <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${catColor}`}>
+                    {/* Image Header with badges OVERLAY */}
+                    <div className="relative h-48 sm:h-56 bg-gray-200">
+                      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800" alt="Lead Property" className="w-full h-full object-cover" />
+                      
+                      {/* Badges on Top Left & Top Right of Image */}
+                      <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+                        <span className={`px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide bg-white/95 backdrop-blur-sm shadow-sm border border-white/50 ${catColor}`}>
                           {lead.category}
                         </span>
-                        <div className="flex items-center gap-2">
-                          {revealed && (
-                            <span className="bg-green-100 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                              <Unlock className="w-3 h-3" /> Unlocked by You
-                            </span>
-                          )}
-                          {soldToOthers && (
-                            <span className="bg-red-100 text-red-600 px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                              <AlertCircle className="w-3 h-3" /> Sold
-                            </span>
-                          )}
-                          {canBuy && (
-                            <span className="bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-bold">
-                              Available
-                            </span>
-                          )}
-                          {!isAdminLead && (
-                            <span className="bg-gray-100 text-gray-500 px-2.5 py-0.5 rounded-full text-xs font-bold">
-                              New Inquiry
-                            </span>
-                          )}
+                        <div className="flex flex-col gap-2 items-end">
+                          {/* Status Badges */}
+                          {revealed && <span className="bg-green-100/95 backdrop-blur-sm text-green-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm border border-green-200"><Unlock className="w-3.5 h-3.5" /> Unlocked</span>}
+                          {soldToOthers && <span className="bg-red-100/95 backdrop-blur-sm text-red-600 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm border border-red-200"><AlertCircle className="w-3.5 h-3.5" /> Sold</span>}
+                          {canBuy && <span className="bg-blue-100/95 backdrop-blur-sm text-blue-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm border border-blue-200">Available</span>}
+                          {!isAdminLead && <span className="bg-gray-100/95 backdrop-blur-sm text-gray-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm border border-gray-200">New Inquiry</span>}
                         </div>
                       </div>
+                    </div>
 
+                    <div className="p-5 sm:p-6 flex flex-col flex-grow">
                       {/* Title */}
-                      <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug line-clamp-2">
+                      <h3 className="text-lg font-bold text-gray-900 mb-4 leading-snug line-clamp-2">
                         {lead.title}
                       </h3>
 
-                      {/* Meta */}
-                      <div className="grid grid-cols-2 gap-3 py-3 border-y border-gray-50 text-sm mb-4">
+                      {/* Meta (Location, Budget, Date) */}
+                      <div className="flex justify-between items-center mb-2">
                         <div className="flex items-center gap-2 text-gray-500">
                           <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
                           <span className="font-semibold text-gray-700 truncate">{lead.city}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-gray-500">
-                          <IndianRupee className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                          <span className="font-bold text-orange-600 truncate">{lead.budget}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-400 col-span-2 text-xs">
-                          <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
-                          <span>
-                            Posted: {new Date(lead.createdAt).toLocaleDateString("en-IN", {
-                              day: "numeric", month: "short", year: "numeric",
-                            })}
-                          </span>
-                        </div>
+                        <span className="font-bold text-green-600 truncate">{lead.budget !== "N/A" && lead.budget ? lead.budget : "₹ NA"}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-400 text-xs mb-5">
+                        <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span>
+                          Posted: {new Date(lead.createdAt).toLocaleDateString("en-IN", {
+                            day: "numeric", month: "short", year: "numeric",
+                          })}
+                        </span>
                       </div>
 
                       {/* Requirements */}
-                      <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1">Requirements</p>
-                      <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">{lead.requirements}</p>
+                      <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1 mt-auto">Requirements</p>
+                      <p className="text-sm text-gray-600 leading-relaxed line-clamp-2 mb-6">{lead.requirements}</p>
 
-                      {/* Social Sharing Button */}
-                      <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-50">
-                        <button 
-                          onClick={() => setShareLeadModal(lead)}
-                          className="flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-gray-900 transition-colors bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg w-fit"
-                          title="Share Lead"
-                        >
-                          <Share2 className="w-3.5 h-3.5" /> Share Lead
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* ── ACTION BLOCK — 4 mutually exclusive states ── */}
-                    <div className="mt-5 pt-4 border-t border-gray-100">
-
-                      {/* ✅ STATE 1: BUYER — show contact + download */}
-                      {revealed ? (
-                        <div className="bg-green-50 border border-green-200 rounded-xl p-4 space-y-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-bold text-green-800 flex items-center gap-2">
-                              <Unlock className="w-4 h-4" /> Client Contact Details
-                            </span>
-                            <button
-                              onClick={() => downloadLead(lead)}
-                              className="flex items-center gap-1.5 text-xs font-bold text-green-700 bg-green-100 hover:bg-green-200 px-3 py-1.5 rounded-lg transition-colors"
-                            >
-                              <Download className="w-3.5 h-3.5" /> Save
-                            </button>
-                          </div>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center gap-2 text-gray-700">
-                              <User className="w-4 h-4 text-gray-400" />
-                              <span className="font-bold">{lead.clientName}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-gray-700">
-                              <Phone className="w-4 h-4 text-gray-400" />
-                              <a href={`tel:${lead.clientPhone}`} className="font-semibold text-green-700 hover:underline">
-                                {lead.clientPhone}
-                              </a>
-                            </div>
-                            {lead.clientEmail && (
-                              <div className="flex items-center gap-2 text-gray-700">
-                                <Mail className="w-4 h-4 text-gray-400" />
-                                <a href={`mailto:${lead.clientEmail}`} className="text-sm text-blue-600 hover:underline">
-                                  {lead.clientEmail}
-                                </a>
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex gap-2 pt-1">
-                            <Button
-                              onClick={() => window.open(`tel:${lead.clientPhone}`, "_self")}
-                              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold h-9 text-xs"
-                            >
-                              <Phone className="w-3.5 h-3.5 mr-1" /> Call Now
-                            </Button>
-                            <Button
-                              onClick={() => window.open(
-                                `https://wa.me/91${lead.clientPhone}?text=${encodeURIComponent(
-                                  `Hi, I'm reaching out about your project "${lead.title}" on HousePlanFiles.`
-                                )}`, "_blank"
-                              )}
-                              className="flex-1 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold h-9 text-xs"
-                            >
-                              <MessageCircle className="w-3.5 h-3.5 mr-1" /> WhatsApp
-                            </Button>
-                          </div>
-                        </div>
-
-                      /* ❌ STATE 2: SOLD TO OTHERS — no pay button */
-                      ) : soldToOthers ? (
-                        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
-                          <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
-                          <span className="text-red-600 text-sm font-bold block">Lead Already Sold</span>
-                          <span className="text-gray-400 text-xs mt-1 block">
-                            This lead was purchased by another professional.
-                          </span>
-                        </div>
-
-                      /* 💰 STATE 3: AVAILABLE — pay to unlock */
-                      ) : canBuy ? (
-                        <div className="flex items-center justify-between gap-3">
-                          <div>
-                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-0.5">
-                              Unlock Price
-                            </span>
-                            <span className="text-2xl font-black text-gray-900">₹{lead.price}</span>
-                          </div>
-                          <Button
-                            onClick={() => handleUnlockLead(lead)}
-                            disabled={purchasingId !== null}
-                            className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-5 py-5 rounded-xl flex items-center gap-2 text-sm shadow-md"
+                      {/* ── ACTION BLOCK ── */}
+                      <div className="flex items-center justify-between border-t border-gray-100 pt-4 mt-auto">
+                        <div className="flex items-center gap-3">
+                          <button 
+                            onClick={() => setShareLeadModal(lead)}
+                            className="flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-gray-900 transition-colors bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full"
+                            title="Share Lead"
                           >
-                            {purchasingId === lead._id
-                              ? <Loader2 className="w-4 h-4 animate-spin" />
-                              : <Lock className="w-4 h-4" />
-                            }
-                            Pay &amp; Unlock
-                          </Button>
+                            <Share2 className="w-3.5 h-3.5" /> Share Lead
+                          </button>
                         </div>
-
-                      /* 🔒 STATE 4: NEW INQUIRY — admin hasn't priced yet */
-                      ) : (
-                        <div className="bg-orange-50/60 border border-orange-100 rounded-xl p-3.5 flex items-center justify-between gap-3">
-                          <div className="flex items-center gap-2 text-orange-700">
-                            <Lock className="w-4 h-4 flex-shrink-0" />
-                            <p className="text-xs font-semibold leading-tight">
-                              Contact locked.{" "}
-                              <span className="text-gray-400 font-normal">Admin will set pricing soon.</span>
-                            </p>
-                          </div>
-                          <span className="text-xs font-bold text-orange-600 bg-orange-100 px-2.5 py-1 rounded-full whitespace-nowrap">
-                            Coming Soon
-                          </span>
+                        
+                        <div>
+                          {revealed ? (
+                            <div className="flex gap-2">
+                              <Button
+                                onClick={() => window.open(`tel:${lead.clientPhone}`, "_self")}
+                                className="bg-green-600 hover:bg-green-700 text-white font-bold h-9 px-4 rounded-full text-xs"
+                              >
+                                <Phone className="w-3.5 h-3.5 mr-1" /> Call
+                              </Button>
+                              <Button
+                                onClick={() => downloadLead(lead)}
+                                className="bg-gray-800 hover:bg-gray-900 text-white font-bold h-9 px-4 rounded-full text-xs"
+                              >
+                                <Download className="w-3.5 h-3.5" /> Save
+                              </Button>
+                            </div>
+                          ) : soldToOthers ? (
+                             <span className="text-red-600 text-sm font-bold block bg-red-50 px-4 py-2 rounded-full border border-red-100">Already Sold</span>
+                          ) : canBuy ? (
+                            <div className="flex items-center gap-3">
+                              <div className="text-right">
+                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block leading-tight">Unlock Price</span>
+                                <span className="text-lg font-black text-gray-900 leading-tight">₹{lead.price}</span>
+                              </div>
+                              <Button
+                                onClick={() => handleUnlockLead(lead)}
+                                disabled={purchasingId !== null}
+                                className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-5 py-2 h-10 rounded-full flex items-center gap-2 text-sm shadow-md"
+                              >
+                                {purchasingId === lead._id
+                                  ? <Loader2 className="w-4 h-4 animate-spin" />
+                                  : <Lock className="w-4 h-4" />
+                                }
+                                Pay &amp; Unlock
+                              </Button>
+                            </div>
+                          ) : (
+                            <span className="text-xs font-bold text-orange-600 bg-orange-100 px-4 py-2 rounded-full border border-orange-200">Coming Soon</span>
+                          )}
                         </div>
-                      )}
+                      </div>
                     </div>
                   </motion.div>
                 );

@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Hagrid';
+  src: url('/fonts/Hagrid.otf') format('opentype'),
+       url('/fonts/Hagrid.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  src: url('/fonts/Helvetica.otf') format('opentype'),
+       url('/fonts/Helvetica.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* E-Commerce Architecture Design System */
 @layer base {
   :root {
@@ -87,10 +105,12 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-poppins;
+    @apply bg-background text-foreground;
+    font-family: 'Helvetica', sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-poppins;
+    font-family: 'Hagrid', sans-serif;
+    font-weight: 500;
   }
 }
 
