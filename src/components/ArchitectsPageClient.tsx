@@ -251,7 +251,7 @@ const ArchitectsPage: FC = () => {
           <Image src="/architect_hero.webp" alt="Architects Background" fill sizes="100vw" className="object-cover opacity-30" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Badge className="bg-white/20 text-white border-white/30 mb-4 px-4 py-1 text-xs sm:text-sm backdrop-blur-md">Design Experts</Badge>
           <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 px-2 leading-tight">
             Hire Your Top City Architects, Interior Designers & Professionals
@@ -265,7 +265,7 @@ const ArchitectsPage: FC = () => {
         </div>
       </div>
 
-      <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10 pb-20 overflow-hidden">
+      <main className="flex-grow w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10 pb-20 overflow-hidden">
         {/* Filters */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6 mb-10 w-full">
           <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-gray-100">

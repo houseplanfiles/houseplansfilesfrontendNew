@@ -739,10 +739,10 @@ const InteriorDesignsPage = ({ initialData }: { initialData?: any }) => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Navbar />
-      <main className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-12">
+      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
           {/* Left Column: Categories and filters (Desktop) */}
-          <div className="hidden lg:block lg:w-1/4 xl:w-1/5">
+          <div className="hidden lg:block lg:w-1/4 xl:w-1/5 sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-hide">
             <FilterSidebar
               filters={filters}
               setFilters={setFilters}
@@ -903,7 +903,7 @@ const InteriorDesignsPage = ({ initialData }: { initialData?: any }) => {
           </div>
 
           {/* Right Column: Customize Form (Desktop Only) */}
-          <div className="hidden lg:block lg:w-1/4 xl:w-1/5">
+          <div className="hidden lg:block lg:w-1/4 xl:w-1/5 sticky top-24 self-start">
             <CustomizeInteriorForm
               userInfo={userInfo}
               dispatch={dispatch}

@@ -216,7 +216,7 @@ const RefundCancellationPolicy = () => {
               <p>For refund-related queries or complaints, please contact:</p>
               <ul className="list-none pl-0">
                 <li>
-                  <strong>Email:</strong> houseplansdesignsfile@gmail.com
+                  <strong>Email:</strong> Info@houseplanfiles.com
                 </li>
                 <li>
                   <strong>Website:</strong>{" "}

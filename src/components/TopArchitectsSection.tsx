@@ -350,8 +350,8 @@ const TopArchitectsSection: FC = () => {
 
   return (
     <>
-      <section id="top-architects" className="bg-white py-16 md:py-24 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="top-architects" className="bg-[#FAF9F6] pt-8 md:pt-12 pb-16 md:pb-24 border-b">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* --- HERO HEADER --- */}
           <div className="text-center mb-10">

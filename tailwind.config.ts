@@ -20,6 +20,8 @@ export default {
     extend: {
       fontFamily: {
         poppins: ["var(--font-poppins)", "Poppins", "sans-serif"],
+        hagrid: ["Hagrid", "sans-serif"],
+        helvetica: ["Helvetica", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

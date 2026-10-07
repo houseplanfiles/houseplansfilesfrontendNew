@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import React, { useState, useEffect } from "react";
 
-import { Eye, EyeOff, CheckCircle, Loader2 } from "lucide-react";
+import { Eye, EyeOff, CheckCircle, Loader2, Building2, HardHat, Store, Wrench, Factory, ChevronRight, Home } from "lucide-react";
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "@/lib/store";
@@ -36,11 +36,36 @@ import useExternalScripts from "@/hooks/usePaymentGateway";
 import { generateInvoicePDF } from "@/lib/invoiceGenerator";
 
 const userRoles = [
-  { id: "professional", label: "Register as a Architect, engineer, interior designer" },
-  { id: "Contractor", label: "Register as a Contractor" },
-  { id: "seller", label: "Register as a manufacturer, supplier or Shop" },
-  { id: "other_services", label: "Register for Other Services" },
-  { id: "industrial", label: "Register for Industrial Construction & Infrastructure Services" },
+  { 
+    id: "professional", 
+    label: "Register as an Architect, Engineer, Interior Designer",
+    description: "Showcase your work and connect with clients",
+    icon: <Building2 className="w-6 h-6" />
+  },
+  { 
+    id: "Contractor", 
+    label: "Register as a Contractor",
+    description: "Get projects and grow your business",
+    icon: <HardHat className="w-6 h-6" />
+  },
+  { 
+    id: "seller", 
+    label: "Register as a Manufacturer, Supplier or Shop",
+    description: "List your products and reach more buyers",
+    icon: <Store className="w-6 h-6" />
+  },
+  { 
+    id: "other_services", 
+    label: "Register for Other Services",
+    description: "Explore and access additional services",
+    icon: <Wrench className="w-6 h-6" />
+  },
+  { 
+    id: "industrial", 
+    label: "Register for Industrial Construction & Infrastructure Services",
+    description: "For large-scale construction and infrastructure projects",
+    icon: <Factory className="w-6 h-6" />
+  },
 ];
 
 const professionalSubRoles = [
@@ -90,7 +115,7 @@ const cityOptions = (City.getCitiesOfCountry("IN") || []).map(c => ({ value: c.n
 
 const MultiRoleRegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("professional");
+  const [selectedRole, setSelectedRole] = useState("");
   const [selectedPlan, setSelectedPlanState] = useState<string>("Basic");
   const [profileCreation, setProfileCreation] = useState<boolean>(false);
   const [profileStoreManagement, setProfileStoreManagement] = useState<string>("None");
@@ -995,51 +1020,131 @@ const MultiRoleRegisterPage = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen flex items-center justify-center bg-soft-teal p-4 py-12">
-        <div className="bg-card text-foreground p-8 sm:p-10 rounded-2xl shadow-2xl max-w-3xl w-full">
-          <form className="space-y-5" onSubmit={handleSubmit}>
-            <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <legend className="sr-only">Select your registration type</legend>
-              <div className="flex flex-col gap-4">
-                {userRoles.slice(0, 3).map((role) => (
-                  <div
-                    key={role.id}
-                    role="button"
-                    onClick={() => handleRoleChange(role.id)}
-                    className={`flex items-center justify-between w-full p-4 h-full rounded-lg cursor-pointer border-2 transition-all duration-300 ${
-                      selectedRole === role.id
-                        ? "bg-accent text-accent-foreground border-transparent shadow-md"
-                        : "bg-input border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <span className="font-semibold">{role.label}</span>
-                    {selectedRole === role.id && <CheckCircle size={20} />}
+      <div className="min-h-screen bg-[#FAF9F6] relative overflow-hidden font-sans pb-12">
+        {/* Subtle decorative background patterns */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.02] z-0" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23000000\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}></div>
+
+        <form className="relative z-10 flex flex-col min-h-full" onSubmit={handleSubmit}>
+          {!selectedRole && (
+            <div className="w-full">
+              {/* HERO SECTION */}
+              <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-12 md:pt-20 md:pb-16">
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+                  {/* Left Text */}
+                  <div className="lg:w-[55%] flex flex-col items-start text-left">
+                    <div className="inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-xs md:text-sm font-bold text-orange-600 mb-6 shadow-sm">
+                      <CheckCircle className="mr-1.5 h-4 w-4" />
+                      Join Our Community
+                    </div>
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight mb-6 leading-[1.1]">
+                      Create Your <span className="text-orange-600">Account</span>
+                    </h1>
+                    <p className="text-lg md:text-xl text-gray-500 font-medium mb-8 max-w-lg leading-relaxed">
+                      Select your registration type below to get started and join our premium marketplace.
+                    </p>
+                    <p className="text-sm font-bold text-slate-500 flex items-center flex-wrap gap-2 md:gap-3">
+                      Build your profile <span className="text-orange-300">•</span> Connect with professionals <span className="text-orange-300">•</span> Grow your business
+                    </p>
                   </div>
-                ))}
-              </div>
-              <div className="flex flex-col gap-4">
-                {userRoles.slice(3).map((role) => (
-                  <div
-                    key={role.id}
-                    role="button"
-                    onClick={() => handleRoleChange(role.id)}
-                    className={`flex items-center justify-between w-full p-4 h-full rounded-lg cursor-pointer border-2 transition-all duration-300 ${
-                      selectedRole === role.id
-                        ? "bg-accent text-accent-foreground border-transparent shadow-md"
-                        : "bg-input border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <span className="font-semibold">{role.label}</span>
-                    {selectedRole === role.id && <CheckCircle size={20} />}
+                  
+                  {/* Right Visual */}
+                  <div className="lg:w-[45%] relative hidden lg:flex justify-end">
+                    <div className="relative w-full max-w-lg aspect-[4/3] rounded-[32px] overflow-hidden shadow-2xl border-[6px] border-white group">
+                      <img 
+                        src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                        alt="Premium Real Estate" 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-80"></div>
+                      <div className="absolute bottom-6 left-6 right-6">
+                        <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 flex items-center gap-4 shadow-lg transform translate-y-1 group-hover:translate-y-0 transition-all duration-500">
+                          <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
+                            <Building2 className="w-6 h-6 text-orange-500" />
+                          </div>
+                          <div>
+                            <p className="font-extrabold text-slate-900 text-sm">Join 50,000+ Professionals</p>
+                            <p className="text-xs text-slate-500 font-semibold mt-0.5">Architects, Contractors & Sellers</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                ))}
+                </div>
               </div>
-            </fieldset>
-            <AnimatePresence mode="wait">
-              {renderRoleSpecificFields()}
-            </AnimatePresence>
-            <div>
-              <Label htmlFor="email">Email address*</Label>
+
+              {/* REGISTRATION CARDS */}
+              <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-16 relative z-10">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
+                  {userRoles.map((role) => (
+                    <div
+                      key={role.id}
+                      role="button"
+                      onClick={() => handleRoleChange(role.id)}
+                      className="group relative flex flex-col p-4 sm:p-6 rounded-[20px] sm:rounded-3xl border border-gray-200 bg-white shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(249,115,22,0.12)] hover:-translate-y-1 hover:border-orange-500 transition-all duration-300 h-full text-left overflow-hidden cursor-pointer"
+                    >
+                      <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-[#FFF7ED] text-orange-600 flex items-center justify-center mb-3 sm:mb-6 group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300 shrink-0">
+                        <div className="scale-75 sm:scale-100">
+                          {role.icon}
+                        </div>
+                      </div>
+                      <h3 className="font-extrabold text-slate-800 text-[13px] sm:text-lg mb-1.5 sm:mb-2 line-clamp-2 sm:line-clamp-3 leading-snug">
+                        {role.label.replace("Register as an ", "").replace("Register as a ", "").replace("Register for ", "")}
+                      </h3>
+                      <p className="text-[11px] sm:text-sm text-gray-500 font-medium leading-relaxed mb-4 sm:mb-8 flex-grow line-clamp-2 sm:line-clamp-none">
+                        {role.description}
+                      </p>
+                      <div className="mt-auto w-full py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl border sm:border-2 border-orange-100 text-orange-600 font-bold text-[11px] sm:text-sm flex items-center justify-center group-hover:bg-orange-500 group-hover:border-orange-500 group-hover:text-white transition-all duration-300">
+                        Get Started <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 ml-0.5 sm:ml-1 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* TRUST SECTION */}
+              <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center pb-12">
+                 <div className="flex flex-col items-center justify-center border-t border-gray-200 pt-10">
+                   <p className="text-slate-800 font-bold text-lg mb-4">Trusted by 50,000+ Professionals</p>
+                   <div className="flex items-center gap-4 text-sm font-bold text-gray-500">
+                     <span className="flex items-center"><Building2 className="w-4 h-4 mr-1.5 text-orange-500"/> Build</span>
+                     <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                     <span className="flex items-center"><Home className="w-4 h-4 mr-1.5 text-orange-500"/> Connect</span>
+                     <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                     <span className="flex items-center"><Store className="w-4 h-4 mr-1.5 text-orange-500"/> Grow</span>
+                   </div>
+                 </div>
+              </div>
+            </div>
+          )}
+
+          {selectedRole && (
+            <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 my-12 relative z-10 flex-grow">
+              <div className="bg-white p-6 sm:p-10 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-start sm:items-center justify-between flex-col sm:flex-row gap-4 mb-4 pb-4 border-b border-border">
+                  <div>
+                    <h2 className="text-xl font-bold text-foreground">
+                      {userRoles.find(r => r.id === selectedRole)?.label || "Registration"}
+                    </h2>
+                    <p className="text-sm text-muted-foreground">Please fill in your details to continue</p>
+                  </div>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => {
+                      setSelectedRole("");
+                      setFormData(prev => ({ ...prev, role: "" }));
+                    }}
+                    className="h-9 px-4 text-sm"
+                  >
+                    Change Type
+                  </Button>
+                </div>
+                
+                <AnimatePresence mode="wait">
+                  {renderRoleSpecificFields()}
+                </AnimatePresence>
+                <div>
+                  <Label htmlFor="email">Email address*</Label>
               <Input
                 type="email"
                 id="email"
@@ -1286,8 +1391,10 @@ const MultiRoleRegisterPage = () => {
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLoading ? "Registering..." : "Register"}
             </Button>
+            </div>
+            </div>
+            )}
           </form>
-        </div>
       </div>
       <Footer />
     </>

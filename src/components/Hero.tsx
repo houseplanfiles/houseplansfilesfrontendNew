@@ -20,12 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const slides = [
-  { image: "/b11.webp", alt: "Modern white house with a lawn" },
-  { image: "/b12.webp", alt: "Classic house with a beautiful garden" },
-  { image: "/b13.webp", alt: "Luxurious apartment building exterior" },
-  { image: "/b14.webp", alt: "Luxurious apartment building interior" },
-];
+// Slider removed, using single responsive images directly
 
 const CATEGORIES = [
   "Modern Home Design",
@@ -51,7 +46,6 @@ const CATEGORIES = [
 ];
 
 const Hero = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -101,23 +95,17 @@ const Hero = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Auto-advance slider
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
+
 
   const handleSearch = (overrideTerm?: string) => {
     const termToSearch = typeof overrideTerm === 'string' ? overrideTerm : searchTerm;
     const queryParams = new URLSearchParams();
-    
+
     if (selectedCategory) queryParams.append("category", selectedCategory);
     if (termToSearch) queryParams.append("search", termToSearch);
-    
+
     setSuggestions([]);
-    
+
     const st = termToSearch.toLowerCase();
     // Smart routing based on search intent
     if (st.includes("architect") || st.includes("contractor") || st.includes("engineer") || st.includes("plumber")) {
@@ -136,110 +124,47 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-[60vh] h-auto py-20 md:min-h-[550px] flex items-center text-white overflow-hidden">
-      {/* Background Slider */}
+    <section className="relative min-h-[50vh] h-auto py-12 md:py-20 md:min-h-[450px] flex items-center text-white overflow-hidden">
+      {/* Background Images */}
       <div className="absolute inset-0">
+        {/* Desktop Image */}
         <Image
-          key={currentSlide}
-          src={slides[currentSlide].image}
-          alt={slides[currentSlide].alt}
+          src="/hero_premium_bg.jpg"
+          alt="Ultra-luxurious modern house exterior at twilight"
           fill
-          priority={currentSlide === 0}
-          loading={currentSlide === 0 ? "eager" : "lazy"}
+          priority
           sizes="100vw"
-          className="object-cover object-center transition-opacity duration-700"
-          style={{ opacity: 1 }}
+          className="object-cover object-center hidden sm:block"
         />
-        <div className="absolute inset-0 bg-black/50" />
+        {/* Mobile Image */}
+        <Image
+          src="/hero_mobile_premium_bg.jpg"
+          alt="Ultra-luxurious modern house exterior at twilight mobile"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center sm:hidden"
+        />
+        <div className="absolute inset-0 bg-black/60 sm:bg-black/50" />
       </div>
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
-        <div className="flex justify-between items-start pt-10">
-          <div className="max-w-4xl w-full">
+        <div className="flex flex-col justify-center items-center pt-4 sm:pt-6 text-center h-full min-h-[40vh]">
+          <div className="max-w-5xl w-full flex flex-col items-center">
             <div className="inline-block bg-orange-500 text-white font-bold px-4 py-1.5 rounded-full text-xs sm:text-sm tracking-widest uppercase mb-6 shadow-lg">
               India's Premium Platform
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-extrabold text-white leading-[1.2] tracking-tight mb-5 drop-shadow-2xl">
-              Home Design &<br />
-              Construction Ka<br />
-              <span className="text-orange-500">Digital Bazar</span>
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-normal md:leading-normal tracking-tight mb-5 drop-shadow-2xl whitespace-nowrap sm:whitespace-normal">
+              Home Design & Construction <br /> Ka <span className="text-orange-500">Digital Bazar</span>
             </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-200 mb-8 max-w-2xl font-medium drop-shadow-lg leading-relaxed">
+            <p className="text-sm sm:text-base lg:text-lg text-gray-200 mb-8 max-w-3xl font-medium drop-shadow-lg leading-relaxed text-center whitespace-normal">
               Ek hi platform par paaiye ghar se judi har zaroorat — Readymade Designs, Architects, Contractors, aur Marketplace.
             </p>
 
-            {/* Search Bar */}
-            <div className="w-full max-w-4xl relative mb-8" ref={searchContainerRef}>
-              <div className="relative flex items-center bg-white rounded-full p-2 shadow-2xl border border-gray-100 transition-all focus-within:shadow-[0_8px_40px_rgb(0,0,0,0.2)] w-full">
-                <Search className="w-6 h-6 text-gray-400 ml-4 absolute left-2" />
-                <Input
-                  placeholder="Search by city, service, design, professional, product..."
-                  className="flex-1 h-12 sm:h-14 pl-14 pr-2 sm:pr-6 text-sm sm:text-lg border-none focus-visible:ring-0 text-gray-800 bg-transparent rounded-full shadow-none font-medium placeholder:text-gray-400 min-w-0"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onFocus={handleSearchFocus}
-                  autoComplete="off"
-                />
-                <Button
-                  className="bg-orange-500 hover:bg-orange-600 text-white rounded-full h-12 sm:h-14 w-14 sm:w-16 flex items-center justify-center shrink-0 shadow-md transition-colors"
-                  onClick={() => handleSearch()}
-                >
-                  <Search className="w-5 h-5 sm:w-6 sm:h-6" />
-                </Button>
-              </div>
-
-              {/* Autocomplete Suggestions */}
-              <AnimatePresence>
-                {suggestions.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-2xl z-50 text-left border border-gray-100 max-h-60 overflow-y-auto"
-                  >
-                    <ul className="py-2">
-                      {suggestions.map((s: any) => (
-                        <li
-                          key={s._id}
-                          className="px-5 py-3 cursor-pointer text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 border-b border-gray-50 last:border-none transition-colors"
-                          onClick={() => handleSuggestionClick(s)}
-                        >
-                          <span className="font-semibold">{s.plotSize}</span> — {s.name}
-                        </li>
-                      ))}
-                      <li
-                        className="px-5 py-3 cursor-pointer text-sm text-orange-600 font-bold hover:bg-orange-50 text-center transition-colors"
-                        onClick={() => handleSearch()}
-                      >
-                        View all for &quot;{searchTerm}&quot;
-                      </li>
-                    </ul>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Popular Searches */}
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="text-sm font-semibold text-white drop-shadow-md">Popular Searches:</span>
-              <div className="flex flex-wrap gap-2">
-                {["30x40 House Plan", "Architect in Bhopal", "Contractor in Indore", "Tiles Supplier", "Home Decor"].map((tag) => (
-                  <button 
-                    key={tag} 
-                    onClick={() => {
-                      setSearchTerm(tag);
-                      handleSearch(tag);
-                    }}
-                    className="text-xs font-semibold bg-black/40 hover:bg-orange-500 backdrop-blur-sm border border-white/20 text-white px-3 py-1.5 rounded-full transition-colors"
-                  >
-                    {tag}
-                  </button>
-                ))}
-              </div>
-            </div>
-            </div>
+            {/* Search Bar Removed */}
           </div>
+        </div>
       </div>
     </section>
   );

@@ -143,10 +143,10 @@ const ContactUs = () => {
                     <div>
                       <h4 className="font-bold text-lg">Email</h4>
                       <a
-                        href="mailto:houseplansdesignsfile@gmail.com"
+                        href="mailto:Info@houseplanfiles.com"
                         className="text-gray-600 mt-1 hover:text-orange-600 transition-colors"
                       >
-                        houseplansdesignsfile@gmail.com
+                        Info@houseplanfiles.com
                       </a>
                     </div>
                   </div>

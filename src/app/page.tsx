@@ -12,8 +12,6 @@ import RegionalPlansSection from "@/components/RegionalPlansSection";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import CityExplorer from "@/components/CityExplorer";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import JourneyProcess from "@/components/JourneyProcess";
 import LeadBoardHowItWorks from "@/components/LeadBoardHowItWorks";
 import RegistrationPrompts from "@/components/RegistrationPrompts";
 
@@ -61,28 +59,14 @@ export default function HomePage() {
         <main>
           <Hero />
           <HomeServicesCategoriesSection />
-          <WhyChooseUs />
           <CityExplorer />
-          <JourneyProcess />
 
-          <section className="bg-white py-10 md:py-16">
-            <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-6">
-                <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-3">
-                  Kuch Khaas <span className="text-orange-600">Aapke Liye</span>
-                </h2>
-                <p className="text-lg text-gray-500 font-medium">
-                  Explore our top professionals, contractors, and shops
-                </p>
-              </div>
-              <TopArchitectsSection />
-              <ConstructionPartnersSection />
-              <SellersSection />
-              
-              {/* Added Lead Board How it Works per client feedback */}
-              <LeadBoardHowItWorks />
-            </div>
-          </section>
+          <TopArchitectsSection />
+          <ConstructionPartnersSection />
+          <SellersSection />
+          
+          {/* Added Lead Board How it Works per client feedback */}
+          <LeadBoardHowItWorks />
 
           {/* Added Registration Prompts per client feedback */}
           <RegistrationPrompts />
