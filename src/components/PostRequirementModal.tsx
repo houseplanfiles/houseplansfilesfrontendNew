@@ -37,7 +37,6 @@ const CATEGORIES_28 = [
   "Roofing Services",
   "Waterproofing",
   "Pest Control",
-  "Deep Cleaning",
   "HVAC",
   "Solar Panel Installation",
   "Smart Home Automation",
@@ -132,9 +131,10 @@ export const PostRequirementModal: React.FC<PostRequirementModalProps> = ({ isOp
               id="category" 
               name="category" 
               required
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              defaultValue=""
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <option value="" disabled selected>Select a category...</option>
+              <option value="" disabled>Select a category...</option>
               {CATEGORIES_28.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}

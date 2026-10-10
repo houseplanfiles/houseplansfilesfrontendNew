@@ -602,6 +602,7 @@ const SellersSection: FC = () => {
   const BUSINESS_TYPE_TABS = [
     { id: "All", label: "All Sellers", icon: LayoutGrid, tag: "Everything" },
     { id: "Manufacturer", label: "Manufacturer", icon: Factory, tag: "Direct Factory" },
+    { id: "Supplier", label: "Supplier", icon: Truck, tag: "Bulk Supplier" },
     { id: "Manufacturer_Wholesaler", label: "Manufacturer + Wholesaler", icon: Truck, tag: "Bulk Supply" },
     { id: "Local_Shop", label: "Local Shops", icon: Store, tag: "Retail Stores" },
   ];
@@ -705,6 +706,7 @@ const SellersSection: FC = () => {
                 <SelectContent>
                   <SelectItem value="All">All Types</SelectItem>
                   <SelectItem value="Manufacturer">Manufacturer</SelectItem>
+                  <SelectItem value="Supplier">Supplier</SelectItem>
                   <SelectItem value="Manufacturer_Wholesaler">Manufacturer + Wholesaler</SelectItem>
                   <SelectItem value="Local_Shop">Local Shop</SelectItem>
                 </SelectContent>

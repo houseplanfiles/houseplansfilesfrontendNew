@@ -32,7 +32,7 @@ const userRoles = [
 
 const professionalSubRoles = [
   "Architect", "Civil Design Engineer", "Structure Engineer",
-  "Interior Designer", "Site Engineer", "MEP Consultant", "Vastu Consultant",
+  "Interior Designer", "Site Engineer", "BIM Consultant", "MEP Consultant", "Vastu Consultant",
 ];
 
 const contractorProfessions = [

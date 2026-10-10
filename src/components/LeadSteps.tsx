@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import Link from 'next/link';
 import { Search, User, MapPin, IndianRupee, Clock, Lock, MessageCircle, Phone, ArrowRight, TrendingUp, Users, Home, Grid } from 'lucide-react';
 import Image from 'next/image';
 
@@ -27,7 +28,9 @@ const steps = [
             <div className="flex items-center gap-1.5"><User className="w-2 h-2 text-gray-400"/><div className="h-1 bg-gray-200 rounded w-20"></div></div>
             <div className="flex items-center gap-1.5"><User className="w-2 h-2 text-gray-400"/><div className="h-1 bg-gray-200 rounded w-14"></div></div>
           </div>
-          <div className="mt-auto bg-orange-500 text-white text-[7px] font-bold text-center py-1 rounded-md">Submit Enquiry</div>
+          <Link href="/leads" className="mt-auto bg-orange-500 hover:bg-orange-600 text-white text-[7px] font-bold text-center py-1 rounded-md block transition-colors">
+            Submit Enquiry
+          </Link>
         </div>
       </div>
     )
@@ -35,19 +38,24 @@ const steps = [
   {
     num: 2,
     title: "Lead Goes to Lead Board",
-    desc: "The enquiry is verified and listed on the Lead Board with all details like service required, location and budget.",
+    desc: "The enquiry is verified and listed on the Lead Board with complete details like location, requirement and budget.",
     mockup: (
       <div className="bg-white border-2 border-slate-700 rounded-lg overflow-hidden h-full flex flex-col shadow-sm text-left">
         <div className="bg-slate-800 text-white text-[8px] font-bold px-2 py-1.5 flex items-center gap-1">
           <Users className="w-2.5 h-2.5" /> Lead Board
         </div>
         <div className="p-2 flex-grow flex flex-col border border-orange-200 m-1 rounded-md bg-white">
-          <span className="bg-orange-500 text-white text-[5px] px-1 py-0.5 rounded-sm w-fit font-bold mb-1">New</span>
-          <div className="flex items-center gap-1 text-[7px] font-bold text-slate-800 mb-1"><Home className="w-2 h-2 text-slate-500"/> Home Design & Construction</div>
-          <div className="flex items-center gap-1 text-[7px] text-slate-600 mb-1"><MapPin className="w-2 h-2 text-slate-400"/> Bhopal</div>
-          <div className="flex items-center gap-1 text-[7px] font-bold text-slate-800 mb-1"><IndianRupee className="w-2 h-2 text-slate-400"/> 15 Lakh - 25 Lakh</div>
-          <div className="flex items-center gap-1 text-[6px] text-slate-500 mb-1.5"><Clock className="w-2 h-2 text-slate-400"/> 2 Days Ago</div>
-          <div className="mt-auto bg-orange-500 text-white text-[7px] font-bold text-center py-1 rounded-md">View Details</div>
+          <div className="flex items-center justify-between mb-1">
+            <span className="bg-orange-500 text-white text-[5px] px-1 py-0.5 rounded-sm font-bold">New Lead</span>
+            <span className="text-[5px] text-orange-600 font-bold bg-orange-50 px-1 py-0.5 rounded">Bhopal</span>
+          </div>
+          <div className="flex items-center gap-1 text-[7px] font-bold text-slate-800 mb-1"><Home className="w-2 h-2 text-slate-500"/> House Construction</div>
+          <div className="flex items-center gap-1 text-[7px] text-slate-600 mb-1"><MapPin className="w-2 h-2 text-slate-400"/> Bhopal, MP</div>
+          <div className="flex items-center gap-1 text-[7px] font-bold text-slate-800 mb-1"><IndianRupee className="w-2 h-2 text-slate-400"/> Budget: ₹50 Lacs</div>
+          <div className="flex items-center gap-1 text-[6px] text-slate-500 mb-1.5"><Clock className="w-2 h-2 text-slate-400"/> Just Now (Only 2 Seats)</div>
+          <Link href="/leads" className="mt-auto bg-orange-500 hover:bg-orange-600 text-white text-[7px] font-bold text-center py-1 rounded-md block transition-colors">
+            View Details
+          </Link>
         </div>
       </div>
     )
@@ -67,7 +75,9 @@ const steps = [
                <div className="w-2 h-2 bg-orange-500 rounded-sm"></div><span className="text-[4px] text-white font-bold">HousePlanFiles</span>
             </div>
             <div className="text-[5px] text-slate-300 flex items-center gap-1"><Grid className="w-2 h-2"/> Dashboard</div>
-            <div className="text-[5px] text-white bg-orange-500 rounded-sm px-1 py-0.5 flex items-center gap-1"><Users className="w-2 h-2"/> Lead Board</div>
+            <Link href="/leads" className="text-[5px] text-white bg-orange-500 rounded-sm px-1 py-0.5 flex items-center gap-1">
+              <Users className="w-2 h-2"/> Lead Board
+            </Link>
             <div className="text-[5px] text-slate-300 flex items-center gap-1"><User className="w-2 h-2"/> My Profile</div>
           </div>
           <div className="w-[70%] bg-gray-50 p-1.5 flex flex-col">
@@ -75,14 +85,14 @@ const steps = [
               <span className="w-2/3">Customer Details</span>
               <span className="w-1/3 text-right">Location</span>
             </div>
-            <div className="flex text-[5px] text-slate-600 mb-1 bg-white p-0.5 rounded shadow-sm border border-gray-100">
-              <span className="w-2/3 flex flex-col"><span className="font-bold text-slate-800">1. Rohit Sharma</span><span className="text-[4px] text-slate-400">Budget: ₹15-20 Lakh</span></span>
+            <Link href="/leads" className="flex text-[5px] text-slate-600 mb-1 bg-white p-0.5 rounded shadow-sm border border-gray-100 hover:border-orange-300 transition-colors">
+              <span className="w-2/3 flex flex-col"><span className="font-bold text-slate-800">1. House Construction</span><span className="text-[4px] text-slate-400">Budget: ₹50 Lacs</span></span>
               <span className="w-1/3 text-right">Bhopal</span>
-            </div>
-            <div className="flex text-[5px] text-slate-600 mb-1 bg-white p-0.5 rounded shadow-sm border border-gray-100">
-               <span className="w-2/3 flex flex-col"><span className="font-bold text-slate-800">2. Priya Singh</span><span className="text-[4px] text-slate-400">Budget: ₹20-30 Lakh</span></span>
+            </Link>
+            <Link href="/leads" className="flex text-[5px] text-slate-600 mb-1 bg-white p-0.5 rounded shadow-sm border border-gray-100 hover:border-orange-300 transition-colors">
+               <span className="w-2/3 flex flex-col"><span className="font-bold text-slate-800">2. Interior Design</span><span className="text-[4px] text-slate-400">Budget: ₹20-30 Lakh</span></span>
               <span className="w-1/3 text-right">Indore</span>
-            </div>
+            </Link>
           </div>
         </div>
       </div>
@@ -91,37 +101,35 @@ const steps = [
   {
     num: 4,
     title: "Purchase Leads",
-    desc: "Buy the selected leads using your preferred subscription or lead package. Secure, easy and transparent process.",
+    desc: "Buy verified leads at nominal rates (₹99 - ₹499). Each lead is strictly shared with only 2 professionals.",
     mockup: (
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-full flex flex-col shadow-sm text-left p-2">
-        <h4 className="text-[8px] font-bold text-slate-800 mb-2">Lead Package</h4>
-        <div className="flex-grow flex flex-col gap-1.5">
-          <div className="flex items-center justify-between border border-orange-400 bg-orange-50 rounded-md p-1.5 relative overflow-hidden">
-            <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-orange-500"></div>
+        <div className="flex items-center justify-between mb-1.5">
+          <h4 className="text-[8px] font-bold text-slate-800">Choose Lead</h4>
+          <span className="text-[5px] bg-orange-100 text-orange-700 font-bold px-1 py-0.5 rounded">Max 2 Pros</span>
+        </div>
+        <div className="flex-grow flex flex-col gap-1">
+          <div className="flex items-center justify-between border border-orange-400 bg-orange-50 rounded-md p-1 relative overflow-hidden">
             <div className="flex items-center gap-1">
-              <div className="w-2.5 h-2.5 rounded-full border-2 border-orange-500 flex items-center justify-center"><div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div></div>
-              <span className="text-[7px] font-bold text-slate-800">6 Months</span>
+              <div className="w-2 h-2 rounded-full border-2 border-orange-500 flex items-center justify-center"><div className="w-1 h-1 rounded-full bg-orange-500"></div></div>
+              <span className="text-[6.5px] font-bold text-slate-800">Standard Lead</span>
             </div>
-            <span className="text-[7px] font-bold text-slate-800">₹1,999</span>
+            <span className="text-[7px] font-bold text-orange-600">₹99 / ₹149</span>
           </div>
-          <div className="flex items-center justify-between border border-gray-200 rounded-md p-1.5">
+          <div className="flex items-center justify-between border border-gray-200 rounded-md p-1">
             <div className="flex items-center gap-1">
-              <div className="w-2.5 h-2.5 rounded-full border border-gray-300"></div>
-              <span className="text-[7px] text-slate-600">Standard</span>
+              <div className="w-2 h-2 rounded-full border border-gray-300"></div>
+              <span className="text-[6.5px] text-slate-600">High Budget Lead</span>
             </div>
-            <span className="text-[7px] font-bold text-slate-800">₹2,999</span>
+            <span className="text-[7px] font-bold text-slate-800">₹199 / ₹499</span>
           </div>
-          <div className="flex items-center justify-between border border-gray-200 rounded-md p-1.5">
-            <div className="flex items-center gap-1">
-              <div className="w-2.5 h-2.5 rounded-full border border-gray-300"></div>
-              <span className="text-[7px] text-slate-600">Premium</span>
-            </div>
-            <span className="text-[7px] font-bold text-slate-800">₹4,999</span>
+          <div className="bg-slate-50 border border-slate-200 rounded p-1 text-[5px] text-slate-500 text-center font-medium">
+            🔒 Only available for 2 professionals
           </div>
         </div>
-        <div className="mt-2 bg-orange-500 text-white text-[7px] font-bold flex items-center justify-center gap-1 py-1.5 rounded-md">
-          <Lock className="w-2 h-2" /> Proceed to Pay
-        </div>
+        <Link href="/leads" className="mt-1.5 bg-orange-500 hover:bg-orange-600 text-white text-[7px] font-bold flex items-center justify-center gap-1 py-1 rounded-md transition-colors block text-center">
+          <Lock className="w-2 h-2 inline" /> Unlock Lead
+        </Link>
       </div>
     )
   },
@@ -132,18 +140,24 @@ const steps = [
     mockup: (
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-full flex flex-col shadow-sm text-left p-2">
         <div className="flex flex-col gap-1.5 mb-2">
-          <div className="bg-green-500 text-white text-[8px] font-bold flex items-center justify-center gap-1 py-1.5 rounded-md">
+          <Link 
+            href="/leads"
+            className="bg-green-500 hover:bg-green-600 active:scale-95 text-white text-[8px] font-bold flex items-center justify-center gap-1 py-1.5 rounded-md shadow-sm transition-all cursor-pointer"
+          >
             <MessageCircle className="w-2.5 h-2.5" /> Chat on WhatsApp
-          </div>
-          <div className="border border-slate-300 text-slate-700 text-[8px] font-bold flex items-center justify-center gap-1 py-1.5 rounded-md">
+          </Link>
+          <Link 
+            href="/leads"
+            className="border border-slate-300 hover:bg-slate-100 active:scale-95 text-slate-700 text-[8px] font-bold flex items-center justify-center gap-1 py-1.5 rounded-md transition-all cursor-pointer"
+          >
             <Phone className="w-2.5 h-2.5" /> Call Now
-          </div>
+          </Link>
         </div>
-        <div className="border-t border-gray-100 pt-2 flex flex-col gap-1 mt-auto">
-          <div className="flex items-center gap-1 text-[7px]"><User className="w-2 h-2 text-slate-500"/><span className="text-slate-500">Name:</span> <span className="font-bold text-slate-800">Rahul Sharma</span></div>
-          <div className="flex items-center gap-1 text-[7px]"><MapPin className="w-2 h-2 text-slate-500"/><span className="text-slate-500">Location:</span> <span className="font-bold text-slate-800">Bhopal</span></div>
-          <div className="flex items-center gap-1 text-[7px]"><IndianRupee className="w-2 h-2 text-slate-500"/><span className="text-slate-500">Budget:</span> <span className="font-bold text-slate-800">₹15 - 20 Lakh</span></div>
-          <div className="flex items-center gap-1 text-[7px]"><Home className="w-2 h-2 text-slate-500"/><span className="text-slate-500">Service:</span> <span className="font-bold text-slate-800">Home Design</span></div>
+        <div className="border-t border-gray-100 pt-1.5 flex flex-col gap-1 mt-auto">
+          <div className="flex items-center gap-1 text-[7px]"><User className="w-2 h-2 text-slate-500"/><span className="text-slate-500">Requirement:</span> <span className="font-bold text-slate-800 line-clamp-1">House Construction</span></div>
+          <div className="flex items-center gap-1 text-[7px]"><MapPin className="w-2 h-2 text-slate-500"/><span className="text-slate-500">City:</span> <span className="font-bold text-slate-800">Bhopal</span></div>
+          <div className="flex items-center gap-1 text-[7px]"><IndianRupee className="w-2 h-2 text-slate-500"/><span className="text-slate-500">Budget:</span> <span className="font-bold text-slate-800">₹50 Lacs</span></div>
+          <div className="flex items-center gap-1 text-[7px]"><Phone className="w-2 h-2 text-slate-500"/><span className="text-slate-500">Contact:</span> <span className="font-bold text-slate-800">88XXXXXX90</span></div>
         </div>
       </div>
     )
@@ -160,9 +174,9 @@ const steps = [
         <div className="absolute inset-0 flex items-center justify-center">
           <TrendingUp className="w-12 h-12 text-green-500 drop-shadow-md transform -rotate-12 translate-x-4 -translate-y-4" strokeWidth={3} />
         </div>
-        <div className="mt-auto relative z-10 bg-orange-500 text-white text-center py-1.5 px-2 rounded-t-xl">
+        <Link href="/leads" className="mt-auto relative z-10 bg-orange-500 hover:bg-orange-600 text-white text-center py-1.5 px-2 rounded-t-xl block transition-colors">
           <div className="text-[8px] font-bold leading-tight">More Leads<br/>More Projects<br/>More Growth</div>
-        </div>
+        </Link>
       </div>
     )
   }
@@ -211,6 +225,17 @@ export default function LeadSteps() {
             </div>
           ))}
           
+        </div>
+
+        {/* Action Button */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/leads"
+            className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 px-8 rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all hover:scale-105 text-sm md:text-base cursor-pointer"
+          >
+            <span>Explore Lead Board &amp; Get Leads</span>
+            <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </div>
     </div>

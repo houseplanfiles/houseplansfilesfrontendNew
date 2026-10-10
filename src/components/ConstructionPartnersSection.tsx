@@ -7,6 +7,7 @@ import React, {
   useState,
   useEffect,
   useMemo,
+  useRef,
   FC,
   FormEvent,
 } from "react";
@@ -27,7 +28,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { toast } from "sonner";
-import { MapPin, Building, Phone, X, Send, Loader2, Star, Briefcase, CheckCircle2, UserPlus, Search, Filter, HardHat, Paintbrush, MessageCircle, Home, Compass, Zap, Droplet, Grid, Waves, Building2, Layers, Bug, Leaf, Users, ChefHat, ArrowUpDown, Boxes, ClipboardCheck, Sun, Wind, Hammer, Wrench, Shield, Settings, Flame, PencilRuler, Sofa, LayoutGrid, PaintRoller, AppWindow, Factory, PackageOpen, Cuboid, Truck, Fan, Cpu, Umbrella, TreePine, Utensils } from "lucide-react";
+import { MapPin, Building, Phone, X, Send, Loader2, Star, Briefcase, CheckCircle2, UserPlus, Search, Filter, HardHat, Paintbrush, MessageCircle, Home, Compass, Zap, Droplet, Grid, Waves, Building2, Layers, Bug, Leaf, Users, ChefHat, ArrowUpDown, Boxes, ClipboardCheck, Sun, Wind, Hammer, Wrench, Shield, Settings, Flame, PencilRuler, Sofa, LayoutGrid, PaintRoller, AppWindow, Factory, PackageOpen, Cuboid, Truck, Fan, Cpu, Umbrella, TreePine, Utensils, ChevronLeft, ChevronRight } from "lucide-react";
 import { getContractorProfileUrl } from "@/utils/profileUrls";
 import { trackAnalytics } from "@/lib/analytics";
 
@@ -311,7 +312,7 @@ const CONTRACTOR_CATEGORIES = [
 ];
 
 // --- MAIN COMPONENT: ConstructionPartnersSection ---
-const ConstructionPartnersSection: FC = () => {
+const ConstructionPartnersSection: FC<{ hideHeader?: boolean }> = ({ hideHeader }) => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   
@@ -323,6 +324,17 @@ const ConstructionPartnersSection: FC = () => {
   const [selectedPartner, setSelectedPartner] = useState<CityPartnerType | null>(null);
   const [cityFilter, setCityFilter] = useState("");
   const [professionFilter, setProfessionFilter] = useState("All");
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollCategories = (direction: "left" | "right") => {
+    if (categoryScrollRef.current) {
+      const scrollAmount = 240;
+      categoryScrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -373,11 +385,12 @@ const ConstructionPartnersSection: FC = () => {
 
   return (
     <>
-      <section id="city-partners" className="bg-[#FAF9F6] py-16 md:py-24 border-b">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="city-partners" className={hideHeader ? "w-full" : "bg-[#FAF9F6] py-16 md:py-24 border-b"}>
+        <div className={hideHeader ? "w-full" : "max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8"}>
           
           {/* --- HERO HEADER --- */}
-          <div className="text-center mb-10 md:mb-16">
+          {!hideHeader && (
+            <div className="text-center mb-10 md:mb-16">
             <div className="inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-[11px] md:text-sm font-bold text-orange-600 mb-4 md:mb-6 shadow-sm">
               <CheckCircle2 className="mr-1.5 h-3.5 w-3.5 md:h-4 md:w-4" />
               Verified Professionals
@@ -389,6 +402,7 @@ const ConstructionPartnersSection: FC = () => {
               Hire verified local contractors for construction and interiors. Get your project done with the best in the business.
             </p>
           </div>
+          )}
 
           <main className="relative z-10">
             {/* --- FILTERS SECTION --- */}
@@ -413,26 +427,51 @@ const ConstructionPartnersSection: FC = () => {
 
                   {/* Profession Filter Toggle */}
                   <div className="w-full lg:w-2/3 text-left">
-                    <Label className="text-[11px] md:text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">
-                      <Filter className="inline-block w-3.5 h-3.5 mr-1 mb-0.5 text-orange-400" /> Specialization
-                    </Label>
-                    <div 
-                      className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none -mx-1 px-1" 
-                      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                    >
-                      {CONTRACTOR_CATEGORIES.map((cat) => (
-                        <button
-                          key={cat}
-                          onClick={() => setProfessionFilter(cat)}
-                          className={`h-10 md:h-12 px-5 md:px-7 rounded-xl text-xs md:text-sm font-bold whitespace-nowrap transition-all border-2 shrink-0 flex items-center gap-2 ${
-                            professionFilter === cat
-                              ? "bg-orange-50 text-orange-700 border-orange-500 shadow-sm"
-                              : "bg-white text-gray-600 border-gray-100 hover:border-orange-200 hover:bg-gray-50 hover:text-orange-600"
-                          }`}
-                        >
-                          {cat}
-                        </button>
-                      ))}
+                    <div className="flex items-center justify-between mb-2">
+                      <Label className="text-[11px] md:text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                        <Filter className="inline-block w-3.5 h-3.5 mr-1 mb-0.5 text-orange-400" /> Specialization
+                      </Label>
+                      <span className="text-[10px] sm:text-xs text-gray-400 font-medium">Scroll to explore</span>
+                    </div>
+
+                    <div className="relative flex items-center gap-1.5 sm:gap-2">
+                      <button
+                        type="button"
+                        onClick={() => scrollCategories("left")}
+                        className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white border border-gray-200 shadow-xs hover:bg-orange-50 hover:border-orange-400 hover:text-orange-600 flex items-center justify-center text-gray-600 transition-all active:scale-95"
+                        aria-label="Scroll left"
+                      >
+                        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </button>
+
+                      <div 
+                        ref={categoryScrollRef}
+                        className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none scroll-smooth flex-grow -mx-1 px-1" 
+                        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                      >
+                        {CONTRACTOR_CATEGORIES.map((cat) => (
+                          <button
+                            key={cat}
+                            onClick={() => setProfessionFilter(cat)}
+                            className={`h-10 md:h-12 px-4 sm:px-6 md:px-7 rounded-xl text-xs md:text-sm font-bold whitespace-nowrap transition-all border-2 shrink-0 flex items-center gap-2 ${
+                              professionFilter === cat
+                                ? "bg-orange-50 text-orange-700 border-orange-500 shadow-sm"
+                                : "bg-white text-gray-600 border-gray-100 hover:border-orange-200 hover:bg-gray-50 hover:text-orange-600"
+                            }`}
+                          >
+                            {cat}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => scrollCategories("right")}
+                        className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white border border-gray-200 shadow-xs hover:bg-orange-50 hover:border-orange-400 hover:text-orange-600 flex items-center justify-center text-gray-600 transition-all active:scale-95"
+                        aria-label="Scroll right"
+                      >
+                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -452,7 +491,7 @@ const ConstructionPartnersSection: FC = () => {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-8">
-                    {filteredPartners.slice(0, 8).map((partner, index) => (
+                    {filteredPartners.slice(0, 4).map((partner, index) => (
                       <div key={partner._id} className={index >= 4 ? 'hidden sm:block' : ''}>
                         <PartnerCard partner={partner} onContact={handleContactClick} index={index} navigate={(p) => router.push(p)} />
                       </div>

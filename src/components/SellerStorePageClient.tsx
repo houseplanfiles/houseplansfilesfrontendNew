@@ -224,13 +224,25 @@ const ProductCard = ({
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden h-full"
+      className="group bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg hover:border-orange-300 transition-all duration-300 flex flex-col overflow-hidden h-full ring-1 ring-slate-100"
     >
-      <div className="relative h-48 sm:h-64 w-full overflow-hidden bg-gray-100 cursor-pointer" onClick={() => router.push(`/building-material-marketplace/product/${product._id}`)}>
-        <Image src={product.image} alt={product.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
-        <div className="absolute top-3 left-3 bg-orange-600 text-white px-2 py-1 rounded text-[10px] font-bold uppercase z-10">
+      {/* Product Image - proportional height */}
+      <div 
+        className="relative h-36 sm:h-52 md:h-60 w-full overflow-hidden bg-slate-100 cursor-pointer" 
+        onClick={() => router.push(`/building-material-marketplace/product/${product._id}`)}
+      >
+        <Image 
+          src={product.image} 
+          alt={product.name} 
+          fill 
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" 
+          className="object-cover transition-transform duration-700 group-hover:scale-105" 
+        />
+        
+        {/* Category Badge */}
+        <div className="absolute top-2 left-2 bg-orange-600/95 text-white px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shadow-xs z-10">
           {product.category}
         </div>
         
@@ -240,29 +252,43 @@ const ProductCard = ({
             e.stopPropagation();
             onToggleCart(product);
           }}
-          className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg z-10 ${isInCart ? 'bg-orange-600 text-white scale-110' : 'bg-white text-gray-900 hover:bg-gray-100'}`}
+          className={`absolute bottom-2 right-2 w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all shadow-md z-10 ${
+            isInCart ? 'bg-orange-600 text-white scale-105' : 'bg-white/95 backdrop-blur-xs text-gray-800 hover:bg-white hover:text-orange-600'
+          }`}
+          aria-label={isInCart ? "Remove from inquiry" : "Add to inquiry"}
         >
-          {isInCart ? <Check size={20} /> : <Plus size={20} />}
+          {isInCart ? <Check size={14} className="sm:w-4 sm:h-4" /> : <Plus size={14} className="sm:w-4 sm:h-4" />}
         </button>
       </div>
-      <div className="p-4 flex flex-col flex-grow">
+
+      {/* Card Details */}
+      <div className="p-3 sm:p-4 flex flex-col flex-grow bg-white">
         <h3 
-          className="text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors line-clamp-1 cursor-pointer"
+          className="text-xs sm:text-base font-bold text-slate-900 group-hover:text-orange-600 transition-colors line-clamp-1 cursor-pointer leading-snug"
           onClick={() => router.push(`/building-material-marketplace/product/${product._id}`)}
+          title={product.name}
         >
           {product.name}
         </h3>
-        <p className="text-xs text-gray-500 line-clamp-2 mt-1 mb-4">{product.description}</p>
-        <div className="mt-auto pt-4 border-t border-gray-50">
-          <div className="flex items-center justify-between mb-3">
+        <p className="text-[10px] sm:text-xs text-slate-500 line-clamp-1 mt-0.5 mb-2.5">
+          {product.description || "Verified building material"}
+        </p>
+
+        {/* Price & Action Row */}
+        <div className="mt-auto pt-2.5 sm:pt-3 border-t border-slate-100">
+          <div className="flex items-baseline justify-between mb-2">
             <div className="flex items-baseline gap-1">
-              <span className="text-xl font-extrabold text-gray-900">₹{Number(product?.price || 0).toLocaleString()}</span>
-              {product.unit && <span className="text-xs text-gray-500">/ {product.unit}</span>}
+              <span className="text-sm sm:text-lg font-black text-slate-900">
+                ₹{Number(product?.price || 0).toLocaleString()}
+              </span>
+              {product.unit && (
+                <span className="text-[10px] sm:text-xs text-slate-500 font-medium">/ {product.unit}</span>
+              )}
             </div>
           </div>
 
           {sellerData?.contractorType === "Premium" && sellerData?.contractorType !== "Normal" && sellerData?.selectedPlan !== "Basic" ? (
-            <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -272,18 +298,18 @@ const ProductCard = ({
                   trackAnalytics('user', sellerData._id, 'whatsapp_click');
                   window.open(waLink, "_blank");
                 }}
-                className="bg-[#25D366] hover:bg-[#128C7E] text-white rounded-lg px-0 sm:px-2 h-8 sm:h-9 flex items-center justify-center text-[9px] sm:text-xs font-bold w-full overflow-hidden"
+                className="bg-[#25D366] hover:bg-[#128C7E] text-white rounded-lg px-1 sm:px-2 h-7 sm:h-8.5 flex items-center justify-center text-[10px] sm:text-xs font-bold w-full overflow-hidden shadow-xs"
               >
-                <MessageCircle size={12} className="mr-1 flex-shrink-0" /> <span className="truncate">WhatsApp</span>
+                <MessageCircle size={12} className="mr-1 shrink-0" /> <span className="truncate">WhatsApp</span>
               </Button>
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
                   window.location.href = `tel:${sellerData.phone}`;
                 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-0 sm:px-2 h-8 sm:h-9 flex items-center justify-center text-[9px] sm:text-xs font-bold w-full overflow-hidden"
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-1 sm:px-2 h-7 sm:h-8.5 flex items-center justify-center text-[10px] sm:text-xs font-bold w-full overflow-hidden shadow-xs"
               >
-                <Phone size={12} className="mr-1 flex-shrink-0" /> <span className="truncate">Call Now</span>
+                <Phone size={12} className="mr-1 shrink-0" /> <span className="truncate">Call Now</span>
               </Button>
             </div>
           ) : (
@@ -292,7 +318,7 @@ const ProductCard = ({
                 e.stopPropagation();
                 onInquiryClick(product);
               }} 
-              className="bg-gray-900 hover:bg-orange-600 text-white rounded-lg w-full h-9"
+              className="bg-slate-900 hover:bg-orange-600 text-white rounded-lg w-full h-7 sm:h-8.5 text-[11px] sm:text-xs font-bold transition-colors"
             >
               Inquiry
             </Button>
@@ -503,7 +529,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
         </div>
       </div>
 
-      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 -mt-10 mb-20">
+      <main className="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 relative z-20 mt-3 sm:-mt-8 mb-20">
         {/* Store Image Gallery Section */}
         {sellerInfo?.storeImages && sellerInfo.storeImages.length > 0 && (
           <div className="bg-white rounded-2xl p-6 mb-8 shadow-xl border border-gray-100 overflow-hidden">
@@ -526,21 +552,24 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
           </div>
         )}
 
-        <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-xl border border-gray-100">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-8 pb-4 border-b border-gray-100 gap-4">
-            <h2 className="text-2xl font-bold text-gray-900">Store Collection</h2>
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl border border-gray-100">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 pb-4 border-b border-gray-100 gap-3">
+            <div>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900">Store Collection</h2>
+              <p className="text-xs sm:text-sm text-gray-500 font-medium mt-0.5">Explore all available products and materials from this seller</p>
+            </div>
             {cartItems.length > 0 && (
               <Button 
                 onClick={() => setIsCartOpen(true)}
-                className="bg-orange-600 hover:bg-orange-700 text-white font-bold flex items-center gap-2 px-6 rounded-full animate-bounce"
+                className="bg-orange-600 hover:bg-orange-700 text-white font-bold flex items-center gap-2 px-5 py-2.5 rounded-full shadow-md animate-bounce text-xs sm:text-sm"
               >
-                <ShoppingCart size={18} /> View Multi-Inquiry ({cartItems.length})
+                <ShoppingCart size={16} /> View Multi-Inquiry ({cartItems.length})
               </Button>
             )}
           </div>
 
           {products.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-6">
               {products.map((p) => (
                 <ProductCard 
                   key={p._id} 

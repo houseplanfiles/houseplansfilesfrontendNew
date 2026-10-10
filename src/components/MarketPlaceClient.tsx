@@ -31,6 +31,9 @@ import {
   Truck,
   LayoutGrid,
   Sparkles,
+  ShoppingCart,
+  Plus,
+  Trash2,
 } from "lucide-react";
 
 
@@ -234,7 +237,7 @@ const InquiryModal = ({ product, onClose }: { product: any; onClose: () => void 
 };
 
 // --- 3. PRODUCT CARD (Optimized for Mobile 2-Cols) ---
-const ProductCard = ({ product, onInquiryClick, onImageClick }: any) => (
+const ProductCard = ({ product, onInquiryClick, onImageClick, onAddToCart, isInCart }: any) => (
   <motion.div
     layout
     initial={{ opacity: 0, scale: 0.9 }}
@@ -298,15 +301,30 @@ const ProductCard = ({ product, onInquiryClick, onImageClick }: any) => (
         </div>
 
         <div className="flex flex-col gap-2 w-full mt-1">
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              onInquiryClick(product);
-            }}
-            className="w-full h-8 sm:h-10 text-xs sm:text-sm bg-gray-900 hover:bg-orange-600 text-white rounded-lg px-3 transition-colors"
-          >
-            {(product.seller?.businessType === "Manufacturer" || product.seller?.businessType === "Both") ? "Get Bulk Quote" : "Enquiry"}
-          </Button>
+          <div className="flex gap-1.5">
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onInquiryClick(product);
+              }}
+              className="flex-1 h-8 sm:h-10 text-xs sm:text-sm bg-gray-900 hover:bg-orange-600 text-white rounded-lg px-2 transition-colors"
+            >
+              {(product.seller?.businessType === "Manufacturer" || product.seller?.businessType === "Both") ? "Get Bulk Quote" : "Enquiry"}
+            </Button>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddToCart(product);
+              }}
+              title={isInCart ? "Remove from Multi-Inquiry" : "Add to Multi-Inquiry"}
+              className={`h-8 sm:h-10 w-8 sm:w-10 shrink-0 rounded-lg transition-all ${isInCart
+                ? "bg-orange-500 hover:bg-red-500 text-white"
+                : "bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200"
+                }`}
+            >
+              {isInCart ? <Check className="w-3.5 h-3.5 mx-auto" /> : <Plus className="w-3.5 h-3.5 mx-auto" />}
+            </Button>
+          </div>
 
           {(product.seller?.contractorType !== "Normal" && product.seller?.selectedPlan !== "Basic" && (product.seller?.contractorType === "Verified" || product.seller?.contractorType === "Premium" || product.seller?.role === "Premium")) && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
@@ -468,6 +486,55 @@ const MarketplacePage: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [fullScreenImage, setFullScreenImage] = useState(null);
+
+  // Multi-Inquiry Cart State
+  const [cartProducts, setCartProducts] = useState<any[]>([]);
+  const [isMultiInquiryOpen, setIsMultiInquiryOpen] = useState(false);
+  const [multiFormData, setMultiFormData] = useState({ name: "", phone: "", message: "" });
+  const [multiSubmitting, setMultiSubmitting] = useState(false);
+
+  const handleAddToCart = (product: any) => {
+    setCartProducts(prev => {
+      const exists = prev.find(p => p._id === product._id);
+      if (exists) {
+        toast.info(`${product.name} removed from Multi-Inquiry`);
+        return prev.filter(p => p._id !== product._id);
+      } else {
+        toast.success(`${product.name} added to Multi-Inquiry!`);
+        return [...prev, product];
+      }
+    });
+  };
+
+  const handleMultiInquirySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (cartProducts.length === 0) return;
+    setMultiSubmitting(true);
+    try {
+      const promises = cartProducts.map(product =>
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/seller-inquiries`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            productId: product._id,
+            name: multiFormData.name,
+            phone: multiFormData.phone,
+            email: "",
+            message: multiFormData.message || `I am interested in ${product.name}. Please share the price and availability.`,
+          }),
+        })
+      );
+      await Promise.all(promises);
+      toast.success(`Inquiry sent to ${cartProducts.length} seller(s) successfully!`);
+      setCartProducts([]);
+      setIsMultiInquiryOpen(false);
+      setMultiFormData({ name: "", phone: "", message: "" });
+    } catch (err) {
+      toast.error("Failed to send some inquiries. Please try again.");
+    } finally {
+      setMultiSubmitting(false);
+    }
+  };
 
   const handleOpenInquiry = (product: any) => {
     setSelectedProduct(product);
@@ -665,6 +732,7 @@ const MarketplacePage: FC = () => {
   const BUSINESS_TYPE_TABS = [
     { id: "All", label: "All Sellers", icon: LayoutGrid, tag: "Everything" },
     { id: "Manufacturer", label: "Manufacturer", icon: Factory, tag: "Direct Factory" },
+    { id: "Supplier", label: "Supplier", icon: Truck, tag: "Bulk Supplier" },
     { id: "Manufacturer_Wholesaler", label: "Manufacturer + Wholesaler", icon: Truck, tag: "Bulk Supply" },
     { id: "Local_Shop", label: "Local Shops", icon: Store, tag: "Retail Stores" },
   ];
@@ -729,11 +797,10 @@ const MarketplacePage: FC = () => {
                 <button
                   key={tab.id}
                   onClick={() => setSelectedBusinessType(tab.id)}
-                  className={`flex items-center gap-2.5 md:gap-3 px-4 sm:px-6 py-3 md:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 border-2 ${
-                    isSelected
-                      ? "bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-500/25 scale-[1.02]"
-                      : "bg-white text-gray-700 border-gray-100 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600"
-                  }`}
+                  className={`flex items-center gap-2.5 md:gap-3 px-4 sm:px-6 py-3 md:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 border-2 ${isSelected
+                    ? "bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-500/25 scale-[1.02]"
+                    : "bg-white text-gray-700 border-gray-100 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600"
+                    }`}
                 >
                   <div className={`p-1.5 rounded-lg ${isSelected ? "bg-white/20 text-white" : "bg-orange-50 text-orange-600"}`}>
                     <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
@@ -754,11 +821,10 @@ const MarketplacePage: FC = () => {
         <div className="md:hidden mb-3 flex items-center gap-3">
           <button
             onClick={() => setShowMobileFilters(!showMobileFilters)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm ${
-              showMobileFilters
-                ? "bg-orange-600 text-white border-orange-600"
-                : "bg-white text-gray-700 border-gray-200"
-            }`}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm ${showMobileFilters
+              ? "bg-orange-600 text-white border-orange-600"
+              : "bg-white text-gray-700 border-gray-200"
+              }`}
           >
             <Filter className="w-4 h-4" />
             {showMobileFilters ? "Hide Filters" : "Show Filters"}
@@ -771,9 +837,8 @@ const MarketplacePage: FC = () => {
           )}
         </div>
 
-        <div className={`bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 md:p-8 mb-8 space-y-4 ${
-          showMobileFilters ? "block" : "hidden md:block"
-        }`}>
+        <div className={`bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 md:p-8 mb-8 space-y-4 ${showMobileFilters ? "block" : "hidden md:block"
+          }`}>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
             <div className="lg:col-span-2">
               <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Search Shop or Product</Label>
@@ -797,6 +862,7 @@ const MarketplacePage: FC = () => {
                 <SelectContent>
                   <SelectItem value="All">All Types</SelectItem>
                   <SelectItem value="Manufacturer">Manufacturer</SelectItem>
+                  <SelectItem value="Supplier">Supplier</SelectItem>
                   <SelectItem value="Manufacturer_Wholesaler">Manufacturer + Wholesaler</SelectItem>
                   <SelectItem value="Local_Shop">Local Shop</SelectItem>
                 </SelectContent>
@@ -837,13 +903,12 @@ const MarketplacePage: FC = () => {
               <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Coverage</Label>
               <label
                 htmlFor="panIndiaMarketplaceCheck"
-                className={`flex items-center justify-center gap-2 h-12 px-3 rounded-xl border text-xs font-bold transition-all ${
-                  (selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode !== "")
-                    ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60"
-                    : isPanIndiaFilter 
-                      ? "bg-orange-600 border-orange-600 text-white shadow-sm cursor-pointer" 
-                      : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                }`}
+                className={`flex items-center justify-center gap-2 h-12 px-3 rounded-xl border text-xs font-bold transition-all ${(selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode !== "")
+                  ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60"
+                  : isPanIndiaFilter
+                    ? "bg-orange-600 border-orange-600 text-white shadow-sm cursor-pointer"
+                    : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                  }`}
               >
                 <input
                   id="panIndiaMarketplaceCheck"
@@ -939,7 +1004,6 @@ const MarketplacePage: FC = () => {
                 className="h-12 bg-gray-50 border-gray-200 text-base rounded-xl focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
-
             <div className="flex items-center">
               {(isPanIndiaFilter || selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode || searchTerm || selectedBusinessType !== "All" || selectedShopCategory !== "All" || selectedMaterialType !== "All") && (
                 <Button
@@ -998,6 +1062,8 @@ const MarketplacePage: FC = () => {
                         product={item.product}
                         onInquiryClick={handleOpenInquiry}
                         onImageClick={setFullScreenImage}
+                        onAddToCart={handleAddToCart}
+                        isInCart={cartProducts.some(p => p._id === item.product._id)}
                       />
                     )
                   ))}
@@ -1030,6 +1096,120 @@ const MarketplacePage: FC = () => {
         )}
       </main>
 
+      {/* --- Floating Multi-Inquiry Button --- */}
+      {cartProducts.length > 0 && (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90]"
+        >
+          <button
+            onClick={() => setIsMultiInquiryOpen(true)}
+            className="flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white font-black px-6 py-3.5 rounded-full shadow-2xl shadow-orange-500/40 transition-all hover:scale-105 active:scale-95"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            View Multi-Inquiry ({cartProducts.length})
+          </button>
+        </motion.div>
+      )}
+
+      {/* --- Multi-Inquiry Modal --- */}
+      <AnimatePresence>
+        {isMultiInquiryOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"
+            onClick={() => setIsMultiInquiryOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden"
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+            >
+              <div className="bg-gray-900 p-5 flex justify-between items-center text-white">
+                <div>
+                  <h2 className="text-lg font-black uppercase tracking-tight">Multi-Inquiry</h2>
+                  <p className="text-xs text-gray-400 mt-0.5">Send one inquiry to {cartProducts.length} seller(s)</p>
+                </div>
+                <button onClick={() => setIsMultiInquiryOpen(false)} className="hover:bg-white/20 p-2 rounded-full transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Selected Products List */}
+              <div className="max-h-48 overflow-y-auto p-4 space-y-2 border-b border-gray-100">
+                {cartProducts.map(p => (
+                  <div key={p._id} className="flex items-center justify-between bg-orange-50 rounded-xl px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg overflow-hidden relative shrink-0">
+                        <Image src={p.image || "https://via.placeholder.com/100"} alt={p.name} fill className="object-cover" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-800 line-clamp-1">{p.name}</p>
+                        <p className="text-[10px] text-gray-500">{p.seller?.businessName}</p>
+                      </div>
+                    </div>
+                    <button onClick={() => handleAddToCart(p)} className="text-red-400 hover:text-red-600 p-1">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleMultiInquirySubmit} className="p-5 space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[10px] font-black text-gray-400 uppercase block mb-1">Your Name *</label>
+                    <Input
+                      required
+                      value={multiFormData.name}
+                      onChange={e => setMultiFormData(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="Full Name"
+                      className="h-10 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-black text-gray-400 uppercase block mb-1">Phone / WhatsApp *</label>
+                    <Input
+                      required
+                      value={multiFormData.phone}
+                      onChange={e => setMultiFormData(prev => ({ ...prev, phone: e.target.value }))}
+                      placeholder="9876543210"
+                      className="h-10 text-sm"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-gray-400 uppercase block mb-1">Message (Optional)</label>
+                  <Textarea
+                    value={multiFormData.message}
+                    onChange={e => setMultiFormData(prev => ({ ...prev, message: e.target.value }))}
+                    placeholder="Describe your requirement, quantity, etc..."
+                    className="h-20 resize-none text-sm"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  disabled={multiSubmitting}
+                  className="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-xl"
+                >
+                  {multiSubmitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <><Send className="w-4 h-4 mr-2" /> Send to {cartProducts.length} Seller(s)</>
+                  )}
+                </Button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* --- Modals Overlay --- */}
       <AnimatePresence>
         {isModalOpen && (
@@ -1050,5 +1230,4 @@ const MarketplacePage: FC = () => {
     </div>
   );
 };
-
 export default MarketplacePage;

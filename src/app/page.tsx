@@ -8,7 +8,7 @@ import HomeServicesCategoriesSection from "@/components/HomeServicesCategoriesSe
 import TopArchitectsSection from "@/components/TopArchitectsSection";
 import ConstructionPartnersSection from "@/components/ConstructionPartnersSection";
 import SellersSection from "@/components/SellersSection";
-import RegionalPlansSection from "@/components/RegionalPlansSection";
+import IndustrialServicesSection from "@/components/IndustrialServicesSection";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import CityExplorer from "@/components/CityExplorer";
@@ -61,8 +61,32 @@ export default function HomePage() {
           <HomeServicesCategoriesSection />
           <CityExplorer />
 
-          <TopArchitectsSection />
-          <ConstructionPartnersSection />
+          {/* COMBINED PROFESSIONALS SECTION */}
+          <section className="bg-[#FAF9F6] pt-12 md:pt-20 pb-16 md:pb-24 border-b">
+            <div className="max-w-[1900px] mx-auto px-4">
+              <div className="text-center mb-6 md:mb-10">
+                <div className="inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3.5 py-1.5 text-sm font-bold text-orange-600 mb-4 shadow-sm">
+                  <span className="mr-1.5">✓</span>
+                  Verified Professionals
+                </div>
+                <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
+                  Top <span className="text-orange-600">Architects &amp; Contractors</span>
+                </h2>
+                <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto">
+                  Find the best experts to design and build your dream project.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-12 max-w-[1600px] mx-auto">
+                <div className="w-full overflow-hidden">
+                  <TopArchitectsSection hideHeader={true} />
+                </div>
+                <div className="w-full overflow-hidden">
+                  <ConstructionPartnersSection hideHeader={true} />
+                </div>
+              </div>
+            </div>
+          </section>
           <SellersSection />
           
           {/* Added Lead Board How it Works per client feedback */}
@@ -71,7 +95,8 @@ export default function HomePage() {
           {/* Added Registration Prompts per client feedback */}
           <RegistrationPrompts />
 
-          <RegionalPlansSection />
+          {/* Industrial Services Section */}
+          <IndustrialServicesSection />
 
           <Testimonials />
           <CTA />
