@@ -77,7 +77,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+              <div className="flex flex-col gap-12 max-w-[1600px] mx-auto">
                 <div className="w-full overflow-hidden">
                   <TopArchitectsSection hideHeader={true} />
                 </div>

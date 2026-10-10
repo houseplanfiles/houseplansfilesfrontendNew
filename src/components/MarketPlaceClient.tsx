@@ -317,11 +317,10 @@ const ProductCard = ({ product, onInquiryClick, onImageClick, onAddToCart, isInC
                 onAddToCart(product);
               }}
               title={isInCart ? "Remove from Multi-Inquiry" : "Add to Multi-Inquiry"}
-              className={`h-8 sm:h-10 w-8 sm:w-10 shrink-0 rounded-lg transition-all ${
-                isInCart
+              className={`h-8 sm:h-10 w-8 sm:w-10 shrink-0 rounded-lg transition-all ${isInCart
                   ? "bg-orange-500 hover:bg-red-500 text-white"
                   : "bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200"
-              }`}
+                }`}
             >
               {isInCart ? <Check className="w-3.5 h-3.5 mx-auto" /> : <Plus className="w-3.5 h-3.5 mx-auto" />}
             </Button>
@@ -798,11 +797,10 @@ const MarketplacePage: FC = () => {
                 <button
                   key={tab.id}
                   onClick={() => setSelectedBusinessType(tab.id)}
-                  className={`flex items-center gap-2.5 md:gap-3 px-4 sm:px-6 py-3 md:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 border-2 ${
-                    isSelected
+                  className={`flex items-center gap-2.5 md:gap-3 px-4 sm:px-6 py-3 md:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 border-2 ${isSelected
                       ? "bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-500/25 scale-[1.02]"
                       : "bg-white text-gray-700 border-gray-100 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600"
-                  }`}
+                    }`}
                 >
                   <div className={`p-1.5 rounded-lg ${isSelected ? "bg-white/20 text-white" : "bg-orange-50 text-orange-600"}`}>
                     <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
@@ -823,11 +821,10 @@ const MarketplacePage: FC = () => {
         <div className="md:hidden mb-3 flex items-center gap-3">
           <button
             onClick={() => setShowMobileFilters(!showMobileFilters)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm ${
-              showMobileFilters
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm ${showMobileFilters
                 ? "bg-orange-600 text-white border-orange-600"
                 : "bg-white text-gray-700 border-gray-200"
-            }`}
+              }`}
           >
             <Filter className="w-4 h-4" />
             {showMobileFilters ? "Hide Filters" : "Show Filters"}
@@ -840,9 +837,8 @@ const MarketplacePage: FC = () => {
           )}
         </div>
 
-        <div className={`bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 md:p-8 mb-8 space-y-4 ${
-          showMobileFilters ? "block" : "hidden md:block"
-        }`}>
+        <div className={`bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 md:p-8 mb-8 space-y-4 ${showMobileFilters ? "block" : "hidden md:block"
+          }`}>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
             <div className="lg:col-span-2">
               <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Search Shop or Product</Label>
@@ -907,13 +903,12 @@ const MarketplacePage: FC = () => {
               <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Coverage</Label>
               <label
                 htmlFor="panIndiaMarketplaceCheck"
-                className={`flex items-center justify-center gap-2 h-12 px-3 rounded-xl border text-xs font-bold transition-all ${
-                  (selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode !== "")
+                className={`flex items-center justify-center gap-2 h-12 px-3 rounded-xl border text-xs font-bold transition-all ${(selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode !== "")
                     ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60"
-                    : isPanIndiaFilter 
-                      ? "bg-orange-600 border-orange-600 text-white shadow-sm cursor-pointer" 
+                    : isPanIndiaFilter
+                      ? "bg-orange-600 border-orange-600 text-white shadow-sm cursor-pointer"
                       : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                }`}
+                  }`}
               >
                 <input
                   id="panIndiaMarketplaceCheck"
@@ -1216,7 +1211,6 @@ const MarketplacePage: FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
       {/* --- Modals Overlay --- */}
       <AnimatePresence>
         {isModalOpen && (
