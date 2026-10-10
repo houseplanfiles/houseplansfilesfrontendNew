@@ -77,20 +77,20 @@ const INDUSTRIAL_SERVICES: IndustrialServiceItem[] = [
 const IndustrialServicesSection = () => {
   return (
     <section className="py-14 sm:py-16 md:py-20 bg-gradient-to-b from-white via-slate-50/70 to-white border-t border-slate-100">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1900px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* --- Centered Header & Intro --- */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+        <div className="text-center max-w-5xl mx-auto mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-xs sm:text-sm font-bold uppercase tracking-wider mb-3 shadow-xs">
             <HardHat className="w-4 h-4 text-[#ff6b00]" />
             <span>Industrial & Heavy Infrastructure</span>
           </div>
           
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight whitespace-nowrap">
             Industrial <span className="text-[#ff6b00]">Services</span> & Solutions
           </h2>
           
-          <p className="mt-3 text-sm sm:text-base md:text-lg text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto">
+          <p className="mt-3 text-sm sm:text-base md:text-lg text-slate-600 font-medium leading-relaxed max-w-3xl mx-auto">
             Find verified contractors, PEB specialists, machinery providers, and structural engineers for commercial, industrial, and heavy infrastructure projects across India.
           </p>
 
@@ -106,7 +106,7 @@ const IndustrialServicesSection = () => {
         </div>
 
         {/* --- Quick Value Highlights Bar (Centered) --- */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-10 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-10 max-w-[1400px] mx-auto">
           <div className="flex items-center gap-2.5 sm:gap-3 bg-white p-3 sm:p-4 rounded-xl border border-slate-200/80 shadow-xs">
             <div className="p-1.5 sm:p-2 rounded-lg bg-orange-100 text-[#ff6b00] shrink-0">
               <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -149,7 +149,7 @@ const IndustrialServicesSection = () => {
         </div>
 
         {/* --- Services Grid (Only 4, 2 in a row on mobile/tablet) --- */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8 w-full">
           {INDUSTRIAL_SERVICES.slice(0, 4).map((service) => {
             const Icon = service.icon;
             return (
