@@ -80,17 +80,17 @@ const IndustrialServicesSection = () => {
       <div className="max-w-[1900px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* --- Centered Header & Intro --- */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+        <div className="text-center max-w-5xl mx-auto mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-xs sm:text-sm font-bold uppercase tracking-wider mb-3 shadow-xs">
             <HardHat className="w-4 h-4 text-[#ff6b00]" />
             <span>Industrial & Heavy Infrastructure</span>
           </div>
           
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight whitespace-nowrap">
             Industrial <span className="text-[#ff6b00]">Services</span> & Solutions
           </h2>
           
-          <p className="mt-3 text-sm sm:text-base md:text-lg text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto">
+          <p className="mt-3 text-sm sm:text-base md:text-lg text-slate-600 font-medium leading-relaxed max-w-3xl mx-auto">
             Find verified contractors, PEB specialists, machinery providers, and structural engineers for commercial, industrial, and heavy infrastructure projects across India.
           </p>
 
