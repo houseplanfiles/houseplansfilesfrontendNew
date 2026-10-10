@@ -2,7 +2,7 @@
 import React, { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Home, PencilRuler, HardHat, Wrench, ShoppingCart, ArrowRight, Users, ShieldCheck, MapPin, Star, Globe } from "lucide-react";
+import { Home, PencilRuler, HardHat, Wrench, ShoppingCart, ArrowRight, Users, ShieldCheck, MapPin, Star, Globe, Factory } from "lucide-react";
 
 const CATEGORIES = [
   {
@@ -65,6 +65,18 @@ const CATEGORIES = [
     lightColor: "bg-red-50",
     textColor: "text-red-500",
   },
+  {
+    id: 6,
+    title: "Industrial Services",
+    desc: "Pre-engineered buildings, machinery, and heavy infrastructure",
+    link: "/industrial-services",
+    icon: Factory,
+    btnText: "Explore Industrial",
+    image: "/b11.jpg",
+    color: "bg-amber-500",
+    lightColor: "bg-amber-50",
+    textColor: "text-amber-500",
+  },
 ];
 
 const HomeServicesCategoriesSection: FC<{ hideHeader?: boolean; className?: string }> = ({ hideHeader = false, className = "bg-[#FAF9F6] py-10" }) => {
@@ -84,8 +96,8 @@ const HomeServicesCategoriesSection: FC<{ hideHeader?: boolean; className?: stri
           </div>
         )}
 
-        {/* 5 Cards Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-6 mb-4">
+        {/* 6 Cards Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-6 mb-4">
           {CATEGORIES.map((cat) => (
             <Link 
               key={cat.id} 

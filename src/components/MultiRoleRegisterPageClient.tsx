@@ -38,33 +38,68 @@ import { generateInvoicePDF } from "@/lib/invoiceGenerator";
 const userRoles = [
   { 
     id: "professional", 
-    label: "Register as an Architect, Engineer, Interior Designer",
-    description: "Showcase your work and connect with clients",
-    icon: <Building2 className="w-6 h-6" />
+    label: "Architects & Engineers",
+    subItems: [
+      "Architects",
+      "Interior Designers",
+      "Civil Engineers",
+      "Structural Engineers",
+      "Vastu Consultants"
+    ],
+    theme: "blue",
+    icon: <Building2 className="w-5 h-5" />
   },
   { 
     id: "Contractor", 
-    label: "Register as a Contractor",
-    description: "Get projects and grow your business",
-    icon: <HardHat className="w-6 h-6" />
+    label: "Contractors",
+    subItems: [
+      "Civil Contractors",
+      "Turnkey Contractors",
+      "Painting Contractors",
+      "Electrical Contractors",
+      "Plumbing Contractors"
+    ],
+    theme: "orange",
+    icon: <HardHat className="w-5 h-5" />
   },
   { 
     id: "seller", 
-    label: "Register as a Manufacturer, Supplier or Shop",
-    description: "List your products and reach more buyers",
-    icon: <Store className="w-6 h-6" />
+    label: "Manufacturers & Suppliers",
+    subItems: [
+      "Building Material Shops",
+      "Hardware Stores",
+      "Cement & Steel",
+      "Furniture Showrooms",
+      "Sanitary & Tile Shops"
+    ],
+    theme: "green",
+    icon: <Store className="w-5 h-5" />
   },
   { 
     id: "other_services", 
-    label: "Register for Other Services",
-    description: "Explore and access additional services",
-    icon: <Wrench className="w-6 h-6" />
+    label: "Other Services",
+    subItems: [
+      "Pest Control Services",
+      "Landscaping Services",
+      "HVAC Technicians",
+      "Lift Installation",
+      "Solar Installation"
+    ],
+    theme: "purple",
+    icon: <Wrench className="w-5 h-5" />
   },
   { 
     id: "industrial", 
-    label: "Register for Industrial Construction & Infrastructure Services",
-    description: "For large-scale construction and infrastructure projects",
-    icon: <Factory className="w-6 h-6" />
+    label: "Industrial Services",
+    subItems: [
+      "Pre-Engineered Bldgs",
+      "Machinery Rental",
+      "Manpower Supply",
+      "Project Management",
+      "Heavy Infrastructure"
+    ],
+    theme: "red",
+    icon: <Factory className="w-5 h-5" />
   },
 ];
 
@@ -1074,30 +1109,55 @@ const MultiRoleRegisterPage = () => {
 
               {/* REGISTRATION CARDS */}
               <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-16 relative z-10">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
-                  {userRoles.map((role) => (
-                    <div
-                      key={role.id}
-                      role="button"
-                      onClick={() => handleRoleChange(role.id)}
-                      className="group relative flex flex-col p-4 sm:p-6 rounded-[20px] sm:rounded-3xl border border-gray-200 bg-white shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(249,115,22,0.12)] hover:-translate-y-1 hover:border-orange-500 transition-all duration-300 h-full text-left overflow-hidden cursor-pointer"
-                    >
-                      <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-[#FFF7ED] text-orange-600 flex items-center justify-center mb-3 sm:mb-6 group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300 shrink-0">
-                        <div className="scale-75 sm:scale-100">
-                          {role.icon}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-5 lg:gap-6">
+                  {userRoles.map((role) => {
+                    const getThemeClasses = (t: string) => {
+                      switch(t) {
+                        case 'blue': return { bg: 'bg-blue-600', text: 'text-blue-600', lightBg: 'bg-blue-50', border: 'hover:border-blue-400', shadow: 'shadow-blue-500/20', hoverBg: 'group-hover:bg-blue-700' };
+                        case 'orange': return { bg: 'bg-[#ea580c]', text: 'text-[#ea580c]', lightBg: 'bg-orange-50', border: 'hover:border-[#ea580c]', shadow: 'shadow-orange-500/20', hoverBg: 'group-hover:bg-[#c2410c]' };
+                        case 'green': return { bg: 'bg-emerald-600', text: 'text-emerald-600', lightBg: 'bg-emerald-50', border: 'hover:border-emerald-400', shadow: 'shadow-emerald-500/20', hoverBg: 'group-hover:bg-emerald-700' };
+                        case 'purple': return { bg: 'bg-purple-600', text: 'text-purple-600', lightBg: 'bg-purple-50', border: 'hover:border-purple-400', shadow: 'shadow-purple-500/20', hoverBg: 'group-hover:bg-purple-700' };
+                        case 'red': return { bg: 'bg-rose-600', text: 'text-rose-600', lightBg: 'bg-rose-50', border: 'hover:border-rose-400', shadow: 'shadow-rose-500/20', hoverBg: 'group-hover:bg-rose-700' };
+                        default: return { bg: 'bg-[#ea580c]', text: 'text-[#ea580c]', lightBg: 'bg-orange-50', border: 'hover:border-[#ea580c]', shadow: 'shadow-orange-500/20', hoverBg: 'group-hover:bg-[#c2410c]' };
+                      }
+                    };
+                    const theme = getThemeClasses(role.theme || 'orange');
+                    return (
+                      <div
+                        key={role.id}
+                        role="button"
+                        onClick={() => handleRoleChange(role.id)}
+                        className={`group relative flex flex-col p-3 sm:p-5 md:p-6 rounded-[16px] sm:rounded-[24px] border border-gray-100 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 ${theme.border} transition-all duration-300 h-full text-left overflow-hidden cursor-pointer`}
+                      >
+                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl ${theme.lightBg} ${theme.text} flex items-center justify-center mb-3 sm:mb-5 shrink-0 transition-colors duration-300`}>
+                          <div className="scale-75 sm:scale-100">
+                            {role.icon}
+                          </div>
+                        </div>
+                        <h3 className="font-extrabold text-slate-800 text-[13px] sm:text-[17px] mb-3 sm:mb-5 leading-tight pr-1 sm:pr-2 min-h-[32px] sm:min-h-[auto]">
+                          {role.label}
+                        </h3>
+                        
+                        <ul className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 flex-grow">
+                          {role.subItems?.map((item: string, idx: number) => (
+                            <li key={idx} className="flex items-start text-[10px] sm:text-sm text-gray-600 font-medium leading-snug">
+                              <svg className={`w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2.5 ${theme.text} shrink-0 mt-0.5`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                              {item}
+                            </li>
+                          ))}
+                          <li className="flex items-center text-[9px] sm:text-xs text-gray-400 italic pt-1 sm:pt-2 font-medium">
+                            <span className="mr-1.5 sm:mr-2 opacity-60">→</span> And many more...
+                          </li>
+                        </ul>
+
+                        <div className={`mt-auto w-full py-2 sm:py-3 rounded-lg sm:rounded-xl ${theme.bg} text-white font-bold text-[11px] sm:text-sm flex items-center justify-center shadow-md ${theme.shadow} ${theme.hoverBg} transition-colors duration-300`}>
+                          Register Now
                         </div>
                       </div>
-                      <h3 className="font-extrabold text-slate-800 text-[13px] sm:text-lg mb-1.5 sm:mb-2 line-clamp-2 sm:line-clamp-3 leading-snug">
-                        {role.label.replace("Register as an ", "").replace("Register as a ", "").replace("Register for ", "")}
-                      </h3>
-                      <p className="text-[11px] sm:text-sm text-gray-500 font-medium leading-relaxed mb-4 sm:mb-8 flex-grow line-clamp-2 sm:line-clamp-none">
-                        {role.description}
-                      </p>
-                      <div className="mt-auto w-full py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl border sm:border-2 border-orange-100 text-orange-600 font-bold text-[11px] sm:text-sm flex items-center justify-center group-hover:bg-orange-500 group-hover:border-orange-500 group-hover:text-white transition-all duration-300">
-                        Get Started <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 ml-0.5 sm:ml-1 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 

@@ -223,7 +223,7 @@ export default async function CityPage({ params }: { params: Promise<{ cityName:
           )}
           
           {data?.constructionNote && (
-            <p className="text-sm text-slate-500 italic max-w-2xl mb-8">
+            <p className="text-sm md:text-base text-gray-500 font-medium max-w-2xl mb-8">
               {data.constructionNote}
             </p>
           )}
@@ -231,16 +231,20 @@ export default async function CityPage({ params }: { params: Promise<{ cityName:
           {/* Premium CTA Buttons (Pill shaped as per screenshot) */}
           <div className="flex flex-wrap gap-4 items-center">
             <Link href={`/architects?city=${displayCity}`}
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#ff6b00] text-white text-sm font-semibold hover:bg-[#e66000] hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300">
-              Find Architects in {displayCity} →
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#ff6b00] text-white text-sm font-bold hover:bg-[#e66000] hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300">
+              Find Architects in {displayCity} &rarr;
             </Link>
             <Link href={`/city-partners?city=${displayCity}`}
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border-2 border-[#ff6b00]/30 text-[#ff6b00] bg-white/80 backdrop-blur-sm text-sm font-semibold hover:bg-orange-50 hover:border-[#ff6b00]/50 transition-all duration-300">
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-orange-300 text-orange-500 bg-white text-sm font-bold hover:bg-orange-50 transition-all duration-300 shadow-sm">
               Contractors in {displayCity}
             </Link>
-            <Link href="/customize/floor-plans"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-slate-300 text-slate-600 bg-white/80 backdrop-blur-sm text-sm font-medium hover:bg-slate-50 hover:border-slate-400 transition-all duration-300 shadow-sm">
-              Get Custom Plan
+            <Link href={`/building-material-marketplace?city=${displayCity}`}
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-gray-200 text-gray-500 bg-white text-sm font-bold hover:bg-gray-50 transition-all duration-300 shadow-sm">
+              Building Material
+            </Link>
+            <Link href="/leads"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-gray-200 text-gray-500 bg-white text-sm font-bold hover:bg-gray-50 transition-all duration-300 shadow-sm">
+              Lead Board
             </Link>
           </div>
         </div>

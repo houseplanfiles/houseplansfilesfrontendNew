@@ -27,6 +27,10 @@ import {
   Filter,
   Check,
   ChevronsUpDown,
+  Factory,
+  Truck,
+  LayoutGrid,
+  Sparkles,
 } from "lucide-react";
 
 
@@ -369,11 +373,11 @@ const ShopCard = ({ seller, productCount, products }: { seller: any; productCoun
             <MapPin size={10} className="text-orange-500" /> {products[0]?.city || "India"}
           </div>
           {seller.businessType && (
-            <div className="bg-green-600 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
+            <div className="bg-emerald-600 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
               {seller.businessType === "Manufacturer" && "🏭 Manufacturer"}
-              {seller.businessType === "Supplier" && "🚛 Supplier"}
-              {seller.businessType === "Both" && "🏭 Manufacturer & Supplier"}
-              {seller.businessType === "Retail" && "🏪 Retail Shop"}
+              {seller.businessType === "Supplier" && "🚛 Wholesaler / Supplier"}
+              {seller.businessType === "Both" && "🏭 Manufacturer & Wholesaler"}
+              {(seller.businessType === "Retail" || seller.businessType === "Local Shop") && "🏪 Local Shop"}
             </div>
           )}
           <div className="bg-orange-600 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
@@ -556,7 +560,17 @@ const MarketplacePage: FC = () => {
       );
     if (selectedBusinessType !== "All") {
       filteredItems = filteredItems.filter((p) => {
-        const type = p.seller?.businessType;
+        const type = (p.seller?.businessType || "").trim();
+        const lowerType = type.toLowerCase();
+        if (selectedBusinessType === "Manufacturer") {
+          return type === "Manufacturer" || type === "Both";
+        }
+        if (selectedBusinessType === "Manufacturer_Wholesaler" || selectedBusinessType === "Supplier") {
+          return type === "Supplier" || type === "Both" || lowerType.includes("whole") || lowerType.includes("suppli");
+        }
+        if (selectedBusinessType === "Local_Shop" || selectedBusinessType === "Retail") {
+          return type === "Retail" || type === "Local Shop" || lowerType.includes("shop") || lowerType.includes("retail") || !type;
+        }
         return type === selectedBusinessType;
       });
     }
@@ -648,6 +662,13 @@ const MarketplacePage: FC = () => {
     return finalItems;
   }, [products, searchTerm, selectedShopCategory, selectedCity, selectedBusinessType, selectedMaterialType, selectedPincode, isPanIndiaFilter, selectedState]);
 
+  const BUSINESS_TYPE_TABS = [
+    { id: "All", label: "All Sellers", icon: LayoutGrid, tag: "Everything" },
+    { id: "Manufacturer", label: "Manufacturer", icon: Factory, tag: "Direct Factory" },
+    { id: "Manufacturer_Wholesaler", label: "Manufacturer + Wholesaler", icon: Truck, tag: "Bulk Supply" },
+    { id: "Local_Shop", label: "Local Shops", icon: Store, tag: "Retail Stores" },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50/50">
 
@@ -692,12 +713,42 @@ const MarketplacePage: FC = () => {
             Register Your Business
           </Button>
           <p className="mt-3 text-gray-300 text-sm font-semibold tracking-wide">
-            Manufacturer &nbsp;|&nbsp; Supplier &nbsp;|&nbsp; Local Shop
+            Manufacturer &nbsp;|&nbsp; Wholesaler &nbsp;|&nbsp; Local Shop
           </p>
         </div>
       </div>
 
       <main className="flex-grow max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 -mt-10 md:-mt-16 relative z-20 pb-20 w-full">
+        {/* --- TOP 3 SEGREGATED CATEGORIES BAR --- */}
+        <div className="mb-6 bg-white p-2.5 sm:p-4 rounded-2xl md:rounded-[28px] shadow-xl border border-gray-100">
+          <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1 sm:pb-0 scrollbar-none" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+            {BUSINESS_TYPE_TABS.map((tab) => {
+              const Icon = tab.icon;
+              const isSelected = selectedBusinessType === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedBusinessType(tab.id)}
+                  className={`flex items-center gap-2.5 md:gap-3 px-4 sm:px-6 py-3 md:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 border-2 ${
+                    isSelected
+                      ? "bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-500/25 scale-[1.02]"
+                      : "bg-white text-gray-700 border-gray-100 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600"
+                  }`}
+                >
+                  <div className={`p-1.5 rounded-lg ${isSelected ? "bg-white/20 text-white" : "bg-orange-50 text-orange-600"}`}>
+                    <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="leading-tight">{tab.label}</span>
+                    <span className={`text-[10px] font-normal leading-tight hidden sm:block ${isSelected ? "text-orange-100" : "text-gray-400"}`}>
+                      {tab.tag}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
         {/* --- Filters Card --- */}
         {/* Mobile Filter Toggle Button */}
         <div className="md:hidden mb-3 flex items-center gap-3">
@@ -746,9 +797,8 @@ const MarketplacePage: FC = () => {
                 <SelectContent>
                   <SelectItem value="All">All Types</SelectItem>
                   <SelectItem value="Manufacturer">Manufacturer</SelectItem>
-                  <SelectItem value="Supplier">Supplier</SelectItem>
-                  <SelectItem value="Both">Manufacturer &amp; Supplier Both</SelectItem>
-                  <SelectItem value="Retail">Retail Shop</SelectItem>
+                  <SelectItem value="Manufacturer_Wholesaler">Manufacturer + Wholesaler</SelectItem>
+                  <SelectItem value="Local_Shop">Local Shop</SelectItem>
                 </SelectContent>
               </Select>
             </div>
