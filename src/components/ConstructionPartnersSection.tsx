@@ -491,7 +491,7 @@ const ConstructionPartnersSection: FC<{ hideHeader?: boolean }> = ({ hideHeader 
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-8">
-                    {filteredPartners.slice(0, 8).map((partner, index) => (
+                    {filteredPartners.slice(0, 4).map((partner, index) => (
                       <div key={partner._id} className={index >= 4 ? 'hidden sm:block' : ''}>
                         <PartnerCard partner={partner} onContact={handleContactClick} index={index} navigate={(p) => router.push(p)} />
                       </div>
