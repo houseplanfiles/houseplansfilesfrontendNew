@@ -37,7 +37,6 @@ const CATEGORIES_28 = [
   "Roofing Services",
   "Waterproofing",
   "Pest Control",
-  "Deep Cleaning",
   "HVAC",
   "Solar Panel Installation",
   "Smart Home Automation",
