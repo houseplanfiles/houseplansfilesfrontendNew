@@ -7,7 +7,7 @@ import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
-import RegionalPlansSection from "@/components/RegionalPlansSection";
+import IndustrialServicesSection from "@/components/IndustrialServicesSection";
 import ReadymadePlansSection from "../components/ReadymadePlansSection";
 import CustomDesignSection from "../components/CustomDesignSection";
 import SellersSection from "@/components/SellersSection";
@@ -36,7 +36,7 @@ const Index = () => {
       {/* ✅ Construction Partners (Headings only) */}
       <ConstructionPartnersSection />
 
-      <RegionalPlansSection />
+      <IndustrialServicesSection />
       <Testimonials />
       <CTA />
       <Footer />

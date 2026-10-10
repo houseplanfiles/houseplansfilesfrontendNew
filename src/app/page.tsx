@@ -8,7 +8,7 @@ import HomeServicesCategoriesSection from "@/components/HomeServicesCategoriesSe
 import TopArchitectsSection from "@/components/TopArchitectsSection";
 import ConstructionPartnersSection from "@/components/ConstructionPartnersSection";
 import SellersSection from "@/components/SellersSection";
-import RegionalPlansSection from "@/components/RegionalPlansSection";
+import IndustrialServicesSection from "@/components/IndustrialServicesSection";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import CityExplorer from "@/components/CityExplorer";
@@ -71,7 +71,8 @@ export default function HomePage() {
           {/* Added Registration Prompts per client feedback */}
           <RegistrationPrompts />
 
-          <RegionalPlansSection />
+          {/* Industrial Services Section */}
+          <IndustrialServicesSection />
 
           <Testimonials />
           <CTA />
