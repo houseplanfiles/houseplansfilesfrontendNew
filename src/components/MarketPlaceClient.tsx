@@ -719,7 +719,6 @@ const MarketplacePage: FC = () => {
       if (projectsA !== projectsB) {
         return projectsB - projectsA; // More projects come first
       }
-
       // Then by profile update recency
       const updatedA = new Date(sellerA?.updatedAt || 0).getTime();
       const updatedB = new Date(sellerB?.updatedAt || 0).getTime();
