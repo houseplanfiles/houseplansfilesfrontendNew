@@ -109,6 +109,7 @@ const professionalSubRoles = [
   "Interior Designers",
   "Structural Engineers",
   "Site Engineers",
+  "BIM Consultant",
   "Vastu Consultant",
 ];
 

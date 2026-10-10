@@ -19,9 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 // Slider removed, using single responsive images directly
-
 const CATEGORIES = [
   "Modern Home Design",
   "Duplex House Plans",
@@ -112,7 +110,6 @@ const Hero = () => {
       setSuggestions([]);
     }
   }, [searchTerm, products]);
-
   // Close suggestions on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -126,9 +123,6 @@ const Hero = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-
-
   const handleSearch = (overrideTerm?: string) => {
     const termToSearch = typeof overrideTerm === 'string' ? overrideTerm : searchTerm;
     const queryParams = new URLSearchParams();
@@ -180,7 +174,6 @@ const Hero = () => {
         </AnimatePresence>
         <div className="absolute inset-0 bg-black/60 sm:bg-black/50" />
       </div>
-
       {/* Hero Content */}
       <div className="relative z-10 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex flex-col justify-center items-center pt-4 sm:pt-6 text-center h-full min-h-[40vh]">
@@ -209,7 +202,6 @@ const Hero = () => {
                 </motion.div>
               </AnimatePresence>
             </div>
-
             <div className="flex flex-col sm:flex-row gap-3 items-center justify-center mt-2 w-full sm:w-auto">
               <Link href="/register" className="bg-transparent hover:bg-white/10 text-white font-bold py-2.5 px-6 rounded-md shadow-lg transition-all hover:scale-105 border border-orange-500 text-center text-sm md:text-base min-w-[200px]">
                 Register
