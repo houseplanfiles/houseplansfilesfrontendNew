@@ -1135,7 +1135,7 @@ const MarketplacePage: FC = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden"
-              onClick={e => e.stopPropagation()}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               <div className="bg-gray-900 p-5 flex justify-between items-center text-white">
                 <div>

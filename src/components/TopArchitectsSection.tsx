@@ -319,7 +319,7 @@ const ArchitectCard: FC<{
 };
 
 // --- MAIN COMPONENT: TopArchitectsSection ---
-const TopArchitectsSection: FC = () => {
+const TopArchitectsSection: FC<{ hideHeader?: boolean }> = ({ hideHeader }) => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
 
@@ -387,11 +387,12 @@ const TopArchitectsSection: FC = () => {
 
   return (
     <>
-      <section id="top-architects" className="bg-[#FAF9F6] pt-8 md:pt-12 pb-16 md:pb-24 border-b">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="top-architects" className={hideHeader ? "w-full" : "bg-[#FAF9F6] pt-8 md:pt-12 pb-16 md:pb-24 border-b"}>
+        <div className={hideHeader ? "w-full" : "max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8"}>
 
           {/* --- HERO HEADER --- */}
-          <div className="text-center mb-10 md:mb-16">
+          {!hideHeader && (
+            <div className="text-center mb-10 md:mb-16">
             <div className="inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-[11px] md:text-sm font-bold text-orange-600 mb-4 md:mb-6 shadow-sm">
               <CheckCircle2 className="mr-1.5 h-3.5 w-3.5 md:h-4 md:w-4" />
               Verified Professionals
@@ -403,6 +404,7 @@ const TopArchitectsSection: FC = () => {
               Find the best experts to design your dream project. Get your design done with the best in the business.
             </p>
           </div>
+          )}
 
           <main className="relative z-10">
             {/* --- FILTERS SECTION --- */}

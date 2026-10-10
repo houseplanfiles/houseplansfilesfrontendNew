@@ -312,7 +312,7 @@ const CONTRACTOR_CATEGORIES = [
 ];
 
 // --- MAIN COMPONENT: ConstructionPartnersSection ---
-const ConstructionPartnersSection: FC = () => {
+const ConstructionPartnersSection: FC<{ hideHeader?: boolean }> = ({ hideHeader }) => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   
@@ -385,11 +385,12 @@ const ConstructionPartnersSection: FC = () => {
 
   return (
     <>
-      <section id="city-partners" className="bg-[#FAF9F6] py-16 md:py-24 border-b">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="city-partners" className={hideHeader ? "w-full" : "bg-[#FAF9F6] py-16 md:py-24 border-b"}>
+        <div className={hideHeader ? "w-full" : "max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8"}>
           
           {/* --- HERO HEADER --- */}
-          <div className="text-center mb-10 md:mb-16">
+          {!hideHeader && (
+            <div className="text-center mb-10 md:mb-16">
             <div className="inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-[11px] md:text-sm font-bold text-orange-600 mb-4 md:mb-6 shadow-sm">
               <CheckCircle2 className="mr-1.5 h-3.5 w-3.5 md:h-4 md:w-4" />
               Verified Professionals
@@ -401,6 +402,7 @@ const ConstructionPartnersSection: FC = () => {
               Hire verified local contractors for construction and interiors. Get your project done with the best in the business.
             </p>
           </div>
+          )}
 
           <main className="relative z-10">
             {/* --- FILTERS SECTION --- */}
