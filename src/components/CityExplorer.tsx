@@ -67,7 +67,7 @@ const CityExplorer = () => {
 
   const handleExplore = () => {
     if (selectedCity) {
-      router.push(`/architects?city=${selectedCity.toLowerCase()}`);
+      router.push(`/architects?city=${selectedCity.toLowerCase().replace(/\s+/g, '-')}`);
     }
   };
 
@@ -162,7 +162,7 @@ const CityExplorer = () => {
               {ALL_CITIES_DATA.map((city, idx) => (
                 <Link 
                   key={`${city.slug}-${idx}`} 
-                  href={`/architects?city=${city.slug}`}
+                  href={`/city/${city.slug}`}
                   className="snap-center shrink-0 w-[220px] sm:w-[250px] group block"
                 >
                   <div className={`relative rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-[260px] sm:h-[300px] group-hover:-translate-y-1.5 bg-white border-2 ${idx === activeIndex ? 'border-[#FF6B00]/50 shadow-orange-500/10' : 'border-transparent'}`}>

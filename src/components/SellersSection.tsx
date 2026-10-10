@@ -24,6 +24,10 @@ import {
   Filter,
   ChevronUp,
   ChevronDown,
+  Factory,
+  Truck,
+  LayoutGrid,
+  Sparkles,
 } from "lucide-react";
 
 // Helmet ko import kiya gaya hai
@@ -353,11 +357,11 @@ const ShopCard = ({ seller, productCount, products }: { seller: any; productCoun
             <MapPin size={10} className="text-orange-500" /> {products[0]?.city || "India"}
           </div>
           {seller.businessType && (
-            <div className="bg-green-600 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
+            <div className="bg-emerald-600 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
               {seller.businessType === "Manufacturer" && "🏭 Manufacturer"}
-              {seller.businessType === "Supplier" && "🚛 Supplier"}
-              {seller.businessType === "Both" && "🏭 Manufacturer & Supplier"}
-              {seller.businessType === "Retail" && "🏪 Retail Shop"}
+              {seller.businessType === "Supplier" && "🚛 Wholesaler / Supplier"}
+              {seller.businessType === "Both" && "🏭 Manufacturer & Wholesaler"}
+              {(seller.businessType === "Retail" || seller.businessType === "Local Shop") && "🏪 Local Shop"}
             </div>
           )}
           <div className="bg-orange-600 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 whitespace-nowrap">
@@ -445,7 +449,7 @@ const SellersSection: FC = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchPublicSellerProducts({ limit: 8 }));
+    dispatch(fetchPublicSellerProducts({ limit: 50 }));
   }, [dispatch]);
 
   // Unique Categories & Cities from products
@@ -493,7 +497,17 @@ const SellersSection: FC = () => {
       filteredItems = filteredItems.filter((p) => p.city === selectedCity || p.seller?.city === selectedCity);
     if (selectedBusinessType !== "All") {
       filteredItems = filteredItems.filter((p) => {
-        const type = p.seller?.businessType;
+        const type = (p.seller?.businessType || "").trim();
+        const lowerType = type.toLowerCase();
+        if (selectedBusinessType === "Manufacturer") {
+          return type === "Manufacturer" || type === "Both";
+        }
+        if (selectedBusinessType === "Manufacturer_Wholesaler" || selectedBusinessType === "Supplier") {
+          return type === "Supplier" || type === "Both" || lowerType.includes("whole") || lowerType.includes("suppli");
+        }
+        if (selectedBusinessType === "Local_Shop" || selectedBusinessType === "Retail") {
+          return type === "Retail" || type === "Local Shop" || lowerType.includes("shop") || lowerType.includes("retail") || !type;
+        }
         return type === selectedBusinessType;
       });
     }
@@ -585,17 +599,61 @@ const SellersSection: FC = () => {
     return finalItems;
   }, [products, searchTerm, selectedShopCategory, selectedCity, selectedBusinessType, selectedMaterialType, selectedPincode]);
 
+  const BUSINESS_TYPE_TABS = [
+    { id: "All", label: "All Sellers", icon: LayoutGrid, tag: "Everything" },
+    { id: "Manufacturer", label: "Manufacturer", icon: Factory, tag: "Direct Factory" },
+    { id: "Manufacturer_Wholesaler", label: "Manufacturer + Wholesaler", icon: Truck, tag: "Bulk Supply" },
+    { id: "Local_Shop", label: "Local Shops", icon: Store, tag: "Retail Stores" },
+  ];
+
   return (
     <div className="flex flex-col bg-[#FAF9F6] pt-10">
 
       {/* --- HERO HEADER --- */}
-      <div className="text-center mb-10 px-4">
-        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">
-          Top <span className="text-orange-600">Material & Decor Shops</span>
+      <div className="text-center mb-6 md:mb-8 px-4">
+        <div className="inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3.5 py-1.5 text-[11px] md:text-sm font-bold text-orange-600 mb-3 md:mb-4 shadow-sm">
+          <Sparkles className="mr-1.5 h-3.5 w-3.5 text-orange-500" />
+          Building Material Marketplace
+        </div>
+        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3 md:mb-4 leading-tight">
+          Top <span className="text-orange-600">Material &amp; Decor Shops</span>
         </h2>
-        <p className="text-lg text-gray-500 font-medium">
-          Discover verified building material stores and interior showrooms
+        <p className="text-sm md:text-lg text-gray-500 font-medium max-w-2xl mx-auto px-4">
+          Directly connect with verified manufacturers, wholesale distributors, and local stores
         </p>
+      </div>
+
+      {/* --- TOP 3 SEGREGATED CATEGORIES BAR --- */}
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-6 md:mb-8 w-full">
+        <div className="bg-white p-2.5 sm:p-4 rounded-2xl md:rounded-[28px] shadow-sm border border-gray-100">
+          <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1 sm:pb-0 scrollbar-none" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+            {BUSINESS_TYPE_TABS.map((tab) => {
+              const Icon = tab.icon;
+              const isSelected = selectedBusinessType === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedBusinessType(tab.id)}
+                  className={`flex items-center gap-2.5 md:gap-3 px-4 sm:px-6 py-3 md:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0 border-2 ${
+                    isSelected
+                      ? "bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-500/25 scale-[1.02]"
+                      : "bg-white text-gray-700 border-gray-100 hover:border-orange-200 hover:bg-orange-50/50 hover:text-orange-600"
+                  }`}
+                >
+                  <div className={`p-1.5 rounded-lg ${isSelected ? "bg-white/20 text-white" : "bg-orange-50 text-orange-600"}`}>
+                    <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="leading-tight">{tab.label}</span>
+                    <span className={`text-[10px] font-normal leading-tight hidden sm:block ${isSelected ? "text-orange-100" : "text-gray-400"}`}>
+                      {tab.tag}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       <main className="flex-grow max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pb-20 w-full">
@@ -647,9 +705,8 @@ const SellersSection: FC = () => {
                 <SelectContent>
                   <SelectItem value="All">All Types</SelectItem>
                   <SelectItem value="Manufacturer">Manufacturer</SelectItem>
-                  <SelectItem value="Supplier">Supplier</SelectItem>
-                  <SelectItem value="Both">Manufacturer &amp; Supplier Both</SelectItem>
-                  <SelectItem value="Retail">Retail Shop</SelectItem>
+                  <SelectItem value="Manufacturer_Wholesaler">Manufacturer + Wholesaler</SelectItem>
+                  <SelectItem value="Local_Shop">Local Shop</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -789,31 +846,45 @@ const SellersSection: FC = () => {
           <>
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-xl sm:text-2xl font-black text-gray-900 uppercase tracking-tight">Building Material &amp; Home Decor Results</h2>
-              <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-bold">{displayItems.length} ITEMS</span>
+              <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-bold">
+                Showing {Math.min(displayItems.length, 4)} of {displayItems.length} ITEMS
+              </span>
             </div>
 
             {displayItems.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
-                <AnimatePresence mode="popLayout">
-                  {displayItems.map((item) => (
-                    item.type === 'shop' ? (
-                      <ShopCard
-                        key={item.id}
-                        seller={item.seller}
-                        productCount={item.products.length}
-                        products={item.products}
-                      />
-                    ) : (
-                      <ProductCard
-                        key={item.id}
-                        product={item.product}
-                        onInquiryClick={handleOpenInquiry}
-                        onImageClick={setFullScreenImage}
-                      />
-                    )
-                  ))}
-                </AnimatePresence>
-              </div>
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+                  <AnimatePresence mode="popLayout">
+                    {displayItems.slice(0, 4).map((item) => (
+                      item.type === 'shop' ? (
+                        <ShopCard
+                          key={item.id}
+                          seller={item.seller}
+                          productCount={item.products.length}
+                          products={item.products}
+                        />
+                      ) : (
+                        <ProductCard
+                          key={item.id}
+                          product={item.product}
+                          onInquiryClick={handleOpenInquiry}
+                          onImageClick={setFullScreenImage}
+                        />
+                      )
+                    ))}
+                  </AnimatePresence>
+                </div>
+
+                <div className="mt-10 md:mt-12 text-center">
+                  <Button
+                    onClick={() => router.push("/building-material-marketplace")}
+                    variant="outline"
+                    className="border-gray-300 text-gray-700 hover:bg-gray-900 hover:text-white px-8 py-6 rounded-xl text-base md:text-lg font-bold transition-all shadow-sm"
+                  >
+                    View All Material &amp; Decor Shops
+                  </Button>
+                </div>
+              </>
             ) : (
               <div className="text-center py-32 bg-white rounded-3xl border-2 border-dashed border-gray-100">
                 <Store className="h-20 w-20 text-gray-200 mx-auto mb-6" />

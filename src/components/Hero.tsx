@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
-
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { PostRequirementModal } from "./PostRequirementModal";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
@@ -57,6 +57,38 @@ const Hero = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [isPostReqModalOpen, setIsPostReqModalOpen] = useState(false);
+
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const sliderTexts = [
+    "Readymade Plans",
+    "Architects, Engineers & Interior Designers",
+    "Contractors",
+    "Building Materials",
+    "Other Services"
+  ];
+
+  useEffect(() => {
+    const textTimer = setInterval(() => {
+      setCurrentTextIndex((prev) => (prev + 1) % sliderTexts.length);
+    }, 2500);
+    return () => clearInterval(textTimer);
+  }, []);
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slides = [
+    "/hero_slider_readymade.jpg",
+    "/hero_slider_architects.jpg",
+    "/hero_slider_materials.jpg",
+    "/b14.webp"
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Fetch products only when user interacts with search to save TBT and LCP
   const handleSearchFocus = () => {
@@ -125,26 +157,27 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-[50vh] h-auto py-12 md:py-20 md:min-h-[450px] flex items-center text-white overflow-hidden">
-      {/* Background Images */}
+      {/* Background Slider */}
       <div className="absolute inset-0">
-        {/* Desktop Image */}
-        <Image
-          src="/hero_premium_bg.jpg"
-          alt="Ultra-luxurious modern house exterior at twilight"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center hidden sm:block"
-        />
-        {/* Mobile Image */}
-        <Image
-          src="/hero_mobile_premium_bg.jpg"
-          alt="Ultra-luxurious modern house exterior at twilight mobile"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center sm:hidden"
-        />
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={currentSlide}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={slides[currentSlide]}
+              alt="House Plan Files Services"
+              fill
+              priority={currentSlide === 0}
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+          </motion.div>
+        </AnimatePresence>
         <div className="absolute inset-0 bg-black/60 sm:bg-black/50" />
       </div>
 
@@ -158,14 +191,40 @@ const Hero = () => {
             <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-normal md:leading-normal tracking-tight mb-5 drop-shadow-2xl whitespace-nowrap sm:whitespace-normal">
               Home Design & Construction <br /> Ka <span className="text-orange-500">Digital Bazar</span>
             </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-200 mb-8 max-w-3xl font-medium drop-shadow-lg leading-relaxed text-center whitespace-normal">
+            <p className="text-sm sm:text-base lg:text-lg text-gray-200 mb-4 max-w-3xl font-medium drop-shadow-lg leading-relaxed text-center whitespace-normal">
               Ek hi platform par paaiye ghar se judi har zaroorat — Readymade Designs, Architects, Contractors, aur Marketplace.
             </p>
 
-            {/* Search Bar Removed */}
+            <div className="h-8 md:h-12 mb-8 flex items-center justify-center overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentTextIndex}
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -30, opacity: 0 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#ff6b00] drop-shadow-md tracking-wide"
+                >
+                  {sliderTexts[currentTextIndex]}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center mt-2 w-full sm:w-auto">
+              <Link href="/register" className="bg-transparent hover:bg-white/10 text-white font-bold py-2.5 px-6 rounded-md shadow-lg transition-all hover:scale-105 border border-orange-500 text-center text-sm md:text-base min-w-[200px]">
+                Register
+              </Link>
+              <button
+                onClick={() => setIsPostReqModalOpen(true)}
+                className="bg-[#ff6b00] hover:bg-[#e66000] text-white font-bold py-2.5 px-6 rounded-md shadow-lg transition-all hover:scale-105 border border-transparent text-center text-sm md:text-base min-w-[200px]"
+              >
+                Post Your Requirements
+              </button>
+            </div>
           </div>
         </div>
       </div>
+      <PostRequirementModal isOpen={isPostReqModalOpen} onClose={() => setIsPostReqModalOpen(false)} />
     </section>
   );
 };

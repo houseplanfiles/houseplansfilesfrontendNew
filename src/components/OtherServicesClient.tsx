@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { PostRequirementModal } from "./PostRequirementModal";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -48,6 +49,7 @@ const OtherServicesClient = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
+  const [isPostReqModalOpen, setIsPostReqModalOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +76,7 @@ const OtherServicesClient = () => {
             />
           </div>
 
-          <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
             <div className="max-w-3xl">
               <span className="inline-block bg-[#ff6b00] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-6 shadow-md">
                 Trusted Network
@@ -110,8 +112,23 @@ const OtherServicesClient = () => {
                 </div>
               </div>
             </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3 mt-6 lg:mt-0 lg:mr-12 w-full sm:w-auto">
+              <Link href="/register" className="bg-transparent hover:bg-white/10 text-white font-bold py-2.5 px-6 rounded-md shadow-lg transition-transform hover:scale-105 border border-orange-500 text-center text-sm md:text-base min-w-[200px]">
+                Register
+              </Link>
+              <button 
+                onClick={() => setIsPostReqModalOpen(true)}
+                className="bg-[#ff6b00] hover:bg-[#e66000] text-white font-bold py-2.5 px-6 rounded-md shadow-lg transition-transform hover:scale-105 border border-transparent text-center text-sm md:text-base min-w-[200px]"
+              >
+                Post Your Requirements
+              </button>
+            </div>
           </div>
         </section>
+        
+        <PostRequirementModal isOpen={isPostReqModalOpen} onClose={() => setIsPostReqModalOpen(false)} />
 
         {/* --- Floating Search Bar --- */}
         <section className="relative z-20 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 -mt-12 mb-12">

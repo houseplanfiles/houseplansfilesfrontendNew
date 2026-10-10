@@ -24,8 +24,10 @@ import {
   MapPin, Phone, X, Send, Loader2, Star, Briefcase, Search,
   CheckCircle2, Filter as FilterIcon, SlidersHorizontal, UserPlus,
   ChevronLeft, ChevronRight, MessageCircle, BookOpen, Zap,
+  PenTool, Ruler, Building, HardHat, Box, Compass, Home
 } from "lucide-react";
 import { getArchitectProfileUrl } from "@/utils/profileUrls";
+import HomeServicesCategoriesSection from "@/components/HomeServicesCategoriesSection";
 
 type ArchitectType = {
   _id: string;
@@ -239,31 +241,84 @@ const ArchitectsPage: FC = () => {
     "Uttarakhand", "West Bengal", "Delhi", "Jammu and Kashmir", "Ladakh", "Chandigarh"
   ];
 
-  const categories = ["All", "Architect", "Civil Design Engineer", "Structure Engineer", "Interior Designer", "Site Engineer", "MEP Consultant", "Vastu Consultant"];
+  const categories = ["All", "Architect", "Civil Design Engineer", "Structure Engineer", "Interior Designer", "Site Engineer", "BIM Consultant", "MEP Consultant", "Vastu Consultant"];
+
+  const CATEGORY_CARDS = [
+    { id: "Architect", title: "Architect", desc: "Get creative and functional design solutions from expert architects.", img: "/cat_home_designs.jpg", icon: PenTool },
+    { id: "Civil Design Engineer", title: "Civil Design Engineer", desc: "Get accurate structural and design plans for your project.", img: "/b14.webp", icon: Home },
+    { id: "Structure Engineer", title: "Structure Engineer", desc: "Ensure structural safety and stability with professional expertise.", img: "/contractor2.webp", icon: Building },
+    { id: "Site Engineer", title: "Site Engineer", desc: "Get on-site technical support for smooth project execution.", img: "/architect_hero.webp", icon: HardHat },
+    { id: "BIM Consultant", title: "BIM Consultant", desc: "Get advanced 3D modeling and BIM solutions for smarter design.", img: "/b11.jpg", icon: Box },
+    { id: "Vastu Consultant", title: "Vastu Consultant", desc: "Get positive energy and balanced design as per Vastu principles.", img: "/marketplace.webp", icon: Compass },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col w-full overflow-x-hidden">
       <Navbar />
 
       {/* Hero Section */}
-      <div className="relative bg-slate-900 py-12 sm:py-20 overflow-hidden w-full">
-        <div className="absolute inset-0">
-          <Image src="/architect_hero.webp" alt="Architects Background" fill sizes="100vw" className="object-cover opacity-30" priority />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
-        </div>
-        <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Badge className="bg-white/20 text-white border-white/30 mb-4 px-4 py-1 text-xs sm:text-sm backdrop-blur-md">Design Experts</Badge>
-          <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 px-2 leading-tight">
-            Hire Your Top City Architects, Interior Designers & Professionals
-          </h1>
-          <p className="text-sm sm:text-lg text-gray-300 max-w-2xl mx-auto mb-8 font-medium px-4">Architect, Civil Design Engineer, Structure Engineer, Interior Designer, Site Engineer, MEP Consultant, Vastu Consultant</p>
-          <div className="flex justify-center px-4">
-            <Button onClick={() => router.push("/register?role=professional")} className="w-full max-w-[280px] sm:max-w-none sm:w-auto bg-orange-600 text-white hover:bg-orange-700 font-bold py-5 sm:py-6 px-6 sm:px-8 rounded-full shadow-lg transition-all transform hover:-translate-y-1 text-sm sm:text-lg flex items-center justify-center">
-              <UserPlus className="w-5 h-5 mr-2" /> Register as professional
-            </Button>
+      {cityFilter ? (
+        <>
+          <div className="relative overflow-hidden bg-[#f4f7f9] pt-10 pb-16 lg:pt-20 lg:pb-24 border-b border-gray-100">
+            <div className="absolute top-0 right-0 w-full lg:w-[60%] h-full z-0 hidden lg:block">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#f4f7f9] via-[#f4f7f9]/90 to-transparent z-10 w-[70%]" />
+              <img 
+                src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2075&q=80" 
+                alt={`Architects and Professionals in ${cityFilter}`} 
+                className="w-full h-full object-cover object-left-top"
+              />
+            </div>
+            <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+              <nav className="text-sm text-slate-500 mb-6" aria-label="Breadcrumb">
+                <ol className="flex items-center gap-2 flex-wrap">
+                  <li><Link href="/" className="hover:text-[#ff6b00] transition-colors">Home</Link></li>
+                  <li className="text-slate-400">/</li>
+                  <li><Link href="/architects" className="hover:text-[#ff6b00] transition-colors">Architects</Link></li>
+                  <li className="text-slate-400">/</li>
+                  <li className="text-[#ff6b00] font-semibold">Architects in {cityFilter.charAt(0).toUpperCase() + cityFilter.slice(1)}</li>
+                </ol>
+              </nav>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#0f172a] tracking-tight mb-4">
+                Architects & Professionals in {cityFilter.charAt(0).toUpperCase() + cityFilter.slice(1)}, India
+              </h1>
+              <div className="flex flex-wrap gap-4 items-center mt-8">
+                <Link href={`/architects?city=${cityFilter}`}
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#ff6b00] text-white text-sm font-semibold hover:bg-[#e66000] hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300">
+                  Find Architects in {cityFilter.charAt(0).toUpperCase() + cityFilter.slice(1)} →
+                </Link>
+                <Link href={`/city-partners?city=${cityFilter}`}
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border-2 border-[#ff6b00]/30 text-[#ff6b00] bg-white/80 backdrop-blur-sm text-sm font-semibold hover:bg-orange-50 hover:border-[#ff6b00]/50 transition-all duration-300">
+                  Contractors in {cityFilter.charAt(0).toUpperCase() + cityFilter.slice(1)}
+                </Link>
+                <Link href="/customize/floor-plans"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-slate-300 text-slate-600 bg-white/80 backdrop-blur-sm text-sm font-medium hover:bg-slate-50 hover:border-slate-400 transition-all duration-300 shadow-sm">
+                  Get Custom Plan
+                </Link>
+              </div>
+            </div>
+          </div>
+          <HomeServicesCategoriesSection hideHeader={true} className="bg-white pt-2 pb-6" />
+        </>
+      ) : (
+        <div className="relative bg-slate-900 py-12 sm:py-20 overflow-hidden w-full">
+          <div className="absolute inset-0">
+            <Image src="/architect_hero.webp" alt="Architects Background" fill sizes="100vw" className="object-cover opacity-30" priority />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
+          </div>
+          <div className="relative max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <Badge className="bg-white/20 text-white border-white/30 mb-4 px-4 py-1 text-xs sm:text-sm backdrop-blur-md">Design Experts</Badge>
+            <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 px-2 leading-tight">
+              Hire Your Top City Architects, Interior Designers & Professionals
+            </h1>
+            <p className="text-sm sm:text-lg text-gray-300 max-w-2xl mx-auto mb-8 font-medium px-4">Architect, Civil Design Engineer, Structure Engineer, Interior Designer, Site Engineer, MEP Consultant, Vastu Consultant</p>
+            <div className="flex justify-center px-4">
+              <Button onClick={() => router.push("/register?role=professional")} className="w-full max-w-[280px] sm:max-w-none sm:w-auto bg-orange-600 text-white hover:bg-orange-700 font-bold py-5 sm:py-6 px-6 sm:px-8 rounded-full shadow-lg transition-all transform hover:-translate-y-1 text-sm sm:text-lg flex items-center justify-center">
+                <UserPlus className="w-5 h-5 mr-2" /> Register as professional
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <main className="flex-grow w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10 pb-20 overflow-hidden">
         {/* Filters */}
@@ -372,7 +427,31 @@ const ArchitectsPage: FC = () => {
         </div>
 
         {/* Grid */}
-        {architectListStatus === "loading" ? (
+        {professionFilter === "All" && !cityFilter && (stateFilter === "All States" || !stateFilter) && !pincodeFilter && !isPanIndiaFilter ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-5 mt-8 animate-fade-in">
+            {CATEGORY_CARDS.map(cat => (
+              <div 
+                key={cat.id} 
+                onClick={() => setProfessionFilter(cat.id)}
+                className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col items-center text-center group cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 pb-4"
+              >
+                <div className="h-32 w-full relative bg-gray-100">
+                  <Image src={cat.img} alt={cat.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="relative -mt-6 bg-[#ff6b00] rounded-full p-3 border-4 border-white shadow-sm z-10 flex items-center justify-center transition-transform group-hover:scale-110">
+                  <cat.icon className="w-5 h-5 text-white" />
+                </div>
+                <div className="px-4 pb-2 pt-2 flex flex-col flex-grow items-center w-full">
+                  <h3 className="font-extrabold text-sm sm:text-base text-gray-900 mb-2 leading-tight min-h-[2.5rem] flex items-center justify-center">{cat.title}</h3>
+                  <p className="text-[11px] sm:text-xs text-gray-500 mb-4 flex-grow leading-snug">{cat.desc}</p>
+                  <button className="w-full bg-[#ff6b00] hover:bg-[#e66000] text-white text-xs font-bold py-2.5 px-4 rounded-full flex items-center justify-center gap-1.5 transition-colors shadow-md">
+                    View Professionals <span className="text-lg leading-none">&rarr;</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : architectListStatus === "loading" ? (
           <div className="flex flex-col items-center justify-center py-24">
             <Loader2 className="h-12 w-12 animate-spin text-orange-600" />
             <p className="mt-4 text-gray-500">Finding experts...</p>
@@ -439,14 +518,16 @@ const ArchitectsPage: FC = () => {
                           <div className="pt-3 sm:pt-5 mt-auto flex flex-col gap-1.5 sm:gap-2">
                             <Button onClick={() => router.push(getArchitectProfileUrl(architect))} variant="outline" className="w-full border-orange-600 text-orange-600 hover:bg-orange-50 h-8 sm:h-10 text-[11px] sm:text-xs font-bold">View Profile</Button>
                             
-                            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-                              <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
-                                <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> <span className="truncate">WhatsApp</span>
-                              </Button>
-                              <Button onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = callLink; }} className="w-full bg-blue-600 hover:bg-blue-700 text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
-                                <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> <span className="truncate">Call Now</span>
-                              </Button>
-                            </div>
+                            {type === "Premium" && (
+                              <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                                <Button onClick={() => { trackAnalytics('user', architect._id, 'whatsapp_click'); window.open(waLink, "_blank"); }} className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
+                                  <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> <span className="truncate">WhatsApp</span>
+                                </Button>
+                                <Button onClick={() => { trackAnalytics('user', architect._id, 'call_click'); window.location.href = callLink; }} className="w-full bg-blue-600 hover:bg-blue-700 text-white text-[10px] sm:text-xs font-semibold h-8 sm:h-10 px-1 sm:px-2 flex items-center justify-center gap-1 shadow-sm leading-none">
+                                  <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> <span className="truncate">Call Now</span>
+                                </Button>
+                              </div>
+                            )}
                             
                             <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                               <Button onClick={() => handleContactClick(architect)} className="w-full bg-gray-800 hover:bg-gray-900 text-white h-8 sm:h-10 text-[10px] sm:text-xs font-medium px-1 flex items-center justify-center gap-1">
