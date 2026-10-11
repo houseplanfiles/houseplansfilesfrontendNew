@@ -77,7 +77,7 @@ const INDUSTRIAL_SERVICES: IndustrialServiceItem[] = [
 const IndustrialServicesSection = () => {
   return (
     <section className="py-14 sm:py-16 md:py-20 bg-gradient-to-b from-white via-slate-50/70 to-white border-t border-slate-100">
-      <div className="max-w-[1900px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* --- Centered Header & Intro --- */}
         <div className="text-center max-w-5xl mx-auto mb-10 sm:mb-12">
@@ -106,7 +106,7 @@ const IndustrialServicesSection = () => {
         </div>
 
         {/* --- Quick Value Highlights Bar (Centered) --- */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-10 max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-10 w-full">
           <div className="flex items-center gap-2.5 sm:gap-3 bg-white p-3 sm:p-4 rounded-xl border border-slate-200/80 shadow-xs">
             <div className="p-1.5 sm:p-2 rounded-lg bg-orange-100 text-[#ff6b00] shrink-0">
               <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />

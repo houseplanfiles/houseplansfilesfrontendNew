@@ -63,7 +63,7 @@ export default function HomePage() {
 
           {/* COMBINED PROFESSIONALS SECTION */}
           <section className="bg-[#FAF9F6] pt-12 md:pt-20 pb-16 md:pb-24 border-b">
-            <div className="max-w-[1900px] mx-auto px-4">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-6 md:mb-10">
                 <div className="inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3.5 py-1.5 text-sm font-bold text-orange-600 mb-4 shadow-sm">
                   <span className="mr-1.5">✓</span>
