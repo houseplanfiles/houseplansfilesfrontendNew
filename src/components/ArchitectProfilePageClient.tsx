@@ -7,7 +7,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,7 +21,6 @@ import {
   Phone,
   Briefcase,
   Star,
-  Download,
   CheckCircle2,
   Loader2,
   X,
@@ -56,37 +54,6 @@ import { toast } from "sonner";
 interface ArchitectProfilePageClientProps {
   initialArchitect?: any;
 }
-
-const DEFAULT_SERVICES = [
-  { title: "Architectural Design & Planning", icon: PenTool, desc: "Complete architectural blueprints, layouts and space management." },
-  { title: "Interior Design", icon: Home, desc: "Modern aesthetic interior concepts, 3D views and styling." },
-  { title: "3D Elevation & Visualization", icon: Layers, desc: "Photorealistic 3D front elevations and walkthrough renderings." },
-  { title: "Residential Design", icon: Building, desc: "Tailored villa, duplex, bungalow and apartment home designs." },
-  { title: "Commercial Design", icon: Briefcase, desc: "Office, retail and commercial architectural planning." },
-];
-
-const DEFAULT_REVIEWS = [
-  {
-    name: "Priya Verma",
-    date: "2 weeks ago",
-    rating: 5,
-    comment: "Bohut hi professional aur creative design plans diye. Time par delivery hui aur hamara living room interior exact waisa hi bana jaisa visualize kiya tha!",
-    projectTitle: "3BHK Interior Design",
-    projectCity: "Residential",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
-    projectImage: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=400&q=80"
-  },
-  {
-    name: "Amit Soni",
-    date: "1 month ago",
-    rating: 5,
-    comment: "Professional approach, creative design and excellent communication throughout the project. Our office space looks amazing!",
-    projectTitle: "Office & Commercial Space",
-    projectCity: "Commercial",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
-    projectImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=400&q=80"
-  }
-];
 
 const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientProps = {}) => {
   const params = useParams();
@@ -221,18 +188,18 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
     else toast.info("Contact number not available.");
   };
 
-  // Projects / Portfolio computation
+  // Real Projects / Portfolio computation
   const projectsList = useMemo(() => {
-    if (architect?.workSamples && architect.workSamples.length > 0) {
+    if (architect?.workSamples && Array.isArray(architect.workSamples)) {
       return architect.workSamples;
     }
     return [];
   }, [architect?.workSamples]);
 
-  // Reviews computation
+  // Real Reviews computation - only from DB
   const reviewsList = useMemo(() => {
     const embeddedReviews: any[] = [];
-    if (architect?.workSamples && architect.workSamples.length > 0) {
+    if (architect?.workSamples && Array.isArray(architect.workSamples)) {
       architect.workSamples.forEach((sample: any) => {
         if (sample.reviews && Array.isArray(sample.reviews)) {
           sample.reviews.forEach((r: any) => {
@@ -241,7 +208,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
               date: r.createdAt ? new Date(r.createdAt).toLocaleDateString() : "Recent",
               rating: r.rating || 5,
               comment: r.comment || "",
-              projectTitle: sample.title || "Architectural Project",
+              projectTitle: sample.title || "Project",
               projectCity: sample.location || architect.city || "",
               avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(r.name || "User")}`,
               projectImage: sample.imageUrl ? getFileUrl(sample.imageUrl) : null
@@ -250,20 +217,45 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
         }
       });
     }
-    return embeddedReviews.length > 0 ? embeddedReviews : DEFAULT_REVIEWS;
+    return embeddedReviews;
   }, [architect?.workSamples, architect?.city]);
 
-  // Services offered
+  const avgRating = useMemo(() => {
+    if (reviewsList.length === 0) return null;
+    const total = reviewsList.reduce((acc, r) => acc + (r.rating || 5), 0);
+    return (total / reviewsList.length).toFixed(1);
+  }, [reviewsList]);
+
+  // Real Services offered - only from architect skills/serviceTypes
   const servicesList = useMemo(() => {
-    if (architect?.skills && architect.skills.length > 0) {
-      return architect.skills.map((skill: string, idx: number) => ({
-        title: skill,
-        icon: idx % 2 === 0 ? PenTool : Layers,
-        desc: `Customized professional ${skill} solutions tailored for your space.`
-      }));
+    const list: any[] = [];
+    if (architect?.skills && Array.isArray(architect.skills)) {
+      architect.skills.forEach((skill: string, idx: number) => {
+        list.push({
+          title: skill,
+          icon: idx % 2 === 0 ? PenTool : Layers,
+        });
+      });
     }
-    return DEFAULT_SERVICES;
-  }, [architect?.skills]);
+    if (architect?.serviceTypes && Array.isArray(architect.serviceTypes)) {
+      architect.serviceTypes.forEach((st: string) => {
+        if (!list.some(s => s.title.toLowerCase() === st.toLowerCase())) {
+          list.push({ title: st, icon: Compass });
+        }
+      });
+    }
+    return list;
+  }, [architect?.skills, architect?.serviceTypes]);
+
+  // Name formatting: only add "Ar." if architect role and not already added
+  const displayName = useMemo(() => {
+    if (!architect?.name) return "Professional";
+    const isArchitect = (architect.role === "Architect" || architect.role === "architect" || architect.profession?.toLowerCase() === "architect");
+    if (isArchitect && !architect.name.startsWith("Ar.")) {
+      return `Ar. ${architect.name}`;
+    }
+    return architect.name;
+  }, [architect?.name, architect?.role, architect?.profession]);
 
   if (loading) {
     return (
@@ -296,9 +288,9 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col w-full text-slate-800">
       <Navbar />
 
-      {/* --- HERO BANNER (Pixel-perfect matches user reference image) --- */}
+      {/* --- HERO BANNER --- */}
       <section className="relative w-full bg-slate-900 overflow-hidden">
-        {/* Banner Background with warm ambient lighting overlay */}
+        {/* Banner Background */}
         <div className="absolute inset-0 z-0">
           <img
             src={getFileUrl(architect.coverPhotoUrl) || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80"}
@@ -338,57 +330,74 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
               {/* Text Info */}
               <div className="space-y-1.5 sm:space-y-2">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                  {architect.name?.startsWith("Ar.") ? architect.name : `Ar. ${architect.name}`}
+                  {displayName}
                 </h1>
                 <p className="text-sm sm:text-base font-semibold text-slate-200">
-                  {architect.profession || "Architect & Interior Designer"}
+                  {architect.profession || architect.role || "Design & Construction Professional"}
                 </p>
                 
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 sm:gap-3 text-xs sm:text-sm text-slate-300">
-                  <span className="flex items-center gap-1 text-slate-300">
-                    <MapPin className="w-3.5 h-3.5 text-[#ff6b00]" /> {architect.city || "India"}{architect.state ? `, ${architect.state}` : ""}
-                  </span>
-                  <span className="text-slate-500">•</span>
-                  <div className="flex items-center gap-1">
-                    <div className="flex text-amber-400">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                      ))}
-                    </div>
-                    <span className="font-bold text-white ml-0.5">4.8</span>
-                    <span className="text-slate-400">({reviewsList.length * 14 || 56} Reviews)</span>
-                  </div>
+                  {architect.city && (
+                    <span className="flex items-center gap-1 text-slate-300">
+                      <MapPin className="w-3.5 h-3.5 text-[#ff6b00]" /> {architect.city}{architect.state ? `, ${architect.state}` : ""}
+                    </span>
+                  )}
+                  {avgRating ? (
+                    <>
+                      <span className="text-slate-500">•</span>
+                      <div className="flex items-center gap-1">
+                        <div className="flex text-amber-400">
+                          {[...Array(Math.round(Number(avgRating)))].map((_, i) => (
+                            <Star key={i} className="w-3.5 h-3.5 fill-current" />
+                          ))}
+                        </div>
+                        <span className="font-bold text-white ml-0.5">{avgRating}</span>
+                        <span className="text-slate-400">({reviewsList.length} Reviews)</span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-slate-500">•</span>
+                      <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Verified Profile
+                      </span>
+                    </>
+                  )}
                 </div>
 
-                <p className="text-xs sm:text-sm text-slate-300 max-w-xl line-clamp-2 leading-relaxed pt-1">
-                  {architect.bio || "Modern designs for better living. We create functional, aesthetic and sustainable spaces for homes and businesses."}
-                </p>
+                {architect.bio && (
+                  <p className="text-xs sm:text-sm text-slate-300 max-w-xl line-clamp-2 leading-relaxed pt-1">
+                    {architect.bio}
+                  </p>
+                )}
               </div>
             </div>
 
-            {/* Right: 3 Stats Badges */}
-            <div className="grid grid-cols-3 gap-2.5 sm:gap-3 self-center sm:self-end w-full lg:w-auto bg-black/30 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-white/10">
-              <div className="flex items-center gap-2.5 sm:gap-3 px-2 sm:px-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/10 flex items-center justify-center text-[#ff6b00] shrink-0">
-                  <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+            {/* Right: Stats Badges (Real data only, no fake 510+ or fake 100+) */}
+            <div className="flex items-center justify-center gap-2.5 sm:gap-3 self-center sm:self-end w-full lg:w-auto bg-black/30 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-white/10">
+              {architect.experience && (
+                <div className="flex items-center gap-2.5 sm:gap-3 px-2 sm:px-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/10 flex items-center justify-center text-[#ff6b00] shrink-0">
+                    <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </div>
+                  <div>
+                    <p className="text-base sm:text-xl font-extrabold text-white leading-none">
+                      {architect.experience}
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-slate-400 font-medium whitespace-nowrap mt-0.5">Experience</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-base sm:text-xl font-extrabold text-white leading-none">
-                    {architect.experience ? `${architect.experience.replace(/\D/g, '') || '8'}+` : "8+"}
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-slate-400 font-medium whitespace-nowrap mt-0.5">Years Experience</p>
-                </div>
-              </div>
+              )}
 
-              <div className="flex items-center gap-2.5 sm:gap-3 px-2 sm:px-3 border-l border-white/10">
+              <div className={`flex items-center gap-2.5 sm:gap-3 px-2 sm:px-3 ${architect.experience ? "border-l border-white/10" : ""}`}>
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/10 flex items-center justify-center text-[#ff6b00] shrink-0">
                   <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
                   <p className="text-base sm:text-xl font-extrabold text-white leading-none">
-                    {projectsList.length > 0 ? `${projectsList.length * 5}+` : "120+"}
+                    {projectsList.length}
                   </p>
-                  <p className="text-[10px] sm:text-xs text-slate-400 font-medium whitespace-nowrap mt-0.5">Projects Done</p>
+                  <p className="text-[10px] sm:text-xs text-slate-400 font-medium whitespace-nowrap mt-0.5">Projects Uploaded</p>
                 </div>
               </div>
 
@@ -397,8 +406,10 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                   <Award className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <p className="text-base sm:text-xl font-extrabold text-white leading-none">100+</p>
-                  <p className="text-[10px] sm:text-xs text-slate-400 font-medium whitespace-nowrap mt-0.5">Happy Clients</p>
+                  <p className="text-base sm:text-xl font-extrabold text-white leading-none">
+                    {architect.contractorType || "Verified"}
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-slate-400 font-medium whitespace-nowrap mt-0.5">Member Status</p>
                 </div>
               </div>
             </div>
@@ -410,7 +421,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
       <nav className="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-6 sm:gap-8 overflow-x-auto no-scrollbar py-3 text-xs sm:text-sm font-semibold">
-            {["Overview", "Portfolio", "Services", "Reviews", "About", "Contact"].map((tab) => (
+            {["Overview", "Portfolio", "Services", "About", "Contact"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => {
@@ -432,14 +443,14 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
         </div>
       </nav>
 
-      {/* --- MAIN CONTENT LAYOUT (Two-column layout matching reference design) --- */}
+      {/* --- MAIN CONTENT LAYOUT --- */}
       <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* ================= LEFT COLUMN (Col span 8) ================= */}
+          {/* ================= LEFT COLUMN ================= */}
           <div className="lg:col-span-8 space-y-8 sm:space-y-10">
 
-            {/* --- 1. PORTFOLIO SECTION --- */}
+            {/* --- 1. PORTFOLIO SECTION (REAL DATA ONLY) --- */}
             <section id="portfolio" className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2.5">
@@ -449,124 +460,110 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                   <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">Portfolio</h2>
                 </div>
                 {projectsList.length > 0 && (
-                  <span className="text-xs sm:text-sm font-bold text-[#ff6b00] hover:underline cursor-pointer flex items-center gap-1">
-                    View All {projectsList.length} Projects <ChevronRight className="w-4 h-4" />
+                  <span className="text-xs sm:text-sm font-bold text-[#ff6b00]">
+                    Total {projectsList.length} Projects
                   </span>
                 )}
               </div>
 
               {projectsList.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                  {projectsList.slice(0, 8).map((proj: any, idx: number) => {
-                    const tag = idx % 4 === 0 ? "3D Elevation" : idx % 4 === 1 ? "Interior" : idx % 4 === 2 ? "Floor Plan" : "Exterior";
+                  {projectsList.map((proj: any, idx: number) => (
+                    <div
+                      key={idx}
+                      onClick={() => router.push(`/contractors/${targetId}/project/${idx}`)}
+                      className="group bg-slate-50 rounded-xl overflow-hidden border border-slate-200/80 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
+                    >
+                      <div className="relative h-36 w-full overflow-hidden bg-slate-200">
+                        <img
+                          src={getFileUrl(proj.imageUrl) || "/architect_hero.webp"}
+                          alt={proj.title || "Project"}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        {proj.features?.[0] && (
+                          <div className="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                            {proj.features[0]}
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-3">
+                        <h4 className="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-[#ff6b00] transition-colors line-clamp-1">
+                          {proj.title || "Architectural Work"}
+                        </h4>
+                        <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                          {proj.location || architect.city || "Project Site"}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-12 text-center text-slate-400 bg-slate-50/70 rounded-xl border border-dashed border-slate-200">
+                  <Layers className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+                  <p className="text-sm font-semibold text-slate-600">No portfolio projects uploaded yet.</p>
+                  <p className="text-xs text-slate-400 mt-1">Project photos will appear here once the professional uploads work samples.</p>
+                </div>
+              )}
+            </section>
+
+            {/* --- 2. SERVICES OFFERED SECTION (REAL DATA ONLY) --- */}
+            <section id="services" className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
+              <div className="flex items-center gap-2.5 mb-6">
+                <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center">
+                  <Compass className="w-5 h-5" />
+                </div>
+                <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">Services & Skills</h2>
+              </div>
+
+              {servicesList.length > 0 ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
+                  {servicesList.map((srv: any, idx: number) => {
+                    const Icon = srv.icon || PenTool;
                     return (
                       <div
                         key={idx}
-                        onClick={() => router.push(`/contractors/${targetId}/project/${idx}`)}
-                        className="group bg-slate-50 rounded-xl overflow-hidden border border-slate-200/80 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col"
+                        className="flex flex-col items-center text-center p-4 rounded-xl border border-slate-100 hover:border-orange-200 hover:shadow-md bg-slate-50/60 hover:bg-orange-50/20 transition-all duration-300"
                       >
-                        <div className="relative h-36 w-full overflow-hidden bg-slate-200">
-                          <img
-                            src={getFileUrl(proj.imageUrl) || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80"}
-                            alt={proj.title || "Project"}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded">
-                            {tag}
-                          </div>
+                        <div className="w-11 h-11 rounded-xl border border-orange-200 text-[#ff6b00] flex items-center justify-center mb-2.5 bg-white shadow-xs">
+                          <Icon className="w-5 h-5 stroke-[1.8]" />
                         </div>
-                        <div className="p-3">
-                          <h4 className="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-[#ff6b00] transition-colors line-clamp-1">
-                            {proj.title || "Modern Architectural Design"}
-                          </h4>
-                          <p className="text-[11px] text-slate-500 mt-0.5">
-                            {proj.location || architect.city || "India"} | {proj.features?.[0] || "2500 Sqft"}
-                          </p>
-                        </div>
+                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                          {srv.title}
+                        </h4>
                       </div>
                     );
                   })}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { tag: "3D Elevation", title: "Modern Villa Design", sub: `${architect.city || "Bhopal"} | 2500 Sqft`, img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=500&q=80" },
-                    { tag: "Interior", title: "Living Room Interior", sub: `${architect.city || "Bhopal"} | 3BHK`, img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=500&q=80" },
-                    { tag: "Floor Plan", title: "3BHK Floor Plan", sub: `${architect.city || "Bhopal"} | 1500 Sqft`, img: "https://images.unsplash.com/photo-1574958269340-fa927503f3dd?auto=format&fit=crop&w=500&q=80" },
-                    { tag: "Exterior", title: "Contemporary Home", sub: `${architect.city || "Bhopal"} | 2000 Sqft`, img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=500&q=80" },
-                  ].map((demo, i) => (
-                    <div key={i} className="group bg-slate-50 rounded-xl overflow-hidden border border-slate-200/80 hover:shadow-md transition-all">
-                      <div className="relative h-36 w-full overflow-hidden bg-slate-200">
-                        <img src={demo.img} alt={demo.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                        <div className="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded">
-                          {demo.tag}
-                        </div>
-                      </div>
-                      <div className="p-3">
-                        <h4 className="font-bold text-xs sm:text-sm text-slate-900">{demo.title}</h4>
-                        <p className="text-[11px] text-slate-500 mt-0.5">{demo.sub}</p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="py-8 text-center text-slate-400 bg-slate-50/70 rounded-xl border border-dashed border-slate-200">
+                  <Compass className="w-7 h-7 mx-auto mb-2 text-slate-300" />
+                  <p className="text-xs sm:text-sm font-semibold text-slate-600">Specialization: {architect.profession || "Design Services"}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Contact directly via WhatsApp or Call for detailed service inquiries.</p>
                 </div>
               )}
             </section>
 
-            {/* --- 2. SERVICES OFFERED SECTION --- */}
-            <section id="services" className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center">
-                    <Compass className="w-5 h-5" />
-                  </div>
-                  <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">Services Offered</h2>
-                </div>
-                <span className="text-xs sm:text-sm font-bold text-[#ff6b00] hover:underline cursor-pointer flex items-center gap-1">
-                  View All Services <ChevronRight className="w-4 h-4" />
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5">
-                {servicesList.slice(0, 5).map((srv: any, idx: number) => {
-                  const Icon = srv.icon || PenTool;
-                  return (
-                    <div
-                      key={idx}
-                      className="flex flex-col items-center text-center p-4 rounded-xl border border-slate-100 hover:border-orange-200 hover:shadow-md bg-slate-50/60 hover:bg-orange-50/20 transition-all duration-300"
-                    >
-                      <div className="w-12 h-12 rounded-xl border-2 border-orange-200 text-[#ff6b00] flex items-center justify-center mb-3 bg-white shadow-xs">
-                        <Icon className="w-6 h-6 stroke-[1.8]" />
-                      </div>
-                      <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
-                        {srv.title}
-                      </h4>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* --- 3. ABOUT ME SECTION --- */}
+            {/* --- 3. ABOUT SECTION --- */}
             <section id="about" className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
               <div className="flex items-center gap-2.5 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center">
                   <Users className="w-5 h-5" />
                 </div>
-                <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">About Me</h2>
+                <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">About {architect.name}</h2>
               </div>
 
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 {architect.bio ||
-                  `I am an experienced ${architect.profession || "architect and interior designer"} with ${architect.experience || "8+ years"} of experience in residential, commercial and renovation projects. I focus on creating modern, functional and sustainable designs that reflect your lifestyle and personality. From concept to execution, I work closely with my clients to turn their dream vision into reality.`}
+                  `${architect.name} is a verified ${architect.profession || "professional"} based in ${architect.city || "India"}${architect.qualification ? ` with qualification in ${architect.qualification}` : ""}${architect.experience ? ` having ${architect.experience} of experience` : ""}. Connect directly for project consultations, designs and execution estimates.`}
               </p>
 
-              {/* 4 Feature Value Pills */}
+              {/* Trust Badges */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
                 {[
-                  { label: "Modern Design Approach", icon: Sparkles },
-                  { label: "Client-Focused Process", icon: Users },
-                  { label: "On-Time Delivery", icon: Clock },
-                  { label: "Sustainable Solutions", icon: Leaf },
+                  { label: "Verified Professional", icon: ShieldCheck },
+                  { label: "Direct Communication", icon: Users },
+                  { label: "On-Time Service", icon: Clock },
+                  { label: "Quality Commitment", icon: Sparkles },
                 ].map((item, idx) => {
                   const ItemIcon = item.icon;
                   return (
@@ -586,64 +583,63 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
               </div>
             </section>
 
-            {/* --- 4. CUSTOMER REVIEWS SECTION --- */}
-            <section id="reviews" className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center">
-                    <Star className="w-5 h-5" />
+            {/* --- 4. CUSTOMER REVIEWS (REAL DATA ONLY) --- */}
+            {reviewsList.length > 0 && (
+              <section id="reviews" className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center">
+                      <Star className="w-5 h-5" />
+                    </div>
+                    <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">Customer Reviews ({reviewsList.length})</h2>
                   </div>
-                  <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">Customer Reviews</h2>
                 </div>
-                <span className="text-xs sm:text-sm font-bold text-[#ff6b00] hover:underline cursor-pointer flex items-center gap-1">
-                  View All Reviews <ChevronRight className="w-4 h-4" />
-                </span>
-              </div>
 
-              <div className="space-y-4">
-                {reviewsList.map((rev: any, idx: number) => (
-                  <div
-                    key={idx}
-                    className="p-4 sm:p-5 rounded-xl border border-slate-200/80 bg-slate-50/40 flex flex-col sm:flex-row items-start justify-between gap-4"
-                  >
-                    <div className="flex items-start gap-3.5">
-                      <Avatar className="w-10 h-10 rounded-full border border-slate-200">
-                        <AvatarImage src={rev.avatar} alt={rev.name} />
-                        <AvatarFallback className="bg-slate-200 font-bold text-xs">{rev.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-extrabold text-xs sm:text-sm text-slate-900">{rev.name}</h4>
-                          <div className="flex text-amber-400">
-                            {[...Array(rev.rating || 5)].map((_, i) => (
-                              <Star key={i} className="w-3 h-3 fill-current" />
-                            ))}
+                <div className="space-y-4">
+                  {reviewsList.map((rev: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="p-4 sm:p-5 rounded-xl border border-slate-200/80 bg-slate-50/40 flex flex-col sm:flex-row items-start justify-between gap-4"
+                    >
+                      <div className="flex items-start gap-3.5">
+                        <Avatar className="w-10 h-10 rounded-full border border-slate-200">
+                          <AvatarImage src={rev.avatar} alt={rev.name} />
+                          <AvatarFallback className="bg-slate-200 font-bold text-xs">{rev.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-extrabold text-xs sm:text-sm text-slate-900">{rev.name}</h4>
+                            <div className="flex text-amber-400">
+                              {[...Array(rev.rating || 5)].map((_, i) => (
+                                <Star key={i} className="w-3 h-3 fill-current" />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-[10px] text-slate-400 mt-0.5">{rev.date}</p>
+                          <p className="text-xs text-slate-600 mt-2 leading-relaxed">{rev.comment}</p>
+                        </div>
+                      </div>
+
+                      {rev.projectImage && (
+                        <div className="shrink-0 flex sm:flex-col items-center sm:items-end gap-2 text-right">
+                          <img
+                            src={rev.projectImage}
+                            alt="Project Preview"
+                            className="w-16 h-12 sm:w-20 sm:h-14 rounded-lg object-cover border border-slate-200 shadow-xs"
+                          />
+                          <div className="text-[10px] text-slate-500 font-medium">
+                            <p className="font-bold text-slate-700">{rev.projectTitle}</p>
+                            <p>{rev.projectCity}</p>
                           </div>
                         </div>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{rev.date}</p>
-                        <p className="text-xs text-slate-600 mt-2 leading-relaxed">{rev.comment}</p>
-                      </div>
+                      )}
                     </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
-                    {rev.projectImage && (
-                      <div className="shrink-0 flex sm:flex-col items-center sm:items-end gap-2 text-right">
-                        <img
-                          src={rev.projectImage}
-                          alt="Project Preview"
-                          className="w-16 h-12 sm:w-20 sm:h-14 rounded-lg object-cover border border-slate-200 shadow-xs"
-                        />
-                        <div className="text-[10px] text-slate-500 font-medium">
-                          <p className="font-bold text-slate-700">{rev.projectTitle}</p>
-                          <p>{rev.projectCity}</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Design Packages (If available from backend) */}
+            {/* Design Packages (If available in DB) */}
             {architect.packages && architect.packages.length > 0 && (
               <section className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
                 <h3 className="text-lg font-extrabold text-slate-900 mb-4">Design Packages</h3>
@@ -671,7 +667,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
 
           </div>
 
-          {/* ================= RIGHT COLUMN / SIDEBAR (Col span 4) ================= */}
+          {/* ================= RIGHT COLUMN / SIDEBAR ================= */}
           <div className="lg:col-span-4 space-y-6 sticky top-20">
 
             {/* --- 1. GET IN TOUCH CARD --- */}
@@ -696,70 +692,86 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                 </Button>
               </div>
 
-              {/* Free Consultation Advisory Note */}
+              {/* Consultation Note */}
               <div className="bg-orange-50/70 border border-orange-100 rounded-xl p-3 flex items-start gap-2.5">
                 <Calendar className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900">Free Consultation</h4>
+                  <h4 className="text-xs font-bold text-slate-900">
+                    {architect.charges ? `Charges: ${architect.charges}` : "Free Consultation"}
+                  </h4>
                   <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                    Discuss your project, get expert advice and customized solutions.
+                    Connect directly to discuss requirements, feasibility and quotes.
                   </p>
                 </div>
               </div>
             </div>
 
             {/* --- 2. LOCATION CARD --- */}
-            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
-              <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#ff6b00]" /> Location
-              </h3>
-              <p className="text-xs text-slate-600 font-medium">
-                {architect.city ? `${architect.city}, ` : ""}{architect.state || "India"}
-              </p>
+            {architect.city && (
+              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+                <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-[#ff6b00]" /> Location
+                </h3>
+                <p className="text-xs text-slate-600 font-medium">
+                  {architect.city}{architect.state ? `, ${architect.state}` : ""}{architect.pincode ? ` - ${architect.pincode}` : ""}
+                </p>
 
-              {/* Map Preview embed */}
-              <div className="relative h-32 w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
-                <iframe
-                  title="Location Map"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  allowFullScreen
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent((architect.city || "Bhopal") + ", India")}&t=&z=12&ie=UTF8&iwloc=&output=embed`}
-                />
+                {/* Map Preview embed */}
+                <div className="relative h-32 w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
+                  <iframe
+                    title="Location Map"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    allowFullScreen
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(architect.city + ", India")}&t=&z=12&ie=UTF8&iwloc=&output=embed`}
+                  />
+                </div>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(architect.city + ", India")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs font-bold text-[#ff6b00] hover:underline flex items-center gap-1"
+                >
+                  View on Map <ExternalLink className="w-3 h-3" />
+                </a>
               </div>
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((architect.city || "Bhopal") + ", India")}`}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs font-bold text-[#ff6b00] hover:underline flex items-center gap-1"
-              >
-                View on Map <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
+            )}
 
             {/* --- 3. BUSINESS DETAILS CARD --- */}
             <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3.5">
               <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <Briefcase className="w-4 h-4 text-[#ff6b00]" /> Business Details
+                <Briefcase className="w-4 h-4 text-[#ff6b00]" /> Professional Details
               </h3>
 
               <div className="space-y-2.5 text-xs">
-                <div className="flex justify-between py-1 border-b border-slate-100">
-                  <span className="text-slate-500 flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> Type</span>
-                  <span className="font-semibold text-slate-800">{architect.businessType || "Individual / Proprietorship"}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-100">
-                  <span className="text-slate-500 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Est. Year</span>
-                  <span className="font-semibold text-slate-800">{architect.experience || "2018"}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-100">
-                  <span className="text-slate-500 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Service Area</span>
-                  <span className="font-semibold text-slate-800 text-right max-w-[60%] truncate">
-                    {architect.city || "Bhopal"} & nearby cities
-                  </span>
-                </div>
+                {architect.companyName && (
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500 flex items-center gap-1.5"><Building className="w-3.5 h-3.5" /> Company</span>
+                    <span className="font-semibold text-slate-800 text-right">{architect.companyName}</span>
+                  </div>
+                )}
+                {architect.qualification && (
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500 flex items-center gap-1.5"><Award className="w-3.5 h-3.5" /> Qualification</span>
+                    <span className="font-semibold text-slate-800 uppercase text-right">{architect.qualification}</span>
+                  </div>
+                )}
+                {architect.experience && (
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Experience</span>
+                    <span className="font-semibold text-slate-800">{architect.experience}</span>
+                  </div>
+                )}
+                {architect.city && (
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Service Area</span>
+                    <span className="font-semibold text-slate-800 text-right max-w-[60%] truncate">
+                      {architect.city} & nearby regions
+                    </span>
+                  </div>
+                )}
                 {architect.gstNumber && (
                   <div className="flex justify-between py-1 border-b border-slate-100">
                     <span className="text-slate-500 flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> GST No.</span>
@@ -834,10 +846,10 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
             {/* --- 6. REQUEST A FREE QUOTE BANNER --- */}
             <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-5 border border-orange-200 space-y-3 text-center">
               <h4 className="font-extrabold text-sm text-slate-900 leading-tight">
-                Looking for a designer for your project?
+                Looking to consult with {architect.name}?
               </h4>
               <p className="text-[11px] text-slate-600 leading-snug">
-                Get expert guidance and personalized home design solutions directly from {architect.name}.
+                Share your requirements to get customized design and pricing details.
               </p>
               <Button
                 onClick={() => handleInquiryAction()}
@@ -851,7 +863,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
         </div>
       </main>
 
-      {/* --- STICKY BOTTOM BAR (High Conversion CTA from Reference Design) --- */}
+      {/* --- STICKY BOTTOM BAR --- */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 px-4 py-3 shadow-2xl">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-3 text-center sm:text-left">
@@ -939,7 +951,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
             <div className="space-y-1">
               <label className="text-[10px] font-bold uppercase text-slate-500 tracking-wider">Project Details</label>
               <Textarea
-                placeholder="Briefly describe your dream project, plot size or interior requirements..."
+                placeholder="Briefly describe your dream project, plot size or requirements..."
                 className="min-h-[100px] p-3 rounded-lg bg-slate-50 border-slate-200 text-sm font-semibold"
                 value={formData.requirements}
                 onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
