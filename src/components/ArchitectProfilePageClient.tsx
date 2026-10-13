@@ -43,7 +43,8 @@ import {
   Instagram,
   Linkedin,
   Youtube,
-  Twitter
+  Twitter,
+  Globe
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -220,6 +221,11 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
               {/* Social Media Icons */}
               {architect.socialLinks && Object.values(architect.socialLinks).some(val => val) && (
                 <div className="flex justify-center gap-4 mt-2 mb-6">
+                  {architect.socialLinks.website && (
+                    <a href={architect.socialLinks.website.startsWith("http") ? architect.socialLinks.website : `https://${architect.socialLinks.website}`} target="_blank" rel="noopener noreferrer" title="Official Website" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
                   {architect.socialLinks.facebook && (
                     <a href={architect.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
                       <Facebook className="w-4 h-4 sm:w-5 sm:h-5 text-white" />

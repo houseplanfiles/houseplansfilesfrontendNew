@@ -7,7 +7,8 @@ import {
   Send, 
   Youtube, 
   Phone,
-  MessageCircle
+  MessageCircle,
+  Globe
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,6 +19,7 @@ interface SocialShareProps {
   heading?: string;
   socialLinks?: any;
   className?: string;
+  showCallButton?: boolean;
 }
 
 const SocialShare: React.FC<SocialShareProps> = ({ 
@@ -26,11 +28,24 @@ const SocialShare: React.FC<SocialShareProps> = ({
   phone,
   heading = "Share this plan",
   socialLinks,
-  className = "mt-6"
+  className = "mt-6",
+  showCallButton = true
 }) => {
   const isProfileMode = !!socialLinks;
 
+  const formatWebsiteUrl = (webUrl: string) => {
+    if (!webUrl) return "";
+    return webUrl.startsWith("http://") || webUrl.startsWith("https://") ? webUrl : `https://${webUrl}`;
+  };
+
   const shareLinks = [
+    {
+      name: "Website",
+      icon: <Globe size={18} />,
+      color: "bg-[#0ea5e9]",
+      link: formatWebsiteUrl(socialLinks?.website),
+      show: isProfileMode && !!socialLinks?.website,
+    },
     {
       name: "Facebook",
       icon: <Facebook size={18} fill="currentColor" />,
@@ -92,7 +107,7 @@ const SocialShare: React.FC<SocialShareProps> = ({
       icon: <Phone size={18} fill="currentColor" />,
       color: "bg-[#34495e]",
       link: phone ? `tel:${phone}` : "tel:+910000000000",
-      show: isProfileMode ? !!phone : true,
+      show: showCallButton && (isProfileMode ? !!phone : true),
     }
   ].filter(item => item.show);
 

@@ -40,6 +40,7 @@ type FormData = {
   seoTitle?: string;
   seoDescription?: string;
   seoKeywords?: string;
+  socialWebsite?: string;
   socialFacebook?: string;
   socialInstagram?: string;
   socialLinkedin?: string;
@@ -145,6 +146,7 @@ const ProfilePageProf = () => {
         setValue("seoKeywords", userInfo.seoKeywords || "");
         
         if (userInfo.socialLinks) {
+          setValue("socialWebsite", userInfo.socialLinks.website || (userInfo as any).website || "");
           setValue("socialFacebook", userInfo.socialLinks.facebook || "");
           setValue("socialInstagram", userInfo.socialLinks.instagram || "");
           setValue("socialLinkedin", userInfo.socialLinks.linkedin || "");
@@ -154,6 +156,8 @@ const ProfilePageProf = () => {
           setValue("socialPinterest", userInfo.socialLinks.pinterest || "");
           setValue("socialTelegram", userInfo.socialLinks.telegram || "");
           setValue("socialThreads", userInfo.socialLinks.threads || "");
+        } else if ((userInfo as any).website) {
+          setValue("socialWebsite", (userInfo as any).website);
         }
       }
       setPhotoPreview(userInfo.photoUrl || null);
@@ -200,6 +204,7 @@ const ProfilePageProf = () => {
     });
 
     const socialLinks = {
+      website: data.socialWebsite || "",
       facebook: data.socialFacebook || "",
       instagram: data.socialInstagram || "",
       linkedin: data.socialLinkedin || "",
@@ -211,6 +216,9 @@ const ProfilePageProf = () => {
       threads: data.socialThreads || "",
     };
     dataToSubmit.append("socialLinks", JSON.stringify(socialLinks));
+    if (data.socialWebsite) {
+      dataToSubmit.append("website", data.socialWebsite);
+    }
 
     // Agar nayi photo hai to use bhi append karein
     if (photo) {
@@ -435,10 +443,24 @@ const ProfilePageProf = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Social Media Links</CardTitle>
-            <CardDescription>Add links to your social media profiles to display on your public page.</CardDescription>
+            <CardTitle>Website & Social Media Links</CardTitle>
+            <CardDescription>Add links to your official website and social media profiles to display on your public page (creates backlink).</CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-2 bg-orange-50/50 p-4 rounded-xl border border-orange-200">
+              <Label htmlFor="socialWebsite" className="font-bold text-orange-950 flex items-center gap-1.5">
+                Official Website URL (Backlink)
+              </Label>
+              <Input 
+                id="socialWebsite" 
+                {...register("socialWebsite")} 
+                placeholder="https://yourwebsite.com" 
+                className="mt-1 bg-white border-orange-300 focus:border-orange-500"
+              />
+              <p className="text-[11px] text-gray-500 mt-1">
+                Your website link will appear on your public profile and help drive direct organic backlink traffic.
+              </p>
+            </div>
             <div>
               <Label htmlFor="socialFacebook">Facebook URL</Label>
               <Input id="socialFacebook" {...register("socialFacebook")} placeholder="https://facebook.com/yourprofile" />

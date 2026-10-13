@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import MarketPlaceClient from "@/components/MarketPlaceClient";
 export const metadata: Metadata = {
   title: "Marketplace | Building material supplier , construction and home decor products",
@@ -11,7 +12,9 @@ const schema = { "@context": "https://schema.org", "@type": "BreadcrumbList", it
 export default function MarketplacePage() {
   return (<><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     <main>
-      <MarketPlaceClient />
+      <Suspense fallback={<div className="py-20 text-center text-gray-500">Loading marketplace...</div>}>
+        <MarketPlaceClient />
+      </Suspense>
     </main>
 </>);
 }

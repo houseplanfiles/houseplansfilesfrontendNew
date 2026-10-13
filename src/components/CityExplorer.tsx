@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -62,6 +62,7 @@ const ALL_CITIES_DATA = [
 const CityExplorer = () => {
   const [selectedCity, setSelectedCity] = useState("Bhopal");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const router = useRouter();
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -80,10 +81,38 @@ const CityExplorer = () => {
 
   const scrollRight = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
-      setActiveIndex((prev) => Math.min(ALL_CITIES_DATA.length - 1, prev + 1));
+      const container = carouselRef.current;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      if (container.scrollLeft >= maxScroll - 20) {
+        container.scrollTo({ left: 0, behavior: "smooth" });
+        setActiveIndex(0);
+      } else {
+        container.scrollBy({ left: 300, behavior: "smooth" });
+        setActiveIndex((prev) => Math.min(ALL_CITIES_DATA.length - 1, prev + 1));
+      }
     }
   };
+
+  // Automatic slider / autoplay effect
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      if (carouselRef.current) {
+        const container = carouselRef.current;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (container.scrollLeft >= maxScroll - 20) {
+          container.scrollTo({ left: 0, behavior: "smooth" });
+          setActiveIndex(0);
+        } else {
+          container.scrollBy({ left: 280, behavior: "smooth" });
+          setActiveIndex((prev) => (prev + 1) % ALL_CITIES_DATA.length);
+        }
+      }
+    }, 2800);
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
   return (
     <section className="bg-[#FAF9F6] py-10 md:py-20 border-t border-gray-100 relative overflow-hidden">
@@ -156,7 +185,11 @@ const CityExplorer = () => {
 
             <div 
               ref={carouselRef}
-              className="flex gap-4 sm:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar pl-2" 
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onTouchStart={() => setIsPaused(true)}
+              onTouchEnd={() => setIsPaused(false)}
+              className="flex gap-4 sm:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory hide-scrollbar pl-2 scroll-smooth" 
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {ALL_CITIES_DATA.map((city, idx) => (

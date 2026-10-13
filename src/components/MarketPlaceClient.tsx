@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 
 import { handleCallClick } from "@/utils/callHelper";
@@ -431,23 +431,31 @@ const ShopCard = ({ seller, productCount, products }: { seller: any; productCoun
 const MarketplacePage: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { products, status, error } = useSelector(
     (state: RootState) => state.sellerProducts
   );
 
   // Filters State
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedShopCategory, setSelectedShopCategory] = useState("All");
-  const [isPanIndiaFilter, setIsPanIndiaFilter] = useState(false);
-  const [selectedState, setSelectedState] = useState("All States");
-  const [selectedCity, setSelectedCity] = useState("all-cities");
+  const [searchTerm, setSearchTerm] = useState(() => searchParams?.get("search") || "");
+  const [selectedShopCategory, setSelectedShopCategory] = useState(() => searchParams?.get("category") || "All");
+  const [isPanIndiaFilter, setIsPanIndiaFilter] = useState(() => searchParams?.get("panIndia") === "true");
+  const [selectedState, setSelectedState] = useState(() => searchParams?.get("state") || "All States");
+  const [selectedCity, setSelectedCity] = useState(() => searchParams?.get("city") || "all-cities");
   const [cityPopoverOpen, setCityPopoverOpen] = useState(false);
   const [citySearchTerm, setCitySearchTerm] = useState("");
-  const [selectedPincode, setSelectedPincode] = useState("");
-  const [selectedBusinessType, setSelectedBusinessType] = useState("All");
-  const [selectedMaterialType, setSelectedMaterialType] = useState("All");
+  const [selectedPincode, setSelectedPincode] = useState(() => searchParams?.get("pincode") || "");
+  const [selectedBusinessType, setSelectedBusinessType] = useState(() => searchParams?.get("businessType") || "All");
+  const [selectedMaterialType, setSelectedMaterialType] = useState(() => searchParams?.get("materialType") || "All");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  useEffect(() => {
+    const cat = searchParams?.get("category");
+    if (cat) setSelectedShopCategory(cat);
+    const bType = searchParams?.get("businessType");
+    if (bType) setSelectedBusinessType(bType);
+  }, [searchParams]);
 
   const INDIAN_STATES = [
     "All States", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
@@ -838,24 +846,24 @@ const MarketplacePage: FC = () => {
 
         <div className={`bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 md:p-8 mb-8 space-y-4 ${showMobileFilters ? "block" : "hidden md:block"
           }`}>
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
-            <div className="lg:col-span-2">
-              <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Search Shop or Product</Label>
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 items-end">
+            <div className="col-span-2 lg:col-span-2">
+              <Label className="text-[10px] font-black text-gray-400 uppercase mb-1.5 md:mb-2 block tracking-widest">Search Shop or Product</Label>
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <Search className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                 <Input
                   placeholder="What are you looking for?"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 h-12 bg-gray-50 border-gray-200 text-base rounded-xl focus:ring-orange-500"
+                  className="pl-10 md:pl-12 h-11 md:h-12 bg-gray-50 border-gray-200 text-sm md:text-base rounded-xl focus:ring-orange-500"
                 />
               </div>
             </div>
 
             <div>
-              <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Business Type</Label>
+              <Label className="text-[10px] font-black text-gray-400 uppercase mb-1.5 md:mb-2 block tracking-widest">Business Type</Label>
               <Select value={selectedBusinessType} onValueChange={setSelectedBusinessType}>
-                <SelectTrigger className="h-12 bg-gray-50 border-gray-200 rounded-xl">
+                <SelectTrigger className="h-11 md:h-12 bg-gray-50 border-gray-200 rounded-xl text-xs sm:text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -869,9 +877,9 @@ const MarketplacePage: FC = () => {
             </div>
 
             <div>
-              <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Category</Label>
+              <Label className="text-[10px] font-black text-gray-400 uppercase mb-1.5 md:mb-2 block tracking-widest">Category</Label>
               <Select value={selectedShopCategory} onValueChange={setSelectedShopCategory}>
-                <SelectTrigger className="h-12 bg-gray-50 border-gray-200 rounded-xl">
+                <SelectTrigger className="h-11 md:h-12 bg-gray-50 border-gray-200 rounded-xl text-xs sm:text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -882,10 +890,10 @@ const MarketplacePage: FC = () => {
               </Select>
             </div>
 
-            <div>
-              <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Material Type</Label>
+            <div className="col-span-2 sm:col-span-1">
+              <Label className="text-[10px] font-black text-gray-400 uppercase mb-1.5 md:mb-2 block tracking-widest">Material Type</Label>
               <Select value={selectedMaterialType} onValueChange={setSelectedMaterialType}>
-                <SelectTrigger className="h-12 bg-gray-50 border-gray-200 rounded-xl">
+                <SelectTrigger className="h-11 md:h-12 bg-gray-50 border-gray-200 rounded-xl text-xs sm:text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -897,12 +905,12 @@ const MarketplacePage: FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 items-end">
             <div>
-              <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Coverage</Label>
+              <Label className="text-[10px] font-black text-gray-400 uppercase mb-1.5 md:mb-2 block tracking-widest">Coverage</Label>
               <label
                 htmlFor="panIndiaMarketplaceCheck"
-                className={`flex items-center justify-center gap-2 h-12 px-3 rounded-xl border text-xs font-bold transition-all ${(selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode !== "")
+                className={`flex items-center justify-center gap-2 h-11 md:h-12 px-2 sm:px-3 rounded-xl border text-[11px] sm:text-xs font-bold transition-all ${(selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode !== "")
                   ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60"
                   : isPanIndiaFilter
                     ? "bg-orange-600 border-orange-600 text-white shadow-sm cursor-pointer"
@@ -922,9 +930,9 @@ const MarketplacePage: FC = () => {
             </div>
 
             <div>
-              <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">State</Label>
+              <Label className="text-[10px] font-black text-gray-400 uppercase mb-1.5 md:mb-2 block tracking-widest">State</Label>
               <Select value={selectedState} onValueChange={setSelectedState} disabled={isPanIndiaFilter}>
-                <SelectTrigger className="h-12 bg-gray-50 border-gray-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                <SelectTrigger className="h-11 md:h-12 bg-gray-50 border-gray-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="max-h-72">
@@ -936,7 +944,7 @@ const MarketplacePage: FC = () => {
             </div>
 
             <div>
-              <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">City</Label>
+              <Label className="text-[10px] font-black text-gray-400 uppercase mb-1.5 md:mb-2 block tracking-widest">City</Label>
               <Popover open={cityPopoverOpen} onOpenChange={setCityPopoverOpen}>
                 <PopoverTrigger asChild>
                   <Button
@@ -944,10 +952,10 @@ const MarketplacePage: FC = () => {
                     role="combobox"
                     aria-expanded={cityPopoverOpen}
                     disabled={isPanIndiaFilter}
-                    className="h-12 w-full justify-between bg-gray-50 border-gray-200 rounded-xl text-sm font-normal hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="h-11 md:h-12 w-full justify-between bg-gray-50 border-gray-200 rounded-xl text-xs sm:text-sm font-normal hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed px-2.5 sm:px-3"
                   >
-                    {selectedCity === "all-cities" ? "All Cities" : selectedCity}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    <span className="truncate">{selectedCity === "all-cities" ? "All Cities" : selectedCity}</span>
+                    <ChevronsUpDown className="ml-1 sm:ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-72 p-0 z-[100]" align="start">
@@ -994,17 +1002,17 @@ const MarketplacePage: FC = () => {
             </div>
 
             <div>
-              <Label className="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">Pincode</Label>
+              <Label className="text-[10px] font-black text-gray-400 uppercase mb-1.5 md:mb-2 block tracking-widest">Pincode</Label>
               <Input
                 placeholder="e.g. 110001"
                 value={selectedPincode}
                 onChange={(e) => setSelectedPincode(e.target.value)}
                 disabled={isPanIndiaFilter}
-                className="h-12 bg-gray-50 border-gray-200 text-base rounded-xl focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="h-11 md:h-12 bg-gray-50 border-gray-200 text-xs sm:text-base rounded-xl focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
-            <div className="flex items-center">
-              {(isPanIndiaFilter || selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode || searchTerm || selectedBusinessType !== "All" || selectedShopCategory !== "All" || selectedMaterialType !== "All") && (
+            {(isPanIndiaFilter || selectedState !== "All States" || selectedCity !== "all-cities" || selectedPincode || searchTerm || selectedBusinessType !== "All" || selectedShopCategory !== "All" || selectedMaterialType !== "All") && (
+              <div className="col-span-2 lg:col-span-1 flex items-center">
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -1017,12 +1025,12 @@ const MarketplacePage: FC = () => {
                     setSelectedMaterialType("All");
                     setSelectedPincode("");
                   }}
-                  className="h-12 w-full text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 rounded-xl font-bold text-xs"
+                  className="h-11 md:h-12 w-full text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 rounded-xl font-bold text-xs"
                 >
                   <X className="w-4 h-4 mr-1.5" /> Reset Filters
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 
