@@ -47,7 +47,8 @@ import {
   Award,
   ShieldCheck,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  Zap
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -62,12 +63,103 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
   const [architect, setArchitect] = useState<any>(initialArchitect || null);
   const [loading, setLoading] = useState(!initialArchitect);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<string>("Overview");
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const targetId = (id as string) || initialArchitect?._id;
+
+  const isPaid = architect?.paymentStatus === "Paid" || architect?.contractorType === "Premium";
+
+  const handlePayToUpgrade = async () => {
+    setIsPaying(true);
+    try {
+      if (!(window as any).Razorpay) {
+        await new Promise((resolve) => {
+          const script = document.createElement("script");
+          script.src = "https://checkout.razorpay.com/v1/checkout.js";
+          script.onload = () => resolve(true);
+          script.onerror = () => resolve(false);
+          document.body.appendChild(script);
+        });
+      }
+
+      const planName = architect.selectedPlan || "City Listing Plan (Premium - 1 Year)";
+      const planPrice = 999;
+      const taxPrice = Math.round(planPrice * 0.18 * 100) / 100;
+      const totalPrice = planPrice + taxPrice;
+
+      const orderData = {
+        userId: targetId,
+        orderItems: [{ name: planName, price: planPrice }],
+        shippingAddress: {
+          name: architect.name || "",
+          email: architect.email || "",
+          phone: architect.phone || "",
+          location: architect.city || "",
+        },
+        paymentMethod: "Razorpay",
+        itemsPrice: planPrice,
+        taxPrice: taxPrice,
+        shippingPrice: 0,
+        totalPrice: totalPrice,
+        orderType: "subscription",
+      };
+
+      const { data: createdOrder } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders`,
+        orderData
+      );
+
+      const { data: razorpayOrderData } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/${createdOrder._id}/create-razorpay-order`,
+        {}
+      );
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: razorpayOrderData.amount,
+        currency: razorpayOrderData.currency,
+        name: "Houseplanfiles",
+        order_id: razorpayOrderData.orderId,
+        handler: async (response: any) => {
+          try {
+            await axios.post(
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/${createdOrder._id}/verify-payment`,
+              response
+            );
+            toast.success("Payment successful! Account upgraded to Premium!");
+            setArchitect((prev: any) => ({
+              ...prev,
+              paymentStatus: "Paid",
+              contractorType: "Premium",
+              isApproved: true,
+              status: "Approved"
+            }));
+            setIsUpgradeModalOpen(false);
+          } catch (err) {
+            toast.error("Payment verification failed. Please contact support.");
+          }
+        },
+        prefill: {
+          name: architect.name || "",
+          email: architect.email || "",
+          contact: architect.phone || "",
+        },
+        theme: { color: "#ea580c" },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to initiate payment gateway.");
+    } finally {
+      setIsPaying(false);
+    }
+  };
 
   useEffect(() => {
     if (targetId) {
@@ -226,24 +318,64 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
     return (total / reviewsList.length).toFixed(1);
   }, [reviewsList]);
 
-  // Real Services offered - only from architect skills/serviceTypes
+  // Parse social links safely
+  const socialLinks = useMemo(() => {
+    if (!architect) return {};
+    let sl = architect.socialLinks;
+    if (typeof sl === "string") {
+      try { sl = JSON.parse(sl); } catch(e) { sl = {}; }
+    }
+    sl = { ...(sl || {}) };
+    if (!sl.website && architect.website) sl.website = architect.website;
+    if (!sl.facebook && architect.facebook) sl.facebook = architect.facebook;
+    if (!sl.instagram && architect.instagram) sl.instagram = architect.instagram;
+    if (!sl.linkedin && architect.linkedin) sl.linkedin = architect.linkedin;
+    if (!sl.youtube && architect.youtube) sl.youtube = architect.youtube;
+    if (!sl.whatsapp && architect.phone) sl.whatsapp = `https://wa.me/${architect.phone.replace(/[^0-9]/g, "")}`;
+    return sl;
+  }, [architect]);
+
+  // Real Services offered - from architect skills/serviceTypes with smart fallback
   const servicesList = useMemo(() => {
     const list: any[] = [];
-    if (architect?.skills && Array.isArray(architect.skills)) {
-      architect.skills.forEach((skill: string, idx: number) => {
-        list.push({
-          title: skill,
-          icon: idx % 2 === 0 ? PenTool : Layers,
-        });
+    let skillsArr: string[] = [];
+    if (Array.isArray(architect?.skills)) {
+      skillsArr = architect.skills;
+    } else if (typeof architect?.skills === "string" && architect.skills.trim()) {
+      skillsArr = architect.skills.split(",").map((s: string) => s.trim()).filter(Boolean);
+    }
+    skillsArr.forEach((skill: string, idx: number) => {
+      list.push({
+        title: skill,
+        icon: idx % 2 === 0 ? PenTool : Layers,
+      });
+    });
+
+    let serviceArr: string[] = [];
+    if (Array.isArray(architect?.serviceTypes)) {
+      serviceArr = architect.serviceTypes;
+    } else if (typeof architect?.serviceTypes === "string" && architect.serviceTypes.trim()) {
+      serviceArr = architect.serviceTypes.split(",").map((s: string) => s.trim()).filter(Boolean);
+    }
+    serviceArr.forEach((st: string) => {
+      if (!list.some(s => s.title.toLowerCase() === st.toLowerCase())) {
+        list.push({ title: st, icon: Compass });
+      }
+    });
+
+    if (list.length === 0) {
+      const defaultServices = [
+        "Architectural 2D & 3D Planning",
+        "Elevation Design & 3D Walkthrough",
+        "Structural Layout & Engineering",
+        "Interior Design & Space Planning",
+        "Site Supervision & Consultation"
+      ];
+      defaultServices.forEach((s) => {
+        list.push({ title: s, icon: Compass });
       });
     }
-    if (architect?.serviceTypes && Array.isArray(architect.serviceTypes)) {
-      architect.serviceTypes.forEach((st: string) => {
-        if (!list.some(s => s.title.toLowerCase() === st.toLowerCase())) {
-          list.push({ title: st, icon: Compass });
-        }
-      });
-    }
+
     return list;
   }, [architect?.skills, architect?.serviceTypes]);
 
@@ -288,6 +420,18 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col w-full text-slate-800">
       <Navbar />
 
+      {!isPaid && (
+        <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-b border-amber-200 px-4 py-2.5 text-center text-xs font-semibold text-amber-900 flex flex-wrap items-center justify-center gap-2 shadow-xs">
+          <span>⚡ This profile is currently in <strong>Demo Mode</strong> (Payment Pending).</span>
+          <button
+            onClick={() => setIsUpgradeModalOpen(true)}
+            className="inline-flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#e05e00] text-white text-[11px] font-bold px-3.5 py-1 rounded-full shadow-sm cursor-pointer transition-transform hover:scale-105"
+          >
+            <Zap className="w-3 h-3 fill-white" /> Click here to Pay & Upgrade to Premium
+          </button>
+        </div>
+      )}
+
       {/* --- HERO BANNER --- */}
       <section className="relative w-full bg-slate-900 overflow-hidden">
         {/* Banner Background */}
@@ -322,9 +466,19 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                     {architect.name?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-md border border-white/80 whitespace-nowrap">
-                  <CheckCircle2 className="w-3 h-3 fill-white text-emerald-600" /> Verified
-                </div>
+                {isPaid ? (
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-md border border-white/80 whitespace-nowrap">
+                    <CheckCircle2 className="w-3 h-3 fill-white text-emerald-600" /> Verified
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setIsUpgradeModalOpen(true)}
+                    title="Click to activate Premium Account"
+                    className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-[10px] sm:text-[11px] font-extrabold px-3 py-0.5 rounded-full flex items-center gap-1 shadow-lg border border-white/90 whitespace-nowrap transition-transform hover:scale-105 cursor-pointer"
+                  >
+                    <Zap className="w-3 h-3 fill-white" /> Demo Account
+                  </button>
+                )}
               </div>
 
               {/* Text Info */}
@@ -370,6 +524,40 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                     {architect.bio}
                   </p>
                 )}
+
+                {/* Social media links in hero */}
+                <div className="flex items-center justify-center sm:justify-start gap-2 pt-1">
+                  {socialLinks.instagram && (
+                    <a href={socialLinks.instagram} target="_blank" rel="noreferrer" title="Instagram" className="w-7 h-7 rounded-full bg-white/10 hover:bg-pink-600 text-white flex items-center justify-center transition-all">
+                      <Instagram className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                  {socialLinks.facebook && (
+                    <a href={socialLinks.facebook} target="_blank" rel="noreferrer" title="Facebook" className="w-7 h-7 rounded-full bg-white/10 hover:bg-blue-600 text-white flex items-center justify-center transition-all">
+                      <Facebook className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                  {socialLinks.linkedin && (
+                    <a href={socialLinks.linkedin} target="_blank" rel="noreferrer" title="LinkedIn" className="w-7 h-7 rounded-full bg-white/10 hover:bg-blue-500 text-white flex items-center justify-center transition-all">
+                      <Linkedin className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                  {socialLinks.youtube && (
+                    <a href={socialLinks.youtube} target="_blank" rel="noreferrer" title="YouTube" className="w-7 h-7 rounded-full bg-white/10 hover:bg-red-600 text-white flex items-center justify-center transition-all">
+                      <Youtube className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                  {websiteUrl && (
+                    <a href={websiteUrl} target="_blank" rel="noreferrer" title="Website" className="w-7 h-7 rounded-full bg-white/10 hover:bg-[#ff6b00] text-white flex items-center justify-center transition-all">
+                      <Globe className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                  {socialLinks.whatsapp && (
+                    <a href={socialLinks.whatsapp} target="_blank" rel="noreferrer" title="WhatsApp" className="w-7 h-7 rounded-full bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center transition-all">
+                      <MessageCircle className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -406,8 +594,8 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                   <Award className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div>
-                  <p className="text-base sm:text-xl font-extrabold text-white leading-none">
-                    {architect.contractorType || "Verified"}
+                  <p className={`text-base sm:text-xl font-extrabold leading-none ${isPaid ? "text-white" : "text-amber-400"}`}>
+                    {isPaid ? (architect.contractorType || "Verified") : "Demo"}
                   </p>
                   <p className="text-[10px] sm:text-xs text-slate-400 font-medium whitespace-nowrap mt-0.5">Member Status</p>
                 </div>
@@ -583,18 +771,27 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
               </div>
             </section>
 
-            {/* --- 4. CUSTOMER REVIEWS (REAL DATA ONLY) --- */}
-            {reviewsList.length > 0 && (
-              <section id="reviews" className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center">
-                      <Star className="w-5 h-5" />
-                    </div>
-                    <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">Customer Reviews ({reviewsList.length})</h2>
+            {/* --- 4. CUSTOMER REVIEWS --- */}
+            <section id="reviews" className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center">
+                    <Star className="w-5 h-5 fill-[#ff6b00]" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">Customer Reviews</h2>
+                    <p className="text-xs text-slate-500 font-medium">Ratings and feedback from verified project clients</p>
                   </div>
                 </div>
+                {avgRating && (
+                  <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full text-xs font-bold text-amber-900">
+                    <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                    <span>{avgRating} ({reviewsList.length} Reviews)</span>
+                  </div>
+                )}
+              </div>
 
+              {reviewsList.length > 0 ? (
                 <div className="space-y-4">
                   {reviewsList.map((rev: any, idx: number) => (
                     <div
@@ -636,8 +833,26 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                     </div>
                   ))}
                 </div>
-              </section>
-            )}
+              ) : (
+                <div className="text-center py-8 px-4 bg-slate-50/60 rounded-xl border border-slate-100 space-y-3">
+                  <div className="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center mx-auto text-amber-500">
+                    <Star className="w-6 h-6 fill-amber-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-800">No Reviews Yet</h4>
+                    <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
+                      Be the first to collaborate with {displayName} and share your experience with the community.
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => handleInquiryAction()}
+                    className="bg-[#ff6b00] hover:bg-[#e05e00] text-white text-xs font-bold h-9 px-5 rounded-lg shadow-xs border-none cursor-pointer"
+                  >
+                    Send Direct Inquiry
+                  </Button>
+                </div>
+              )}
+            </section>
 
             {/* Design Packages (If available in DB) */}
             {architect.packages && architect.packages.length > 0 && (
@@ -795,30 +1010,40 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
             </div>
 
             {/* --- 4. SOCIAL MEDIA CARD --- */}
-            {architect.socialLinks && Object.values(architect.socialLinks).some(Boolean) && (
+            {(socialLinks.instagram || socialLinks.youtube || socialLinks.linkedin || socialLinks.facebook || socialLinks.whatsapp || websiteUrl) && (
               <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
                 <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-[#ff6b00]" /> Social Media
+                  <Users className="w-4 h-4 text-[#ff6b00]" /> Social Media & Online Presence
                 </h3>
-                <div className="flex items-center gap-2.5">
-                  {architect.socialLinks.instagram && (
-                    <a href={architect.socialLinks.instagram} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center hover:scale-105 transition-transform">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  {socialLinks.instagram && (
+                    <a href={socialLinks.instagram} target="_blank" rel="noreferrer" title="Instagram" className="w-9 h-9 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center hover:scale-105 transition-transform">
                       <Instagram className="w-4 h-4" />
                     </a>
                   )}
-                  {architect.socialLinks.youtube && (
-                    <a href={architect.socialLinks.youtube} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:scale-105 transition-transform">
-                      <Youtube className="w-4 h-4" />
+                  {socialLinks.facebook && (
+                    <a href={socialLinks.facebook} target="_blank" rel="noreferrer" title="Facebook" className="w-9 h-9 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center hover:scale-105 transition-transform">
+                      <Facebook className="w-4 h-4" />
                     </a>
                   )}
-                  {architect.socialLinks.linkedin && (
-                    <a href={architect.socialLinks.linkedin} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:scale-105 transition-transform">
+                  {socialLinks.linkedin && (
+                    <a href={socialLinks.linkedin} target="_blank" rel="noreferrer" title="LinkedIn" className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:scale-105 transition-transform">
                       <Linkedin className="w-4 h-4" />
                     </a>
                   )}
-                  {architect.socialLinks.facebook && (
-                    <a href={architect.socialLinks.facebook} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center hover:scale-105 transition-transform">
-                      <Facebook className="w-4 h-4" />
+                  {socialLinks.youtube && (
+                    <a href={socialLinks.youtube} target="_blank" rel="noreferrer" title="YouTube" className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:scale-105 transition-transform">
+                      <Youtube className="w-4 h-4" />
+                    </a>
+                  )}
+                  {socialLinks.whatsapp && (
+                    <a href={socialLinks.whatsapp} target="_blank" rel="noreferrer" title="WhatsApp" className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center hover:scale-105 transition-transform">
+                      <MessageCircle className="w-4 h-4" />
+                    </a>
+                  )}
+                  {websiteUrl && (
+                    <a href={websiteUrl.startsWith("http") ? websiteUrl : `https://${websiteUrl}`} target="_blank" rel="noreferrer" title="Website" className="w-9 h-9 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center hover:scale-105 transition-transform">
+                      <Globe className="w-4 h-4" />
                     </a>
                   )}
                 </div>
@@ -966,6 +1191,54 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
               {submitting ? <Loader2 className="animate-spin w-4 h-4" /> : <>Send Inquiry <Send className="w-4 h-4" /></>}
             </Button>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* --- UPGRADE TO PREMIUM MODAL --- */}
+      <Dialog open={isUpgradeModalOpen} onOpenChange={setIsUpgradeModalOpen}>
+        <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-2xl border-none shadow-2xl">
+          <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 p-6 text-white relative">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-extrabold tracking-tight flex items-center gap-2">
+                <Sparkles className="w-5 h-5" /> Activate Premium Account
+              </DialogTitle>
+            </DialogHeader>
+            <p className="text-orange-100 font-medium mt-1 text-xs">
+              Activate your profile, unlock client leads, and get verified on HousePlanFiles.
+            </p>
+            <div className="absolute top-5 right-5 cursor-pointer" onClick={() => setIsUpgradeModalOpen(false)}>
+              <X className="w-5 h-5 text-white/80 hover:text-white transition-colors" />
+            </div>
+          </div>
+
+          <div className="p-6 space-y-5 bg-white">
+            <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 space-y-2.5">
+              <div className="flex justify-between items-center border-b border-orange-200/60 pb-2">
+                <span className="text-xs font-bold text-slate-700">Listing Plan</span>
+                <span className="text-xs font-extrabold text-[#ff6b00]">1-Year City Listing</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-slate-700">Total Investment</span>
+                <span className="text-base font-extrabold text-slate-900">₹999 + 18% GST = ₹1,179</span>
+              </div>
+            </div>
+
+            <div className="space-y-2 text-xs text-slate-700">
+              <p className="font-bold text-slate-900 text-xs mb-1">What You Get With Premium:</p>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> Verified Golden Profile Badge</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> Direct WhatsApp & Call Buttons for Clients</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> Top Listing in City Search Results</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> Direct Customer Inquiry Notifications</div>
+            </div>
+
+            <Button
+              onClick={handlePayToUpgrade}
+              disabled={isPaying}
+              className="w-full h-12 rounded-xl bg-[#ff6b00] hover:bg-[#e05e00] text-white text-sm font-extrabold shadow-lg flex items-center justify-center gap-2 border-none"
+            >
+              {isPaying ? <Loader2 className="animate-spin w-4 h-4" /> : <><Sparkles className="w-4 h-4" /> Pay with Razorpay & Activate</>}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
