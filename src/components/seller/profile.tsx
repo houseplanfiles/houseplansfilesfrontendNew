@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { Loader2, Save, Eye, EyeOff } from "lucide-react";
+import { Loader2, Save, Eye, EyeOff, Zap, Sparkles, CheckCircle2 } from "lucide-react";
 import { RootState, AppDispatch } from "@/lib/store";
 import {
   updateProfile,
   resetActionStatus,
+  fetchCurrentUser,
 } from "@/lib/features/users/userSlice";
 import axios from "axios";
 import { generateInvoicePDF } from "@/lib/invoiceGenerator";
@@ -60,6 +61,101 @@ const SellerProfilePage = () => {
 
   const isLoading = actionStatus === "loading";
   const [downloadingInvoice, setDownloadingInvoice] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+
+  const isPaid = userInfo?.paymentStatus === "Paid" || userInfo?.contractorType === "Premium" || userInfo?.isApproved === true;
+
+  const handlePayToUpgrade = async () => {
+    if (!userInfo) return;
+    setIsPaying(true);
+    try {
+      if (!(window as any).Razorpay) {
+        await new Promise((resolve) => {
+          const script = document.createElement("script");
+          script.src = "https://checkout.razorpay.com/v1/checkout.js";
+          script.onload = () => resolve(true);
+          script.onerror = () => resolve(false);
+          document.body.appendChild(script);
+        });
+      }
+
+      const planName = userInfo.selectedPlan || "Material Seller Listing Plan (Premium - 1 Year)";
+      const planPrice = 999;
+      const taxPrice = Math.round(planPrice * 0.18 * 100) / 100;
+      const totalPrice = planPrice + taxPrice;
+
+      const orderData = {
+        userId: userInfo._id,
+        orderItems: [{ name: planName, price: planPrice }],
+        shippingAddress: {
+          name: userInfo.name || userInfo.businessName || "",
+          email: userInfo.email || "",
+          phone: userInfo.phone || "",
+          location: userInfo.city || "",
+        },
+        paymentMethod: "Razorpay",
+        itemsPrice: planPrice,
+        taxPrice: taxPrice,
+        shippingPrice: 0,
+        totalPrice: totalPrice,
+        orderType: "subscription",
+      };
+
+      const { data: createdOrder } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders`,
+        orderData,
+        { headers: { Authorization: `Bearer ${userInfo.token}` } }
+      );
+
+      const { data: razorpayOrderData } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/${createdOrder._id}/create-razorpay-order`,
+        {},
+        { headers: { Authorization: `Bearer ${userInfo.token}` } }
+      );
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: razorpayOrderData.amount,
+        currency: razorpayOrderData.currency,
+        name: "Houseplanfiles",
+        order_id: razorpayOrderData.orderId,
+        handler: async (response: any) => {
+          try {
+            await axios.post(
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/${createdOrder._id}/verify-payment`,
+              response,
+              { headers: { Authorization: `Bearer ${userInfo.token}` } }
+            );
+            toast.success("Payment successful! Your account has been upgraded to Premium!");
+            const updatedUser = {
+              ...userInfo,
+              paymentStatus: "Paid",
+              contractorType: "Premium",
+              isApproved: true,
+              status: "Approved",
+            };
+            localStorage.setItem("userInfo", JSON.stringify(updatedUser));
+            dispatch(fetchCurrentUser());
+          } catch (err) {
+            toast.error("Payment verification failed. Please contact support.");
+          }
+        },
+        prefill: {
+          name: userInfo.name || userInfo.businessName || "",
+          email: userInfo.email || "",
+          contact: userInfo.phone || "",
+        },
+        theme: { color: "#ea580c" },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to initiate payment gateway.");
+    } finally {
+      setIsPaying(false);
+    }
+  };
 
   const handleDownloadInvoice = async () => {
     if (!userInfo || !userInfo.token) {
@@ -222,6 +318,33 @@ const SellerProfilePage = () => {
   return (
     <div className="w-full p-4 md:p-6 space-y-8">
       <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
+
+      {!isPaid && (
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-2xl p-5 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="bg-white/20 text-white text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border border-white/30 tracking-wider">
+                ⚡ Demo Account
+              </span>
+              <span className="text-xs text-amber-100 font-semibold">Payment Incomplete</span>
+            </div>
+            <h3 className="text-base sm:text-lg font-extrabold leading-snug">
+              Your seller account is currently in Demo Mode.
+            </h3>
+            <p className="text-xs text-orange-100 max-w-xl">
+              Complete your payment of ₹999 + GST to activate your store, unlock verified status, and receive buyer inquiries directly!
+            </p>
+          </div>
+          <Button
+            type="button"
+            onClick={handlePayToUpgrade}
+            disabled={isPaying}
+            className="shrink-0 bg-white hover:bg-slate-100 text-[#ea580c] hover:text-[#c2410c] font-black px-6 h-11 rounded-xl shadow-md border-none cursor-pointer flex items-center gap-2"
+          >
+            {isPaying ? <Loader2 className="animate-spin w-4 h-4 text-orange-600" /> : <><Sparkles className="w-4 h-4 text-orange-600" /> Pay & Upgrade to Premium</>}
+          </Button>
+        </div>
+      )}
 
       {/* --- Profile Information Card --- */}
       <Card>
