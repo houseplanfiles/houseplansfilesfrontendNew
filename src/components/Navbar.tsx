@@ -96,8 +96,40 @@ const Navbar = () => {
       ],
     },
     { name: "Architects & Engineers", path: "/architects" },
-    { name: "Contractors", path: "/city-partners" },
-    { name: "Material Marketplace", path: "/building-material-marketplace" },
+    {
+      name: "Contractors",
+      path: "/city-partners",
+      submenu: [
+        { name: "All Contractors", path: "/city-partners" },
+        { name: "Building Contractor", path: "/city-partners?profession=Building" },
+        { name: "Interior Contractor", path: "/city-partners?profession=Interior" },
+        { name: "Electrical Contractor", path: "/city-partners?profession=Electrical" },
+        { name: "Plumbing Contractor", path: "/city-partners?profession=Plumbing" },
+        { name: "Tiles & Marble", path: "/city-partners?profession=Tiles+%26+Marble" },
+        { name: "Painting Contractor", path: "/city-partners?profession=Painting" },
+        { name: "Other Services", path: "/city-partners?profession=Other+Services" },
+      ],
+    },
+    {
+      name: "Material Marketplace",
+      path: "/building-material-marketplace",
+      submenu: [
+        { name: "All Categories", path: "/building-material-marketplace" },
+        { name: "Building Material", path: "/building-material-marketplace?category=Building+Material" },
+        { name: "Cement & Concrete", path: "/building-material-marketplace?category=Cement+%26+Concrete" },
+        { name: "Steel & Iron", path: "/building-material-marketplace?category=Steel+%26+Iron" },
+        { name: "Bricks & Blocks", path: "/building-material-marketplace?category=Bricks+%26+Blocks" },
+        { name: "Tiles & Flooring", path: "/building-material-marketplace?category=Tiles+%26+Flooring" },
+        { name: "Electrical Material", path: "/building-material-marketplace?category=Electrical+Material" },
+        { name: "Plumbing Material", path: "/building-material-marketplace?category=Plumbing+Material" },
+        { name: "Paint & Coatings", path: "/building-material-marketplace?category=Paint+%26+Coatings" },
+        { name: "Sanitary & Bath", path: "/building-material-marketplace?category=Sanitary+%26+Bath" },
+        { name: "Modular Kitchen", path: "/building-material-marketplace?category=Modular+Kitchen" },
+        { name: "Doors & Frames", path: "/building-material-marketplace?category=Doors+%26+Frames" },
+        { name: "Glass & Windows", path: "/building-material-marketplace?category=Glass+%26+Windows" },
+        { name: "Home Decor & Furniture", path: "/building-material-marketplace?category=Home+Decor" },
+      ],
+    },
     { name: "Tutorials", path: "/tutorials" },
   ];
 
@@ -160,30 +192,44 @@ const Navbar = () => {
                     onMouseEnter={() => setActiveDropdown(link.name)}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link
-                      href={link.path}
-                      className={`text-[15px] font-medium flex items-center gap-1 relative transition-colors duration-300 whitespace-nowrap py-2 ${isActive(link.path) || link.submenu.some(sub => isActive(sub.path))
-                        ? "text-orange-600"
-                        : "text-gray-700 hover:text-orange-600"
-                        }`}
-                    >
-                      {link.name}
-                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-orange-600' :
-                        (isActive(link.path) || link.submenu.some(sub => isActive(sub.path)) ? 'text-orange-600' : 'text-gray-600 group-hover:text-orange-600')
-                        }`} />
-                      <span
-                        className={`absolute bottom-0 left-0 w-full h-0.5 bg-orange-500 transition-transform duration-300 origin-center ${isActive(link.path) || link.submenu.some(sub => isActive(sub.path)) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                    <div className="flex items-center">
+                      <Link
+                        href={link.path}
+                        className={`text-[15px] font-medium flex items-center gap-1 relative transition-colors duration-300 whitespace-nowrap py-2 ${isActive(link.path) || link.submenu.some(sub => isActive(sub.path))
+                          ? "text-orange-600"
+                          : "text-gray-700 hover:text-orange-600"
                           }`}
-                      />
-                    </Link>
+                      >
+                        {link.name}
+                        <span
+                          className={`absolute bottom-0 left-0 w-full h-0.5 bg-orange-500 transition-transform duration-300 origin-center ${isActive(link.path) || link.submenu.some(sub => isActive(sub.path)) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                            }`}
+                        />
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setActiveDropdown(activeDropdown === link.name ? null : link.name);
+                        }}
+                        className="p-1 text-gray-500 hover:text-orange-600 focus:outline-none transition-colors"
+                        aria-label={`Toggle ${link.name} categories`}
+                      >
+                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-orange-600' :
+                          (isActive(link.path) || link.submenu.some(sub => isActive(sub.path)) ? 'text-orange-600' : 'text-gray-600 group-hover:text-orange-600')
+                          }`} />
+                      </button>
+                    </div>
                     {activeDropdown === link.name && (
-                      <div className="absolute left-0 top-[calc(100%-10px)] pt-2 w-56 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                        <div className="bg-white border border-gray-100 rounded-xl shadow-xl py-2">
+                      <div className="absolute left-0 top-[calc(100%-8px)] pt-2 w-64 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="bg-white border border-gray-100 rounded-2xl shadow-2xl py-2 max-h-[420px] overflow-y-auto scrollbar-thin">
                           {link.submenu.map((sub) => (
                             <Link
                               key={sub.name}
                               href={sub.path}
-                              className={`block px-4 py-3 text-sm font-medium transition-colors ${isActive(sub.path) ? "bg-orange-50 text-orange-600" : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
+                              onClick={() => setActiveDropdown(null)}
+                              className={`block px-4 py-2.5 text-xs sm:text-sm font-medium transition-colors ${isActive(sub.path) ? "bg-orange-50 text-orange-600 font-bold" : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
                                 }`}
                             >
                               {sub.name}

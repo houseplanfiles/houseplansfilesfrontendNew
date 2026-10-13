@@ -28,6 +28,7 @@ import { fetchProducts } from "@/lib/features/products/productSlice";
 import { fetchMyOrders } from "@/lib/features/orders/orderSlice";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ReadymadeHero from "@/components/ReadymadeHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -1158,6 +1159,48 @@ const Products = ({
   const isError = listStatus === "failed";
   const errorMessage = String(error);
 
+  const handleHeroSearch = (term: string, cat: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      searchTerm: term,
+      category: cat || "all",
+      plotSize: "all",
+    }));
+    setCurrentPage(1);
+
+    const url = new URL(window.location.href);
+    if (term) {
+      url.searchParams.set("search", term);
+    } else {
+      url.searchParams.delete("search");
+    }
+    if (cat && cat !== "all") {
+      url.searchParams.set("category", cat);
+    } else {
+      url.searchParams.delete("category");
+    }
+    url.searchParams.delete("plotSize");
+    url.searchParams.delete("page");
+    router.push(url.pathname + (url.search ? url.search : ""), { scroll: false });
+  };
+
+  const handleHeroReset = () => {
+    setFilters((prev) => ({
+      ...prev,
+      searchTerm: "",
+      category: "all",
+      plotSize: "all",
+      plotArea: "all",
+      direction: "all",
+      floors: "all",
+      propertyType: "all",
+      budget: [0, 50000],
+      sortBy: "newest",
+    }));
+    setCurrentPage(1);
+    router.push("/house-plans", { scroll: false });
+  };
+
   const pageTitle = countryQuery
     ? `${countryQuery} House Plans`
     : "House Plans & Designs";
@@ -1168,11 +1211,21 @@ const Products = ({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* --- 3. HELMET UPDATED WITH DYNAMIC DATA --- */}
-      
 
       <Navbar />
 
-      {headerSlot && headerSlot}
+      {headerSlot ? (
+        headerSlot
+      ) : !countryQuery ? (
+        <ReadymadeHero
+          selectedCategory={filters.category}
+          searchTerm={filters.searchTerm}
+          onSearch={handleHeroSearch}
+          onReset={handleHeroReset}
+          categories={staticCategories}
+          products={products}
+        />
+      ) : null}
 
       <AnimatePresence>
         {playingVideoUrl && (
@@ -1180,24 +1233,32 @@ const Products = ({
         )}
       </AnimatePresence>
 
-      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-4 lg:mb-8">
-          <h2 className="text-3xl font-bold">{pageTitle}</h2>
-          <p className="text-xl text-muted-foreground hidden lg:block">
-            {pageDescription}
-          </p>
-          <div className="lg:hidden mt-2 text-gray-500">
-            Showing {products.length} of {count} results
+      <div id="plans-results-section" className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-4 lg:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+              {filters.searchTerm
+                ? `Results for "${filters.searchTerm}"`
+                : filters.category && filters.category !== "all"
+                ? `${filters.category}`
+                : pageTitle}
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1">
+              {pageDescription} • Showing {products.length} of {count} plans
+            </p>
           </div>
 
-          {(countryQuery || categoryQuery || searchQuery) && (
-            <div className="mt-4 hidden lg:block">
-              <Link href="/house-plans">
-                <Button variant="destructive" size="sm">
-                  <X className="w-4 h-4 mr-2" />
-                  Clear Filters
-                </Button>
-              </Link>
+          {(countryQuery || (filters.category && filters.category !== "all") || filters.searchTerm || filters.plotSize !== "all") && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleHeroReset}
+                className="text-orange-600 border-orange-200 hover:bg-orange-50 font-semibold cursor-pointer"
+              >
+                <X className="w-4 h-4 mr-1.5" />
+                Clear All Filters
+              </Button>
             </div>
           )}
         </div>

@@ -24,7 +24,7 @@ import {
   MapPin, Phone, X, Send, Loader2, Star, Briefcase, Search,
   CheckCircle2, Filter as FilterIcon, SlidersHorizontal, UserPlus,
   ChevronLeft, ChevronRight, MessageCircle, BookOpen, Zap,
-  PenTool, Ruler, Building, HardHat, Box, Compass, Home
+  PenTool, Ruler, Building, HardHat, Box, Compass, Home, Paintbrush
 } from "lucide-react";
 import { getArchitectProfileUrl } from "@/utils/profileUrls";
 import HomeServicesCategoriesSection from "@/components/HomeServicesCategoriesSection";
@@ -218,7 +218,15 @@ const ArchitectsPage: FC = () => {
       }
 
       // Profession filter
-      const matchesProfession = professionFilter === "All" || c.profession?.toLowerCase() === professionFilter.toLowerCase();
+      const normProfFilter = professionFilter.toLowerCase();
+      const normUserProf = (c.profession || "").toLowerCase();
+      const matchesProfession =
+        professionFilter === "All" ||
+        normUserProf === normProfFilter ||
+        (normProfFilter === "bim consultant" && normUserProf === "mep consultant") ||
+        (normProfFilter === "interior designer" && (normUserProf === "interior designer" || normUserProf === "interior designers" || normUserProf.includes("interior design"))) ||
+        (normProfFilter === "civil design engineer" && (normUserProf.includes("civil") || normUserProf === "civil engineers")) ||
+        (normProfFilter === "structure engineer" && (normUserProf.includes("structural") || normUserProf.includes("structure")));
       if (!matchesProfession) return false;
 
       return true;
@@ -241,12 +249,13 @@ const ArchitectsPage: FC = () => {
     "Uttarakhand", "West Bengal", "Delhi", "Jammu and Kashmir", "Ladakh", "Chandigarh"
   ];
 
-  const categories = ["All", "Architect", "Civil Design Engineer", "Structure Engineer", "Interior Designer", "Site Engineer", "BIM Consultant", "MEP Consultant", "Vastu Consultant"];
+  const categories = ["All", "Architect", "Civil Design Engineer", "Structure Engineer", "Interior Designer", "Site Engineer", "BIM Consultant", "Vastu Consultant"];
 
   const CATEGORY_CARDS = [
     { id: "Architect", title: "Architect", desc: "Get creative and functional design solutions from expert architects.", img: "/cat_home_designs.jpg", icon: PenTool },
     { id: "Civil Design Engineer", title: "Civil Design Engineer", desc: "Get accurate structural and design plans for your project.", img: "/b14.webp", icon: Home },
     { id: "Structure Engineer", title: "Structure Engineer", desc: "Ensure structural safety and stability with professional expertise.", img: "/contractor2.webp", icon: Building },
+    { id: "Interior Designer", title: "Interior Designer", desc: "Transform your spaces with modern, functional and aesthetic interiors.", img: "/b13.webp", icon: Paintbrush },
     { id: "Site Engineer", title: "Site Engineer", desc: "Get on-site technical support for smooth project execution.", img: "/architect_hero.webp", icon: HardHat },
     { id: "BIM Consultant", title: "BIM Consultant", desc: "Get advanced 3D modeling and BIM solutions for smarter design.", img: "/b11.jpg", icon: Box },
     { id: "Vastu Consultant", title: "Vastu Consultant", desc: "Get positive energy and balanced design as per Vastu principles.", img: "/marketplace.webp", icon: Compass },
@@ -310,7 +319,7 @@ const ArchitectsPage: FC = () => {
             <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4 px-2 leading-tight">
               Hire Your Top City Architects, Interior Designers & Professionals
             </h1>
-            <p className="text-sm sm:text-lg text-gray-300 max-w-2xl mx-auto mb-8 font-medium px-4">Architect, Civil Design Engineer, Structure Engineer, Interior Designer, Site Engineer, MEP Consultant, Vastu Consultant</p>
+            <p className="text-sm sm:text-lg text-gray-300 max-w-2xl mx-auto mb-8 font-medium px-4">Architect, Civil Design Engineer, Structure Engineer, Interior Designer, Site Engineer, BIM Consultant, Vastu Consultant</p>
             <div className="flex justify-center px-4">
               <Button onClick={() => router.push("/register?role=professional")} className="w-full max-w-[280px] sm:max-w-none sm:w-auto bg-orange-600 text-white hover:bg-orange-700 font-bold py-5 sm:py-6 px-6 sm:px-8 rounded-full shadow-lg transition-all transform hover:-translate-y-1 text-sm sm:text-lg flex items-center justify-center">
                 <UserPlus className="w-5 h-5 mr-2" /> Register as professional
@@ -428,7 +437,7 @@ const ArchitectsPage: FC = () => {
 
         {/* Grid */}
         {professionFilter === "All" && !cityFilter && (stateFilter === "All States" || !stateFilter) && !pincodeFilter && !isPanIndiaFilter ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-5 mt-8 animate-fade-in">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3.5 sm:gap-4 mt-8 animate-fade-in">
             {CATEGORY_CARDS.map(cat => (
               <div 
                 key={cat.id} 

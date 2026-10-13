@@ -410,7 +410,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
       <Navbar />
 
       {/* Hero / Header Section */}
-      <div className="relative bg-gray-900 pt-6 sm:pt-10 pb-16 sm:pb-20 px-4">
+      <div className="relative bg-gray-900 pt-3 sm:pt-10 pb-6 sm:pb-20 px-3 sm:px-4">
         {/* Cover Image Background */}
         <div className="absolute inset-0 z-0 opacity-40">
           <Image 
@@ -425,13 +425,13 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
         <div className="max-w-7xl mx-auto relative z-10">
           <button 
             onClick={() => router.push("/building-material-marketplace")}
-            className="text-gray-400 hover:text-white flex items-center gap-2 mb-8 transition-colors"
+            className="text-gray-400 hover:text-white flex items-center gap-1.5 text-xs sm:text-base mb-3 sm:mb-8 transition-colors"
           >
-            <ArrowLeft size={20} /> Back to Marketplace
+            <ArrowLeft size={16} className="sm:w-5 sm:h-5" /> Back to Marketplace
           </button>
           
-          <div className="flex flex-col md:flex-row gap-4 sm:gap-6 items-center md:items-start">
-            <div className="relative w-20 h-20 sm:w-32 sm:h-32 bg-white rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 border-4 border-white/20">
+          <div className="flex flex-col md:flex-row gap-3 sm:gap-6 items-center md:items-start">
+            <div className="relative w-16 h-16 sm:w-32 sm:h-32 bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 border-2 sm:border-4 border-white/20">
               {sellerInfo?.photoUrl ? (
                 <Image src={sellerInfo.photoUrl} alt={sellerInfo.businessName} fill priority sizes="(max-width: 640px) 96px, 128px" className="object-cover" />
               ) : (
@@ -441,19 +441,19 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
               )}
             </div>
             <div className="flex-grow text-center md:text-left">
-              <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-white mb-3 leading-tight">
+              <h1 className="text-xl sm:text-3xl md:text-5xl font-black text-white mb-2 sm:mb-3 leading-tight">
                 {sellerInfo?.businessName || "Verified Seller"}
               </h1>
-              <div className="flex flex-wrap justify-center md:justify-start items-center gap-2 sm:gap-3 text-gray-200 mb-4">
-                <span className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm border border-white/10 text-center text-balance max-w-full">
-                  <MapPin size={16} className="text-orange-400 flex-shrink-0" /> 
+              <div className="flex flex-wrap justify-center md:justify-start items-center gap-1.5 sm:gap-3 text-gray-200 mb-3 sm:mb-4">
+                <span className="flex items-center gap-1 sm:gap-1.5 bg-black/40 backdrop-blur-sm px-2.5 py-1 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-sm border border-white/10 text-center text-balance max-w-full">
+                  <MapPin size={14} className="text-orange-400 flex-shrink-0 sm:w-4 sm:h-4" /> 
                   {Array.from(new Set([sellerInfo?.businessAddress, sellerInfo?.address, sellerInfo?.city, sellerInfo?.pincode].filter(Boolean))).join(", ") || "India"}
                 </span>
-                <span className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm border border-white/10">
-                  <Package size={16} className="text-orange-400" /> {products.length} Products
+                <span className="flex items-center gap-1 sm:gap-1.5 bg-black/40 backdrop-blur-sm px-2.5 py-1 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-sm border border-white/10">
+                  <Package size={14} className="text-orange-400 sm:w-4 sm:h-4" /> {products.length} Products
                 </span>
                 {sellerInfo?.businessType && (
-                  <span className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold text-orange-400 border border-white/10">
+                  <span className="flex items-center gap-1 sm:gap-1.5 bg-black/40 backdrop-blur-sm px-2.5 py-1 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-sm font-bold text-orange-400 border border-white/10">
                     {sellerInfo.businessType === "Manufacturer" ? "🏭 Manufacturer" :
                      sellerInfo.businessType === "Supplier" ? "🚛 Supplier" :
                      sellerInfo.businessType === "Both" ? "🏭 Manufacturer & Supplier" :
@@ -462,7 +462,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
                   </span>
                 )}
                 {/* Rating Display */}
-                <div className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm border border-white/10">
+                <div className="flex items-center gap-1 bg-black/40 backdrop-blur-sm px-2.5 py-1 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-sm border border-white/10">
                   <div className="flex text-yellow-400">
                     {"★".repeat(Math.round(sellerInfo?.rating || 4.5))}
                     {"☆".repeat(5 - Math.round(sellerInfo?.rating || 4.5))}
@@ -479,7 +479,11 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
                     title={`Check out ${sellerInfo?.businessName}'s store on Houseplans Marketplace!`} 
                     phone={sellerInfo?.phone} 
                     heading=""
-                    socialLinks={sellerInfo?.socialLinks}
+                    socialLinks={{
+                      ...(sellerInfo?.socialLinks || {}),
+                      website: sellerInfo?.socialLinks?.website || sellerInfo?.website || ""
+                    }}
+                    showCallButton={false}
                     className="mt-0"
                   />
                 </div>

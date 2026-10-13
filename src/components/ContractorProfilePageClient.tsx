@@ -38,7 +38,8 @@ import {
   Instagram,
   Linkedin,
   Youtube,
-  Twitter
+  Twitter,
+  Globe
 } from "lucide-react";
 import { toast } from "sonner";
 import { trackAnalytics } from "@/lib/analytics";
@@ -206,6 +207,11 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
               {/* Social Media Icons */}
               {contractor.socialLinks && Object.values(contractor.socialLinks).some(val => val) && (
                 <div className="flex justify-center gap-4 mt-4 mb-2">
+                  {contractor.socialLinks.website && (
+                    <a href={contractor.socialLinks.website.startsWith("http") ? contractor.socialLinks.website : `https://${contractor.socialLinks.website}`} target="_blank" rel="noopener noreferrer" title="Official Website" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
+                      <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </a>
+                  )}
                   {contractor.socialLinks.facebook && (
                     <a href={contractor.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-orange-600 transition-colors">
                       <Facebook className="w-4 h-4 sm:w-5 sm:h-5 text-white" />

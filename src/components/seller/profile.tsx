@@ -47,6 +47,7 @@ const SellerProfilePage = () => {
     gstNumber: "",
     businessType: "",
     businessAddress: "",
+    website: "",
   });
   const [passwordData, setPasswordData] = useState({
     newPassword: "",
@@ -125,6 +126,7 @@ const SellerProfilePage = () => {
         gstNumber: userInfo.gstNumber || "",
         businessType: userInfo.businessType || "",
         businessAddress: userInfo.businessAddress || "",
+        website: userInfo.socialLinks?.website || (userInfo as any).website || "",
       });
       setPhotoPreview(userInfo.photoUrl || null);
     }
@@ -176,6 +178,13 @@ const SellerProfilePage = () => {
     Object.entries(formData).forEach(([key, value]) => {
       dataToSubmit.append(key, value);
     });
+
+    const socialLinks = {
+      ...(userInfo.socialLinks || {}),
+      website: formData.website || "",
+    };
+    dataToSubmit.append("socialLinks", JSON.stringify(socialLinks));
+
     if (photo) {
       dataToSubmit.append("photo", photo);
     }
@@ -345,14 +354,20 @@ const SellerProfilePage = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="md:col-span-2">
-                <Label htmlFor="businessAddress">Business Address</Label>
-                <Textarea
-                  id="businessAddress"
-                  value={formData.businessAddress}
+              <div className="md:col-span-2 bg-orange-50/50 p-4 rounded-xl border border-orange-200">
+                <Label htmlFor="website" className="font-bold text-orange-950 flex items-center gap-1.5">
+                  Official Website URL (Backlink)
+                </Label>
+                <Input
+                  id="website"
+                  value={formData.website}
                   onChange={handleChange}
-                  placeholder="Enter detailed business address"
+                  placeholder="https://yourwebsite.com"
+                  className="mt-1 bg-white border-orange-300 focus:border-orange-500"
                 />
+                <p className="text-[11px] text-gray-500 mt-1">
+                  Enter your company website. This link will be displayed on your store profile to provide high-quality backlink and organic traffic.
+                </p>
               </div>
               <div className="md:col-span-2">
                 <Label htmlFor="businessCertification">Business License / Certification (Optional)</Label>
