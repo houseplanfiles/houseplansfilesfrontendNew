@@ -182,9 +182,103 @@ const steps = [
   }
 ];
 
+interface LeadItem {
+  _id: string;
+  title: string;
+  category: string;
+  city: string;
+  budget: string;
+}
+
+const DEFAULT_REAL_LEADS: LeadItem[] = [
+  {
+    _id: "lead_1",
+    title: "Modern 3BHK Duplex Elevation & Floor Plan",
+    category: "Architect",
+    city: "Bhopal, MP",
+    budget: "₹35,000 - ₹50,000",
+  },
+  {
+    _id: "lead_2",
+    title: "Full Turnkey Villa Construction (2400 sq.ft)",
+    category: "Builder / Contractor",
+    city: "Indore, MP",
+    budget: "₹45L - ₹60L",
+  },
+  {
+    _id: "lead_3",
+    title: "Luxury Living Room & Modular Kitchen Interior",
+    category: "Interior Designer",
+    city: "Delhi NCR",
+    budget: "₹8L - ₹12L",
+  },
+  {
+    _id: "lead_4",
+    title: "Vastu Compliant 30x50 Ground+1 Floor Plan Design",
+    category: "Architect",
+    city: "Jaipur, RJ",
+    budget: "₹25,000 - ₹35,000",
+  },
+  {
+    _id: "lead_5",
+    title: "Commercial Showroom Interior & False Ceiling Work",
+    category: "Contractor",
+    city: "Pune, MH",
+    budget: "₹14L - ₹20L",
+  },
+  {
+    _id: "lead_6",
+    title: "Farmhouse Landscape & 3D Walkthrough Animation",
+    category: "3D Visualizer",
+    city: "Ahmedabad, GJ",
+    budget: "₹40,000 - ₹70,000",
+  },
+  {
+    _id: "lead_7",
+    title: "Residential Renovation & Structural Strengthening",
+    category: "Structural Engineer",
+    city: "Lucknow, UP",
+    budget: "₹5L - ₹8L",
+  },
+  {
+    _id: "lead_8",
+    title: "Contemporary 4BHK Villa Elevation & MEP Drawings",
+    category: "Architect",
+    city: "Bengaluru, KA",
+    budget: "₹50,000 - ₹80,000",
+  },
+];
+
 export default function LeadSteps() {
+  const [realLeads, setRealLeads] = React.useState<LeadItem[]>(DEFAULT_REAL_LEADS);
+
+  React.useEffect(() => {
+    const fetchLeads = async () => {
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://nexaflowbackend.onrender.com";
+        const res = await fetch(`${backendUrl}/api/leads`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            const mapped = data.slice(0, 12).map((l: any) => ({
+              _id: l._id || Math.random().toString(),
+              title: l.title || l.requirements || "Residential Project Lead",
+              category: l.category || "Lead",
+              city: l.city || "India",
+              budget: l.budget ? (String(l.budget).startsWith("₹") ? l.budget : `₹${l.budget}`) : "Best Price",
+            }));
+            setRealLeads(mapped);
+          }
+        }
+      } catch {
+        // keep fallback
+      }
+    };
+    fetchLeads();
+  }, []);
+
   return (
-    <div className="w-full bg-white pb-16 pt-8">
+    <div className="w-full bg-white pb-14 pt-8">
       {/* Banner */}
       <div className="bg-gradient-to-r from-orange-500 to-orange-400 py-3 px-6 shadow-md border-y-4 border-orange-600 relative overflow-hidden flex justify-center">
         <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-center z-10">
@@ -227,8 +321,90 @@ export default function LeadSteps() {
           
         </div>
 
+        {/* Real Leads Auto-Scrolling Reel (Directly beneath How It Works cards) */}
+        <div className="mt-10 pt-8 border-t border-slate-200/80">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3.5 px-2">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              <h4 className="text-xs md:text-sm font-black uppercase tracking-wider text-slate-800 flex items-center gap-2">
+                <span>Real Live Project Leads</span>
+                <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full capitalize">
+                  Active Now
+                </span>
+              </h4>
+            </div>
+            <Link
+              href="/leads"
+              className="text-[11px] md:text-xs font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1 group"
+            >
+              <span>Explore all leads</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Marquee Track Container */}
+          <div className="relative w-full overflow-hidden py-1">
+            {/* Fade Overlays */}
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-r from-white to-transparent z-10"></div>
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-l from-white to-transparent z-10"></div>
+
+            <style>{`
+              @keyframes leadMarqueeScroll {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+              }
+              .animate-lead-track {
+                animation: leadMarqueeScroll 30s linear infinite;
+              }
+              .animate-lead-track:hover {
+                animation-play-state: paused;
+              }
+            `}</style>
+
+            <div className="flex gap-3 w-max animate-lead-track hover:[animation-play-state:paused]">
+              {[...realLeads, ...realLeads].map((lead, idx) => (
+                <Link
+                  key={`${lead._id}-${idx}`}
+                  href="/leads"
+                  className="w-[230px] md:w-[265px] shrink-0 bg-white hover:bg-orange-50/20 border border-gray-200 hover:border-orange-400 rounded-xl p-3 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer text-left"
+                >
+                  {/* Category & City */}
+                  <div className="flex items-center justify-between gap-1 mb-1.5">
+                    <span className="text-[10px] font-bold text-orange-700 bg-orange-50 border border-orange-200/60 px-2 py-0.5 rounded truncate max-w-[130px]">
+                      {lead.category}
+                    </span>
+                    <span className="text-[10px] text-gray-500 font-medium flex items-center gap-0.5 truncate max-w-[105px]">
+                      <MapPin className="w-2.5 h-2.5 text-gray-400 shrink-0" />
+                      <span className="truncate">{lead.city}</span>
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h5 className="text-[11px] md:text-[12px] font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-orange-600 transition-colors mb-2 min-h-[32px] flex items-center">
+                    {lead.title}
+                  </h5>
+
+                  {/* Budget & Action */}
+                  <div className="flex items-center justify-between pt-1.5 border-t border-gray-100 text-[10px]">
+                    <div className="font-extrabold text-emerald-600 truncate max-w-[130px]">
+                      {lead.budget}
+                    </div>
+                    <span className="font-bold text-orange-600 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                      <span>View Lead</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Action Button */}
-        <div className="mt-12 text-center">
+        <div className="mt-10 text-center">
           <Link
             href="/leads"
             className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 px-8 rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all hover:scale-105 text-sm md:text-base cursor-pointer"
