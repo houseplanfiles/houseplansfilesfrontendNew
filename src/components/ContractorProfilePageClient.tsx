@@ -51,6 +51,7 @@ import {
   Zap
 } from "lucide-react";
 import { toast } from "sonner";
+import ActivatePremiumModal from "@/components/ActivatePremiumModal";
 
 interface ContractorProfilePageClientProps {
   initialContractor?: any;
@@ -1185,52 +1186,17 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
       </Dialog>
 
       {/* --- UPGRADE TO PREMIUM MODAL --- */}
-      <Dialog open={isUpgradeModalOpen} onOpenChange={setIsUpgradeModalOpen}>
-        <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-2xl border-none shadow-2xl">
-          <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 p-6 text-white relative">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-extrabold tracking-tight flex items-center gap-2">
-                <Sparkles className="w-5 h-5" /> Activate Premium Account
-              </DialogTitle>
-            </DialogHeader>
-            <p className="text-orange-100 font-medium mt-1 text-xs">
-              Activate your profile, unlock client leads, and get verified on HousePlanFiles.
-            </p>
-            <div className="absolute top-5 right-5 cursor-pointer" onClick={() => setIsUpgradeModalOpen(false)}>
-              <X className="w-5 h-5 text-white/80 hover:text-white transition-colors" />
-            </div>
-          </div>
-
-          <div className="p-6 space-y-5 bg-white">
-            <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 space-y-2.5">
-              <div className="flex justify-between items-center border-b border-orange-200/60 pb-2">
-                <span className="text-xs font-bold text-slate-700">Listing Plan</span>
-                <span className="text-xs font-extrabold text-[#ff6b00]">1-Year City Listing</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-slate-700">Total Investment</span>
-                <span className="text-base font-extrabold text-slate-900">₹999 + 18% GST = ₹1,179</span>
-              </div>
-            </div>
-
-            <div className="space-y-2 text-xs text-slate-700">
-              <p className="font-bold text-slate-900 text-xs mb-1">What You Get With Premium:</p>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> Verified Golden Profile Badge</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> Direct WhatsApp & Call Buttons for Clients</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> Top Listing in City Search Results</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> Direct Customer Inquiry Notifications</div>
-            </div>
-
-            <Button
-              onClick={handlePayToUpgrade}
-              disabled={isPaying}
-              className="w-full h-12 rounded-xl bg-[#ff6b00] hover:bg-[#e05e00] text-white text-sm font-extrabold shadow-lg flex items-center justify-center gap-2 border-none"
-            >
-              {isPaying ? <Loader2 className="animate-spin w-4 h-4" /> : <><Sparkles className="w-4 h-4" /> Pay with Razorpay & Activate</>}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <ActivatePremiumModal
+        isOpen={isUpgradeModalOpen}
+        onClose={() => setIsUpgradeModalOpen(false)}
+        user={contractor}
+        onSuccess={(updated) => {
+          setContractor((prev: any) => ({
+            ...prev,
+            ...updated,
+          }));
+        }}
+      />
 
       <div className="pb-16 sm:pb-20">
         <Footer />

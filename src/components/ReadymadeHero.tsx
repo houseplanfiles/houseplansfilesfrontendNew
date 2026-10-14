@@ -234,7 +234,7 @@ export default function ReadymadeHero({
 
         {/* Hero Subtitle */}
         <p className="text-xs sm:text-sm text-gray-200 mb-4 max-w-2xl font-medium drop-shadow-md leading-relaxed">
-          Plot size (e.g. 20x40, 30x40, 40x60) ya category ke mutabik naksha dhoondhein — AutoCAD &amp; PDF instant download.
+          Plot size (e.g. 20x40, 30x40, 40x60) ya category ke mutabik naksha dhoondhein — DWG &amp; PDF instant download.
         </p>
 
         {/* Hero Search Bar Container */}
@@ -406,7 +406,7 @@ export default function ReadymadeHero({
             <Compass className="w-3 h-3 text-orange-400" /> 100% Vastu
           </div>
           <div className="flex items-center gap-1 bg-black/25 backdrop-blur-sm border border-white/10 rounded-lg py-1 px-2.5">
-            <Layers className="w-3 h-3 text-orange-400" /> AutoCAD + PDF
+            <Layers className="w-3 h-3 text-orange-400" /> DWG &amp; PDF
           </div>
           <div className="flex items-center gap-1 bg-black/25 backdrop-blur-sm border border-white/10 rounded-lg py-1 px-2.5">
             <Sparkles className="w-3 h-3 text-orange-400" /> Customizable

@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import ActivatePremiumModal from "@/components/ActivatePremiumModal";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -62,6 +63,7 @@ const SellerProfilePage = () => {
   const isLoading = actionStatus === "loading";
   const [downloadingInvoice, setDownloadingInvoice] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   const isPaid = userInfo?.paymentStatus === "Paid" || userInfo?.contractorType === "Premium" || userInfo?.isApproved === true;
 
@@ -337,14 +339,23 @@ const SellerProfilePage = () => {
           </div>
           <Button
             type="button"
-            onClick={handlePayToUpgrade}
-            disabled={isPaying}
+            onClick={() => setIsUpgradeModalOpen(true)}
             className="shrink-0 bg-white hover:bg-slate-100 text-[#ea580c] hover:text-[#c2410c] font-black px-6 h-11 rounded-xl shadow-md border-none cursor-pointer flex items-center gap-2"
           >
-            {isPaying ? <Loader2 className="animate-spin w-4 h-4 text-orange-600" /> : <><Sparkles className="w-4 h-4 text-orange-600" /> Pay & Upgrade to Premium</>}
+            <Sparkles className="w-4 h-4 text-orange-600" /> Pay &amp; Upgrade to Premium
           </Button>
         </div>
       )}
+
+      {/* Upgrade to Premium Modal */}
+      <ActivatePremiumModal
+        isOpen={isUpgradeModalOpen}
+        onClose={() => setIsUpgradeModalOpen(false)}
+        user={userInfo}
+        onSuccess={() => {
+          dispatch(fetchCurrentUser() as any);
+        }}
+      />
 
       {/* --- Profile Information Card --- */}
       <Card>
