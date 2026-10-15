@@ -301,6 +301,9 @@ const PartnersPage: FC = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
             {paginatedContractors.map((contractor) => {
+              const isPaid = (contractor as any).paymentStatus === "Paid";
+              const isPremium = isPaid && contractor.contractorType === "Premium";
+              const isVerified = isPaid && contractor.contractorType === "Verified";
               const phoneStr = contractor.phone ? (contractor.phone || '').replace(/\D/g, '') : '';
               const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
               const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
@@ -309,8 +312,8 @@ const PartnersPage: FC = () => {
                   <div className="h-20 sm:h-28 bg-gray-100 relative">
                     <Image src={contractor.shopImageUrl ? getFileUrl(contractor.shopImageUrl) : "/contractor.jpeg"} className="object-cover" alt="Shop Image" fill sizes="(max-width: 768px) 50vw, 25vw" />
                     <div className="absolute top-2 right-2 flex flex-col gap-1">
-                      {contractor.contractorType === "Premium" && <Badge className="bg-orange-500 text-[10px]">Premium</Badge>}
-                      {contractor.contractorType === "Verified" && <Badge className="bg-blue-600 text-[10px]">Verified</Badge>}
+                      {isPremium && <Badge className="bg-orange-500 text-[10px]">Premium</Badge>}
+                      {isVerified && <Badge className="bg-blue-600 text-[10px]">Verified</Badge>}
                     </div>
                   </div>
                   <div className="px-2.5 sm:px-4 pb-3.5 sm:pb-5 flex flex-col flex-grow">
@@ -343,7 +346,7 @@ const PartnersPage: FC = () => {
                           View Profile
                         </Button>
                       </Link>
-                      {contractor.contractorType === "Premium" && (
+                      {isPremium && (
                         <>
                           <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                             <Button 
@@ -366,7 +369,7 @@ const PartnersPage: FC = () => {
                           </div>
                         </>
                       )}
-                      {contractor.contractorType === "Verified" && (
+                      {isVerified && (
                         <Button
                           onClick={() => { trackAnalytics('user', contractor._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
                           className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-8 sm:h-10 text-[11px] sm:text-xs font-semibold"
@@ -375,7 +378,7 @@ const PartnersPage: FC = () => {
                           <span className="truncate">WhatsApp Enquiry</span>
                         </Button>
                       )}
-                      {(!contractor.contractorType || contractor.contractorType === "Normal") && (
+                      {(!isPaid || !contractor.contractorType || contractor.contractorType === "Normal") && (
                         <Button onClick={() => handleContactClick(contractor)} className="w-full bg-gray-800 hover:bg-gray-900 h-8 sm:h-10 text-[11px] sm:text-xs text-white font-medium">
                           Enquiry Now
                         </Button>

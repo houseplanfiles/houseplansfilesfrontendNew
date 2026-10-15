@@ -471,9 +471,10 @@ const ArchitectsPage: FC = () => {
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
                   {paginatedArchitects.map((architect, index) => {
-                    const isPaid = (architect as any).paymentStatus === "Paid" || (architect.contractorType === "Premium" && (architect as any).paymentStatus !== "Unpaid");
+                    const isPaid = (architect as any).paymentStatus === "Paid";
                     const isPremium = isPaid && architect.contractorType === "Premium";
-                    const type = isPremium ? "Premium" : (architect.contractorType || "Normal");
+                    const isVerified = isPaid && architect.contractorType === "Verified";
+                    const type = isPremium ? "Premium" : isVerified ? "Verified" : (architect.contractorType || "Normal");
                     const phoneStr = architect.phone ? architect.phone.replace(/\D/g, '') : '';
                     const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
                     const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;

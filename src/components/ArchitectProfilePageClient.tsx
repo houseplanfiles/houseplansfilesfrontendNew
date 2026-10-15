@@ -73,8 +73,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
   const [error, setError] = useState<string | null>(null);
 
   const targetId = (id as string) || initialArchitect?._id;
-
-  const isPaid = architect?.paymentStatus === "Paid" || (architect?.contractorType === "Premium" && architect?.paymentStatus !== "Unpaid");
+  const isPaid = architect?.paymentStatus === "Paid";
 
   const handlePayToUpgrade = async () => {
     setIsPaying(true);
@@ -271,12 +270,20 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
   const callUrl = phoneClean ? `tel:${phoneClean}` : "";
 
   const handleWhatsAppClick = () => {
+    if (!isPaid) {
+      setIsUpgradeModalOpen(true);
+      return;
+    }
     if (targetId) trackAnalytics('user', targetId, 'whatsapp_click');
     if (waUrl) window.open(waUrl, "_blank");
     else toast.info("Contact number not available.");
   };
 
   const handleCallNowClick = () => {
+    if (!isPaid) {
+      setIsUpgradeModalOpen(true);
+      return;
+    }
     if (targetId) trackAnalytics('user', targetId, 'call_click');
     if (callUrl) window.location.href = callUrl;
     else toast.info("Contact number not available.");
@@ -554,10 +561,22 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                       <Globe className="w-3.5 h-3.5" />
                     </a>
                   )}
-                  {isPaid && socialLinks.whatsapp && (
-                    <a href={socialLinks.whatsapp} target="_blank" rel="noreferrer" title="WhatsApp" className="w-7 h-7 rounded-full bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center transition-all">
+                  {socialLinks.whatsapp && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isPaid) {
+                          window.open(socialLinks.whatsapp, "_blank");
+                        } else {
+                          setIsUpgradeModalOpen(true);
+                        }
+                      }}
+                      title={isPaid ? "WhatsApp" : "WhatsApp (Locked - Demo Account)"}
+                      className="w-7 h-7 rounded-full bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center transition-all cursor-pointer relative"
+                    >
                       <MessageCircle className="w-3.5 h-3.5" />
-                    </a>
+                      {!isPaid && <Lock className="w-2.5 h-2.5 absolute -top-1 -right-1 text-amber-300" />}
+                    </button>
                   )}
                 </div>
               </div>
@@ -885,58 +904,118 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
           </div>
 
           {/* ================= RIGHT COLUMN / SIDEBAR ================= */}
+          {/* Requested Order: 1. Professional Details -> 2. Social Media -> 3. Location -> 4. Get in Touch */}
           <div className="lg:col-span-4 space-y-6 sticky top-20">
 
-            {/* --- 1. GET IN TOUCH CARD --- */}
-            <div id="contact" className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+            {/* --- 1. PROFESSIONAL DETAILS CARD --- */}
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3.5">
               <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#ff6b00]" /> Get in Touch
+                <Briefcase className="w-4 h-4 text-[#ff6b00]" /> Professional Details
               </h3>
 
-              {/* Action Buttons: WhatsApp & Call Now (Only for Paid Accounts) */}
-              {isPaid ? (
-                <div className="grid grid-cols-2 gap-2.5">
-                  <Button
-                    onClick={handleWhatsAppClick}
-                    className="bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
-                  >
-                    <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
-                  </Button>
-                  <Button
-                    onClick={handleCallNowClick}
-                    className="bg-[#0084FF] hover:bg-[#0073e6] text-white font-bold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
-                  >
-                    <Phone className="w-4 h-4" /> Call Now
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <Button
-                    onClick={() => setIsDialogOpen(true)}
-                    className="w-full bg-[#ff6b00] hover:bg-[#e05e00] text-white font-extrabold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md border-none cursor-pointer"
-                  >
-                    <Send className="w-4 h-4" /> Send Project Inquiry
-                  </Button>
-                  <div className="p-3 bg-amber-50 border border-amber-200/80 rounded-xl text-center space-y-1">
-                    <p className="text-xs font-bold text-amber-900 flex items-center justify-center gap-1">
-                      <Lock className="w-3.5 h-3.5 text-amber-600" /> Demo Account (Payment Pending)
-                    </p>
-                    <p className="text-[11px] text-amber-700 leading-tight">
-                      Direct WhatsApp &amp; Call buttons will be activated once this profile is upgraded to Premium.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => setIsUpgradeModalOpen(true)}
-                      className="text-xs font-black text-orange-600 hover:text-orange-700 underline mt-1 cursor-pointer"
-                    >
-                      Pay &amp; Activate Premium
-                    </button>
+              <div className="space-y-2.5 text-xs">
+                {architect.companyName && (
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500 flex items-center gap-1.5"><Building className="w-3.5 h-3.5" /> Company</span>
+                    <span className="font-semibold text-slate-800 text-right">{architect.companyName}</span>
                   </div>
-                </div>
-              )}
+                )}
+                {architect.qualification && (
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500 flex items-center gap-1.5"><Award className="w-3.5 h-3.5" /> Qualification</span>
+                    <span className="font-semibold text-slate-800 uppercase text-right">{architect.qualification}</span>
+                  </div>
+                )}
+                {architect.experience && (
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Experience</span>
+                    <span className="font-semibold text-slate-800">{architect.experience}</span>
+                  </div>
+                )}
+                {architect.city && (
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Service Area</span>
+                    <span className="font-semibold text-slate-800 text-right max-w-[60%] truncate">
+                      {architect.city} &amp; nearby regions
+                    </span>
+                  </div>
+                )}
+                {architect.gstNumber && (
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500 flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> GST No.</span>
+                    <span className="font-semibold text-slate-800">{architect.gstNumber}</span>
+                  </div>
+                )}
+                {websiteUrl && (
+                  <div className="flex justify-between py-1">
+                    <span className="text-slate-500 flex items-center gap-1.5"><Globe className="w-3.5 h-3.5" /> Website</span>
+                    <a
+                      href={websiteUrl.startsWith("http") ? websiteUrl : `https://${websiteUrl}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-bold text-[#ff6b00] hover:underline truncate max-w-[60%]"
+                    >
+                      {websiteUrl.replace(/^https?:\/\//, "")}
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* --- 2. LOCATION CARD --- */}
+            {/* --- 2. SOCIAL MEDIA & ONLINE PRESENCE CARD --- */}
+            {(socialLinks.instagram || socialLinks.youtube || socialLinks.linkedin || socialLinks.facebook || socialLinks.whatsapp || websiteUrl) && (
+              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+                <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-[#ff6b00]" /> Social Media &amp; Online Presence
+                </h3>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  {socialLinks.instagram && (
+                    <a href={socialLinks.instagram} target="_blank" rel="noreferrer" title="Instagram" className="w-9 h-9 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center hover:scale-105 transition-transform">
+                      <Instagram className="w-4 h-4" />
+                    </a>
+                  )}
+                  {socialLinks.facebook && (
+                    <a href={socialLinks.facebook} target="_blank" rel="noreferrer" title="Facebook" className="w-9 h-9 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center hover:scale-105 transition-transform">
+                      <Facebook className="w-4 h-4" />
+                    </a>
+                  )}
+                  {socialLinks.linkedin && (
+                    <a href={socialLinks.linkedin} target="_blank" rel="noreferrer" title="LinkedIn" className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:scale-105 transition-transform">
+                      <Linkedin className="w-4 h-4" />
+                    </a>
+                  )}
+                  {socialLinks.youtube && (
+                    <a href={socialLinks.youtube} target="_blank" rel="noreferrer" title="YouTube" className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:scale-105 transition-transform">
+                      <Youtube className="w-4 h-4" />
+                    </a>
+                  )}
+                  {socialLinks.whatsapp && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isPaid) {
+                          window.open(socialLinks.whatsapp, "_blank");
+                        } else {
+                          setIsUpgradeModalOpen(true);
+                        }
+                      }}
+                      title={isPaid ? "WhatsApp" : "WhatsApp (Locked - Demo Account)"}
+                      className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center hover:scale-105 transition-transform relative cursor-pointer"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      {!isPaid && <Lock className="w-2.5 h-2.5 absolute -top-1 -right-1 text-amber-500" />}
+                    </button>
+                  )}
+                  {websiteUrl && (
+                    <a href={websiteUrl.startsWith("http") ? websiteUrl : `https://${websiteUrl}`} target="_blank" rel="noreferrer" title="Website" className="w-9 h-9 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center hover:scale-105 transition-transform">
+                      <Globe className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* --- 3. LOCATION CARD --- */}
             {architect.city && (
               <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
                 <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
@@ -969,101 +1048,57 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
               </div>
             )}
 
-            {/* --- 3. BUSINESS DETAILS CARD --- */}
-            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3.5">
+            {/* --- 4. GET IN TOUCH CARD --- */}
+            <div id="contact" className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
               <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <Briefcase className="w-4 h-4 text-[#ff6b00]" /> Professional Details
+                <Phone className="w-4 h-4 text-[#ff6b00]" /> Get in Touch
               </h3>
 
-              <div className="space-y-2.5 text-xs">
-                {architect.companyName && (
-                  <div className="flex justify-between py-1 border-b border-slate-100">
-                    <span className="text-slate-500 flex items-center gap-1.5"><Building className="w-3.5 h-3.5" /> Company</span>
-                    <span className="font-semibold text-slate-800 text-right">{architect.companyName}</span>
-                  </div>
-                )}
-                {architect.qualification && (
-                  <div className="flex justify-between py-1 border-b border-slate-100">
-                    <span className="text-slate-500 flex items-center gap-1.5"><Award className="w-3.5 h-3.5" /> Qualification</span>
-                    <span className="font-semibold text-slate-800 uppercase text-right">{architect.qualification}</span>
-                  </div>
-                )}
-                {architect.experience && (
-                  <div className="flex justify-between py-1 border-b border-slate-100">
-                    <span className="text-slate-500 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Experience</span>
-                    <span className="font-semibold text-slate-800">{architect.experience}</span>
-                  </div>
-                )}
-                {architect.city && (
-                  <div className="flex justify-between py-1 border-b border-slate-100">
-                    <span className="text-slate-500 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Service Area</span>
-                    <span className="font-semibold text-slate-800 text-right max-w-[60%] truncate">
-                      {architect.city} & nearby regions
-                    </span>
-                  </div>
-                )}
-                {architect.gstNumber && (
-                  <div className="flex justify-between py-1 border-b border-slate-100">
-                    <span className="text-slate-500 flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> GST No.</span>
-                    <span className="font-semibold text-slate-800">{architect.gstNumber}</span>
-                  </div>
-                )}
-                {websiteUrl && (
-                  <div className="flex justify-between py-1">
-                    <span className="text-slate-500 flex items-center gap-1.5"><Globe className="w-3.5 h-3.5" /> Website</span>
-                    <a
-                      href={websiteUrl.startsWith("http") ? websiteUrl : `https://${websiteUrl}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="font-bold text-[#ff6b00] hover:underline truncate max-w-[60%]"
-                    >
-                      {websiteUrl.replace(/^https?:\/\//, "")}
-                    </a>
-                  </div>
-                )}
+              {/* Action Buttons: WhatsApp & Call Now (Visible to all, locked for Demo accounts) */}
+              <div className="grid grid-cols-2 gap-2.5">
+                <Button
+                  onClick={handleWhatsAppClick}
+                  className={`${isPaid ? "bg-[#25D366] hover:bg-[#1ebd5a]" : "bg-emerald-600/90 hover:bg-emerald-700"} text-white font-bold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer`}
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>WhatsApp</span>
+                  {!isPaid && <Lock className="w-3.5 h-3.5 ml-0.5 text-white/90" />}
+                </Button>
+                <Button
+                  onClick={handleCallNowClick}
+                  className={`${isPaid ? "bg-[#0084FF] hover:bg-[#0073e6]" : "bg-blue-600/90 hover:bg-blue-700"} text-white font-bold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer`}
+                >
+                  <Phone className="w-4 h-4" />
+                  <span>Call Now</span>
+                  {!isPaid && <Lock className="w-3.5 h-3.5 ml-0.5 text-white/90" />}
+                </Button>
               </div>
-            </div>
 
-            {/* --- 4. SOCIAL MEDIA CARD --- */}
-            {(socialLinks.instagram || socialLinks.youtube || socialLinks.linkedin || socialLinks.facebook || socialLinks.whatsapp || websiteUrl) && (
-              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
-                <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-[#ff6b00]" /> Social Media & Online Presence
-                </h3>
-                <div className="flex flex-wrap items-center gap-2.5">
-                  {socialLinks.instagram && (
-                    <a href={socialLinks.instagram} target="_blank" rel="noreferrer" title="Instagram" className="w-9 h-9 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center hover:scale-105 transition-transform">
-                      <Instagram className="w-4 h-4" />
-                    </a>
-                  )}
-                  {socialLinks.facebook && (
-                    <a href={socialLinks.facebook} target="_blank" rel="noreferrer" title="Facebook" className="w-9 h-9 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center hover:scale-105 transition-transform">
-                      <Facebook className="w-4 h-4" />
-                    </a>
-                  )}
-                  {socialLinks.linkedin && (
-                    <a href={socialLinks.linkedin} target="_blank" rel="noreferrer" title="LinkedIn" className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:scale-105 transition-transform">
-                      <Linkedin className="w-4 h-4" />
-                    </a>
-                  )}
-                  {socialLinks.youtube && (
-                    <a href={socialLinks.youtube} target="_blank" rel="noreferrer" title="YouTube" className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:scale-105 transition-transform">
-                      <Youtube className="w-4 h-4" />
-                    </a>
-                  )}
-                  {socialLinks.whatsapp && (
-                    <a href={socialLinks.whatsapp} target="_blank" rel="noreferrer" title="WhatsApp" className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center hover:scale-105 transition-transform">
-                      <MessageCircle className="w-4 h-4" />
-                    </a>
-                  )}
-                  {websiteUrl && (
-                    <a href={websiteUrl.startsWith("http") ? websiteUrl : `https://${websiteUrl}`} target="_blank" rel="noreferrer" title="Website" className="w-9 h-9 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center hover:scale-105 transition-transform">
-                      <Globe className="w-4 h-4" />
-                    </a>
-                  )}
+              <Button
+                onClick={() => setIsDialogOpen(true)}
+                className="w-full bg-[#ff6b00] hover:bg-[#e05e00] text-white font-extrabold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md border-none cursor-pointer"
+              >
+                <Send className="w-4 h-4" /> Send Project Inquiry
+              </Button>
+
+              {!isPaid && (
+                <div className="p-3 bg-amber-50 border border-amber-200/80 rounded-xl text-center space-y-1">
+                  <p className="text-xs font-bold text-amber-900 flex items-center justify-center gap-1">
+                    <Lock className="w-3.5 h-3.5 text-amber-600" /> Demo Account (Payment Pending)
+                  </p>
+                  <p className="text-[11px] text-amber-700 leading-tight">
+                    Direct WhatsApp &amp; Call buttons are locked. Upgrade to Premium to activate direct contact.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setIsUpgradeModalOpen(true)}
+                    className="text-xs font-black text-orange-600 hover:text-orange-700 underline mt-1 cursor-pointer"
+                  >
+                    Pay &amp; Activate Premium
+                  </button>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* --- 5. SHARE PROFILE CARD --- */}
             <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
@@ -1120,37 +1155,32 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
             </div>
           </div>
 
-          {isPaid ? (
-            <div className="flex items-center gap-2.5 w-full sm:w-auto">
-              <Button
-                onClick={handleWhatsAppClick}
-                className="flex-1 sm:flex-none bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold h-9 sm:h-10 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
-              >
-                <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
-              </Button>
-              <Button
-                onClick={handleCallNowClick}
-                className="flex-1 sm:flex-none bg-[#0084FF] hover:bg-[#0073e6] text-white font-bold h-9 sm:h-10 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
-              >
-                <Phone className="w-4 h-4" /> Call Now
-              </Button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <Button
+              onClick={handleWhatsAppClick}
+              className={`${isPaid ? "bg-[#25D366] hover:bg-[#1ebd5a]" : "bg-emerald-600/90 hover:bg-emerald-700"} text-white font-bold h-9 sm:h-10 px-3 sm:px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer`}
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>WhatsApp</span>
+              {!isPaid && <Lock className="w-3 h-3 text-white/90" />}
+            </Button>
+            <Button
+              onClick={handleCallNowClick}
+              className={`${isPaid ? "bg-[#0084FF] hover:bg-[#0073e6]" : "bg-blue-600/90 hover:bg-blue-700"} text-white font-bold h-9 sm:h-10 px-3 sm:px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer`}
+            >
+              <Phone className="w-4 h-4" />
+              <span>Call Now</span>
+              {!isPaid && <Lock className="w-3 h-3 text-white/90" />}
+            </Button>
+            {!isPaid && (
               <Button
                 onClick={() => setIsDialogOpen(true)}
-                className="flex-1 sm:flex-none bg-[#ff6b00] hover:bg-[#e05e00] text-white font-bold h-9 sm:h-10 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
+                className="bg-[#ff6b00] hover:bg-[#e05e00] text-white font-bold h-9 sm:h-10 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
               >
-                <Send className="w-4 h-4" /> Send Inquiry
+                <Send className="w-3.5 h-3.5" /> Send Inquiry
               </Button>
-              <Button
-                onClick={() => setIsUpgradeModalOpen(true)}
-                className="flex-1 sm:flex-none bg-amber-500 hover:bg-amber-600 text-white font-bold h-9 sm:h-10 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5" /> Activate Premium
-              </Button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 

@@ -230,8 +230,18 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                   value={contractorType}
                   onValueChange={(val) => {
                     setContractorType(val);
-                    if (val === "Normal") setSelectedPlan("Basic");
-                    else if (val === "Premium" && selectedPlan === "Basic") setSelectedPlan("Premium");
+                    if (val === "Normal") {
+                      setSelectedPlan("Basic");
+                      setPaymentStatus("Unpaid");
+                    } else if (val === "Verified") {
+                      setPaymentStatus("Paid");
+                      setStatus("Approved");
+                      if (selectedPlan === "Basic" || selectedPlan === "None") setSelectedPlan("Standard");
+                    } else if (val === "Premium") {
+                      setPaymentStatus("Paid");
+                      setStatus("Approved");
+                      if (selectedPlan === "Basic" || selectedPlan === "None") setSelectedPlan("Premium");
+                    }
                   }}
                   disabled={isLoading}
                 >
@@ -255,9 +265,18 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                   value={selectedPlan}
                   onValueChange={(val) => {
                     setSelectedPlan(val);
-                    if (val === "Basic" || val === "None") setContractorType("Normal");
-                    else if (val === "Standard") setContractorType("Verified");
-                    else setContractorType("Premium");
+                    if (val === "Basic" || val === "None") {
+                      setContractorType("Normal");
+                      setPaymentStatus("Unpaid");
+                    } else if (val === "Standard") {
+                      setContractorType("Verified");
+                      setPaymentStatus("Paid");
+                      setStatus("Approved");
+                    } else {
+                      setContractorType("Premium");
+                      setPaymentStatus("Paid");
+                      setStatus("Approved");
+                    }
                   }}
                   disabled={isLoading}
                 >
@@ -278,7 +297,19 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
                 <Label>Payment Status</Label>
                 <Select
                   value={paymentStatus}
-                  onValueChange={setPaymentStatus}
+                  onValueChange={(val) => {
+                    setPaymentStatus(val);
+                    if (val === "Paid") {
+                      if (contractorType === "Normal") {
+                        setContractorType("Verified");
+                        if (selectedPlan === "Basic" || selectedPlan === "None") setSelectedPlan("Standard");
+                      }
+                      setStatus("Approved");
+                    } else if (val === "Unpaid") {
+                      setContractorType("Normal");
+                      setSelectedPlan("Basic");
+                    }
+                  }}
                   disabled={isLoading}
                 >
                   <SelectTrigger>

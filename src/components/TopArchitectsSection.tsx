@@ -178,6 +178,8 @@ const ArchitectCard: FC<{
   index: number;
   navigate: (path: string) => void;
 }> = ({ architect, onContact, index, navigate }) => {
+  const isPaid = (architect as any).paymentStatus === "Paid";
+  const isPremium = isPaid && architect.contractorType === "Premium";
   const type = architect.contractorType || "Normal";
   const phoneStr = architect.phone ? architect.phone.replace(/\D/g, '') : '';
   const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
@@ -201,7 +203,7 @@ const ArchitectCard: FC<{
           className="object-cover" loading="lazy" />
         <div className="absolute inset-0 bg-black/10" />
         <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex flex-col gap-1.5 sm:gap-2 items-end">
-          {architect.contractorType === "Premium" && (
+          {isPremium && (
             <Badge className="bg-orange-500 hover:bg-orange-600 text-white border-none shadow-md px-2 sm:px-3 py-0.5 sm:py-1 font-bold text-[10px] sm:text-xs">
               <Star className="w-3 h-3 mr-1 fill-current" /> Top Rated
             </Badge>
@@ -265,7 +267,7 @@ const ArchitectCard: FC<{
               View Profile
             </Link>
 
-            {architect.contractorType === "Premium" && (
+            {isPremium && (
               <div className="grid grid-cols-2 gap-2">
                 <Button 
                   onClick={() => { 
