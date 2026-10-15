@@ -801,6 +801,8 @@ const PartnersPage: FC = () => {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
             {paginatedContractors.map((contractor) => {
+              const isPaid = (contractor as any).paymentStatus === "Paid" || (contractor.contractorType === "Premium" && (contractor as any).paymentStatus !== "Unpaid");
+              const isPremium = isPaid && contractor.contractorType === "Premium";
               const phoneStr = contractor.phone ? (contractor.phone || '').replace(/\D/g, '') : '';
               const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
               const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
@@ -810,7 +812,7 @@ const PartnersPage: FC = () => {
                   <div className="h-20 sm:h-28 bg-gray-100 relative">
                     <Image src={contractor.shopImageUrl ? getFileUrl(contractor.shopImageUrl) : "/contractor.jpeg"} className="object-cover" alt="Shop Image" fill sizes="(max-width: 768px) 50vw, 25vw" />
                     <div className="absolute top-2 right-2 flex flex-col gap-1">
-                      {contractor.contractorType === "Premium" && <Badge className="bg-orange-500 text-[10px]">Premium</Badge>}
+                      {isPremium && <Badge className="bg-orange-500 text-[10px]">Premium</Badge>}
                       {contractor.contractorType === "Verified" && <Badge className="bg-blue-600 text-[10px]">Verified</Badge>}
                     </div>
                   </div>
@@ -847,7 +849,7 @@ const PartnersPage: FC = () => {
                           View Profile
                         </Button>
                       </Link>
-                      {contractor.contractorType === "Premium" && (
+                      {isPremium && (
                         <>
                           <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                             <Button 

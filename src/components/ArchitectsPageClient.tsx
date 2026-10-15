@@ -471,7 +471,9 @@ const ArchitectsPage: FC = () => {
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
                   {paginatedArchitects.map((architect, index) => {
-                    const type = architect.contractorType || "Normal";
+                    const isPaid = (architect as any).paymentStatus === "Paid" || (architect.contractorType === "Premium" && (architect as any).paymentStatus !== "Unpaid");
+                    const isPremium = isPaid && architect.contractorType === "Premium";
+                    const type = isPremium ? "Premium" : (architect.contractorType || "Normal");
                     const phoneStr = architect.phone ? architect.phone.replace(/\D/g, '') : '';
                     const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
                     const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
@@ -482,7 +484,7 @@ const ArchitectsPage: FC = () => {
                         {/* Banner */}
                         <div className="h-24 sm:h-32 relative overflow-hidden shrink-0">
                           <Image src={architect.shopImageUrl ? getFileUrl(architect.shopImageUrl) : "/architect.png"} alt={`${architect.name} banner`} fill className="object-cover" sizes="100vw" priority />
-                          {type === "Premium" && (
+                          {isPremium && (
                             <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
                               <Badge className="bg-orange-500 text-white border-none shadow-lg px-2 py-0.5 text-[10px] font-bold"><Zap className="w-3 h-3 mr-1 fill-current" /> PREMIUM</Badge>
                             </div>

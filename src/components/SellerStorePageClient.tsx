@@ -488,7 +488,7 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
                   />
                 </div>
                 
-                {(sellerInfo?.contractorType === "Premium" || sellerInfo?.contractorType === "Verified") && sellerInfo?.contractorType !== "Normal" && sellerInfo?.selectedPlan !== "Basic" && sellerInfo?.phone && (
+                {sellerInfo?.paymentStatus !== "Unpaid" && (sellerInfo?.paymentStatus === "Paid" || sellerInfo?.contractorType === "Premium" || sellerInfo?.contractorType === "Verified") && sellerInfo?.contractorType !== "Normal" && sellerInfo?.selectedPlan !== "Basic" && sellerInfo?.phone && (
                   <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-2 sm:mt-0">
                     <Button 
                       onClick={() => {

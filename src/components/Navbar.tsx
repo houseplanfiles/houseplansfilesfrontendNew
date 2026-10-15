@@ -259,27 +259,6 @@ const Navbar = () => {
             </nav>
             <div className="flex items-center gap-1.5 flex-shrink-0">
               <div className="hidden md:flex items-center gap-4">
-                {/* Location Dropdown */}
-                <div className="relative flex items-center bg-white shadow-sm rounded-full border border-gray-200 hover:border-orange-400 transition-colors shrink-0">
-                  <div className="flex items-center pl-2 pr-0.5 pointer-events-none">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-orange-500"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                  </div>
-                  <select 
-                    className="bg-transparent border-none focus:ring-0 text-[11px] font-semibold text-slate-800 py-1 pl-1 pr-5 cursor-pointer appearance-none outline-none hover:text-orange-600 transition-colors"
-                    onChange={(e) => {
-                      if (e.target.value) {
-                        router.push(`/city/${e.target.value.toLowerCase().replace(/\s+/g, '-')}`);
-                      }
-                    }}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>Select City</option>
-                    {["Pan India", "Agra", "Ahmedabad", "Ajmer", "Aligarh", "Allahabad", "Amritsar", "Aurangabad", "Bareilly", "Bengaluru", "Bhopal", "Bhubaneswar", "Bikaner", "Chandigarh", "Chennai", "Coimbatore", "Cuttack", "Dehradun", "Delhi", "Dhanbad", "Faridabad", "Ghaziabad", "Gorakhpur", "Guwahati", "Gwalior", "Hubli-Dharwad", "Hyderabad", "Indore", "Jabalpur", "Jaipur", "Jalandhar", "Jammu", "Jamshedpur", "Jodhpur", "Kanpur", "Kochi", "Kolkata", "Kota", "Lucknow", "Ludhiana", "Madurai", "Meerut", "Moradabad", "Mumbai", "Mysore", "Nagpur", "Nashik", "Noida", "Patna", "Pune", "Raipur", "Rajkot", "Ranchi", "Saharanpur", "Salem", "Siliguri", "Solapur", "Srinagar", "Surat", "Thane", "Thiruvananthapuram", "Tiruchirappalli", "Vadodara", "Varanasi", "Vijayawada", "Visakhapatnam", "Warangal"].map(city => (
-                      <option key={city} value={city}>{city}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="w-3 h-3 absolute right-1.5 text-slate-600 pointer-events-none" />
-                </div>
 
                 {/* Search Icon */}
                 <button className="text-gray-600 hover:text-orange-600 p-2 rounded-full hover:bg-gray-50 transition-colors">

@@ -48,7 +48,8 @@ import {
   ShieldCheck,
   ChevronRight,
   ExternalLink,
-  Zap
+  Zap,
+  Lock
 } from "lucide-react";
 import { toast } from "sonner";
 import ActivatePremiumModal from "@/components/ActivatePremiumModal";
@@ -73,7 +74,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
 
   const targetId = (id as string) || initialArchitect?._id;
 
-  const isPaid = architect?.paymentStatus === "Paid" || architect?.contractorType === "Premium";
+  const isPaid = architect?.paymentStatus === "Paid" || (architect?.contractorType === "Premium" && architect?.paymentStatus !== "Unpaid");
 
   const handlePayToUpgrade = async () => {
     setIsPaying(true);
@@ -553,7 +554,7 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                       <Globe className="w-3.5 h-3.5" />
                     </a>
                   )}
-                  {socialLinks.whatsapp && (
+                  {isPaid && socialLinks.whatsapp && (
                     <a href={socialLinks.whatsapp} target="_blank" rel="noreferrer" title="WhatsApp" className="w-7 h-7 rounded-full bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center transition-all">
                       <MessageCircle className="w-3.5 h-3.5" />
                     </a>
@@ -892,34 +893,47 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                 <Phone className="w-4 h-4 text-[#ff6b00]" /> Get in Touch
               </h3>
 
-              {/* Action Buttons: WhatsApp & Call Now */}
-              <div className="grid grid-cols-2 gap-2.5">
-                <Button
-                  onClick={handleWhatsAppClick}
-                  className="bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm border-none"
-                >
-                  <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
-                </Button>
-                <Button
-                  onClick={handleCallNowClick}
-                  className="bg-[#0084FF] hover:bg-[#0073e6] text-white font-bold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm border-none"
-                >
-                  <Phone className="w-4 h-4" /> Call Now
-                </Button>
-              </div>
-
-              {/* Consultation Note */}
-              <div className="bg-orange-50/70 border border-orange-100 rounded-xl p-3 flex items-start gap-2.5">
-                <Calendar className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-xs font-bold text-slate-900">
-                    {architect.charges ? `Charges: ${architect.charges}` : "Free Consultation"}
-                  </h4>
-                  <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                    Connect directly to discuss requirements, feasibility and quotes.
-                  </p>
+              {/* Action Buttons: WhatsApp & Call Now (Only for Paid Accounts) */}
+              {isPaid ? (
+                <div className="grid grid-cols-2 gap-2.5">
+                  <Button
+                    onClick={handleWhatsAppClick}
+                    className="bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
+                  >
+                    <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
+                  </Button>
+                  <Button
+                    onClick={handleCallNowClick}
+                    className="bg-[#0084FF] hover:bg-[#0073e6] text-white font-bold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
+                  >
+                    <Phone className="w-4 h-4" /> Call Now
+                  </Button>
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-3">
+                  <Button
+                    onClick={() => setIsDialogOpen(true)}
+                    className="w-full bg-[#ff6b00] hover:bg-[#e05e00] text-white font-extrabold h-11 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md border-none cursor-pointer"
+                  >
+                    <Send className="w-4 h-4" /> Send Project Inquiry
+                  </Button>
+                  <div className="p-3 bg-amber-50 border border-amber-200/80 rounded-xl text-center space-y-1">
+                    <p className="text-xs font-bold text-amber-900 flex items-center justify-center gap-1">
+                      <Lock className="w-3.5 h-3.5 text-amber-600" /> Demo Account (Payment Pending)
+                    </p>
+                    <p className="text-[11px] text-amber-700 leading-tight">
+                      Direct WhatsApp &amp; Call buttons will be activated once this profile is upgraded to Premium.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setIsUpgradeModalOpen(true)}
+                      className="text-xs font-black text-orange-600 hover:text-orange-700 underline mt-1 cursor-pointer"
+                    >
+                      Pay &amp; Activate Premium
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* --- 2. LOCATION CARD --- */}
@@ -1106,20 +1120,37 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 w-full sm:w-auto">
-            <Button
-              onClick={handleWhatsAppClick}
-              className="flex-1 sm:flex-none bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold h-9 sm:h-10 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none"
-            >
-              <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
-            </Button>
-            <Button
-              onClick={handleCallNowClick}
-              className="flex-1 sm:flex-none bg-[#0084FF] hover:bg-[#0073e6] text-white font-bold h-9 sm:h-10 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none"
-            >
-              <Phone className="w-4 h-4" /> Call Now
-            </Button>
-          </div>
+          {isPaid ? (
+            <div className="flex items-center gap-2.5 w-full sm:w-auto">
+              <Button
+                onClick={handleWhatsAppClick}
+                className="flex-1 sm:flex-none bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold h-9 sm:h-10 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
+              >
+                <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
+              </Button>
+              <Button
+                onClick={handleCallNowClick}
+                className="flex-1 sm:flex-none bg-[#0084FF] hover:bg-[#0073e6] text-white font-bold h-9 sm:h-10 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
+              >
+                <Phone className="w-4 h-4" /> Call Now
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Button
+                onClick={() => setIsDialogOpen(true)}
+                className="flex-1 sm:flex-none bg-[#ff6b00] hover:bg-[#e05e00] text-white font-bold h-9 sm:h-10 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
+              >
+                <Send className="w-4 h-4" /> Send Inquiry
+              </Button>
+              <Button
+                onClick={() => setIsUpgradeModalOpen(true)}
+                className="flex-1 sm:flex-none bg-amber-500 hover:bg-amber-600 text-white font-bold h-9 sm:h-10 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm border-none cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5" /> Activate Premium
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
