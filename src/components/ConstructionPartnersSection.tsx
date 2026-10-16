@@ -167,9 +167,12 @@ const PartnerCard: FC<{
   index: number;
   navigate: (path: string) => void;
 }> = ({ partner, onContact, index, navigate }) => {
-  const isPaid = (partner as any).paymentStatus === "Paid";
-  const isPremium = isPaid && partner.contractorType === "Premium";
-  const isVerified = isPaid && partner.contractorType === "Verified";
+  const isPaid =
+    (partner as any).paymentStatus === "Paid" ||
+    partner.contractorType === "Premium" ||
+    partner.contractorType === "Verified";
+  const isPremium = partner.contractorType === "Premium";
+  const isVerified = partner.contractorType === "Verified";
   const type = partner.contractorType || "Normal";
   const phoneStr = partner.phone ? partner.phone.replace(/\D/g, '') : '';
   const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
