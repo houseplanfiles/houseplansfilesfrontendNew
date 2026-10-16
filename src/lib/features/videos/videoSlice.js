@@ -42,13 +42,13 @@ export const fetchTopics = createAsyncThunk(
 export const addVideoLink = createAsyncThunk(
   "videos/addLink",
   async (
-    { title, youtubeLink, topic, productLink },
+    { title, description, youtubeLink, topic, productLink },
     { getState, rejectWithValue }
   ) => {
     try {
       const token = getToken(getState);
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const payload = { title, youtubeLink, topic };
+      const payload = { title, description, youtubeLink, topic };
       // सिर्फ तभी productLink भेजें जब वह मौजूद हो
       if (productLink && productLink !== "none") {
         payload.productLink = productLink;
@@ -58,6 +58,29 @@ export const addVideoLink = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to add video link"
+      );
+    }
+  }
+);
+
+export const updateVideo = createAsyncThunk(
+  "videos/update",
+  async (
+    { id, title, description, youtubeLink, topic, productLink },
+    { getState, rejectWithValue }
+  ) => {
+    try {
+      const token = getToken(getState);
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const payload = { title, description, youtubeLink, topic };
+      if (productLink) {
+        payload.productLink = productLink === "none" ? null : productLink;
+      }
+      const { data } = await axios.put(`${API_URL}/${id}`, payload, config);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update video"
       );
     }
   }
@@ -127,6 +150,22 @@ const videoSlice = createSlice({
         state.videos.unshift(action.payload);
       })
       .addCase(addVideoLink.rejected, (state, action) => {
+        state.actionStatus = "failed";
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(updateVideo.pending, (state) => {
+        state.actionStatus = "loading";
+      })
+      .addCase(updateVideo.fulfilled, (state, action) => {
+        state.actionStatus = "succeeded";
+        const idx = state.videos.findIndex((v) => v._id === action.payload._id);
+        if (idx !== -1) {
+          state.videos[idx] = action.payload;
+        }
+      })
+      .addCase(updateVideo.rejected, (state, action) => {
         state.actionStatus = "failed";
         state.error = action.payload;
       });
