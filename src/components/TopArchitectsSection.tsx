@@ -178,8 +178,11 @@ const ArchitectCard: FC<{
   index: number;
   navigate: (path: string) => void;
 }> = ({ architect, onContact, index, navigate }) => {
-  const isPaid = (architect as any).paymentStatus === "Paid";
-  const isPremium = isPaid && architect.contractorType === "Premium";
+  const isPaid =
+    (architect as any).paymentStatus === "Paid" ||
+    architect.contractorType === "Premium" ||
+    architect.contractorType === "Verified";
+  const isPremium = architect.contractorType === "Premium";
   const type = architect.contractorType || "Normal";
   const phoneStr = architect.phone ? architect.phone.replace(/\D/g, '') : '';
   const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;

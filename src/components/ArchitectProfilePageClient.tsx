@@ -73,7 +73,10 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
   const [error, setError] = useState<string | null>(null);
 
   const targetId = (id as string) || initialArchitect?._id;
-  const isPaid = architect?.paymentStatus === "Paid";
+  const isPaid =
+    architect?.paymentStatus === "Paid" ||
+    architect?.contractorType === "Premium" ||
+    architect?.contractorType === "Verified";
 
   const handlePayToUpgrade = async () => {
     setIsPaying(true);

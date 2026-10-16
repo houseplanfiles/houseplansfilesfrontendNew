@@ -73,7 +73,10 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
   const [error, setError] = useState<string | null>(null);
 
   const targetId = id || initialContractor?._id;
-  const isPaid = contractor?.paymentStatus === "Paid";
+  const isPaid =
+    contractor?.paymentStatus === "Paid" ||
+    contractor?.contractorType === "Premium" ||
+    contractor?.contractorType === "Verified";
 
   const handlePayToUpgrade = async () => {
     setIsPaying(true);

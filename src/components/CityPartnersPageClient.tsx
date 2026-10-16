@@ -801,9 +801,12 @@ const PartnersPage: FC = () => {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
             {paginatedContractors.map((contractor) => {
-              const isPaid = (contractor as any).paymentStatus === "Paid";
-              const isPremium = isPaid && contractor.contractorType === "Premium";
-              const isVerified = isPaid && contractor.contractorType === "Verified";
+              const isPaid =
+                (contractor as any).paymentStatus === "Paid" ||
+                contractor.contractorType === "Premium" ||
+                contractor.contractorType === "Verified";
+              const isPremium = contractor.contractorType === "Premium";
+              const isVerified = contractor.contractorType === "Verified";
               const phoneStr = contractor.phone ? (contractor.phone || '').replace(/\D/g, '') : '';
               const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
               const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent("Hello! I found your profile on www.houseplanfiles.com - Architect Contractor Marketplace. I would like to connect with you.")}`;
