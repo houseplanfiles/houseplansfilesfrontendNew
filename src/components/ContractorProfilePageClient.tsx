@@ -508,14 +508,14 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
                         <span className="text-slate-400">({reviewsList.length} Reviews)</span>
                       </div>
                     </>
-                  ) : (
+                  ) : isPaid ? (
                     <>
                       <span className="text-slate-500">•</span>
                       <span className="text-emerald-400 font-semibold flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" /> Verified Profile
                       </span>
                     </>
-                  )}
+                  ) : null}
                 </div>
 
                 {contractor.bio && (

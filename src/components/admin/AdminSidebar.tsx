@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import {
   LayoutDashboard, ShoppingBag, Box, PlusCircle, Users, BarChart2,
   UserCircle, LogOut, X, ChevronDown, FileText, Building, Briefcase,
-  HelpCircle, FileCheck2, Gem, PenSquare, Image, Package, Globe,
+  HelpCircle, FileCheck2, Gem, PenSquare, Image, Package, Globe, Clapperboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/lib/features/users/userSlice";
@@ -21,7 +21,7 @@ const mainLinks = [
   { name: "Reports", path: "/admin/reports", icon: BarChart2 },
   { name: "Analytics Report", path: "/admin/analytics-report", icon: BarChart2 },
   { name: "Profile", path: "/admin/profile", icon: UserCircle },
-  { name: "Videos", path: "/admin/addvideos", icon: PlusCircle },
+  { name: "Tutorial Videos", path: "/admin/addvideos", icon: Clapperboard },
   { name: "Seller Products", path: "/admin/seller-products", icon: Box },
   { name: "Media", path: "/admin/media", icon: FileText },
   { name: "Seller Enquiries", path: "/admin/seller-enquiries", icon: Briefcase },
