@@ -167,6 +167,9 @@ const PartnerCard: FC<{
   index: number;
   navigate: (path: string) => void;
 }> = ({ partner, onContact, index, navigate }) => {
+  const isPaid = (partner as any).paymentStatus === "Paid";
+  const isPremium = isPaid && partner.contractorType === "Premium";
+  const isVerified = isPaid && partner.contractorType === "Verified";
   const type = partner.contractorType || "Normal";
   const phoneStr = partner.phone ? partner.phone.replace(/\D/g, '') : '';
   const cleanPhone = phoneStr.startsWith('91') ? phoneStr : '91' + phoneStr;
@@ -185,7 +188,7 @@ const PartnerCard: FC<{
       <Image src={getImageUrl(partner.shopImageUrl)} alt={partner.companyName || "Contractor"} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover" loading="lazy" />
       <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
       <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex flex-col gap-1.5 sm:gap-2 items-end">
-        {partner.contractorType === "Premium" && (
+        {isPremium && (
           <Badge className="bg-orange-500 hover:bg-orange-600 text-white border-none shadow-md text-[10px] sm:text-xs">
             <Star className="w-3 h-3 mr-1 fill-current" /> Top Rated
           </Badge>
@@ -258,7 +261,7 @@ const PartnerCard: FC<{
           View Profile
         </Link>
 
-        {type === "Premium" && (
+        {isPremium && (
           <div className="grid grid-cols-2 gap-2">
             <Button 
               onClick={() => { trackAnalytics('user', partner._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
@@ -277,7 +280,7 @@ const PartnerCard: FC<{
           </div>
         )}
 
-        {type === "Verified" && (
+        {isVerified && (
           <Button 
             onClick={() => { trackAnalytics('user', partner._id, 'whatsapp_click'); window.open(waLink, "_blank"); }}
             className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white transition-colors h-10 sm:h-11 flex items-center justify-center gap-2 rounded-lg shadow-sm font-bold text-[13px] sm:text-sm"
@@ -287,7 +290,7 @@ const PartnerCard: FC<{
           </Button>
         )}
 
-        {type !== "Premium" && type !== "Verified" && (
+        {(!isPaid || !partner.contractorType || partner.contractorType === "Normal") && (
           <Button 
             onClick={() => { trackAnalytics('user', partner._id, 'contact'); onContact(partner); }} 
             className="w-full h-10 sm:h-11 bg-[#1E293B] hover:bg-[#0F172A] text-white font-bold text-[13px] sm:text-sm rounded-lg transition-all"
