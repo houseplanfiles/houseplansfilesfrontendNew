@@ -496,15 +496,13 @@ const DashboardPage = () => {
           </Button>
 
           {isProfessionalPartner && (
-            <a
-              href={userInfo ? getContractorProfileUrl(userInfo) : "/contractors"}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/professional/view-profile"
               className="inline-flex items-center gap-2 bg-white hover:bg-orange-50 text-orange-600 border border-orange-200 font-semibold px-4 py-2 h-[42px] rounded-lg shadow-sm transition-all text-sm"
             >
-              <span>View Live Profile</span>
-              <ExternalLink size={16} />
-            </a>
+              <span>View My Profile</span>
+              <Eye size={16} />
+            </Link>
           )}
 
           <Link

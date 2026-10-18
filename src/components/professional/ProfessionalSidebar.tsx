@@ -19,7 +19,8 @@ const navLinks = [
   { name: "My Portfolio", path: "/professional/portfolio", icon: Briefcase, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
   { name: "My Projects", path: "/professional/projects", icon: LayoutGrid, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
 
-  { name: "My Profile", path: "/professional/profile", icon: User },
+  { name: "Edit Profile", path: "/professional/profile", icon: User },
+  { name: "View Live Profile", path: "/professional/view-profile", icon: Briefcase, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
 ];
 
 interface ProfessionalSidebarProps {
@@ -49,20 +50,25 @@ const ProfessionalSidebar = ({ isOpen, setIsOpen }: ProfessionalSidebarProps) =>
         <button onClick={() => setIsOpen(false)} className="md:hidden text-gray-400 hover:text-gray-900 transition-colors" aria-label="Close sidebar"><X className="h-6 w-6" /></button>
       </div>
 
-      {/* Live Public Profile Link */}
+      {/* Live Public Profile Link Inside Panel */}
       <div className="mb-4">
-        <a
-          href={publicProfileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-between w-full p-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl text-xs font-bold shadow-md shadow-orange-500/20 transition-all duration-200 group"
+        <Link
+          href="/professional/view-profile"
+          onClick={() => setIsOpen(false)}
+          className={`flex items-center justify-between w-full p-3 rounded-xl text-xs font-bold transition-all duration-200 group ${
+            pathname === "/professional/view-profile"
+              ? "bg-orange-600 text-white shadow-md shadow-orange-500/25"
+              : "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-md shadow-orange-500/20"
+          }`}
         >
           <div className="flex items-center gap-2">
             <User className="w-4 h-4" />
-            <span>View Public Profile</span>
+            <span>View My Profile</span>
           </div>
-          <ExternalLink className="w-3.5 h-3.5 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-transform" />
-        </a>
+          <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+            Live
+          </span>
+        </Link>
       </div>
 
       <nav className="flex flex-col space-y-1.5 flex-1 min-h-0 overflow-y-auto pr-1">
