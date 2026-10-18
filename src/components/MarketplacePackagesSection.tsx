@@ -50,7 +50,7 @@ const DEFAULT_MARKETPLACE_PACKAGES: Package[] = [
   {
     _id: "mkt_state_level",
     title: "State Level Listing",
-    price: "9,999",
+    price: "4,999",
     unit: "1 Year / Full State",
     areaType: "State Level",
     isPopular: true,

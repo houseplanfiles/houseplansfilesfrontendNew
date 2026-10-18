@@ -141,7 +141,7 @@ const ProjectsPage = () => {
     setIsProjectModalOpen(true);
   };
 
-  const handleSaveProject = () => {
+  const handleSaveProject = async () => {
     if (!tempProject.title) return toast.error("Project title is required");
     const updated = [...workSamples];
     if (editingProjectIdx !== null) {
@@ -151,7 +151,28 @@ const ProjectsPage = () => {
     }
     setWorkSamples(updated);
     setIsProjectModalOpen(false);
-    toast.success(editingProjectIdx !== null ? "Project updated" : "Project added");
+
+    // Save directly to backend
+    const formData = new FormData();
+    const samplesToSubmit = updated.map((sample, idx) => {
+      const { imageFiles, ...rest } = sample;
+      if (imageFiles && imageFiles.length > 0) {
+        imageFiles.forEach((file: File) => {
+          formData.append(`workSample_images_${idx}`, file);
+        });
+        return { ...rest, hasNewImages: true, newImagesCount: imageFiles.length };
+      }
+      return rest;
+    });
+
+    formData.append("workSamples", JSON.stringify(samplesToSubmit));
+
+    try {
+      await dispatch(updateProfile(formData)).unwrap();
+      toast.success(editingProjectIdx !== null ? "Project updated successfully!" : "Project added successfully!");
+    } catch (err: any) {
+      toast.error(err || "Failed to save project changes");
+    }
   };
 
   const handleRemovePackage = (index: number) => {
@@ -372,7 +393,7 @@ const ProjectsPage = () => {
 
       {/* PACKAGE MODAL */}
       <Dialog open={isPackageModalOpen} onOpenChange={setIsPackageModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-white text-gray-900 shadow-2xl border border-gray-200 z-[1050]">
           <DialogHeader>
             <DialogTitle className="text-2xl font-black text-gray-900 tracking-tight">
                {editingPackageIdx !== null ? "Edit Package" : "Create New Package"}
@@ -443,7 +464,7 @@ const ProjectsPage = () => {
 
       {/* PROJECT MODAL */}
       <Dialog open={isProjectModalOpen} onOpenChange={setIsProjectModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white text-gray-900 shadow-2xl border border-gray-200 z-[1050]">
           <DialogHeader>
             <DialogTitle className="text-2xl font-black text-gray-900 tracking-tight">
                {editingProjectIdx !== null ? "Edit Project Details" : "Upload New Execution"}

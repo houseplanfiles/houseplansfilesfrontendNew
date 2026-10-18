@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { Loader2, Save, Zap, Sparkles, CheckCircle2 } from "lucide-react";
+import { Loader2, Save, Zap, Sparkles, CheckCircle2, ExternalLink } from "lucide-react";
 import { RootState, AppDispatch } from "@/lib/store";
 import {
   updateProfile,
@@ -13,6 +13,7 @@ import {
 } from "@/lib/features/users/userSlice";
 import axios from "axios";
 import { generateInvoicePDF } from "@/lib/invoiceGenerator";
+import { getContractorProfileUrl } from "@/utils/profileUrls";
 
 import { Button } from "@/components/ui/button";
 import ActivatePremiumModal from "@/components/ActivatePremiumModal";
@@ -336,13 +337,28 @@ const ProfilePageProf = () => {
     );
   }
 
+  const publicProfileUrl = userInfo ? getContractorProfileUrl(userInfo) : "/contractors";
+
   return (
     <div className="space-y-6 p-4 md:p-6">
       
-      <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
-      <p className="text-gray-600">
-        Update your public profile and account details.
-      </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 max-w-3xl">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
+          <p className="text-gray-600">
+            Update your public profile and account details.
+          </p>
+        </div>
+        <a
+          href={publicProfileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all"
+        >
+          <span>View Public Profile</span>
+          <ExternalLink className="w-4 h-4" />
+        </a>
+      </div>
 
       {!isPaid && (
         <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-2xl p-5 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4 max-w-3xl">

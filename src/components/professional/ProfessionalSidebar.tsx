@@ -4,10 +4,11 @@ import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { LayoutGrid, Package, PlusSquare, User, LogOut, ClipboardList, Briefcase, X } from "lucide-react";
+import { LayoutGrid, Package, PlusSquare, User, LogOut, ClipboardList, Briefcase, X, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/lib/features/users/userSlice";
 import { RootState, AppDispatch } from "@/lib/store";
+import { getContractorProfileUrl } from "@/utils/profileUrls";
 
 const navLinks = [
   { name: "Dashboard", path: "/professional", icon: LayoutGrid },
@@ -18,7 +19,8 @@ const navLinks = [
   { name: "My Portfolio", path: "/professional/portfolio", icon: Briefcase, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
   { name: "My Projects", path: "/professional/projects", icon: LayoutGrid, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
 
-  { name: "My Profile", path: "/professional/profile", icon: User },
+  { name: "Edit Profile", path: "/professional/profile", icon: User },
+  { name: "View Live Profile", path: "/professional/view-profile", icon: Briefcase, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
 ];
 
 interface ProfessionalSidebarProps {
@@ -39,6 +41,7 @@ const ProfessionalSidebar = ({ isOpen, setIsOpen }: ProfessionalSidebarProps) =>
   const inactiveClasses = "text-gray-500 hover:bg-orange-50 hover:text-orange-600";
 
   const isProPartner = ["contractor", "architect", "professional"].includes(userInfo?.role?.toLowerCase() || "");
+  const publicProfileUrl = userInfo ? getContractorProfileUrl(userInfo) : "/contractors";
 
   return (
     <aside style={{ top: "80px" }} className={`fixed md:sticky left-0 bg-white border-r border-gray-100 p-4 flex flex-col w-64 transition-transform duration-300 ease-in-out z-50 h-[calc(100vh-80px)] md:shrink-0 overflow-y-auto ${isOpen ? "translate-x-0 shadow-2xl md:shadow-none" : "-translate-x-full md:translate-x-0"}`}>
@@ -46,6 +49,28 @@ const ProfessionalSidebar = ({ isOpen, setIsOpen }: ProfessionalSidebarProps) =>
         <h2 className="text-xl font-black text-gray-900 capitalize tracking-tight">{isProPartner ? userInfo?.role : "Professional"}</h2>
         <button onClick={() => setIsOpen(false)} className="md:hidden text-gray-400 hover:text-gray-900 transition-colors" aria-label="Close sidebar"><X className="h-6 w-6" /></button>
       </div>
+
+      {/* Live Public Profile Link Inside Panel */}
+      <div className="mb-4">
+        <Link
+          href="/professional/view-profile"
+          onClick={() => setIsOpen(false)}
+          className={`flex items-center justify-between w-full p-3 rounded-xl text-xs font-bold transition-all duration-200 group ${
+            pathname === "/professional/view-profile"
+              ? "bg-orange-600 text-white shadow-md shadow-orange-500/25"
+              : "bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-md shadow-orange-500/20"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <User className="w-4 h-4" />
+            <span>View My Profile</span>
+          </div>
+          <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+            Live
+          </span>
+        </Link>
+      </div>
+
       <nav className="flex flex-col space-y-1.5 flex-1 min-h-0 overflow-y-auto pr-1">
         {navLinks
           .filter((link) => !link.roles || (userInfo?.role && link.roles.includes(userInfo.role)))

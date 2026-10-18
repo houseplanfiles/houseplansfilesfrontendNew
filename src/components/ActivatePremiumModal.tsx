@@ -98,6 +98,7 @@ export default function ActivatePremiumModal({
   // Plan Definitions matching Register page
   const plans = useMemo(() => {
     const cityCount = selectedCities.length > 0 ? selectedCities.length : 1;
+    const stateCount = selectedStates.length > 0 ? selectedStates.length : 1;
 
     if (userRole === "seller") {
       return [
@@ -114,8 +115,8 @@ export default function ActivatePremiumModal({
           id: "Seller_State",
           name: "State Listing (1 Year)",
           duration: "1 Year",
-          basePrice: 9999,
-          note: "Entire State Coverage",
+          basePrice: 4999 * stateCount,
+          note: stateCount > 1 ? `${stateCount} States (₹4,999/state)` : "Entire State Coverage",
           badge: "State Level",
           isPanIndia: false,
         },
@@ -146,8 +147,8 @@ export default function ActivatePremiumModal({
           id: "Industrial_State",
           name: "State Level (1 Year)",
           duration: "1 Year",
-          basePrice: 14999,
-          note: "State Level Listing",
+          basePrice: 14999 * stateCount,
+          note: stateCount > 1 ? `${stateCount} States (₹14,999/state)` : "State Level Listing",
           badge: "State Level",
           isPanIndia: false,
         },
@@ -196,8 +197,8 @@ export default function ActivatePremiumModal({
         id: "State_1Y",
         name: "State (1 Year)",
         duration: "1 Year",
-        basePrice: 9999,
-        note: "Entire State-wide Coverage",
+        basePrice: 4999 * stateCount,
+        note: stateCount > 1 ? `${stateCount} States (₹4,999/state)` : "Entire State-wide Coverage",
         badge: "State Level",
         isPanIndia: false,
       },
@@ -211,10 +212,39 @@ export default function ActivatePremiumModal({
         isPanIndia: true,
       },
     ];
-  }, [userRole, selectedCities.length]);
+  }, [userRole, selectedCities.length, selectedStates.length]);
 
   const activePlan = plans.find((p) => p.id === selectedPlanId) || plans[0];
-  const itemsPrice = activePlan.basePrice;
+
+  // If user selected both Cities and States (and not PAN India), add both components together!
+  const itemsPrice = useMemo(() => {
+    if (activePlan.isPanIndia || isPanIndia) {
+      return activePlan.basePrice;
+    }
+
+    const cityCount = selectedCities.length;
+    const stateCount = selectedStates.length;
+
+    // Both city and state selected
+    if (cityCount > 0 && stateCount > 0) {
+      let cityUnitRate = 999;
+      if (userRole === "seller") {
+        cityUnitRate = 2999;
+      } else if (userRole === "industrial") {
+        cityUnitRate = 4999;
+      } else {
+        if (activePlan.id === "City_6M") cityUnitRate = 1999;
+        else if (activePlan.id === "City_1Y") cityUnitRate = 2999;
+        else cityUnitRate = 999;
+      }
+
+      const stateUnitRate = userRole === "industrial" ? 14999 : 4999;
+      return (cityCount * cityUnitRate) + (stateCount * stateUnitRate);
+    }
+
+    return activePlan.basePrice;
+  }, [activePlan, isPanIndia, selectedCities.length, selectedStates.length, userRole]);
+
   const taxPrice = Math.round(itemsPrice * 0.18 * 100) / 100;
   const totalPrice = itemsPrice + taxPrice;
 
@@ -389,55 +419,17 @@ export default function ActivatePremiumModal({
         <div className="p-4 md:p-6 space-y-6">
           {/* 1. SELECT OPERATING REGION */}
           <div className="bg-orange-50/70 p-4 md:p-5 rounded-xl border border-orange-200/80">
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-              <div>
-                <h4 className="text-sm md:text-base font-bold text-slate-900 flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-orange-600" /> Select Operating Region
-                </h4>
-                <p className="text-[11px] text-slate-500">
-                  Select your operating area to view suitable listing plans.
-                </p>
-              </div>
-
-              {/* Serve PAN India Toggle */}
-              <label
-                htmlFor="modal_pan_india"
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border cursor-pointer transition-all ${
-                  isPanIndia
-                    ? "bg-orange-600 text-white border-orange-600 shadow-sm"
-                    : "bg-white text-orange-700 border-orange-300 hover:bg-orange-50"
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  id="modal_pan_india"
-                  className="w-4 h-4 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
-                  checked={isPanIndia}
-                  onChange={(e) => handlePanIndiaToggle(e.target.checked)}
-                />
-                <span className="text-xs font-bold whitespace-nowrap">Serve PAN India</span>
-              </label>
+            <div className="mb-3">
+              <h4 className="text-sm md:text-base font-bold text-slate-900 flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-orange-600" /> Select Operating Region
+              </h4>
+              <p className="text-[11px] text-slate-500">
+                Select your operating area to view suitable listing plans.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-              <div>
-                <Label className="text-xs font-semibold text-slate-700 mb-1 block">
-                  State* <span className="text-[10px] text-gray-400 font-normal">(select multiple)</span>
-                </Label>
-                <CreatableSelect
-                  isMulti
-                  options={stateOptions}
-                  value={selectedStates.map((s) => ({ value: s, label: s }))}
-                  onChange={(vals: any) => {
-                    const newStates = vals ? vals.map((v: any) => v.value) : [];
-                    setSelectedStates(newStates);
-                  }}
-                  placeholder="Search or select state..."
-                  className="text-xs"
-                  formatCreateLabel={(input: string) => `Add "${input}"`}
-                />
-              </div>
-
+            <div className="space-y-3.5">
+              {/* 1. City selection */}
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <Label className="text-xs font-semibold text-slate-700 block">
@@ -462,6 +454,60 @@ export default function ActivatePremiumModal({
                   formatCreateLabel={(input: string) => `Add "${input}"`}
                   isDisabled={isPanIndia}
                 />
+              </div>
+
+              {/* 2. State selection */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <Label className="text-xs font-semibold text-slate-700 block">
+                    State* <span className="text-[10px] text-gray-400 font-normal">(select multiple)</span>
+                  </Label>
+                  {selectedStates.length > 1 && !isPanIndia && (
+                    <span className="text-[10px] font-bold text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">
+                      {selectedStates.length} States Selected
+                    </span>
+                  )}
+                </div>
+                <CreatableSelect
+                  isMulti
+                  options={stateOptions}
+                  value={selectedStates.map((s) => ({ value: s, label: s }))}
+                  onChange={(vals: any) => {
+                    const newStates = vals ? vals.map((v: any) => v.value) : [];
+                    setSelectedStates(newStates);
+                  }}
+                  placeholder="Search or select state..."
+                  className="text-xs"
+                  formatCreateLabel={(input: string) => `Add "${input}"`}
+                />
+              </div>
+
+              {/* 3. Serve PAN India below */}
+              <div className="pt-1">
+                <label
+                  htmlFor="modal_pan_india"
+                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                    isPanIndia
+                      ? "bg-orange-50 border-orange-400 shadow-sm"
+                      : "bg-white border-orange-200 hover:border-orange-300"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    id="modal_pan_india"
+                    className="w-4 h-4 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                    checked={isPanIndia}
+                    onChange={(e) => handlePanIndiaToggle(e.target.checked)}
+                  />
+                  <div>
+                    <span className="text-xs md:text-sm font-bold text-orange-800 block">
+                      Serve PAN India (₹9,999)
+                    </span>
+                    <span className="text-[11px] text-slate-500 block">
+                      Expand coverage nationwide across all cities and states with top-tier ranking.
+                    </span>
+                  </div>
+                </label>
               </div>
             </div>
           </div>
@@ -546,9 +592,16 @@ export default function ActivatePremiumModal({
             </div>
             <div className="flex justify-between items-center text-xs border-b border-slate-200/60 pb-2">
               <span className="text-slate-600">Base Investment</span>
-              <span className="font-bold text-slate-800">
-                ₹{itemsPrice.toLocaleString("en-IN")}
-              </span>
+              <div className="text-right">
+                <span className="font-bold text-slate-800 block">
+                  ₹{itemsPrice.toLocaleString("en-IN")}
+                </span>
+                {selectedCities.length > 0 && selectedStates.length > 0 && !isPanIndia && (
+                  <span className="text-[10px] text-orange-600 font-semibold block">
+                    ({selectedCities.length} Cities + {selectedStates.length} States)
+                  </span>
+                )}
+              </div>
             </div>
             <div className="flex justify-between items-center text-xs border-b border-slate-200/60 pb-2">
               <span className="text-slate-600">GST (18%)</span>

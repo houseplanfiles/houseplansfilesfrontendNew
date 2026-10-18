@@ -60,7 +60,7 @@ const DEFAULT_CITY_PARTNER_PACKAGES: Package[] = [
   {
     _id: "cp_state_1y",
     title: "State Level Listing (1 Year)",
-    price: "9,999",
+    price: "4,999",
     unit: "1 Year / State",
     areaType: "State Level",
     isPopular: false,

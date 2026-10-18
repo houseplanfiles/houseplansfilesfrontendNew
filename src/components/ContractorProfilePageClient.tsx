@@ -56,9 +56,10 @@ import ActivatePremiumModal from "@/components/ActivatePremiumModal";
 
 interface ContractorProfilePageClientProps {
   initialContractor?: any;
+  isEmbedded?: boolean;
 }
 
-const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClientProps = {}) => {
+const ContractorProfilePage = ({ initialContractor, isEmbedded = false }: ContractorProfilePageClientProps = {}) => {
   const params = useParams();
   const id = params?.id as string;
   const router = useRouter();
@@ -419,8 +420,8 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
   const websiteUrl = contractor.website || contractor.socialLinks?.website;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col w-full text-slate-800">
-      <Navbar />
+    <div className={`min-h-screen bg-[#F8FAFC] flex flex-col w-full text-slate-800 ${isEmbedded ? "rounded-2xl overflow-hidden shadow-sm border border-slate-100" : ""}`}>
+      {!isEmbedded && <Navbar />}
 
       {!isPaid && (
         <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-b border-amber-200 px-4 py-2.5 text-center text-xs font-semibold text-amber-900 flex flex-wrap items-center justify-center gap-2 shadow-xs">
@@ -1263,7 +1264,7 @@ const ContractorProfilePage = ({ initialContractor }: ContractorProfilePageClien
       />
 
       <div className="pb-16 sm:pb-20">
-        <Footer />
+        {!isEmbedded && <Footer />}
       </div>
     </div>
   );
