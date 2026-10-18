@@ -238,7 +238,7 @@ const MultiRoleRegisterPage = () => {
         break;
       }
       case "State_1Y":
-        planPrice = 9999;
+        planPrice = 4999;
         planName = "State Listing (1 Year)";
         break;
       case "Pan_India_1Y":
@@ -255,7 +255,7 @@ const MultiRoleRegisterPage = () => {
         break;
       }
       case "Seller_State":
-        planPrice = 9999;
+        planPrice = 4999;
         planName = "Marketplace State Listing (1 Year)";
         break;
       case "Seller_Pan_India":
@@ -1310,7 +1310,7 @@ const MultiRoleRegisterPage = () => {
                   {(selectedRole === "seller"
                     ? [
                         { id: "Seller_City", name: "City Shop (1 Year)", price: 2999 * (formData.city.length > 0 ? formData.city.length : 1), final: (2999 * (formData.city.length > 0 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected (₹2,999/city)` : "Per City Shop Listing", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
-                        { id: "Seller_State", name: "State Listing (1 Year)", price: 9999, final: "11,798.82", note: "Entire State Coverage", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                        { id: "Seller_State", name: "State Listing (1 Year)", price: 4999, final: "5,898.82", note: "Entire State Coverage", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
                         { id: "Seller_Pan_India", name: "PAN INDIA (1 Year)", price: 9999, final: "11,798.82", note: "All India Coverage", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
                       ]
                     : selectedRole === "industrial"
@@ -1323,7 +1323,7 @@ const MultiRoleRegisterPage = () => {
                         { id: "City_3M", name: "City (3 Months)", price: 999 * (formData.city.length > 0 ? formData.city.length : 1), final: (999 * (formData.city.length > 0 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected (₹999/city)` : "City Listing", color: "border-green-500 bg-green-500/5 text-green-800" },
                         { id: "City_6M", name: "City (6 Months)", price: 1999 * (formData.city.length > 0 ? formData.city.length : 1), final: (1999 * (formData.city.length > 0 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected (₹1,999/city)` : "Verified Profile", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
                         { id: "City_1Y", name: "City (1 Year)", price: 2999 * (formData.city.length > 0 ? formData.city.length : 1), final: (2999 * (formData.city.length > 0 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected (₹2,999/city)` : "Premium Full Year", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
-                        { id: "State_1Y", name: "State (1 Year)", price: 9999, final: "11,798.82", note: "State-wide Coverage", color: "border-indigo-500 bg-indigo-500/5 text-indigo-800" },
+                        { id: "State_1Y", name: "State (1 Year)", price: 4999, final: "5,898.82", note: "State-wide Coverage", color: "border-indigo-500 bg-indigo-500/5 text-indigo-800" },
                         { id: "Pan_India_1Y", name: "PAN INDIA (1 Year)", price: 9999, final: "11,798.82", note: "All India Top Listing", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
                       ]
                   ).map((p) => (
