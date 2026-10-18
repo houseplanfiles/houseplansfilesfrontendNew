@@ -215,7 +215,36 @@ export default function ActivatePremiumModal({
   }, [userRole, selectedCities.length, selectedStates.length]);
 
   const activePlan = plans.find((p) => p.id === selectedPlanId) || plans[0];
-  const itemsPrice = activePlan.basePrice;
+
+  // If user selected both Cities and States (and not PAN India), add both components together!
+  const itemsPrice = useMemo(() => {
+    if (activePlan.isPanIndia || isPanIndia) {
+      return activePlan.basePrice;
+    }
+
+    const cityCount = selectedCities.length;
+    const stateCount = selectedStates.length;
+
+    // Both city and state selected
+    if (cityCount > 0 && stateCount > 0) {
+      let cityUnitRate = 999;
+      if (userRole === "seller") {
+        cityUnitRate = 2999;
+      } else if (userRole === "industrial") {
+        cityUnitRate = 4999;
+      } else {
+        if (activePlan.id === "City_6M") cityUnitRate = 1999;
+        else if (activePlan.id === "City_1Y") cityUnitRate = 2999;
+        else cityUnitRate = 999;
+      }
+
+      const stateUnitRate = userRole === "industrial" ? 14999 : 4999;
+      return (cityCount * cityUnitRate) + (stateCount * stateUnitRate);
+    }
+
+    return activePlan.basePrice;
+  }, [activePlan, isPanIndia, selectedCities.length, selectedStates.length, userRole]);
+
   const taxPrice = Math.round(itemsPrice * 0.18 * 100) / 100;
   const totalPrice = itemsPrice + taxPrice;
 
@@ -563,9 +592,16 @@ export default function ActivatePremiumModal({
             </div>
             <div className="flex justify-between items-center text-xs border-b border-slate-200/60 pb-2">
               <span className="text-slate-600">Base Investment</span>
-              <span className="font-bold text-slate-800">
-                ₹{itemsPrice.toLocaleString("en-IN")}
-              </span>
+              <div className="text-right">
+                <span className="font-bold text-slate-800 block">
+                  ₹{itemsPrice.toLocaleString("en-IN")}
+                </span>
+                {selectedCities.length > 0 && selectedStates.length > 0 && !isPanIndia && (
+                  <span className="text-[10px] text-orange-600 font-semibold block">
+                    ({selectedCities.length} Cities + {selectedStates.length} States)
+                  </span>
+                )}
+              </div>
             </div>
             <div className="flex justify-between items-center text-xs border-b border-slate-200/60 pb-2">
               <span className="text-slate-600">GST (18%)</span>

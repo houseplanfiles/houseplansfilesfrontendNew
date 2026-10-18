@@ -214,31 +214,51 @@ const MultiRoleRegisterPage = () => {
     let planPrice = 999;
     let planName = "City Listing (3 Months)";
 
+    // Check if both city and states are selected
+    const rawCCount = formData.city.length;
+    const rawSCount = formData.selectedStates.length;
+    const hasBoth = rawCCount > 0 && rawSCount > 0 && !formData.isPanIndia;
+
     switch (selectedPlan) {
       // Architect, Contractor, Other Services
       case "City_3M":
       case "Basic": {
-        const cCount = formData.city.length > 0 ? formData.city.length : 1;
-        planPrice = 999 * cCount;
-        planName = `City Listing (3 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
+        const cCount = rawCCount > 0 ? rawCCount : 1;
+        if (hasBoth) {
+          planPrice = (999 * rawCCount) + (4999 * rawSCount);
+          planName = `City (3M) + State Listing (${rawCCount} Cities + ${rawSCount} States)`;
+        } else {
+          planPrice = 999 * cCount;
+          planName = `City Listing (3 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
+        }
         break;
       }
       case "City_6M":
       case "Premium": {
-        const cCount = formData.city.length > 0 ? formData.city.length : 1;
-        planPrice = 1999 * cCount;
-        planName = `City Listing (6 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
+        const cCount = rawCCount > 0 ? rawCCount : 1;
+        if (hasBoth) {
+          planPrice = (1999 * rawCCount) + (4999 * rawSCount);
+          planName = `City (6M) + State Listing (${rawCCount} Cities + ${rawSCount} States)`;
+        } else {
+          planPrice = 1999 * cCount;
+          planName = `City Listing (6 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
+        }
         break;
       }
       case "City_1Y":
       case "Premium+": {
-        const cCount = formData.city.length > 0 ? formData.city.length : 1;
-        planPrice = 2999 * cCount;
-        planName = `City Listing (1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
+        const cCount = rawCCount > 0 ? rawCCount : 1;
+        if (hasBoth) {
+          planPrice = (2999 * rawCCount) + (4999 * rawSCount);
+          planName = `City (1Y) + State Listing (${rawCCount} Cities + ${rawSCount} States)`;
+        } else {
+          planPrice = 2999 * cCount;
+          planName = `City Listing (1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
+        }
         break;
       }
       case "State_1Y": {
-        const sCount = formData.selectedStates.length > 0 ? formData.selectedStates.length : 1;
+        const sCount = rawSCount > 0 ? rawSCount : 1;
         planPrice = 4999 * sCount;
         planName = `State Listing (1 Year) - ${sCount > 1 ? `${sCount} States` : "Per State"}`;
         break;
@@ -251,13 +271,18 @@ const MultiRoleRegisterPage = () => {
       // Marketplace / Building Material (Seller)
       case "Seller_City":
       case "Seller_Auto": {
-        const cityCount = formData.city.length > 0 ? formData.city.length : 1;
-        planPrice = 2999 * cityCount;
-        planName = `Marketplace Shop Listing (${cityCount > 1 ? `${cityCount} Cities` : "Per City"} / 1 Year)`;
+        const cityCount = rawCCount > 0 ? rawCCount : 1;
+        if (hasBoth) {
+          planPrice = (2999 * rawCCount) + (4999 * rawSCount);
+          planName = `Marketplace City + State Listing (${rawCCount} Cities + ${rawSCount} States)`;
+        } else {
+          planPrice = 2999 * cityCount;
+          planName = `Marketplace Shop Listing (${cityCount > 1 ? `${cityCount} Cities` : "Per City"} / 1 Year)`;
+        }
         break;
       }
       case "Seller_State": {
-        const sCount = formData.selectedStates.length > 0 ? formData.selectedStates.length : 1;
+        const sCount = rawSCount > 0 ? rawSCount : 1;
         planPrice = 4999 * sCount;
         planName = `Marketplace State Listing (1 Year) - ${sCount > 1 ? `${sCount} States` : "Per State"}`;
         break;
@@ -269,13 +294,18 @@ const MultiRoleRegisterPage = () => {
 
       // Infra and Industrial Services
       case "Industrial_City": {
-        const cCount = formData.city.length > 0 ? formData.city.length : 1;
-        planPrice = 4999 * cCount;
-        planName = `Industrial Services (City / 1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
+        const cCount = rawCCount > 0 ? rawCCount : 1;
+        if (hasBoth) {
+          planPrice = (4999 * rawCCount) + (14999 * rawSCount);
+          planName = `Industrial Services City + State Listing (${rawCCount} Cities + ${rawSCount} States)`;
+        } else {
+          planPrice = 4999 * cCount;
+          planName = `Industrial Services (City / 1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
+        }
         break;
       }
       case "Industrial_State": {
-        const sCount = formData.selectedStates.length > 0 ? formData.selectedStates.length : 1;
+        const sCount = rawSCount > 0 ? rawSCount : 1;
         planPrice = 14999 * sCount;
         planName = `Industrial Services (State / 1 Year) - ${sCount > 1 ? `${sCount} States` : "Per State"}`;
         break;
@@ -1355,17 +1385,24 @@ const MultiRoleRegisterPage = () => {
                 {/* Plans Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {(() => {
-                    const cCount = formData.city.length > 0 ? formData.city.length : 1;
-                    const sCount = formData.selectedStates.length > 0 ? formData.selectedStates.length : 1;
+                    const rawCCount = formData.city.length;
+                    const rawSCount = formData.selectedStates.length;
+                    const cCount = rawCCount > 0 ? rawCCount : 1;
+                    const sCount = rawSCount > 0 ? rawSCount : 1;
+
+                    // If both cities and states are selected
+                    const hasBoth = rawCCount > 0 && rawSCount > 0 && !formData.isPanIndia;
 
                     const planList = selectedRole === "seller"
                       ? [
                           { 
                             id: "Seller_City", 
-                            name: "City Shop (1 Year)", 
-                            price: 2999 * cCount, 
-                            final: (2999 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Per City Shop Listing", 
+                            name: hasBoth ? "City + State (1 Year)" : "City Shop (1 Year)", 
+                            price: hasBoth ? (2999 * rawCCount) + (4999 * rawSCount) : 2999 * cCount, 
+                            final: ((hasBoth ? (2999 * rawCCount) + (4999 * rawSCount) : 2999 * cCount) * 1.18).toFixed(2), 
+                            note: hasBoth 
+                              ? `${rawCCount} Cities (₹2,999/city) + ${rawSCount} States (₹4,999/state)`
+                              : (cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Per City Shop Listing"), 
                             color: "border-blue-500 bg-blue-500/5 text-blue-800" 
                           },
                           { 
@@ -1389,10 +1426,12 @@ const MultiRoleRegisterPage = () => {
                       ? [
                           { 
                             id: "Industrial_City", 
-                            name: "City Level (1 Year)", 
-                            price: 4999 * cCount, 
-                            final: (4999 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹4,999/city)` : "City Level Listing", 
+                            name: hasBoth ? "City + State (1 Year)" : "City Level (1 Year)", 
+                            price: hasBoth ? (4999 * rawCCount) + (14999 * rawSCount) : 4999 * cCount, 
+                            final: ((hasBoth ? (4999 * rawCCount) + (14999 * rawSCount) : 4999 * cCount) * 1.18).toFixed(2), 
+                            note: hasBoth 
+                              ? `${rawCCount} Cities (₹4,999/city) + ${rawSCount} States (₹14,999/state)`
+                              : (cCount > 1 ? `${cCount} Cities Selected (₹4,999/city)` : "City Level Listing"), 
                             color: "border-blue-500 bg-blue-500/5 text-blue-800" 
                           },
                           { 
@@ -1415,26 +1454,32 @@ const MultiRoleRegisterPage = () => {
                       : [
                           { 
                             id: "City_3M", 
-                            name: "City (3 Months)", 
-                            price: 999 * cCount, 
-                            final: (999 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹999/city)` : "City Listing", 
+                            name: hasBoth ? "City (3M) + State" : "City (3 Months)", 
+                            price: hasBoth ? (999 * rawCCount) + (4999 * rawSCount) : 999 * cCount, 
+                            final: ((hasBoth ? (999 * rawCCount) + (4999 * rawSCount) : 999 * cCount) * 1.18).toFixed(2), 
+                            note: hasBoth 
+                              ? `${rawCCount} Cities (₹999/city) + ${rawSCount} States (₹4,999/state)`
+                              : (cCount > 1 ? `${cCount} Cities Selected (₹999/city)` : "City Listing"), 
                             color: "border-green-500 bg-green-500/5 text-green-800" 
                           },
                           { 
                             id: "City_6M", 
-                            name: "City (6 Months)", 
-                            price: 1999 * cCount, 
-                            final: (1999 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹1,999/city)` : "Verified Profile", 
+                            name: hasBoth ? "City (6M) + State" : "City (6 Months)", 
+                            price: hasBoth ? (1999 * rawCCount) + (4999 * rawSCount) : 1999 * cCount, 
+                            final: ((hasBoth ? (1999 * rawCCount) + (4999 * rawSCount) : 1999 * cCount) * 1.18).toFixed(2), 
+                            note: hasBoth 
+                              ? `${rawCCount} Cities (₹1,999/city) + ${rawSCount} States (₹4,999/state)`
+                              : (cCount > 1 ? `${cCount} Cities Selected (₹1,999/city)` : "Verified Profile"), 
                             color: "border-blue-500 bg-blue-500/5 text-blue-800" 
                           },
                           { 
                             id: "City_1Y", 
-                            name: "City (1 Year)", 
-                            price: 2999 * cCount, 
-                            final: (2999 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Premium Full Year", 
+                            name: hasBoth ? "City (1Y) + State" : "City (1 Year)", 
+                            price: hasBoth ? (2999 * rawCCount) + (4999 * rawSCount) : 2999 * cCount, 
+                            final: ((hasBoth ? (2999 * rawCCount) + (4999 * rawSCount) : 2999 * cCount) * 1.18).toFixed(2), 
+                            note: hasBoth 
+                              ? `${rawCCount} Cities (₹2,999/city) + ${rawSCount} States (₹4,999/state)`
+                              : (cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Premium Full Year"), 
                             color: "border-orange-500 bg-orange-500/5 text-orange-800" 
                           },
                           { 
