@@ -372,7 +372,7 @@ const ProjectsPage = () => {
 
       {/* PACKAGE MODAL */}
       <Dialog open={isPackageModalOpen} onOpenChange={setIsPackageModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-white text-gray-900 shadow-2xl border border-gray-200 z-[1050]">
           <DialogHeader>
             <DialogTitle className="text-2xl font-black text-gray-900 tracking-tight">
                {editingPackageIdx !== null ? "Edit Package" : "Create New Package"}
@@ -443,7 +443,7 @@ const ProjectsPage = () => {
 
       {/* PROJECT MODAL */}
       <Dialog open={isProjectModalOpen} onOpenChange={setIsProjectModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white text-gray-900 shadow-2xl border border-gray-200 z-[1050]">
           <DialogHeader>
             <DialogTitle className="text-2xl font-black text-gray-900 tracking-tight">
                {editingProjectIdx !== null ? "Edit Project Details" : "Upload New Execution"}
