@@ -237,10 +237,12 @@ const MultiRoleRegisterPage = () => {
         planName = `City Listing (1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
       }
-      case "State_1Y":
-        planPrice = 4999;
-        planName = "State Listing (1 Year)";
+      case "State_1Y": {
+        const sCount = formData.selectedStates.length > 0 ? formData.selectedStates.length : 1;
+        planPrice = 4999 * sCount;
+        planName = `State Listing (1 Year) - ${sCount > 1 ? `${sCount} States` : "Per State"}`;
         break;
+      }
       case "Pan_India_1Y":
         planPrice = 9999;
         planName = "PAN India Listing (1 Year)";
@@ -254,10 +256,12 @@ const MultiRoleRegisterPage = () => {
         planName = `Marketplace Shop Listing (${cityCount > 1 ? `${cityCount} Cities` : "Per City"} / 1 Year)`;
         break;
       }
-      case "Seller_State":
-        planPrice = 4999;
-        planName = "Marketplace State Listing (1 Year)";
+      case "Seller_State": {
+        const sCount = formData.selectedStates.length > 0 ? formData.selectedStates.length : 1;
+        planPrice = 4999 * sCount;
+        planName = `Marketplace State Listing (1 Year) - ${sCount > 1 ? `${sCount} States` : "Per State"}`;
         break;
+      }
       case "Seller_Pan_India":
         planPrice = 9999;
         planName = "Marketplace PAN India Listing (1 Year)";
@@ -270,10 +274,12 @@ const MultiRoleRegisterPage = () => {
         planName = `Industrial Services (City / 1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
       }
-      case "Industrial_State":
-        planPrice = 14999;
-        planName = "Industrial Services (State / 1 Year)";
+      case "Industrial_State": {
+        const sCount = formData.selectedStates.length > 0 ? formData.selectedStates.length : 1;
+        planPrice = 14999 * sCount;
+        planName = `Industrial Services (State / 1 Year) - ${sCount > 1 ? `${sCount} States` : "Per State"}`;
         break;
+      }
       case "Industrial_Pan_India":
         planPrice = 24999;
         planName = "Industrial Services (PAN India / 1 Year)";
@@ -1243,9 +1249,43 @@ const MultiRoleRegisterPage = () => {
                     <h3 className="text-lg font-bold text-foreground">Select Operating Region</h3>
                     <p className="text-xs text-muted-foreground">Select your coverage area to see suitable plans</p>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                  <div className="space-y-4">
+                    {/* 1. City Selection */}
                     <div>
-                      <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
+                      <div className="flex items-center justify-between mb-1">
+                        <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
+                        {(formData.city as string[]).length > 1 && !formData.isPanIndia && (
+                          <span className="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded">
+                            {(formData.city as string[]).length} Cities Selected
+                          </span>
+                        )}
+                      </div>
+                      <CreatableSelect
+                        isMulti
+                        options={cityOptions}
+                        value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
+                        onChange={(vals: any) => {
+                           const newCities = vals ? vals.map((v: any) => v.value) : [];
+                           setFormData(prev => ({ ...prev, city: newCities }));
+                        }}
+                        placeholder={formData.isPanIndia ? "Disabled (PAN India Active)" : "Search or select city name..."}
+                        className="text-sm"
+                        formatCreateLabel={(input: string) => `Add "${input}"`}
+                        isDisabled={formData.isPanIndia}
+                      />
+                    </div>
+
+                    {/* 2. State Selection */}
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
+                        {(formData.selectedStates as string[]).length > 1 && !formData.isPanIndia && (
+                          <span className="text-xs font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded">
+                            {(formData.selectedStates as string[]).length} States Selected
+                          </span>
+                        )}
+                      </div>
                       <CreatableSelect
                         isMulti
                         options={stateOptions}
@@ -1255,45 +1295,52 @@ const MultiRoleRegisterPage = () => {
                            setFormData(prev => ({ ...prev, selectedStates: newStates }));
                         }}
                         placeholder="Search or select state..."
-                        className="text-sm mb-4"
-                        formatCreateLabel={(input: string) => `Add "${input}"`}
-                      />
-                      <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
-                      <CreatableSelect
-                        isMulti
-                        options={cityOptions}
-                        value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
-                        onChange={(vals: any) => {
-                           const newCities = vals ? vals.map((v: any) => v.value) : [];
-                           setFormData(prev => ({ ...prev, city: newCities }));
-                        }}
-                        placeholder="Search or select city name..."
                         className="text-sm"
                         formatCreateLabel={(input: string) => `Add "${input}"`}
-                        isDisabled={formData.isPanIndia}
                       />
                     </div>
-                    <div>
-                      <div className="flex items-center h-full">
-                        <div className="flex items-center space-x-3 w-full p-4 bg-white border border-orange-200 rounded-lg shadow-sm">
-                          <input
-                            type="checkbox"
-                            id="panIndia_unified"
-                            className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
-                            checked={formData.isPanIndia}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              setFormData(prev => ({ ...prev, isPanIndia: checked }));
-                              if (checked) {
-                                if (selectedRole === "seller") setSelectedPlanState("Seller_Pan_India");
-                                else if (selectedRole === "industrial") setSelectedPlanState("Industrial_Pan_India");
-                                else setSelectedPlanState("Pan_India_1Y");
-                              }
-                            }}
-                          />
-                          <label htmlFor="panIndia_unified" className="text-base font-bold text-orange-700 cursor-pointer">
-                            Serve PAN India
+
+                    {/* 3. Serve PAN India (Below City & State) */}
+                    <div className="pt-2">
+                      <div className="flex items-center space-x-3 w-full p-4 bg-white border border-orange-200 rounded-lg shadow-sm hover:border-orange-300 transition-colors">
+                        <input
+                          type="checkbox"
+                          id="panIndia_unified"
+                          className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                          checked={formData.isPanIndia}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setFormData(prev => ({ ...prev, isPanIndia: checked }));
+                            if (checked) {
+                              if (selectedRole === "seller") setSelectedPlanState("Seller_Pan_India");
+                              else if (selectedRole === "industrial") setSelectedPlanState("Industrial_Pan_India");
+                              else setSelectedPlanState("Pan_India_1Y");
+                            } else {
+                              if (selectedRole === "seller") setSelectedPlanState("Seller_City");
+                              else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
+                              else setSelectedPlanState("City_3M");
+                            }
+                          }}
+                        />
+                        <div className="cursor-pointer" onClick={() => {
+                          const nextChecked = !formData.isPanIndia;
+                          setFormData(prev => ({ ...prev, isPanIndia: nextChecked }));
+                          if (nextChecked) {
+                            if (selectedRole === "seller") setSelectedPlanState("Seller_Pan_India");
+                            else if (selectedRole === "industrial") setSelectedPlanState("Industrial_Pan_India");
+                            else setSelectedPlanState("Pan_India_1Y");
+                          } else {
+                            if (selectedRole === "seller") setSelectedPlanState("Seller_City");
+                            else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
+                            else setSelectedPlanState("City_3M");
+                          }
+                        }}>
+                          <label htmlFor="panIndia_unified" className="text-base font-bold text-orange-700 cursor-pointer block">
+                            Serve PAN India (₹9,999)
                           </label>
+                          <span className="text-xs text-muted-foreground block">
+                            Get full coverage across all states and cities in India with maximum visibility.
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1302,42 +1349,124 @@ const MultiRoleRegisterPage = () => {
 
                 <div>
                   <h3 className="text-lg font-bold text-foreground">Choose your Listing Plan</h3>
-                  <p className="text-xs text-muted-foreground">Select the right plan to grow your business</p>
+                  <p className="text-xs text-muted-foreground">Select the right plan to grow your business (City &rarr; State &rarr; PAN India)</p>
                 </div>
                 
                 {/* Plans Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {(selectedRole === "seller"
-                    ? [
-                        { id: "Seller_City", name: "City Shop (1 Year)", price: 2999 * (formData.city.length > 0 ? formData.city.length : 1), final: (2999 * (formData.city.length > 0 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected (₹2,999/city)` : "Per City Shop Listing", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
-                        { id: "Seller_State", name: "State Listing (1 Year)", price: 4999, final: "5,898.82", note: "Entire State Coverage", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
-                        { id: "Seller_Pan_India", name: "PAN INDIA (1 Year)", price: 9999, final: "11,798.82", note: "All India Coverage", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
-                      ]
-                    : selectedRole === "industrial"
-                    ? [
-                        { id: "Industrial_City", name: "City Level (1 Year)", price: 4999 * (formData.city.length > 0 ? formData.city.length : 1), final: (4999 * (formData.city.length > 0 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected (₹4,999/city)` : "City Level Listing", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
-                        { id: "Industrial_State", name: "State Level (1 Year)", price: 14999, final: "17,698.82", note: "State Level Listing", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
-                        { id: "Industrial_Pan_India", name: "PAN INDIA (1 Year)", price: 24999, final: "29,498.82", note: "All India Coverage", color: "border-red-500 bg-red-500/5 text-red-800" }
-                      ]
-                    : [
-                        { id: "City_3M", name: "City (3 Months)", price: 999 * (formData.city.length > 0 ? formData.city.length : 1), final: (999 * (formData.city.length > 0 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected (₹999/city)` : "City Listing", color: "border-green-500 bg-green-500/5 text-green-800" },
-                        { id: "City_6M", name: "City (6 Months)", price: 1999 * (formData.city.length > 0 ? formData.city.length : 1), final: (1999 * (formData.city.length > 0 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected (₹1,999/city)` : "Verified Profile", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
-                        { id: "City_1Y", name: "City (1 Year)", price: 2999 * (formData.city.length > 0 ? formData.city.length : 1), final: (2999 * (formData.city.length > 0 ? formData.city.length : 1) * 1.18).toFixed(2), note: formData.city.length > 1 ? `${formData.city.length} Cities Selected (₹2,999/city)` : "Premium Full Year", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
-                        { id: "State_1Y", name: "State (1 Year)", price: 4999, final: "5,898.82", note: "State-wide Coverage", color: "border-indigo-500 bg-indigo-500/5 text-indigo-800" },
-                        { id: "Pan_India_1Y", name: "PAN INDIA (1 Year)", price: 9999, final: "11,798.82", note: "All India Top Listing", color: "border-purple-500 bg-purple-500/5 text-purple-800" }
-                      ]
-                  ).map((p) => (
-                    <div
-                      key={p.id}
-                      role="button"
-                      onClick={() => {
-                        setSelectedPlanState(p.id);
-                        if (p.id.toLowerCase().includes("pan_india")) {
-                          setFormData((prev) => ({ ...prev, isPanIndia: true }));
-                        } else {
-                          setFormData((prev) => ({ ...prev, isPanIndia: false }));
-                        }
-                      }}
+                  {(() => {
+                    const cCount = formData.city.length > 0 ? formData.city.length : 1;
+                    const sCount = formData.selectedStates.length > 0 ? formData.selectedStates.length : 1;
+
+                    const planList = selectedRole === "seller"
+                      ? [
+                          { 
+                            id: "Seller_City", 
+                            name: "City Shop (1 Year)", 
+                            price: 2999 * cCount, 
+                            final: (2999 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Per City Shop Listing", 
+                            color: "border-blue-500 bg-blue-500/5 text-blue-800" 
+                          },
+                          { 
+                            id: "Seller_State", 
+                            name: "State Listing (1 Year)", 
+                            price: 4999 * sCount, 
+                            final: (4999 * sCount * 1.18).toFixed(2), 
+                            note: sCount > 1 ? `${sCount} States Selected (₹4,999/state)` : "Entire State Coverage", 
+                            color: "border-orange-500 bg-orange-500/5 text-orange-800" 
+                          },
+                          { 
+                            id: "Seller_Pan_India", 
+                            name: "PAN INDIA (1 Year)", 
+                            price: 9999, 
+                            final: "11,798.82", 
+                            note: "All India Coverage", 
+                            color: "border-purple-500 bg-purple-500/5 text-purple-800" 
+                          }
+                        ]
+                      : selectedRole === "industrial"
+                      ? [
+                          { 
+                            id: "Industrial_City", 
+                            name: "City Level (1 Year)", 
+                            price: 4999 * cCount, 
+                            final: (4999 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹4,999/city)` : "City Level Listing", 
+                            color: "border-blue-500 bg-blue-500/5 text-blue-800" 
+                          },
+                          { 
+                            id: "Industrial_State", 
+                            name: "State Level (1 Year)", 
+                            price: 14999 * sCount, 
+                            final: (14999 * sCount * 1.18).toFixed(2), 
+                            note: sCount > 1 ? `${sCount} States Selected (₹14,999/state)` : "State Level Listing", 
+                            color: "border-orange-500 bg-orange-500/5 text-orange-800" 
+                          },
+                          { 
+                            id: "Industrial_Pan_India", 
+                            name: "PAN INDIA (1 Year)", 
+                            price: 24999, 
+                            final: "29,498.82", 
+                            note: "All India Coverage", 
+                            color: "border-red-500 bg-red-500/5 text-red-800" 
+                          }
+                        ]
+                      : [
+                          { 
+                            id: "City_3M", 
+                            name: "City (3 Months)", 
+                            price: 999 * cCount, 
+                            final: (999 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹999/city)` : "City Listing", 
+                            color: "border-green-500 bg-green-500/5 text-green-800" 
+                          },
+                          { 
+                            id: "City_6M", 
+                            name: "City (6 Months)", 
+                            price: 1999 * cCount, 
+                            final: (1999 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹1,999/city)` : "Verified Profile", 
+                            color: "border-blue-500 bg-blue-500/5 text-blue-800" 
+                          },
+                          { 
+                            id: "City_1Y", 
+                            name: "City (1 Year)", 
+                            price: 2999 * cCount, 
+                            final: (2999 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Premium Full Year", 
+                            color: "border-orange-500 bg-orange-500/5 text-orange-800" 
+                          },
+                          { 
+                            id: "State_1Y", 
+                            name: "State (1 Year)", 
+                            price: 4999 * sCount, 
+                            final: (4999 * sCount * 1.18).toFixed(2), 
+                            note: sCount > 1 ? `${sCount} States Selected (₹4,999/state)` : "State-wide Coverage", 
+                            color: "border-indigo-500 bg-indigo-500/5 text-indigo-800" 
+                          },
+                          { 
+                            id: "Pan_India_1Y", 
+                            name: "PAN INDIA (1 Year)", 
+                            price: 9999, 
+                            final: "11,798.82", 
+                            note: "All India Top Listing", 
+                            color: "border-purple-500 bg-purple-500/5 text-purple-800" 
+                          }
+                        ];
+
+                    return planList.map((p) => (
+                      <div
+                        key={p.id}
+                        role="button"
+                        onClick={() => {
+                          setSelectedPlanState(p.id);
+                          if (p.id.toLowerCase().includes("pan_india")) {
+                            setFormData((prev) => ({ ...prev, isPanIndia: true }));
+                          } else {
+                            setFormData((prev) => ({ ...prev, isPanIndia: false }));
+                          }
+                        }}
                       className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                         selectedPlan === p.id 
                           ? `${p.color} ring-2 ring-primary border-primary` 
@@ -1361,7 +1490,8 @@ const MultiRoleRegisterPage = () => {
                       </div>
                       <p className="text-[10px] text-muted-foreground mt-1.5">{p.note}</p>
                     </div>
-                  ))}
+                    ));
+                  })()}
                 </div>
 
                 {/* Optional Services */}
