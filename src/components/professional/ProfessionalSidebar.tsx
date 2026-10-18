@@ -4,10 +4,11 @@ import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { LayoutGrid, Package, PlusSquare, User, LogOut, ClipboardList, Briefcase, X } from "lucide-react";
+import { LayoutGrid, Package, PlusSquare, User, LogOut, ClipboardList, Briefcase, X, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/lib/features/users/userSlice";
 import { RootState, AppDispatch } from "@/lib/store";
+import { getContractorProfileUrl } from "@/utils/profileUrls";
 
 const navLinks = [
   { name: "Dashboard", path: "/professional", icon: LayoutGrid },
@@ -39,6 +40,7 @@ const ProfessionalSidebar = ({ isOpen, setIsOpen }: ProfessionalSidebarProps) =>
   const inactiveClasses = "text-gray-500 hover:bg-orange-50 hover:text-orange-600";
 
   const isProPartner = ["contractor", "architect", "professional"].includes(userInfo?.role?.toLowerCase() || "");
+  const publicProfileUrl = userInfo ? getContractorProfileUrl(userInfo) : "/contractors";
 
   return (
     <aside style={{ top: "80px" }} className={`fixed md:sticky left-0 bg-white border-r border-gray-100 p-4 flex flex-col w-64 transition-transform duration-300 ease-in-out z-50 h-[calc(100vh-80px)] md:shrink-0 overflow-y-auto ${isOpen ? "translate-x-0 shadow-2xl md:shadow-none" : "-translate-x-full md:translate-x-0"}`}>
@@ -46,6 +48,23 @@ const ProfessionalSidebar = ({ isOpen, setIsOpen }: ProfessionalSidebarProps) =>
         <h2 className="text-xl font-black text-gray-900 capitalize tracking-tight">{isProPartner ? userInfo?.role : "Professional"}</h2>
         <button onClick={() => setIsOpen(false)} className="md:hidden text-gray-400 hover:text-gray-900 transition-colors" aria-label="Close sidebar"><X className="h-6 w-6" /></button>
       </div>
+
+      {/* Live Public Profile Link */}
+      <div className="mb-4">
+        <a
+          href={publicProfileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-between w-full p-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl text-xs font-bold shadow-md shadow-orange-500/20 transition-all duration-200 group"
+        >
+          <div className="flex items-center gap-2">
+            <User className="w-4 h-4" />
+            <span>View Public Profile</span>
+          </div>
+          <ExternalLink className="w-3.5 h-3.5 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-transform" />
+        </a>
+      </div>
+
       <nav className="flex flex-col space-y-1.5 flex-1 min-h-0 overflow-y-auto pr-1">
         {navLinks
           .filter((link) => !link.roles || (userInfo?.role && link.roles.includes(userInfo.role)))

@@ -16,6 +16,7 @@ import {
   Loader2,
   Calendar,
   FileText,
+  ExternalLink,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/store";
@@ -23,6 +24,7 @@ import { fetchMyProducts } from "@/lib/features/products/productSlice";
 import { fetchMyProfessionalOrders } from "@/lib/features/professional/professionalOrderSlice";
 import { fetchMyInquiries } from "@/lib/features/inquiries/inquirySlice";
 import { fetchCurrentUser } from "@/lib/features/users/userSlice";
+import { getContractorProfileUrl } from "@/utils/profileUrls";
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -492,6 +494,18 @@ const DashboardPage = () => {
           >
             <FileText className="w-4 h-4" /> Export Report
           </Button>
+
+          {isProfessionalPartner && (
+            <a
+              href={userInfo ? getContractorProfileUrl(userInfo) : "/contractors"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-white hover:bg-orange-50 text-orange-600 border border-orange-200 font-semibold px-4 py-2 h-[42px] rounded-lg shadow-sm transition-all text-sm"
+            >
+              <span>View Live Profile</span>
+              <ExternalLink size={16} />
+            </a>
+          )}
 
           <Link
             href={
