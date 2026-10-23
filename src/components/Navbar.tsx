@@ -371,34 +371,37 @@ const Navbar = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="fixed top-0 right-0 bottom-0 z-[60] bg-white w-[85%] max-w-sm p-6 lg:hidden flex flex-col shadow-2xl"
             >
-              <div className="flex justify-between items-center mb-8 flex-shrink-0">
-                <Image src="/logo1.png" alt="Logo" width={120} height={40} className="h-10 w-auto" />
+              <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-100 flex-shrink-0">
+                <Image src="/logo1.png" alt="Logo" width={110} height={36} className="h-8 sm:h-9 w-auto" />
                 <button
                   onClick={() => setIsMenuOpen(false)}
-                  className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
+                  className="p-1.5 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
                   aria-label="Close Menu"
                 >
-                  <X className="w-6 h-6 text-gray-600" />
+                  <X className="w-5 h-5 text-gray-600" />
                 </button>
               </div>
 
-              <nav className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
-                <div className="flex flex-col gap-2">
+              <nav className="flex-grow overflow-y-auto pr-1 custom-scrollbar">
+                <div className="flex flex-col gap-1.5">
                   {navLinks.map((link) => (
                     link.submenu ? (
-                      <div key={link.name} className="flex flex-col mb-2">
-                        <span className="text-xs font-black uppercase text-gray-400 tracking-widest px-4 pt-4 pb-2">
-                          {link.name}
+                      <div key={link.name} className="flex flex-col bg-gray-50/70 rounded-xl p-2 border border-gray-100/80 mb-1">
+                        <span className="text-[11px] font-black uppercase text-gray-800 tracking-wider px-2 pt-1 pb-1.5 flex items-center justify-between">
+                          <span>{link.name}</span>
+                          <span className="text-[9px] font-extrabold text-orange-600 bg-orange-100/80 px-1.5 py-0.5 rounded">
+                            {link.submenu.length}
+                          </span>
                         </span>
-                        <div className="flex flex-col pl-4 border-l border-orange-100 ml-4 gap-1">
+                        <div className="flex flex-col pl-2 border-l-2 border-orange-400/80 ml-1.5 gap-0.5 my-1">
                           {link.submenu.map((sub) => (
                             <Link
                               key={sub.name}
                               href={sub.path}
                               onClick={() => setIsMenuOpen(false)}
-                              className={`text-base font-semibold py-3 px-4 rounded-xl transition-all ${isActive(sub.path)
-                                ? "bg-orange-50 text-orange-600"
-                                : "text-gray-700 hover:bg-gray-50"
+                              className={`text-xs font-medium py-1.5 px-2.5 rounded-lg transition-all ${isActive(sub.path)
+                                ? "bg-orange-500 text-white font-bold shadow-sm"
+                                : "text-gray-600 hover:text-orange-600 hover:bg-white"
                                 }`}
                             >
                               {sub.name}
@@ -411,9 +414,9 @@ const Navbar = () => {
                         key={link.name}
                         href={link.path}
                         onClick={() => setIsMenuOpen(false)}
-                        className={`text-lg font-medium p-4 rounded-xl transition-all ${isActive(link.path)
-                          ? "bg-orange-50 text-orange-600 translate-x-2 shadow-sm"
-                          : "text-gray-700 hover:bg-gray-50 hover:translate-x-1"
+                        className={`text-sm font-bold py-2.5 px-3 rounded-xl transition-all ${isActive(link.path)
+                          ? "bg-orange-500 text-white shadow-sm"
+                          : "text-gray-800 hover:bg-gray-50 hover:text-orange-600"
                           }`}
                       >
                         {link.name}
@@ -422,7 +425,7 @@ const Navbar = () => {
                   ))}
                 </div>
               </nav>
-              <div className="border-t pt-6 mt-4 flex-shrink-0 space-y-4">
+              <div className="border-t pt-4 mt-3 flex-shrink-0 space-y-3">
                 {showCartAndWishlist && (
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <Link href="/cart" className="flex items-center justify-center gap-2 bg-gray-50 p-3 rounded-lg text-gray-700 font-medium">
