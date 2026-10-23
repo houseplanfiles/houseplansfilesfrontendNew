@@ -222,24 +222,14 @@ const MultiRoleRegisterPage = () => {
 
     switch (selectedPlan) {
       // Architect, Contractor, Other Services
-      case "City_3M":
-      case "Basic": {
-        const cCount = rawCCount > 0 ? rawCCount : 1;
-        planPrice = 999 * cCount;
-        planName = `City Listing (3 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
-        break;
-      }
-      case "City_6M":
-      case "Premium": {
-        const cCount = rawCCount > 0 ? rawCCount : 1;
-        planPrice = 1999 * cCount;
-        planName = `City Listing (6 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
-        break;
-      }
       case "City_1Y":
+      case "City_3M":
+      case "City_6M":
+      case "Basic":
+      case "Premium":
       case "Premium+": {
         const cCount = rawCCount > 0 ? rawCCount : 1;
-        planPrice = 2999 * cCount;
+        planPrice = 1499 * cCount;
         planName = `City Listing (1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
       }
@@ -298,15 +288,6 @@ const MultiRoleRegisterPage = () => {
 
     const items = [{ name: planName, price: planPrice }];
 
-    if (profileCreation) {
-      items.push({ name: "Profile Creation Addon", price: 499 });
-    }
-
-    if (profileStoreManagement === "6_Month") {
-      items.push({ name: "6-Month Profile & Store Management", price: 999 });
-    } else if (profileStoreManagement === "1_Year") {
-      items.push({ name: "1-Year Profile & Store Management", price: 1499 });
-    }
 
     const subtotal = items.reduce((acc, curr) => acc + curr.price, 0);
     const taxPrice = Math.round(subtotal * 0.18 * 100) / 100;
@@ -456,7 +437,7 @@ const MultiRoleRegisterPage = () => {
 
   const handleRoleChange = (value: string) => {
     setSelectedRole(value);
-    setSelectedPlanState(value === "seller" ? "Seller_Auto" : value === "industrial" ? "Industrial_State" : "Basic");
+    setSelectedPlanState(value === "seller" ? "Seller_Auto" : value === "industrial" ? "Industrial_State" : "City_1Y");
     setFormData({
       role: value,
       email: formData.email,
@@ -1293,7 +1274,7 @@ const MultiRoleRegisterPage = () => {
                            if (newCities.length > 0) {
                              if (selectedRole === "seller") setSelectedPlanState("Seller_City");
                              else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
-                             else setSelectedPlanState("City_3M");
+                             else setSelectedPlanState("City_1Y");
                            }
                         }}
                         placeholder={
@@ -1386,7 +1367,7 @@ const MultiRoleRegisterPage = () => {
                             } else {
                               if (selectedRole === "seller") setSelectedPlanState("Seller_City");
                               else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
-                              else setSelectedPlanState("City_3M");
+                              else setSelectedPlanState("City_1Y");
                             }
                           }}
                         />
@@ -1408,7 +1389,7 @@ const MultiRoleRegisterPage = () => {
                             } else {
                               if (selectedRole === "seller") setSelectedPlanState("Seller_City");
                               else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
-                              else setSelectedPlanState("City_3M");
+                              else setSelectedPlanState("City_1Y");
                             }
                           }}
                         >
@@ -1498,27 +1479,11 @@ const MultiRoleRegisterPage = () => {
                         ]
                       : [
                           { 
-                            id: "City_3M", 
-                            name: "City (3 Months)", 
-                            price: 999 * cCount, 
-                            final: (999 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹999/city)` : "City Listing", 
-                            color: "border-green-500 bg-green-500/5 text-green-800" 
-                          },
-                          { 
-                            id: "City_6M", 
-                            name: "City (6 Months)", 
-                            price: 1999 * cCount, 
-                            final: (1999 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹1,999/city)` : "Verified Profile", 
-                            color: "border-blue-500 bg-blue-500/5 text-blue-800" 
-                          },
-                          { 
                             id: "City_1Y", 
-                            name: "City (1 Year)", 
-                            price: 2999 * cCount, 
-                            final: (2999 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Premium Full Year", 
+                            name: "City Listing (1 Year)", 
+                            price: 1499 * cCount, 
+                            final: (1499 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹1,499/city)` : "Annual City Listing (₹1,499/city)", 
                             color: "border-orange-500 bg-orange-500/5 text-orange-800" 
                           },
                           { 
@@ -1576,70 +1541,6 @@ const MultiRoleRegisterPage = () => {
                     </div>
                     ));
                   })()}
-                </div>
-
-                {/* Optional Services */}
-                <div className="space-y-3 pt-3 border-t border-dashed border-border">
-                  <div>
-                    <h4 className="text-sm font-bold text-foreground">Optional Services</h4>
-                    <p className="text-[11px] text-muted-foreground">Boost your profile and store visibility</p>
-                  </div>
-                  
-                  {/* Service 1: Profile Creation */}
-                  <div
-                    role="button"
-                    onClick={() => setProfileCreation(!profileCreation)}
-                    className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                      profileCreation 
-                        ? "bg-teal-500/5 border-teal-500 text-teal-800" 
-                        : "border-border hover:border-gray-300"
-                    }`}
-                  >
-                    <div>
-                      <span className="text-xs font-bold block">Profile Creation Service</span>
-                      <span className="text-[10px] text-muted-foreground font-medium">One-time setup fee</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs font-bold">₹499</span>
-                      <div className={`w-4 h-4 rounded flex items-center justify-center border ${
-                        profileCreation ? "bg-teal-500 border-teal-500 text-white" : "border-gray-300"
-                      }`}>
-                        {profileCreation && <CheckCircle size={10} />}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Service 2 & 3: Management Plans */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {[
-                      { id: "6_Month", name: "6-Month Management", price: 999 },
-                      { id: "1_Year", name: "1-Year Management", price: 1499 }
-                    ].map((m) => (
-                      <div
-                        key={m.id}
-                        role="button"
-                        onClick={() => setProfileStoreManagement(profileStoreManagement === m.id ? "None" : m.id)}
-                        className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                          profileStoreManagement === m.id
-                            ? "bg-amber-500/5 border-amber-500 text-amber-800"
-                            : "border-border hover:border-gray-300"
-                        }`}
-                      >
-                        <div className="flex justify-between items-start">
-                          <span className="text-xs font-bold">{m.name}</span>
-                          <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                            profileStoreManagement === m.id ? "bg-amber-500 border-amber-500 text-white" : "border-gray-300"
-                          }`}>
-                            {profileStoreManagement === m.id && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
-                          </div>
-                        </div>
-                        <div className="mt-1 flex items-baseline justify-between">
-                          <span className="text-xs text-muted-foreground">Profile & Store</span>
-                          <span className="text-xs font-bold text-foreground">₹{m.price}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
             )}

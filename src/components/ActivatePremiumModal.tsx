@@ -88,7 +88,7 @@ export default function ActivatePremiumModal({
       } else {
         if (user.role === "seller") setSelectedPlanId("Seller_City");
         else if (user.role === "industrial") setSelectedPlanId("Industrial_City");
-        else setSelectedPlanId("City_3M");
+        else setSelectedPlanId("City_1Y");
       }
     }
   }, [isOpen, user, initialCities, initialStates]);
@@ -167,30 +167,12 @@ export default function ActivatePremiumModal({
     // Default for Architect, Contractor, Other Services
     return [
       {
-        id: "City_3M",
-        name: "City (3 Months)",
-        duration: "3 Months",
-        basePrice: 999 * cityCount,
-        note: cityCount > 1 ? `${cityCount} Cities (₹999/city)` : "Starter City Listing",
-        badge: "Quarterly",
-        isPanIndia: false,
-      },
-      {
-        id: "City_6M",
-        name: "City (6 Months)",
-        duration: "6 Months",
-        basePrice: 1999 * cityCount,
-        note: cityCount > 1 ? `${cityCount} Cities (₹1,999/city)` : "Verified Profile",
-        badge: "Half Yearly",
-        isPanIndia: false,
-      },
-      {
         id: "City_1Y",
-        name: "City (1 Year)",
+        name: "City Listing (1 Year)",
         duration: "1 Year",
-        basePrice: 2999 * cityCount,
-        note: cityCount > 1 ? `${cityCount} Cities (₹2,999/city)` : "Annual City Listing",
-        badge: "Best Value",
+        basePrice: 1499 * cityCount,
+        note: cityCount > 1 ? `${cityCount} Cities (₹1,499/city)` : "Annual City Listing (₹1,499/city)",
+        badge: "City Level",
         isPanIndia: false,
       },
       {
@@ -235,7 +217,7 @@ export default function ActivatePremiumModal({
     } else {
       if (userRole === "seller") setSelectedPlanId("Seller_City");
       else if (userRole === "industrial") setSelectedPlanId("Industrial_City");
-      else setSelectedPlanId("City_3M");
+      else setSelectedPlanId("City_1Y");
     }
   };
 
@@ -430,7 +412,7 @@ export default function ActivatePremiumModal({
                       setIsPanIndia(false);
                       if (userRole === "seller") setSelectedPlanId("Seller_City");
                       else if (userRole === "industrial") setSelectedPlanId("Industrial_City");
-                      else setSelectedPlanId("City_3M");
+                      else setSelectedPlanId("City_1Y");
                     }
                   }}
                   placeholder={
