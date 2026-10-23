@@ -16,8 +16,9 @@ const navLinks = [
   { name: "Add New Product", path: "/professional/add-product", icon: PlusSquare, roles: ["professional", "admin"] },
   { name: "My Enquiries", path: "/professional/enquiries", icon: ClipboardList, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
   { name: "My Orders", path: "/professional/my-orders", icon: ClipboardList, roles: ["professional", "admin"] },
-  { name: "My Portfolio", path: "/professional/portfolio", icon: Briefcase, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
+  { name: "My Packages", path: "/professional/packages", icon: Package, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
   { name: "My Projects", path: "/professional/projects", icon: LayoutGrid, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
+  { name: "My Portfolio", path: "/professional/portfolio", icon: Briefcase, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
 
   { name: "Edit Profile", path: "/professional/profile", icon: User },
   { name: "View Live Profile", path: "/professional/view-profile", icon: Briefcase, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },
