@@ -216,42 +216,19 @@ export default function ActivatePremiumModal({
 
   const activePlan = plans.find((p) => p.id === selectedPlanId) || plans[0];
 
-  // If user selected both Cities and States (and not PAN India), add both components together!
   const itemsPrice = useMemo(() => {
-    if (activePlan.isPanIndia || isPanIndia) {
-      return activePlan.basePrice;
-    }
-
-    const cityCount = selectedCities.length;
-    const stateCount = selectedStates.length;
-
-    // Both city and state selected
-    if (cityCount > 0 && stateCount > 0) {
-      let cityUnitRate = 999;
-      if (userRole === "seller") {
-        cityUnitRate = 2999;
-      } else if (userRole === "industrial") {
-        cityUnitRate = 4999;
-      } else {
-        if (activePlan.id === "City_6M") cityUnitRate = 1999;
-        else if (activePlan.id === "City_1Y") cityUnitRate = 2999;
-        else cityUnitRate = 999;
-      }
-
-      const stateUnitRate = userRole === "industrial" ? 14999 : 4999;
-      return (cityCount * cityUnitRate) + (stateCount * stateUnitRate);
-    }
-
     return activePlan.basePrice;
-  }, [activePlan, isPanIndia, selectedCities.length, selectedStates.length, userRole]);
+  }, [activePlan]);
 
   const taxPrice = Math.round(itemsPrice * 0.18 * 100) / 100;
   const totalPrice = itemsPrice + taxPrice;
 
-  // Handle Pan India toggle
+  // Handle Pan India toggle with mutual exclusion
   const handlePanIndiaToggle = (checked: boolean) => {
     setIsPanIndia(checked);
     if (checked) {
+      setSelectedCities([]);
+      setSelectedStates([]);
       if (userRole === "seller") setSelectedPlanId("Seller_Pan_India");
       else if (userRole === "industrial") setSelectedPlanId("Industrial_Pan_India");
       else setSelectedPlanId("Pan_India_1Y");
@@ -435,7 +412,7 @@ export default function ActivatePremiumModal({
                   <Label className="text-xs font-semibold text-slate-700 block">
                     City* <span className="text-[10px] text-gray-400 font-normal">(select multiple)</span>
                   </Label>
-                  {selectedCities.length > 1 && !isPanIndia && (
+                  {selectedCities.length > 1 && !isPanIndia && selectedStates.length === 0 && (
                     <span className="text-[10px] font-bold text-orange-600 bg-orange-100 px-1.5 py-0.5 rounded">
                       {selectedCities.length} Cities Selected
                     </span>
@@ -448,12 +425,28 @@ export default function ActivatePremiumModal({
                   onChange={(vals: any) => {
                     const newCities = vals ? vals.map((v: any) => v.value) : [];
                     setSelectedCities(newCities);
+                    if (newCities.length > 0) {
+                      setSelectedStates([]);
+                      setIsPanIndia(false);
+                      if (userRole === "seller") setSelectedPlanId("Seller_City");
+                      else if (userRole === "industrial") setSelectedPlanId("Industrial_City");
+                      else setSelectedPlanId("City_3M");
+                    }
                   }}
-                  placeholder={isPanIndia ? "Disabled (PAN India Active)" : "Search or select city name..."}
+                  placeholder={
+                    isPanIndia
+                      ? "Locked (PAN India is active)"
+                      : selectedStates.length > 0
+                      ? "Locked (State selection is active)"
+                      : "Search or select city name..."
+                  }
                   className="text-xs"
                   formatCreateLabel={(input: string) => `Add "${input}"`}
-                  isDisabled={isPanIndia}
+                  isDisabled={isPanIndia || selectedStates.length > 0}
                 />
+                {(isPanIndia || selectedStates.length > 0) && (
+                  <p className="text-[10px] text-gray-400 mt-1">Locked: Clear State / PAN India to select City.</p>
+                )}
               </div>
 
               {/* 2. State selection */}
@@ -462,7 +455,7 @@ export default function ActivatePremiumModal({
                   <Label className="text-xs font-semibold text-slate-700 block">
                     State* <span className="text-[10px] text-gray-400 font-normal">(select multiple)</span>
                   </Label>
-                  {selectedStates.length > 1 && !isPanIndia && (
+                  {selectedStates.length > 1 && !isPanIndia && selectedCities.length === 0 && (
                     <span className="text-[10px] font-bold text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded">
                       {selectedStates.length} States Selected
                     </span>
@@ -475,36 +468,61 @@ export default function ActivatePremiumModal({
                   onChange={(vals: any) => {
                     const newStates = vals ? vals.map((v: any) => v.value) : [];
                     setSelectedStates(newStates);
+                    if (newStates.length > 0) {
+                      setSelectedCities([]);
+                      setIsPanIndia(false);
+                      if (userRole === "seller") setSelectedPlanId("Seller_State");
+                      else if (userRole === "industrial") setSelectedPlanId("Industrial_State");
+                      else setSelectedPlanId("State_1Y");
+                    }
                   }}
-                  placeholder="Search or select state..."
+                  placeholder={
+                    isPanIndia
+                      ? "Locked (PAN India is active)"
+                      : selectedCities.length > 0
+                      ? "Locked (City selection is active)"
+                      : "Search or select state..."
+                  }
                   className="text-xs"
                   formatCreateLabel={(input: string) => `Add "${input}"`}
+                  isDisabled={isPanIndia || selectedCities.length > 0}
                 />
+                {(isPanIndia || selectedCities.length > 0) && (
+                  <p className="text-[10px] text-gray-400 mt-1">Locked: Clear City / PAN India to select State.</p>
+                )}
               </div>
 
               {/* 3. Serve PAN India below */}
               <div className="pt-1">
                 <label
                   htmlFor="modal_pan_india"
-                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
-                    isPanIndia
-                      ? "bg-orange-50 border-orange-400 shadow-sm"
-                      : "bg-white border-orange-200 hover:border-orange-300"
+                  className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
+                    selectedCities.length > 0 || selectedStates.length > 0
+                      ? "bg-gray-100/70 border-gray-200 opacity-60 cursor-not-allowed"
+                      : isPanIndia
+                      ? "bg-orange-50 border-orange-400 shadow-sm cursor-pointer"
+                      : "bg-white border-orange-200 hover:border-orange-300 cursor-pointer"
                   }`}
                 >
                   <input
                     type="checkbox"
                     id="modal_pan_india"
-                    className="w-4 h-4 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                    className="w-4 h-4 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer disabled:cursor-not-allowed"
                     checked={isPanIndia}
-                    onChange={(e) => handlePanIndiaToggle(e.target.checked)}
+                    disabled={selectedCities.length > 0 || selectedStates.length > 0}
+                    onChange={(e) => {
+                      if (selectedCities.length > 0 || selectedStates.length > 0) return;
+                      handlePanIndiaToggle(e.target.checked);
+                    }}
                   />
                   <div>
                     <span className="text-xs md:text-sm font-bold text-orange-800 block">
                       Serve PAN India (₹9,999)
                     </span>
                     <span className="text-[11px] text-slate-500 block">
-                      Expand coverage nationwide across all cities and states with top-tier ranking.
+                      {selectedCities.length > 0 || selectedStates.length > 0
+                        ? "Locked: Clear City or State selection to enable PAN India."
+                        : "Expand coverage nationwide across all cities and states with top-tier ranking."}
                     </span>
                   </div>
                 </label>

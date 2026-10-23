@@ -30,6 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   registerUser,
   resetActionStatus,
+  logout,
 } from "@/lib/features/users/userSlice";
 import axios from "axios";
 import useExternalScripts from "@/hooks/usePaymentGateway";
@@ -224,37 +225,22 @@ const MultiRoleRegisterPage = () => {
       case "City_3M":
       case "Basic": {
         const cCount = rawCCount > 0 ? rawCCount : 1;
-        if (hasBoth) {
-          planPrice = (999 * rawCCount) + (4999 * rawSCount);
-          planName = `City (3M) + State Listing (${rawCCount} Cities + ${rawSCount} States)`;
-        } else {
-          planPrice = 999 * cCount;
-          planName = `City Listing (3 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
-        }
+        planPrice = 999 * cCount;
+        planName = `City Listing (3 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
       }
       case "City_6M":
       case "Premium": {
         const cCount = rawCCount > 0 ? rawCCount : 1;
-        if (hasBoth) {
-          planPrice = (1999 * rawCCount) + (4999 * rawSCount);
-          planName = `City (6M) + State Listing (${rawCCount} Cities + ${rawSCount} States)`;
-        } else {
-          planPrice = 1999 * cCount;
-          planName = `City Listing (6 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
-        }
+        planPrice = 1999 * cCount;
+        planName = `City Listing (6 Months) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
       }
       case "City_1Y":
       case "Premium+": {
         const cCount = rawCCount > 0 ? rawCCount : 1;
-        if (hasBoth) {
-          planPrice = (2999 * rawCCount) + (4999 * rawSCount);
-          planName = `City (1Y) + State Listing (${rawCCount} Cities + ${rawSCount} States)`;
-        } else {
-          planPrice = 2999 * cCount;
-          planName = `City Listing (1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
-        }
+        planPrice = 2999 * cCount;
+        planName = `City Listing (1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
       }
       case "State_1Y": {
@@ -272,13 +258,8 @@ const MultiRoleRegisterPage = () => {
       case "Seller_City":
       case "Seller_Auto": {
         const cityCount = rawCCount > 0 ? rawCCount : 1;
-        if (hasBoth) {
-          planPrice = (2999 * rawCCount) + (4999 * rawSCount);
-          planName = `Marketplace City + State Listing (${rawCCount} Cities + ${rawSCount} States)`;
-        } else {
-          planPrice = 2999 * cityCount;
-          planName = `Marketplace Shop Listing (${cityCount > 1 ? `${cityCount} Cities` : "Per City"} / 1 Year)`;
-        }
+        planPrice = 2999 * cityCount;
+        planName = `Marketplace Shop Listing (${cityCount > 1 ? `${cityCount} Cities` : "Per City"} / 1 Year)`;
         break;
       }
       case "Seller_State": {
@@ -295,13 +276,8 @@ const MultiRoleRegisterPage = () => {
       // Infra and Industrial Services
       case "Industrial_City": {
         const cCount = rawCCount > 0 ? rawCCount : 1;
-        if (hasBoth) {
-          planPrice = (4999 * rawCCount) + (14999 * rawSCount);
-          planName = `Industrial Services City + State Listing (${rawCCount} Cities + ${rawSCount} States)`;
-        } else {
-          planPrice = 4999 * cCount;
-          planName = `Industrial Services (City / 1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
-        }
+        planPrice = 4999 * cCount;
+        planName = `Industrial Services (City / 1 Year) - ${cCount > 1 ? `${cCount} Cities` : "Per City"}`;
         break;
       }
       case "Industrial_State": {
@@ -417,15 +393,10 @@ const MultiRoleRegisterPage = () => {
         },
         modal: {
           ondismiss: function () {
-            toast.info("Account created in Demo Mode. You can activate Premium anytime from your profile!");
-            const role = registeredUser.role?.toLowerCase();
-            if (role === "seller") {
-              router.push("/seller/profile");
-            } else if (role === "professional" || role === "contractor") {
-              router.push("/professional/profile");
-            } else {
-              router.push("/dashboard");
-            }
+            toast.error("Registration incomplete: Payment is required to activate your account.");
+            // Log out user so unpaid profile is not left active in current session
+            dispatch(logout());
+            router.push("/login");
           },
         },
       };
@@ -461,7 +432,7 @@ const MultiRoleRegisterPage = () => {
         toast.success("Registration successful! Welcome to HousePlanFiles!");
         setTimeout(() => router.push("/dashboard"), 1000);
       } else {
-        toast.success("Registration successful! Initiating payment...");
+        toast.info("Please complete the payment to activate your account...");
         initiatePayment(userInfo);
       }
     }
@@ -1281,11 +1252,27 @@ const MultiRoleRegisterPage = () => {
                   </div>
 
                   <div className="space-y-4">
+                    {/* Coverage Mode Indicator */}
+                    <div className="flex items-center gap-2 text-xs font-bold text-orange-800 bg-orange-100/60 p-2.5 rounded-lg border border-orange-200">
+                      <span>Coverage Mode:</span>
+                      {formData.isPanIndia ? (
+                        <span className="bg-purple-600 text-white px-2 py-0.5 rounded text-[11px] font-extrabold uppercase">PAN India Active (City &amp; State locked)</span>
+                      ) : (formData.selectedStates as string[]).length > 0 ? (
+                        <span className="bg-indigo-600 text-white px-2 py-0.5 rounded text-[11px] font-extrabold uppercase">State Level Active (City &amp; PAN India locked)</span>
+                      ) : (formData.city as string[]).length > 0 ? (
+                        <span className="bg-orange-600 text-white px-2 py-0.5 rounded text-[11px] font-extrabold uppercase">City Level Active (State &amp; PAN India locked)</span>
+                      ) : (
+                        <span className="text-gray-500 font-normal">Choose either City, State, OR PAN India below (Select one only)</span>
+                      )}
+                    </div>
+
                     {/* 1. City Selection */}
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <Label>City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
-                        {(formData.city as string[]).length > 1 && !formData.isPanIndia && (
+                        <Label className={(formData.selectedStates as string[]).length > 0 || formData.isPanIndia ? "text-gray-400" : ""}>
+                          City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span>
+                        </Label>
+                        {(formData.city as string[]).length > 0 && !(formData.selectedStates as string[]).length && !formData.isPanIndia && (
                           <span className="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded">
                             {(formData.city as string[]).length} Cities Selected
                           </span>
@@ -1297,20 +1284,41 @@ const MultiRoleRegisterPage = () => {
                         value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
                         onChange={(vals: any) => {
                            const newCities = vals ? vals.map((v: any) => v.value) : [];
-                           setFormData(prev => ({ ...prev, city: newCities }));
+                           setFormData(prev => ({
+                             ...prev,
+                             city: newCities,
+                             selectedStates: newCities.length > 0 ? [] : prev.selectedStates,
+                             isPanIndia: newCities.length > 0 ? false : prev.isPanIndia,
+                           }));
+                           if (newCities.length > 0) {
+                             if (selectedRole === "seller") setSelectedPlanState("Seller_City");
+                             else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
+                             else setSelectedPlanState("City_3M");
+                           }
                         }}
-                        placeholder={formData.isPanIndia ? "Disabled (PAN India Active)" : "Search or select city name..."}
+                        placeholder={
+                          formData.isPanIndia 
+                            ? "Locked (PAN India is active)" 
+                            : (formData.selectedStates as string[]).length > 0 
+                            ? "Locked (State selection is active)" 
+                            : "Search or select city name..."
+                        }
                         className="text-sm"
                         formatCreateLabel={(input: string) => `Add "${input}"`}
-                        isDisabled={formData.isPanIndia}
+                        isDisabled={formData.isPanIndia || (formData.selectedStates as string[]).length > 0}
                       />
+                      {((formData.selectedStates as string[]).length > 0 || formData.isPanIndia) && (
+                        <p className="text-[11px] text-gray-400 mt-1">Locked: Clear State / PAN India to select City.</p>
+                      )}
                     </div>
 
                     {/* 2. State Selection */}
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <Label>State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span></Label>
-                        {(formData.selectedStates as string[]).length > 1 && !formData.isPanIndia && (
+                        <Label className={(formData.city as string[]).length > 0 || formData.isPanIndia ? "text-gray-400" : ""}>
+                          State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span>
+                        </Label>
+                        {(formData.selectedStates as string[]).length > 0 && !(formData.city as string[]).length && !formData.isPanIndia && (
                           <span className="text-xs font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded">
                             {(formData.selectedStates as string[]).length} States Selected
                           </span>
@@ -1322,25 +1330,55 @@ const MultiRoleRegisterPage = () => {
                         value={(formData.selectedStates as string[]).map(s => ({ value: s, label: s }))}
                         onChange={(vals: any) => {
                            const newStates = vals ? vals.map((v: any) => v.value) : [];
-                           setFormData(prev => ({ ...prev, selectedStates: newStates }));
+                           setFormData(prev => ({
+                             ...prev,
+                             selectedStates: newStates,
+                             city: newStates.length > 0 ? [] : prev.city,
+                             isPanIndia: newStates.length > 0 ? false : prev.isPanIndia,
+                           }));
+                           if (newStates.length > 0) {
+                             if (selectedRole === "seller") setSelectedPlanState("Seller_State");
+                             else if (selectedRole === "industrial") setSelectedPlanState("Industrial_State");
+                             else setSelectedPlanState("State_1Y");
+                           }
                         }}
-                        placeholder="Search or select state..."
+                        placeholder={
+                          formData.isPanIndia 
+                            ? "Locked (PAN India is active)" 
+                            : (formData.city as string[]).length > 0 
+                            ? "Locked (City selection is active)" 
+                            : "Search or select state..."
+                        }
                         className="text-sm"
                         formatCreateLabel={(input: string) => `Add "${input}"`}
+                        isDisabled={formData.isPanIndia || (formData.city as string[]).length > 0}
                       />
+                      {((formData.city as string[]).length > 0 || formData.isPanIndia) && (
+                        <p className="text-[11px] text-gray-400 mt-1">Locked: Clear City / PAN India to select State.</p>
+                      )}
                     </div>
 
                     {/* 3. Serve PAN India (Below City & State) */}
                     <div className="pt-2">
-                      <div className="flex items-center space-x-3 w-full p-4 bg-white border border-orange-200 rounded-lg shadow-sm hover:border-orange-300 transition-colors">
+                      <div className={`flex items-center space-x-3 w-full p-4 rounded-lg border transition-colors ${
+                        (formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0
+                          ? "bg-gray-100/70 border-gray-200 opacity-60 cursor-not-allowed"
+                          : "bg-white border-orange-200 shadow-sm hover:border-orange-300"
+                      }`}>
                         <input
                           type="checkbox"
                           id="panIndia_unified"
-                          className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                          className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer disabled:cursor-not-allowed"
                           checked={formData.isPanIndia}
+                          disabled={(formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0}
                           onChange={(e) => {
                             const checked = e.target.checked;
-                            setFormData(prev => ({ ...prev, isPanIndia: checked }));
+                            setFormData(prev => ({
+                              ...prev,
+                              isPanIndia: checked,
+                              city: checked ? [] : prev.city,
+                              selectedStates: checked ? [] : prev.selectedStates,
+                            }));
                             if (checked) {
                               if (selectedRole === "seller") setSelectedPlanState("Seller_Pan_India");
                               else if (selectedRole === "industrial") setSelectedPlanState("Industrial_Pan_India");
@@ -1352,24 +1390,35 @@ const MultiRoleRegisterPage = () => {
                             }
                           }}
                         />
-                        <div className="cursor-pointer" onClick={() => {
-                          const nextChecked = !formData.isPanIndia;
-                          setFormData(prev => ({ ...prev, isPanIndia: nextChecked }));
-                          if (nextChecked) {
-                            if (selectedRole === "seller") setSelectedPlanState("Seller_Pan_India");
-                            else if (selectedRole === "industrial") setSelectedPlanState("Industrial_Pan_India");
-                            else setSelectedPlanState("Pan_India_1Y");
-                          } else {
-                            if (selectedRole === "seller") setSelectedPlanState("Seller_City");
-                            else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
-                            else setSelectedPlanState("City_3M");
-                          }
-                        }}>
+                        <div
+                          className={(formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0 ? "cursor-not-allowed" : "cursor-pointer"}
+                          onClick={() => {
+                            if ((formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0) return;
+                            const nextChecked = !formData.isPanIndia;
+                            setFormData(prev => ({
+                              ...prev,
+                              isPanIndia: nextChecked,
+                              city: nextChecked ? [] : prev.city,
+                              selectedStates: nextChecked ? [] : prev.selectedStates,
+                            }));
+                            if (nextChecked) {
+                              if (selectedRole === "seller") setSelectedPlanState("Seller_Pan_India");
+                              else if (selectedRole === "industrial") setSelectedPlanState("Industrial_Pan_India");
+                              else setSelectedPlanState("Pan_India_1Y");
+                            } else {
+                              if (selectedRole === "seller") setSelectedPlanState("Seller_City");
+                              else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
+                              else setSelectedPlanState("City_3M");
+                            }
+                          }}
+                        >
                           <label htmlFor="panIndia_unified" className="text-base font-bold text-orange-700 cursor-pointer block">
                             Serve PAN India (₹9,999)
                           </label>
                           <span className="text-xs text-muted-foreground block">
-                            Get full coverage across all states and cities in India with maximum visibility.
+                            {((formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0)
+                              ? "Locked: Clear City or State selection to enable PAN India."
+                              : "Get full coverage across all states and cities in India with maximum visibility."}
                           </span>
                         </div>
                       </div>
@@ -1397,12 +1446,10 @@ const MultiRoleRegisterPage = () => {
                       ? [
                           { 
                             id: "Seller_City", 
-                            name: hasBoth ? "City + State (1 Year)" : "City Shop (1 Year)", 
-                            price: hasBoth ? (2999 * rawCCount) + (4999 * rawSCount) : 2999 * cCount, 
-                            final: ((hasBoth ? (2999 * rawCCount) + (4999 * rawSCount) : 2999 * cCount) * 1.18).toFixed(2), 
-                            note: hasBoth 
-                              ? `${rawCCount} Cities (₹2,999/city) + ${rawSCount} States (₹4,999/state)`
-                              : (cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Per City Shop Listing"), 
+                            name: "City Shop (1 Year)", 
+                            price: 2999 * cCount, 
+                            final: (2999 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Per City Shop Listing", 
                             color: "border-blue-500 bg-blue-500/5 text-blue-800" 
                           },
                           { 
@@ -1426,12 +1473,10 @@ const MultiRoleRegisterPage = () => {
                       ? [
                           { 
                             id: "Industrial_City", 
-                            name: hasBoth ? "City + State (1 Year)" : "City Level (1 Year)", 
-                            price: hasBoth ? (4999 * rawCCount) + (14999 * rawSCount) : 4999 * cCount, 
-                            final: ((hasBoth ? (4999 * rawCCount) + (14999 * rawSCount) : 4999 * cCount) * 1.18).toFixed(2), 
-                            note: hasBoth 
-                              ? `${rawCCount} Cities (₹4,999/city) + ${rawSCount} States (₹14,999/state)`
-                              : (cCount > 1 ? `${cCount} Cities Selected (₹4,999/city)` : "City Level Listing"), 
+                            name: "City Level (1 Year)", 
+                            price: 4999 * cCount, 
+                            final: (4999 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹4,999/city)` : "City Level Listing", 
                             color: "border-blue-500 bg-blue-500/5 text-blue-800" 
                           },
                           { 
@@ -1454,32 +1499,26 @@ const MultiRoleRegisterPage = () => {
                       : [
                           { 
                             id: "City_3M", 
-                            name: hasBoth ? "City (3M) + State" : "City (3 Months)", 
-                            price: hasBoth ? (999 * rawCCount) + (4999 * rawSCount) : 999 * cCount, 
-                            final: ((hasBoth ? (999 * rawCCount) + (4999 * rawSCount) : 999 * cCount) * 1.18).toFixed(2), 
-                            note: hasBoth 
-                              ? `${rawCCount} Cities (₹999/city) + ${rawSCount} States (₹4,999/state)`
-                              : (cCount > 1 ? `${cCount} Cities Selected (₹999/city)` : "City Listing"), 
+                            name: "City (3 Months)", 
+                            price: 999 * cCount, 
+                            final: (999 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹999/city)` : "City Listing", 
                             color: "border-green-500 bg-green-500/5 text-green-800" 
                           },
                           { 
                             id: "City_6M", 
-                            name: hasBoth ? "City (6M) + State" : "City (6 Months)", 
-                            price: hasBoth ? (1999 * rawCCount) + (4999 * rawSCount) : 1999 * cCount, 
-                            final: ((hasBoth ? (1999 * rawCCount) + (4999 * rawSCount) : 1999 * cCount) * 1.18).toFixed(2), 
-                            note: hasBoth 
-                              ? `${rawCCount} Cities (₹1,999/city) + ${rawSCount} States (₹4,999/state)`
-                              : (cCount > 1 ? `${cCount} Cities Selected (₹1,999/city)` : "Verified Profile"), 
+                            name: "City (6 Months)", 
+                            price: 1999 * cCount, 
+                            final: (1999 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹1,999/city)` : "Verified Profile", 
                             color: "border-blue-500 bg-blue-500/5 text-blue-800" 
                           },
                           { 
                             id: "City_1Y", 
-                            name: hasBoth ? "City (1Y) + State" : "City (1 Year)", 
-                            price: hasBoth ? (2999 * rawCCount) + (4999 * rawSCount) : 2999 * cCount, 
-                            final: ((hasBoth ? (2999 * rawCCount) + (4999 * rawSCount) : 2999 * cCount) * 1.18).toFixed(2), 
-                            note: hasBoth 
-                              ? `${rawCCount} Cities (₹2,999/city) + ${rawSCount} States (₹4,999/state)`
-                              : (cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Premium Full Year"), 
+                            name: "City (1 Year)", 
+                            price: 2999 * cCount, 
+                            final: (2999 * cCount * 1.18).toFixed(2), 
+                            note: cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Premium Full Year", 
                             color: "border-orange-500 bg-orange-500/5 text-orange-800" 
                           },
                           { 
