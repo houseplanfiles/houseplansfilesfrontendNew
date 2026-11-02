@@ -48,6 +48,7 @@ import {
   ShieldCheck,
   ChevronRight,
   ExternalLink,
+  ClipboardList,
   Zap,
   Lock
 } from "lucide-react";
@@ -642,6 +643,10 @@ const ContractorProfilePage = ({ initialContractor, isEmbedded = false }: Contra
                 {tab}
               </button>
             ))}
+            <Link href="/leads" className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl text-xs font-extrabold shadow-sm transition-all shrink-0">
+              <ClipboardList className="w-3.5 h-3.5" />
+              <span>Lead Board</span>
+            </Link>
           </div>
         </div>
       </nav>
@@ -1092,6 +1097,24 @@ const ContractorProfilePage = ({ initialContractor, isEmbedded = false }: Contra
                   </button>
                 </div>
               )}
+            </div>
+
+            {/* --- PROJECT LEAD BOARD CARD --- */}
+            <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-5 border border-orange-200/80 shadow-xs space-y-2.5">
+              <div className="flex items-center gap-2 text-slate-900 font-extrabold text-sm">
+                <ClipboardList className="w-4.5 h-4.5 text-[#ff6b00]" />
+                <span>Project Lead Board</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Find verified client requirements and project inquiries ready for quotes.
+              </p>
+              <Link
+                href="/leads"
+                className="w-full inline-flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#e05e00] text-white font-extrabold py-2.5 px-4 rounded-xl text-xs shadow-sm transition-all"
+              >
+                <span>Browse Leads Board</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
             </div>
 
             {/* --- 5. SHARE PROFILE CARD --- */}

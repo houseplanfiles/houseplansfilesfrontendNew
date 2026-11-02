@@ -14,6 +14,7 @@ import {
   X,
   ChevronDown,
   Briefcase,
+  ClipboardList,
   Building,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ import { RootState } from "@/lib/store";
 
 const mainLinks = [
   { name: "Dashboard", path: "/seller", icon: LayoutDashboard },
+  { name: "Lead Board", path: "/leads", icon: ClipboardList },
   { name: "Profile", path: "/seller/profile", icon: UserCircle },
 ];
 const productLinks = [

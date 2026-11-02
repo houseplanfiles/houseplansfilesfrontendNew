@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import React, { useState, useEffect } from "react";
 
-import { Eye, EyeOff, CheckCircle, Loader2, Building2, HardHat, Store, Wrench, Factory, ChevronRight, Home } from "lucide-react";
+import { Eye, EyeOff, CheckCircle, Loader2, Building2, HardHat, Store, Wrench, Factory, ChevronRight, Home, X, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "@/lib/store";
@@ -156,6 +156,8 @@ const MultiRoleRegisterPage = () => {
   const [selectedPlan, setSelectedPlanState] = useState<string>("Basic");
   const [profileCreation, setProfileCreation] = useState<boolean>(false);
   const [profileStoreManagement, setProfileStoreManagement] = useState<string>("None");
+  // Free vs Paid toggle: null = not yet chosen, 'free' | 'paid'
+  const [accountType, setAccountType] = useState<"free" | "paid" | null>(null);
   const dispatch = useDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -412,12 +414,21 @@ const MultiRoleRegisterPage = () => {
       } else if (userInfo.role === "user") {
         toast.success("Registration successful! Welcome to HousePlanFiles!");
         setTimeout(() => router.push("/dashboard"), 1000);
+      } else if (accountType === "free") {
+        // Free plan: no payment, go directly to profile
+        toast.success("Free account created! Your profile is now live.");
+        const role = userInfo.role?.toLowerCase();
+        if (role === "seller") {
+          setTimeout(() => router.push("/seller/profile"), 1000);
+        } else {
+          setTimeout(() => router.push("/professional/profile"), 1000);
+        }
       } else {
         toast.info("Please complete the payment to activate your account...");
         initiatePayment(userInfo);
       }
     }
-  }, [actionStatus, userInfo, error, router, dispatch, isRazorpayLoaded, selectedPlan, profileCreation, profileStoreManagement]);
+  }, [actionStatus, userInfo, error, router, dispatch, isRazorpayLoaded, selectedPlan, profileCreation, profileStoreManagement, accountType]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -494,7 +505,7 @@ const MultiRoleRegisterPage = () => {
         if (key === "serviceTypes" && Array.isArray(value)) {
           dataToSubmit.append(key, JSON.stringify(value));
         } else if (key === "city" && Array.isArray(value)) {
-          dataToSubmit.append(key, formData.isPanIndia ? "PAN India" : value.join(", "));
+          dataToSubmit.append(key, formData.isPanIndia ? "PAN India" : value.length > 0 ? value.join(", ") : "N/A");
         } else if (key === "selectedStates" && Array.isArray(value)) {
           dataToSubmit.append(key, JSON.stringify(value));
         } else if (key === "role" && ["home_designing", "industrial", "other_services"].includes(value as string)) {
@@ -505,16 +516,25 @@ const MultiRoleRegisterPage = () => {
       }
     }
     if (selectedRole !== "user") {
-      const isPan = Boolean(formData.isPanIndia || selectedPlan.toLowerCase().includes("pan_india"));
-      dataToSubmit.set("isPanIndia", String(isPan));
-      dataToSubmit.append("selectedPlan", selectedPlan);
-      dataToSubmit.append("profileCreation", String(profileCreation));
-      dataToSubmit.append("profileStoreManagement", profileStoreManagement);
-      if (formData.selectedStates && formData.selectedStates.length > 0) {
-        dataToSubmit.set("state", formData.selectedStates[0]);
-      }
-      if (formData.pincode) {
-        dataToSubmit.set("pincode", formData.pincode);
+      if (accountType === "free") {
+        // Free plan — no location required, mark as free
+        dataToSubmit.set("selectedPlan", "Free");
+        dataToSubmit.set("paymentStatus", "Free");
+        dataToSubmit.set("isPanIndia", "false");
+        // If city was not filled, set a placeholder so validation passes
+        if (!dataToSubmit.get("city")) dataToSubmit.set("city", "N/A");
+      } else {
+        const isPan = Boolean(formData.isPanIndia || selectedPlan.toLowerCase().includes("pan_india"));
+        dataToSubmit.set("isPanIndia", String(isPan));
+        dataToSubmit.append("selectedPlan", selectedPlan);
+        dataToSubmit.append("profileCreation", String(profileCreation));
+        dataToSubmit.append("profileStoreManagement", profileStoreManagement);
+        if (formData.selectedStates && formData.selectedStates.length > 0) {
+          dataToSubmit.set("state", formData.selectedStates[0]);
+        }
+        if (formData.pincode) {
+          dataToSubmit.set("pincode", formData.pincode);
+        }
       }
     }
     (dispatch as AppDispatch)(registerUser(dataToSubmit));
@@ -1167,410 +1187,404 @@ const MultiRoleRegisterPage = () => {
 
           {selectedRole && (
             <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 my-12 relative z-10 flex-grow">
-              <div className="bg-white p-6 sm:p-10 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="flex items-start sm:items-center justify-between flex-col sm:flex-row gap-4 mb-4 pb-4 border-b border-border">
-                  <div>
-                    <h2 className="text-xl font-bold text-foreground">
-                      {userRoles.find(r => r.id === selectedRole)?.label || "Registration"}
-                    </h2>
-                    <p className="text-sm text-muted-foreground">Please fill in your details to continue</p>
+
+              {/* ===== FREE vs PAID COMPARISON ===== */}
+              {accountType === null && (
+                <div className="bg-white p-6 sm:p-10 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500 mb-8">
+                  <div className="flex items-start justify-between mb-6">
+                    <div>
+                      <h2 className="text-2xl font-black text-gray-900">Choose Your Plan</h2>
+                      <p className="text-sm text-gray-500 mt-1">Select the plan that's right for you to continue registration</p>
+                    </div>
+                    <Button type="button" variant="outline" onClick={() => { setSelectedRole(""); setAccountType(null); }} className="h-9 px-4 text-sm">Change Type</Button>
                   </div>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => {
-                      setSelectedRole("");
-                      setFormData(prev => ({ ...prev, role: "" }));
-                    }}
-                    className="h-9 px-4 text-sm"
-                  >
-                    Change Type
-                  </Button>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    {/* FREE PLAN CARD */}
+                    <div className="relative border-2 border-gray-200 rounded-2xl p-6 flex flex-col gap-4 hover:border-gray-400 transition-all bg-gray-50/40">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Free Plan</span>
+                          <div className="text-3xl font-black text-gray-800 mt-1">₹0 <span className="text-sm font-medium text-gray-400">/ forever</span></div>
+                        </div>
+                        <span className="bg-amber-100 text-amber-800 border border-amber-300 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">DEMO</span>
+                      </div>
+                      <p className="text-sm text-gray-500">Basic demo listing to showcase your profile. Direct WhatsApp, Call, and Leads are locked.</p>
+                      <ul className="space-y-2.5 flex-1">
+                        {[
+                          "WhatsApp button",
+                          "Call Button",
+                          "Social media integration",
+                          "Do follow backlink for site owners",
+                          "Profile promotion",
+                          "Lead update sharing",
+                          "Profile setup",
+                          "Verified Golden Badge",
+                          "Support available",
+                          "Complimentary free leads",
+                        ].map((f) => (
+                          <li key={f} className="flex items-center gap-2.5 text-sm text-gray-400">
+                            <span className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                              <X className="w-3.5 h-3.5 text-red-600 stroke-[3]" />
+                            </span>
+                            <span className="text-gray-500 font-medium">{f}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <button
+                        type="button"
+                        id="choose-free-plan"
+                        onClick={() => setAccountType("free")}
+                        className="mt-2 w-full border-2 border-gray-300 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-100 transition-all text-sm shadow-xs"
+                      >
+                        Continue with Free (Demo)
+                      </button>
+                    </div>
+
+                    {/* PAID PLAN CARD */}
+                    <div className="relative border-2 border-orange-400 rounded-2xl p-6 flex flex-col gap-4 bg-orange-50/30 shadow-lg shadow-orange-100">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <span className="bg-orange-500 text-white text-xs font-black px-4 py-1 rounded-full uppercase tracking-wider shadow">Recommended</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-xs font-bold uppercase tracking-widest text-orange-500">Paid Plan</span>
+                          <div className="text-3xl font-black text-gray-900 mt-1">₹1,499 <span className="text-sm font-medium text-gray-400">/ year+</span></div>
+                        </div>
+                        <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1"><Zap className="w-3 h-3" />PRO</span>
+                      </div>
+                      <p className="text-sm text-gray-600">Full-featured listing with premium tools to get more leads, visibility and business growth.</p>
+                      <ul className="space-y-2.5 flex-1">
+                        {[
+                          "WhatsApp button",
+                          "Call Button",
+                          "Social media integration",
+                          "Do follow backlink for site owners",
+                          "Profile promotion",
+                          "Lead update sharing",
+                          "Profile setup",
+                          "Verified Golden Badge",
+                          "Support available",
+                          "Complimentary free leads",
+                        ].map((f) => (
+                          <li key={f} className="flex items-center gap-2.5 text-sm text-gray-700 font-medium">
+                            <span className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                              <CheckCircle className="w-3.5 h-3.5 text-green-600" />
+                            </span>
+                            <span className="font-semibold text-gray-900">{f}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <button
+                        type="button"
+                        id="choose-paid-plan"
+                        onClick={() => setAccountType("paid")}
+                        className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl transition-all text-sm shadow-md"
+                      >
+                        Get Started — Choose Paid Plan
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ===== MAIN FORM (after plan chosen) ===== */}
+              {accountType !== null && (
+              <div className="bg-white p-6 sm:p-10 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {/* Plan badge + back */}
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <span className={`text-xs font-bold px-3 py-1 rounded-full ${accountType === "free" ? "bg-gray-100 text-gray-600" : "bg-orange-100 text-orange-700"}`}>
+                      {accountType === "free" ? "Free Plan" : "Paid Plan"}
+                    </span>
+                    <button type="button" onClick={() => setAccountType(null)} className="text-xs text-gray-400 underline hover:text-gray-600">Change plan</button>
+                  </div>
+                  <Button type="button" variant="outline" onClick={() => { setSelectedRole(""); setAccountType(null); }} className="h-9 px-4 text-sm">Change Type</Button>
+                </div>
+                <div className="pb-4 border-b border-border">
+                  <h2 className="text-xl font-bold text-foreground">
+                    {userRoles.find(r => r.id === selectedRole)?.label || "Registration"}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">Please fill in your details to continue</p>
                 </div>
                 
                 <AnimatePresence mode="wait">
                   {renderRoleSpecificFields()}
                 </AnimatePresence>
+
                 <div>
                   <Label htmlFor="email">Email address*</Label>
-              <Input
-                type="email"
-                id="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">Password*</Label>
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="pr-12"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted-foreground"
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Subscription & Addons Panel */}
-            {selectedRole !== "user" && (
-              <div className="space-y-6 pt-4 border-t border-border mt-4">
-                {/* Unified Location Selector */}
-                <div className="bg-orange-50/50 p-6 rounded-xl border border-orange-100">
-                  <div className="mb-4">
-                    <h3 className="text-lg font-bold text-foreground">Select Operating Region</h3>
-                    <p className="text-xs text-muted-foreground">Select your coverage area to see suitable plans</p>
-                  </div>
-
-                  <div className="space-y-4">
-                    {/* Coverage Mode Indicator */}
-                    <div className="flex items-center gap-2 text-xs font-bold text-orange-800 bg-orange-100/60 p-2.5 rounded-lg border border-orange-200">
-                      <span>Coverage Mode:</span>
-                      {formData.isPanIndia ? (
-                        <span className="bg-purple-600 text-white px-2 py-0.5 rounded text-[11px] font-extrabold uppercase">PAN India Active (City &amp; State locked)</span>
-                      ) : (formData.selectedStates as string[]).length > 0 ? (
-                        <span className="bg-indigo-600 text-white px-2 py-0.5 rounded text-[11px] font-extrabold uppercase">State Level Active (City &amp; PAN India locked)</span>
-                      ) : (formData.city as string[]).length > 0 ? (
-                        <span className="bg-orange-600 text-white px-2 py-0.5 rounded text-[11px] font-extrabold uppercase">City Level Active (State &amp; PAN India locked)</span>
-                      ) : (
-                        <span className="text-gray-500 font-normal">Choose either City, State, OR PAN India below (Select one only)</span>
-                      )}
-                    </div>
-
-                    {/* 1. City Selection */}
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <Label className={(formData.selectedStates as string[]).length > 0 || formData.isPanIndia ? "text-gray-400" : ""}>
-                          City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span>
-                        </Label>
-                        {(formData.city as string[]).length > 0 && !(formData.selectedStates as string[]).length && !formData.isPanIndia && (
-                          <span className="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded">
-                            {(formData.city as string[]).length} Cities Selected
-                          </span>
-                        )}
-                      </div>
-                      <CreatableSelect
-                        isMulti
-                        options={cityOptions}
-                        value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
-                        onChange={(vals: any) => {
-                           const newCities = vals ? vals.map((v: any) => v.value) : [];
-                           setFormData(prev => ({
-                             ...prev,
-                             city: newCities,
-                             selectedStates: newCities.length > 0 ? [] : prev.selectedStates,
-                             isPanIndia: newCities.length > 0 ? false : prev.isPanIndia,
-                           }));
-                           if (newCities.length > 0) {
-                             if (selectedRole === "seller") setSelectedPlanState("Seller_City");
-                             else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
-                             else setSelectedPlanState("City_1Y");
-                           }
-                        }}
-                        placeholder={
-                          formData.isPanIndia 
-                            ? "Locked (PAN India is active)" 
-                            : (formData.selectedStates as string[]).length > 0 
-                            ? "Locked (State selection is active)" 
-                            : "Search or select city name..."
-                        }
-                        className="text-sm"
-                        formatCreateLabel={(input: string) => `Add "${input}"`}
-                        isDisabled={formData.isPanIndia || (formData.selectedStates as string[]).length > 0}
-                      />
-                      {((formData.selectedStates as string[]).length > 0 || formData.isPanIndia) && (
-                        <p className="text-[11px] text-gray-400 mt-1">Locked: Clear State / PAN India to select City.</p>
-                      )}
-                    </div>
-
-                    {/* 2. State Selection */}
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <Label className={(formData.city as string[]).length > 0 || formData.isPanIndia ? "text-gray-400" : ""}>
-                          State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span>
-                        </Label>
-                        {(formData.selectedStates as string[]).length > 0 && !(formData.city as string[]).length && !formData.isPanIndia && (
-                          <span className="text-xs font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded">
-                            {(formData.selectedStates as string[]).length} States Selected
-                          </span>
-                        )}
-                      </div>
-                      <CreatableSelect
-                        isMulti
-                        options={stateOptions}
-                        value={(formData.selectedStates as string[]).map(s => ({ value: s, label: s }))}
-                        onChange={(vals: any) => {
-                           const newStates = vals ? vals.map((v: any) => v.value) : [];
-                           setFormData(prev => ({
-                             ...prev,
-                             selectedStates: newStates,
-                             city: newStates.length > 0 ? [] : prev.city,
-                             isPanIndia: newStates.length > 0 ? false : prev.isPanIndia,
-                           }));
-                           if (newStates.length > 0) {
-                             if (selectedRole === "seller") setSelectedPlanState("Seller_State");
-                             else if (selectedRole === "industrial") setSelectedPlanState("Industrial_State");
-                             else setSelectedPlanState("State_1Y");
-                           }
-                        }}
-                        placeholder={
-                          formData.isPanIndia 
-                            ? "Locked (PAN India is active)" 
-                            : (formData.city as string[]).length > 0 
-                            ? "Locked (City selection is active)" 
-                            : "Search or select state..."
-                        }
-                        className="text-sm"
-                        formatCreateLabel={(input: string) => `Add "${input}"`}
-                        isDisabled={formData.isPanIndia || (formData.city as string[]).length > 0}
-                      />
-                      {((formData.city as string[]).length > 0 || formData.isPanIndia) && (
-                        <p className="text-[11px] text-gray-400 mt-1">Locked: Clear City / PAN India to select State.</p>
-                      )}
-                    </div>
-
-                    {/* 3. Serve PAN India (Below City & State) */}
-                    <div className="pt-2">
-                      <div className={`flex items-center space-x-3 w-full p-4 rounded-lg border transition-colors ${
-                        (formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0
-                          ? "bg-gray-100/70 border-gray-200 opacity-60 cursor-not-allowed"
-                          : "bg-white border-orange-200 shadow-sm hover:border-orange-300"
-                      }`}>
-                        <input
-                          type="checkbox"
-                          id="panIndia_unified"
-                          className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer disabled:cursor-not-allowed"
-                          checked={formData.isPanIndia}
-                          disabled={(formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0}
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setFormData(prev => ({
-                              ...prev,
-                              isPanIndia: checked,
-                              city: checked ? [] : prev.city,
-                              selectedStates: checked ? [] : prev.selectedStates,
-                            }));
-                            if (checked) {
-                              if (selectedRole === "seller") setSelectedPlanState("Seller_Pan_India");
-                              else if (selectedRole === "industrial") setSelectedPlanState("Industrial_Pan_India");
-                              else setSelectedPlanState("Pan_India_1Y");
-                            } else {
-                              if (selectedRole === "seller") setSelectedPlanState("Seller_City");
-                              else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
-                              else setSelectedPlanState("City_1Y");
-                            }
-                          }}
-                        />
-                        <div
-                          className={(formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0 ? "cursor-not-allowed" : "cursor-pointer"}
-                          onClick={() => {
-                            if ((formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0) return;
-                            const nextChecked = !formData.isPanIndia;
-                            setFormData(prev => ({
-                              ...prev,
-                              isPanIndia: nextChecked,
-                              city: nextChecked ? [] : prev.city,
-                              selectedStates: nextChecked ? [] : prev.selectedStates,
-                            }));
-                            if (nextChecked) {
-                              if (selectedRole === "seller") setSelectedPlanState("Seller_Pan_India");
-                              else if (selectedRole === "industrial") setSelectedPlanState("Industrial_Pan_India");
-                              else setSelectedPlanState("Pan_India_1Y");
-                            } else {
-                              if (selectedRole === "seller") setSelectedPlanState("Seller_City");
-                              else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
-                              else setSelectedPlanState("City_1Y");
-                            }
-                          }}
-                        >
-                          <label htmlFor="panIndia_unified" className="text-base font-bold text-orange-700 cursor-pointer block">
-                            Serve PAN India (₹9,999)
-                          </label>
-                          <span className="text-xs text-muted-foreground block">
-                            {((formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0)
-                              ? "Locked: Clear City or State selection to enable PAN India."
-                              : "Get full coverage across all states and cities in India with maximum visibility."}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <Input
+                    type="email"
+                    id="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold text-foreground">Choose your Listing Plan</h3>
-                  <p className="text-xs text-muted-foreground">Select the right plan to grow your business (City &rarr; State &rarr; PAN India)</p>
-                </div>
-                
-                {/* Plans Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {(() => {
-                    const rawCCount = formData.city.length;
-                    const rawSCount = formData.selectedStates.length;
-                    const cCount = rawCCount > 0 ? rawCCount : 1;
-                    const sCount = rawSCount > 0 ? rawSCount : 1;
-
-                    // If both cities and states are selected
-                    const hasBoth = rawCCount > 0 && rawSCount > 0 && !formData.isPanIndia;
-
-                    const planList = selectedRole === "seller"
-                      ? [
-                          { 
-                            id: "Seller_City", 
-                            name: "City Shop (1 Year)", 
-                            price: 2999 * cCount, 
-                            final: (2999 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Per City Shop Listing", 
-                            color: "border-blue-500 bg-blue-500/5 text-blue-800" 
-                          },
-                          { 
-                            id: "Seller_State", 
-                            name: "State Listing (1 Year)", 
-                            price: 4999 * sCount, 
-                            final: (4999 * sCount * 1.18).toFixed(2), 
-                            note: sCount > 1 ? `${sCount} States Selected (₹4,999/state)` : "Entire State Coverage", 
-                            color: "border-orange-500 bg-orange-500/5 text-orange-800" 
-                          },
-                          { 
-                            id: "Seller_Pan_India", 
-                            name: "PAN INDIA (1 Year)", 
-                            price: 9999, 
-                            final: "11,798.82", 
-                            note: "All India Coverage", 
-                            color: "border-purple-500 bg-purple-500/5 text-purple-800" 
-                          }
-                        ]
-                      : selectedRole === "industrial"
-                      ? [
-                          { 
-                            id: "Industrial_City", 
-                            name: "City Level (1 Year)", 
-                            price: 4999 * cCount, 
-                            final: (4999 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹4,999/city)` : "City Level Listing", 
-                            color: "border-blue-500 bg-blue-500/5 text-blue-800" 
-                          },
-                          { 
-                            id: "Industrial_State", 
-                            name: "State Level (1 Year)", 
-                            price: 14999 * sCount, 
-                            final: (14999 * sCount * 1.18).toFixed(2), 
-                            note: sCount > 1 ? `${sCount} States Selected (₹14,999/state)` : "State Level Listing", 
-                            color: "border-orange-500 bg-orange-500/5 text-orange-800" 
-                          },
-                          { 
-                            id: "Industrial_Pan_India", 
-                            name: "PAN INDIA (1 Year)", 
-                            price: 24999, 
-                            final: "29,498.82", 
-                            note: "All India Coverage", 
-                            color: "border-red-500 bg-red-500/5 text-red-800" 
-                          }
-                        ]
-                      : [
-                          { 
-                            id: "City_1Y", 
-                            name: "City Listing (1 Year)", 
-                            price: 1499 * cCount, 
-                            final: (1499 * cCount * 1.18).toFixed(2), 
-                            note: cCount > 1 ? `${cCount} Cities Selected (₹1,499/city)` : "Annual City Listing (₹1,499/city)", 
-                            color: "border-orange-500 bg-orange-500/5 text-orange-800" 
-                          },
-                          { 
-                            id: "State_1Y", 
-                            name: "State (1 Year)", 
-                            price: 4999 * sCount, 
-                            final: (4999 * sCount * 1.18).toFixed(2), 
-                            note: sCount > 1 ? `${sCount} States Selected (₹4,999/state)` : "State-wide Coverage", 
-                            color: "border-indigo-500 bg-indigo-500/5 text-indigo-800" 
-                          },
-                          { 
-                            id: "Pan_India_1Y", 
-                            name: "PAN INDIA (1 Year)", 
-                            price: 9999, 
-                            final: "11,798.82", 
-                            note: "All India Top Listing", 
-                            color: "border-purple-500 bg-purple-500/5 text-purple-800" 
-                          }
-                        ];
-
-                    return planList.map((p) => (
-                      <div
-                        key={p.id}
-                        role="button"
-                        onClick={() => {
-                          setSelectedPlanState(p.id);
-                          if (p.id.toLowerCase().includes("pan_india")) {
-                            setFormData((prev) => ({ ...prev, isPanIndia: true }));
-                          } else {
-                            setFormData((prev) => ({ ...prev, isPanIndia: false }));
-                          }
-                        }}
-                      className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                        selectedPlan === p.id 
-                          ? `${p.color} ring-2 ring-primary border-primary` 
-                          : "border-border hover:border-gray-300"
-                      }`}
+                  <Label htmlFor="password">Password*</Label>
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      required
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="pr-12"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted-foreground"
                     >
-                      <div className="flex justify-between items-start">
-                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{p.name}</span>
-                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                          selectedPlan === p.id ? "bg-primary border-primary text-white" : "border-gray-300"
-                        }`}>
-                          {selectedPlan === p.id && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Subscription & Addons Panel — only for Paid plan */}
+                {selectedRole !== "user" && accountType === "paid" && (
+                  <div className="space-y-6 pt-4 border-t border-border mt-4">
+                    {/* Unified Location Selector */}
+                    <div className="bg-orange-50/50 p-6 rounded-xl border border-orange-100">
+                      <div className="mb-4">
+                        <h3 className="text-lg font-bold text-foreground">Select Operating Region</h3>
+                        <p className="text-xs text-muted-foreground">Select your coverage area to see suitable plans</p>
+                      </div>
+                      <div className="space-y-4">
+                        {/* Coverage Mode Indicator */}
+                        <div className="flex items-center gap-2 text-xs font-bold text-orange-800 bg-orange-100/60 p-2.5 rounded-lg border border-orange-200">
+                          <span>Coverage Mode:</span>
+                          {formData.isPanIndia ? (
+                            <span className="bg-purple-600 text-white px-2 py-0.5 rounded text-[11px] font-extrabold uppercase">PAN India Active (City &amp; State locked)</span>
+                          ) : (formData.selectedStates as string[]).length > 0 ? (
+                            <span className="bg-indigo-600 text-white px-2 py-0.5 rounded text-[11px] font-extrabold uppercase">State Level Active (City &amp; PAN India locked)</span>
+                          ) : (formData.city as string[]).length > 0 ? (
+                            <span className="bg-orange-600 text-white px-2 py-0.5 rounded text-[11px] font-extrabold uppercase">City Level Active (State &amp; PAN India locked)</span>
+                          ) : (
+                            <span className="text-gray-500 font-normal">Choose either City, State, OR PAN India below (Select one only)</span>
+                          )}
+                        </div>
+                        {/* 1. City Selection */}
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <Label className={(formData.selectedStates as string[]).length > 0 || formData.isPanIndia ? "text-gray-400" : ""}>
+                              City* <span className="text-xs text-gray-400 font-normal">(select multiple)</span>
+                            </Label>
+                            {(formData.city as string[]).length > 0 && !(formData.selectedStates as string[]).length && !formData.isPanIndia && (
+                              <span className="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded">
+                                {(formData.city as string[]).length} Cities Selected
+                              </span>
+                            )}
+                          </div>
+                          <CreatableSelect
+                            isMulti
+                            options={cityOptions}
+                            value={(formData.city as string[]).map(c => ({ value: c, label: c }))}
+                            onChange={(vals: any) => {
+                               const newCities = vals ? vals.map((v: any) => v.value) : [];
+                               setFormData(prev => ({
+                                 ...prev,
+                                 city: newCities,
+                                 selectedStates: newCities.length > 0 ? [] : prev.selectedStates,
+                                 isPanIndia: newCities.length > 0 ? false : prev.isPanIndia,
+                               }));
+                               if (newCities.length > 0) {
+                                 if (selectedRole === "seller") setSelectedPlanState("Seller_City");
+                                 else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
+                                 else setSelectedPlanState("City_1Y");
+                               }
+                            }}
+                            placeholder={formData.isPanIndia ? "Locked (PAN India is active)" : (formData.selectedStates as string[]).length > 0 ? "Locked (State selection is active)" : "Search or select city name..."}
+                            className="text-sm"
+                            formatCreateLabel={(input: string) => `Add "${input}"`}
+                            isDisabled={formData.isPanIndia || (formData.selectedStates as string[]).length > 0}
+                          />
+                          {((formData.selectedStates as string[]).length > 0 || formData.isPanIndia) && (
+                            <p className="text-[11px] text-gray-400 mt-1">Locked: Clear State / PAN India to select City.</p>
+                          )}
+                        </div>
+                        {/* 2. State Selection */}
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <Label className={(formData.city as string[]).length > 0 || formData.isPanIndia ? "text-gray-400" : ""}>
+                              State* <span className="text-xs text-gray-400 font-normal">(select multiple)</span>
+                            </Label>
+                            {(formData.selectedStates as string[]).length > 0 && !(formData.city as string[]).length && !formData.isPanIndia && (
+                              <span className="text-xs font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded">
+                                {(formData.selectedStates as string[]).length} States Selected
+                              </span>
+                            )}
+                          </div>
+                          <CreatableSelect
+                            isMulti
+                            options={stateOptions}
+                            value={(formData.selectedStates as string[]).map(s => ({ value: s, label: s }))}
+                            onChange={(vals: any) => {
+                               const newStates = vals ? vals.map((v: any) => v.value) : [];
+                               setFormData(prev => ({
+                                 ...prev,
+                                 selectedStates: newStates,
+                                 city: newStates.length > 0 ? [] : prev.city,
+                                 isPanIndia: newStates.length > 0 ? false : prev.isPanIndia,
+                               }));
+                               if (newStates.length > 0) {
+                                 if (selectedRole === "seller") setSelectedPlanState("Seller_State");
+                                 else if (selectedRole === "industrial") setSelectedPlanState("Industrial_State");
+                                 else setSelectedPlanState("State_1Y");
+                               }
+                            }}
+                            placeholder={formData.isPanIndia ? "Locked (PAN India is active)" : (formData.city as string[]).length > 0 ? "Locked (City selection is active)" : "Search or select state..."}
+                            className="text-sm"
+                            formatCreateLabel={(input: string) => `Add "${input}"`}
+                            isDisabled={formData.isPanIndia || (formData.city as string[]).length > 0}
+                          />
+                          {((formData.city as string[]).length > 0 || formData.isPanIndia) && (
+                            <p className="text-[11px] text-gray-400 mt-1">Locked: Clear City / PAN India to select State.</p>
+                          )}
+                        </div>
+                        {/* 3. Serve PAN India */}
+                        <div className="pt-2">
+                          <div className={`flex items-center space-x-3 w-full p-4 rounded-lg border transition-colors ${(formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0 ? "bg-gray-100/70 border-gray-200 opacity-60 cursor-not-allowed" : "bg-white border-orange-200 shadow-sm hover:border-orange-300"}`}>
+                            <input
+                              type="checkbox"
+                              id="panIndia_unified"
+                              className="w-5 h-5 rounded border-orange-400 text-orange-600 focus:ring-orange-500 cursor-pointer disabled:cursor-not-allowed"
+                              checked={formData.isPanIndia}
+                              disabled={(formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFormData(prev => ({ ...prev, isPanIndia: checked, city: checked ? [] : prev.city, selectedStates: checked ? [] : prev.selectedStates }));
+                                if (checked) {
+                                  if (selectedRole === "seller") setSelectedPlanState("Seller_Pan_India");
+                                  else if (selectedRole === "industrial") setSelectedPlanState("Industrial_Pan_India");
+                                  else setSelectedPlanState("Pan_India_1Y");
+                                } else {
+                                  if (selectedRole === "seller") setSelectedPlanState("Seller_City");
+                                  else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
+                                  else setSelectedPlanState("City_1Y");
+                                }
+                              }}
+                            />
+                            <div
+                              className={(formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0 ? "cursor-not-allowed" : "cursor-pointer"}
+                              onClick={() => {
+                                if ((formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0) return;
+                                const nextChecked = !formData.isPanIndia;
+                                setFormData(prev => ({ ...prev, isPanIndia: nextChecked, city: nextChecked ? [] : prev.city, selectedStates: nextChecked ? [] : prev.selectedStates }));
+                                if (nextChecked) {
+                                  if (selectedRole === "seller") setSelectedPlanState("Seller_Pan_India");
+                                  else if (selectedRole === "industrial") setSelectedPlanState("Industrial_Pan_India");
+                                  else setSelectedPlanState("Pan_India_1Y");
+                                } else {
+                                  if (selectedRole === "seller") setSelectedPlanState("Seller_City");
+                                  else if (selectedRole === "industrial") setSelectedPlanState("Industrial_City");
+                                  else setSelectedPlanState("City_1Y");
+                                }
+                              }}
+                            >
+                              <label htmlFor="panIndia_unified" className="text-base font-bold text-orange-700 cursor-pointer block">
+                                Serve PAN India (₹9,999)
+                              </label>
+                              <span className="text-xs text-muted-foreground block">
+                                {((formData.city as string[]).length > 0 || (formData.selectedStates as string[]).length > 0)
+                                  ? "Locked: Clear City or State selection to enable PAN India."
+                                  : "Get full coverage across all states and cities in India with maximum visibility."}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className="mt-2 flex items-baseline">
-                        <span className="text-xl font-extrabold text-foreground">₹{p.price.toLocaleString()}</span>
-                        <span className="text-xs text-muted-foreground ml-1">+18% GST</span>
-                      </div>
-                      <div className="mt-1 text-[11px] text-muted-foreground">
-                        Final Amount: <strong className="text-foreground">₹{p.final}</strong>
-                      </div>
-                      <p className="text-[10px] text-muted-foreground mt-1.5">{p.note}</p>
                     </div>
-                    ));
-                  })()}
-                </div>
-              </div>
-            )}
 
-            <p className="text-xs text-muted-foreground text-center pt-4">
-              By registering, you agree to our{" "}
-              <Link href="/terms-and-conditions" className="text-primary hover:underline">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link href="/privacy-policy" className="text-primary hover:underline">
-                Privacy Policy
-              </Link>
-              .
-            </p>
-            <Button
-              type="submit"
-              className="w-full text-base font-bold py-3 h-12 btn-primary"
-              disabled={isLoading}
-            >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLoading ? "Registering..." : "Register"}
-            </Button>
+                    <div>
+                      <h3 className="text-lg font-bold text-foreground">Choose your Listing Plan</h3>
+                      <p className="text-xs text-muted-foreground">Select the right plan to grow your business (City &rarr; State &rarr; PAN India)</p>
+                    </div>
+
+                    {/* Plans Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {(() => {
+                        const rawCCount = formData.city.length;
+                        const rawSCount = formData.selectedStates.length;
+                        const cCount = rawCCount > 0 ? rawCCount : 1;
+                        const sCount = rawSCount > 0 ? rawSCount : 1;
+                        const planList = selectedRole === "seller"
+                          ? [
+                              { id: "Seller_City", name: "City Shop (1 Year)", price: 2999 * cCount, final: (2999 * cCount * 1.18).toFixed(2), note: cCount > 1 ? `${cCount} Cities Selected (₹2,999/city)` : "Per City Shop Listing", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                              { id: "Seller_State", name: "State Listing (1 Year)", price: 4999 * sCount, final: (4999 * sCount * 1.18).toFixed(2), note: sCount > 1 ? `${sCount} States Selected (₹4,999/state)` : "Entire State Coverage", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                              { id: "Seller_Pan_India", name: "PAN INDIA (1 Year)", price: 9999, final: "11,798.82", note: "All India Coverage", color: "border-purple-500 bg-purple-500/5 text-purple-800" },
+                            ]
+                          : selectedRole === "industrial"
+                          ? [
+                              { id: "Industrial_City", name: "City Level (1 Year)", price: 4999 * cCount, final: (4999 * cCount * 1.18).toFixed(2), note: cCount > 1 ? `${cCount} Cities Selected (₹4,999/city)` : "City Level Listing", color: "border-blue-500 bg-blue-500/5 text-blue-800" },
+                              { id: "Industrial_State", name: "State Level (1 Year)", price: 14999 * sCount, final: (14999 * sCount * 1.18).toFixed(2), note: sCount > 1 ? `${sCount} States Selected (₹14,999/state)` : "State Level Listing", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                              { id: "Industrial_Pan_India", name: "PAN INDIA (1 Year)", price: 24999, final: "29,498.82", note: "All India Coverage", color: "border-red-500 bg-red-500/5 text-red-800" },
+                            ]
+                          : [
+                              { id: "City_1Y", name: "City Listing (1 Year)", price: 1499 * cCount, final: (1499 * cCount * 1.18).toFixed(2), note: cCount > 1 ? `${cCount} Cities Selected (₹1,499/city)` : "Annual City Listing (₹1,499/city)", color: "border-orange-500 bg-orange-500/5 text-orange-800" },
+                              { id: "State_1Y", name: "State (1 Year)", price: 4999 * sCount, final: (4999 * sCount * 1.18).toFixed(2), note: sCount > 1 ? `${sCount} States Selected (₹4,999/state)` : "State-wide Coverage", color: "border-indigo-500 bg-indigo-500/5 text-indigo-800" },
+                              { id: "Pan_India_1Y", name: "PAN INDIA (1 Year)", price: 9999, final: "11,798.82", note: "All India Top Listing", color: "border-purple-500 bg-purple-500/5 text-purple-800" },
+                            ];
+                        return planList.map((p) => (
+                          <div
+                            key={p.id}
+                            role="button"
+                            onClick={() => {
+                              setSelectedPlanState(p.id);
+                              if (p.id.toLowerCase().includes("pan_india")) {
+                                setFormData((prev) => ({ ...prev, isPanIndia: true }));
+                              } else {
+                                setFormData((prev) => ({ ...prev, isPanIndia: false }));
+                              }
+                            }}
+                            className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${selectedPlan === p.id ? `${p.color} ring-2 ring-primary border-primary` : "border-border hover:border-gray-300"}`}
+                          >
+                            <div className="flex justify-between items-start">
+                              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{p.name}</span>
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${selectedPlan === p.id ? "bg-primary border-primary text-white" : "border-gray-300"}`}>
+                                {selectedPlan === p.id && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                              </div>
+                            </div>
+                            <div className="mt-2 flex items-baseline">
+                              <span className="text-xl font-extrabold text-foreground">₹{p.price.toLocaleString()}</span>
+                              <span className="text-xs text-muted-foreground ml-1">+18% GST</span>
+                            </div>
+                            <div className="mt-1 text-[11px] text-muted-foreground">
+                              Final Amount: <strong className="text-foreground">₹{p.final}</strong>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground mt-1.5">{p.note}</p>
+                          </div>
+                        ));
+                      })()}
+                    </div>
+                  </div>
+                )}
+
+                <p className="text-xs text-muted-foreground text-center pt-4">
+                  By registering, you agree to our{" "}
+                  <Link href="/terms-and-conditions" className="text-primary hover:underline">Terms of Service</Link>{" "}
+                  and{" "}
+                  <Link href="/privacy-policy" className="text-primary hover:underline">Privacy Policy</Link>.
+                </p>
+                <Button
+                  type="submit"
+                  className={`w-full text-base font-bold py-3 h-12 ${accountType === "free" ? "bg-gray-700 hover:bg-gray-900" : "btn-primary"}`}
+                  disabled={isLoading}
+                >
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isLoading ? "Registering..." : accountType === "free" ? "Create Free Account" : "Register & Pay"}
+                </Button>
+              </div>
+                            )}
             </div>
-            </div>
-            )}
+                        )}
           </form>
-      </div>
-      <Footer />
-    </>
-  );
-};
-export default MultiRoleRegisterPage;
+        </div>
+        <Footer />
+      </>
+    );
+  };
+  export default MultiRoleRegisterPage;

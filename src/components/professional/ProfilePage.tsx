@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { Loader2, Save, Zap, Sparkles, CheckCircle2, ExternalLink } from "lucide-react";
+import { Loader2, Save, Zap, Sparkles, CheckCircle2, ExternalLink, ClipboardList } from "lucide-react";
 import { RootState, AppDispatch } from "@/lib/store";
 import {
   updateProfile,

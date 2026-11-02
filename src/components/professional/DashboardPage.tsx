@@ -25,6 +25,7 @@ import { fetchMyProfessionalOrders } from "@/lib/features/professional/professio
 import { fetchMyInquiries } from "@/lib/features/inquiries/inquirySlice";
 import { fetchCurrentUser } from "@/lib/features/users/userSlice";
 import { getContractorProfileUrl } from "@/utils/profileUrls";
+import PaidLeadSection from "./PaidLeadSection";
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -527,6 +528,8 @@ const DashboardPage = () => {
           <StatCard key={card.title} {...card} isLoading={isLoadingData} />
         ))}
       </div>
+
+      {isProfessionalPartner && <PaidLeadSection />}
 
       {/* Performance Graph Section */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">

@@ -31,18 +31,18 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 const SERVICES = [
-  { id: 1, name: "Pest Control", icon: Bug, iconColor: "text-orange-500", iconBg: "bg-orange-100", image: "/b14.webp" },
-  { id: 2, name: "HVAC Services", icon: Snowflake, iconColor: "text-blue-500", iconBg: "bg-blue-100", image: "/c3.webp" },
-  { id: 3, name: "Lift Services", icon: ArrowUpDown, iconColor: "text-purple-500", iconBg: "bg-purple-100", image: "/b11.webp" },
-  { id: 4, name: "Carpenter Services", icon: Hammer, iconColor: "text-amber-700", iconBg: "bg-amber-100", image: "/b12.webp" },
-  { id: 5, name: "False Ceiling Contractor", icon: Square, iconColor: "text-cyan-500", iconBg: "bg-cyan-100", image: "/b13.webp" },
-  { id: 6, name: "Waterproofing Contractor", icon: Droplets, iconColor: "text-blue-400", iconBg: "bg-blue-100", image: "/b4.webp" },
-  { id: 7, name: "Modular Kitchen", icon: ChefHat, iconColor: "text-green-500", iconBg: "bg-green-100", image: "/b5.webp" },
-  { id: 8, name: "Home Automation", icon: Home, iconColor: "text-indigo-500", iconBg: "bg-indigo-100", image: "/b6.webp" },
-  { id: 9, name: "Solar Rooftop Panel", icon: Sun, iconColor: "text-yellow-500", iconBg: "bg-yellow-100", image: "/c2.webp" },
-  { id: 10, name: "Glass Fabricator", icon: Layout, iconColor: "text-teal-500", iconBg: "bg-teal-100", image: "/r1.webp" },
-  { id: 11, name: "Landscaping & Garden Services", icon: Leaf, iconColor: "text-emerald-500", iconBg: "bg-emerald-100", image: "/b3.webp" },
-  { id: 12, name: "Swimming Pool Contractor", icon: Waves, iconColor: "text-sky-500", iconBg: "bg-sky-100", image: "/c1.webp" },
+  { id: 1, name: "Pest Control", icon: Bug, iconColor: "text-orange-500", iconBg: "bg-orange-100", image: "/other_pest_control.jpg" },
+  { id: 2, name: "HVAC Services", icon: Snowflake, iconColor: "text-blue-500", iconBg: "bg-blue-100", image: "/other_hvac.jpg" },
+  { id: 3, name: "Lift Services", icon: ArrowUpDown, iconColor: "text-purple-500", iconBg: "bg-purple-100", image: "/other_lift.jpg" },
+  { id: 4, name: "Carpenter Services", icon: Hammer, iconColor: "text-amber-700", iconBg: "bg-amber-100", image: "/other_carpenter.jpg" },
+  { id: 5, name: "False Ceiling Contractor", icon: Square, iconColor: "text-cyan-500", iconBg: "bg-cyan-100", image: "/other_false_ceiling.jpg" },
+  { id: 6, name: "Waterproofing Contractor", icon: Droplets, iconColor: "text-blue-400", iconBg: "bg-blue-100", image: "/other_waterproofing.jpg" },
+  { id: 7, name: "Modular Kitchen", icon: ChefHat, iconColor: "text-green-500", iconBg: "bg-green-100", image: "/other_modular_kitchen.jpg" },
+  { id: 8, name: "Home Automation", icon: Home, iconColor: "text-indigo-500", iconBg: "bg-indigo-100", image: "/other_home_automation.jpg" },
+  { id: 9, name: "Solar Rooftop Panel", icon: Sun, iconColor: "text-yellow-500", iconBg: "bg-yellow-100", image: "/other_solar_panel.jpg" },
+  { id: 10, name: "Glass Fabricator", icon: Layout, iconColor: "text-teal-500", iconBg: "bg-teal-100", image: "/other_glass_fabricator.jpg" },
+  { id: 11, name: "Landscaping & Garden Services", icon: Leaf, iconColor: "text-emerald-500", iconBg: "bg-emerald-100", image: "/other_landscaping.jpg" },
+  { id: 12, name: "Swimming Pool Contractor", icon: Waves, iconColor: "text-sky-500", iconBg: "bg-sky-100", image: "/other_swimming_pool.jpg" },
 ];
 
 const OtherServicesClient = () => {

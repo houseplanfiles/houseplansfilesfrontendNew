@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Heart, ShoppingCart, Menu, X, User, LogOut, ChevronDown } from "lucide-react";
+import { Heart, ShoppingCart, Menu, X, User, ClipboardList, LogOut, ChevronDown } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import WishlistPanel from "@/components/WishlistPanel";

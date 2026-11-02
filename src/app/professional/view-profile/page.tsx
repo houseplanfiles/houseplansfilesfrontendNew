@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
 import { fetchCurrentUser } from "@/lib/features/users/userSlice";
 import ContractorProfilePageClient from "@/components/ContractorProfilePageClient";
-import { Loader2, UserCheck, Edit3 } from "lucide-react";
+import { Loader2, UserCheck, Edit3, ClipboardList } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
 
@@ -62,6 +62,14 @@ export default function MyPublicProfilePage() {
           </div>
         </div>
 
+        <div className="flex items-center gap-2">
+        <Link
+          href="/leads"
+          className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-bold px-3 sm:px-4 py-2 rounded-xl text-xs shadow-sm transition-all shrink-0"
+        >
+          <ClipboardList className="w-3.5 h-3.5" />
+          <span>Lead Board</span>
+        </Link>
         <Link
           href="/professional/profile"
           className="inline-flex items-center gap-2 bg-white hover:bg-orange-50 text-orange-700 font-bold px-4 py-2 rounded-xl text-xs shadow-sm transition-all shrink-0"
@@ -69,6 +77,7 @@ export default function MyPublicProfilePage() {
           <Edit3 className="w-3.5 h-3.5" />
           <span>Edit Profile Details</span>
         </Link>
+        </div>
       </div>
 
       {/* Embedded Public Profile */}

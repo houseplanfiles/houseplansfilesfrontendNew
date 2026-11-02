@@ -7,6 +7,7 @@ import axios from "axios";
 import { RootState, AppDispatch } from "@/lib/store";
 import { fetchDashboardSummary } from "@/lib/features/admin/adminSlice";
 import { Button } from "@/components/ui/button";
+import AdminLeadPreferences from "./AdminLeadPreferences";
 import {
   DollarSign,
   ShoppingCart,
@@ -44,6 +45,7 @@ const AdminDashboardPage = () => {
   const [endDate, setEndDate] = useState("");
   const [userReports, setUserReports] = useState<any[]>([]);
   const [reportLoading, setReportLoading] = useState(false);
+  const [orderFilter, setOrderFilter] = useState<"all" | "paid" | "unpaid">("all");
 
   useEffect(() => {
     dispatch(fetchDashboardSummary());
@@ -431,7 +433,32 @@ const AdminDashboardPage = () => {
 
       {/* Recent Orders - Original Table */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Orders</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <h2 className="text-xl font-bold text-gray-900">Recent Orders</h2>
+          <div className="inline-flex bg-gray-100 rounded-lg p-1">
+            {([
+              { key: "all", label: "All", count: (summary.recentOrders || []).length },
+              { key: "paid", label: "Paid", count: (summary.recentOrders || []).filter((o: any) => o.isPaid).length },
+              { key: "unpaid", label: "Not Paid", count: (summary.recentOrders || []).filter((o: any) => !o.isPaid).length },
+            ] as const).map((f) => (
+              <button
+                key={f.key}
+                onClick={() => setOrderFilter(f.key)}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  orderFilter === f.key
+                    ? f.key === "paid"
+                      ? "bg-green-600 text-white shadow-sm"
+                      : f.key === "unpaid"
+                      ? "bg-red-500 text-white shadow-sm"
+                      : "bg-orange-500 text-white shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                {f.label} ({f.count})
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <table className="w-full text-sm">
             <thead>
@@ -443,8 +470,12 @@ const AdminDashboardPage = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {summary.recentOrders && summary.recentOrders.length > 0 ? (
-                summary.recentOrders.map((order: any) => (
+              {(summary.recentOrders || []).filter((o: any) =>
+                orderFilter === "all" ? true : orderFilter === "paid" ? o.isPaid : !o.isPaid
+              ).length > 0 ? (
+                (summary.recentOrders || []).filter((o: any) =>
+                  orderFilter === "all" ? true : orderFilter === "paid" ? o.isPaid : !o.isPaid
+                ).map((order: any) => (
                   <tr key={order._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-800">
                       {order.user?.name || order.shippingAddress?.name || "N/A"}
@@ -471,7 +502,7 @@ const AdminDashboardPage = () => {
               ) : (
                 <tr>
                   <td colSpan={4} className="text-center py-12 text-gray-400">
-                    No recent orders found.
+                    {orderFilter === "paid" ? "No paid orders found." : orderFilter === "unpaid" ? "No unpaid orders found." : "No recent orders found."}
                   </td>
                 </tr>
               )}
@@ -486,6 +517,8 @@ const AdminDashboardPage = () => {
           </div>
         </div>
       </div>
+
+      <AdminLeadPreferences />
     </div>
   );
 };
