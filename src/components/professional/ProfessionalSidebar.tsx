@@ -12,6 +12,7 @@ import { getContractorProfileUrl } from "@/utils/profileUrls";
 
 const navLinks = [
   { name: "Dashboard", path: "/professional", icon: LayoutGrid },
+  { name: "Lead Board", path: "/leads", icon: ClipboardList },
   { name: "My Products", path: "/professional/my-products", icon: Package, roles: ["professional", "admin"] },
   { name: "Add New Product", path: "/professional/add-product", icon: PlusSquare, roles: ["professional", "admin"] },
   { name: "My Enquiries", path: "/professional/enquiries", icon: ClipboardList, roles: ["contractor", "Contractor", "architect", "Architect", "professional", "admin"] },

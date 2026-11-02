@@ -88,6 +88,20 @@ const getFileUrl = (path: string) => {
   return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path.replace(/\\/g, "/")}`;
 };
 
+
+const SERVICE_HERO_IMAGES: Record<string, string> = {
+  "Pre Engineering Buildings": "/ind_peb_shed.jpg",
+  "Pre Fabricated Buildings": "/ind_prefab_modular.jpg",
+  "Pre Cast Concrete Material": "/ind_precast_concrete.jpg",
+  "Machinery Services": "/ind_machinery_rental.jpg",
+  "Manpower Supply": "/ind_manpower.jpg",
+  "Building Inspection Services": "/ind_inspection.jpg",
+  "Bulk Building Material Services": "/ind_bulk_materials.jpg",
+  "Flooring Services": "/ind_flooring.jpg",
+  "Roofing": "/ind_roofing.jpg",
+  "Structural Designers": "/ind_structural.jpg"
+};
+
 const CONTRACTOR_CATEGORIES = [
   "All",
   "Pre Engineering Buildings",
@@ -281,7 +295,7 @@ const ServiceDetailClient: FC<{ serviceName: string, categoryType: "Industrial" 
       {/* --- Hero Section --- */}
       <div className="relative bg-gray-900 py-12 sm:py-20 overflow-hidden w-full">
         <div className="absolute inset-0">
-          <Image src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80" className="object-cover opacity-20" alt="Hero" fill priority sizes="100vw" />
+          <Image src={SERVICE_HERO_IMAGES[serviceName] || "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80"} className="object-cover opacity-35" alt={serviceName} fill priority sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 text-center">

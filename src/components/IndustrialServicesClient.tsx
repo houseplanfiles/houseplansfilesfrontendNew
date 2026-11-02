@@ -36,16 +36,16 @@ import {
 } from "lucide-react";
 
 const INDUSTRIAL_SERVICES = [
-  { id: 1, name: "Pre Engineering Buildings", icon: Building2, iconColor: "text-orange-500", iconBg: "bg-orange-100", image: "/b14.webp" },
-  { id: 2, name: "Pre Fabricated Buildings", icon: Factory, iconColor: "text-blue-500", iconBg: "bg-blue-100", image: "/c3.webp" },
-  { id: 3, name: "Pre Cast Concrete Material", icon: Blocks, iconColor: "text-purple-500", iconBg: "bg-purple-100", image: "/b11.webp" },
-  { id: 4, name: "Machinery Services", icon: Truck, iconColor: "text-amber-700", iconBg: "bg-amber-100", image: "/b12.webp" },
-  { id: 5, name: "Manpower Supply", icon: Users, iconColor: "text-cyan-500", iconBg: "bg-cyan-100", image: "/b13.webp" },
-  { id: 6, name: "Building Inspection Services", icon: SearchCheck, iconColor: "text-blue-400", iconBg: "bg-blue-100", image: "/b4.webp" },
-  { id: 7, name: "Bulk Building Material Services", icon: Construction, iconColor: "text-green-500", iconBg: "bg-green-100", image: "/b5.webp" },
-  { id: 8, name: "Flooring Services", icon: Maximize, iconColor: "text-indigo-500", iconBg: "bg-indigo-100", image: "/b6.webp" },
-  { id: 9, name: "Roofing", icon: Home, iconColor: "text-yellow-500", iconBg: "bg-yellow-100", image: "/c2.webp" },
-  { id: 10, name: "Structural Designers", icon: Ruler, iconColor: "text-teal-500", iconBg: "bg-teal-100", image: "/r1.webp" }
+  { id: 1, name: "Pre Engineering Buildings", icon: Building2, iconColor: "text-orange-500", iconBg: "bg-orange-100", image: "/ind_peb_shed.jpg" },
+  { id: 2, name: "Pre Fabricated Buildings", icon: Factory, iconColor: "text-blue-500", iconBg: "bg-blue-100", image: "/ind_prefab_modular.jpg" },
+  { id: 3, name: "Pre Cast Concrete Material", icon: Blocks, iconColor: "text-purple-500", iconBg: "bg-purple-100", image: "/ind_precast_concrete.jpg" },
+  { id: 4, name: "Machinery Services", icon: Truck, iconColor: "text-amber-700", iconBg: "bg-amber-100", image: "/ind_machinery_rental.jpg" },
+  { id: 5, name: "Manpower Supply", icon: Users, iconColor: "text-cyan-500", iconBg: "bg-cyan-100", image: "/ind_manpower.jpg" },
+  { id: 6, name: "Building Inspection Services", icon: SearchCheck, iconColor: "text-blue-400", iconBg: "bg-blue-100", image: "/ind_inspection.jpg" },
+  { id: 7, name: "Bulk Building Material Services", icon: Construction, iconColor: "text-green-500", iconBg: "bg-green-100", image: "/ind_bulk_materials.jpg" },
+  { id: 8, name: "Flooring Services", icon: Maximize, iconColor: "text-indigo-500", iconBg: "bg-indigo-100", image: "/ind_flooring.jpg" },
+  { id: 9, name: "Roofing", icon: Home, iconColor: "text-yellow-500", iconBg: "bg-yellow-100", image: "/ind_roofing.jpg" },
+  { id: 10, name: "Structural Designers", icon: Ruler, iconColor: "text-teal-500", iconBg: "bg-teal-100", image: "/ind_structural.jpg" }
 ];
 
 const IndustrialServicesClient = () => {

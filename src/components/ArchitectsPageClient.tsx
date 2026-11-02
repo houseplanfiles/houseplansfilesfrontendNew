@@ -253,12 +253,12 @@ const ArchitectsPage: FC = () => {
 
   const CATEGORY_CARDS = [
     { id: "Architect", title: "Architect", desc: "Get creative and functional design solutions from expert architects.", img: "/cat_home_designs.jpg", icon: PenTool },
-    { id: "Civil Design Engineer", title: "Civil Design Engineer", desc: "Get accurate structural and design plans for your project.", img: "/b14.webp", icon: Home },
-    { id: "Structure Engineer", title: "Structure Engineer", desc: "Ensure structural safety and stability with professional expertise.", img: "/contractor2.webp", icon: Building },
-    { id: "Interior Designer", title: "Interior Designer", desc: "Transform your spaces with modern, functional and aesthetic interiors.", img: "/b13.webp", icon: Paintbrush },
-    { id: "Site Engineer", title: "Site Engineer", desc: "Get on-site technical support for smooth project execution.", img: "/architect_hero.webp", icon: HardHat },
-    { id: "BIM Consultant", title: "BIM Consultant", desc: "Get advanced 3D modeling and BIM solutions for smarter design.", img: "/b11.jpg", icon: Box },
-    { id: "Vastu Consultant", title: "Vastu Consultant", desc: "Get positive energy and balanced design as per Vastu principles.", img: "/marketplace.webp", icon: Compass },
+    { id: "Civil Design Engineer", title: "Civil Design Engineer", desc: "Get accurate structural and design plans for your project.", img: "/arch_civil_engineer.jpg", icon: Home },
+    { id: "Structure Engineer", title: "Structure Engineer", desc: "Ensure structural safety and stability with professional expertise.", img: "/arch_structural_engineer.jpg", icon: Building },
+    { id: "Interior Designer", title: "Interior Designer", desc: "Transform your spaces with modern, functional and aesthetic interiors.", img: "/arch_interior_designer.jpg", icon: Paintbrush },
+    { id: "Site Engineer", title: "Site Engineer", desc: "Get on-site technical support for smooth project execution.", img: "/arch_site_engineer.jpg", icon: HardHat },
+    { id: "BIM Consultant", title: "BIM Consultant", desc: "Get advanced 3D modeling and BIM solutions for smarter design.", img: "/arch_bim_consultant.jpg", icon: Box },
+    { id: "Vastu Consultant", title: "Vastu Consultant", desc: "Get positive energy and balanced design as per Vastu principles.", img: "/arch_vastu_consultant.jpg", icon: Compass },
   ];
 
   return (

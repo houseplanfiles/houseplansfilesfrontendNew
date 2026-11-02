@@ -4,13 +4,14 @@ import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "@/components/MotionWrapper";
-import { LayoutGrid, ShoppingCart, Download, User, LogOut, X } from "lucide-react";
+import { LayoutGrid, ShoppingCart, Download, User, ClipboardList, LogOut, X } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
 import { logout } from "@/lib/features/users/userSlice";
 
 const navItems = [
   { name: "Dashboard", path: "/dashboard", icon: LayoutGrid },
+  { name: "Lead Board", path: "/leads", icon: ClipboardList },
   { name: "My Orders", path: "/dashboard/orders", icon: ShoppingCart },
   { name: "My Downloads", path: "/dashboard/downloads", icon: Download },
   { name: "Account Details", path: "/dashboard/account-details", icon: User },

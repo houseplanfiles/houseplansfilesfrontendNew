@@ -1,9 +1,10 @@
 "use client";
+import Link from "next/link";
 
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { Loader2, Save, Eye, EyeOff, Zap, Sparkles, CheckCircle2 } from "lucide-react";
+import { Loader2, Save, Eye, EyeOff, Zap, Sparkles, CheckCircle2, ClipboardList } from "lucide-react";
 import { RootState, AppDispatch } from "@/lib/store";
 import {
   updateProfile,
@@ -319,7 +320,13 @@ const SellerProfilePage = () => {
 
   return (
     <div className="w-full p-4 md:p-6 space-y-8">
-      <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
+        <Link href="/leads" className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all w-fit">
+          <ClipboardList className="w-4 h-4" />
+          <span>Lead Board</span>
+        </Link>
+      </div>
 
       {!isPaid && (
         <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-2xl p-5 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">

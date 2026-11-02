@@ -1,186 +1,7 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
-import { Search, User, MapPin, IndianRupee, Clock, Lock, MessageCircle, Phone, ArrowRight, TrendingUp, Users, Home, Grid } from 'lucide-react';
-import Image from 'next/image';
-
-const steps = [
-  {
-    num: 1,
-    title: "Customer Enquiry",
-    desc: "A customer searches for home designing, construction or related services on HousePlanFiles.com and submits an enquiry.",
-    mockup: (
-      <div className="bg-white border-2 border-slate-700 rounded-lg overflow-hidden h-full flex flex-col shadow-sm text-left">
-        <div className="bg-slate-700 h-2 w-full flex items-center px-1 space-x-1">
-          <div className="w-1 h-1 rounded-full bg-red-400"></div><div className="w-1 h-1 rounded-full bg-yellow-400"></div><div className="w-1 h-1 rounded-full bg-green-400"></div>
-        </div>
-        <div className="p-2 flex-grow flex flex-col">
-          <div className="flex items-center gap-1 mb-2">
-            <div className="w-3 h-3 bg-orange-500 rounded flex items-center justify-center text-white text-[6px] font-bold">H</div>
-            <span className="text-[7px] font-bold text-slate-800">HousePlanFiles<span className="text-gray-400 font-normal">.com</span></span>
-          </div>
-          <div className="flex bg-gray-50 border border-gray-200 rounded-md overflow-hidden mb-2">
-            <input type="text" value="home design near me" readOnly className="text-[7px] bg-transparent w-full px-1.5 py-1 text-slate-700 outline-none" />
-            <div className="bg-orange-500 w-4 flex items-center justify-center"><Search className="w-2 h-2 text-white" /></div>
-          </div>
-          <div className="space-y-1.5 mb-2">
-            <div className="flex items-center gap-1.5"><User className="w-2 h-2 text-gray-400"/><div className="h-1 bg-gray-200 rounded w-16"></div></div>
-            <div className="flex items-center gap-1.5"><User className="w-2 h-2 text-gray-400"/><div className="h-1 bg-gray-200 rounded w-20"></div></div>
-            <div className="flex items-center gap-1.5"><User className="w-2 h-2 text-gray-400"/><div className="h-1 bg-gray-200 rounded w-14"></div></div>
-          </div>
-          <Link href="/leads" className="mt-auto bg-orange-500 hover:bg-orange-600 text-white text-[7px] font-bold text-center py-1 rounded-md block transition-colors">
-            Submit Enquiry
-          </Link>
-        </div>
-      </div>
-    )
-  },
-  {
-    num: 2,
-    title: "Lead Goes to Lead Board",
-    desc: "The enquiry is verified and listed on the Lead Board with complete details like location, requirement and budget.",
-    mockup: (
-      <div className="bg-white border-2 border-slate-700 rounded-lg overflow-hidden h-full flex flex-col shadow-sm text-left">
-        <div className="bg-slate-800 text-white text-[8px] font-bold px-2 py-1.5 flex items-center gap-1">
-          <Users className="w-2.5 h-2.5" /> Lead Board
-        </div>
-        <div className="p-2 flex-grow flex flex-col border border-orange-200 m-1 rounded-md bg-white">
-          <div className="flex items-center justify-between mb-1">
-            <span className="bg-orange-500 text-white text-[5px] px-1 py-0.5 rounded-sm font-bold">New Lead</span>
-            <span className="text-[5px] text-orange-600 font-bold bg-orange-50 px-1 py-0.5 rounded">Bhopal</span>
-          </div>
-          <div className="flex items-center gap-1 text-[7px] font-bold text-slate-800 mb-1"><Home className="w-2 h-2 text-slate-500"/> House Construction</div>
-          <div className="flex items-center gap-1 text-[7px] text-slate-600 mb-1"><MapPin className="w-2 h-2 text-slate-400"/> Bhopal, MP</div>
-          <div className="flex items-center gap-1 text-[7px] font-bold text-slate-800 mb-1"><IndianRupee className="w-2 h-2 text-slate-400"/> Budget: ₹50 Lacs</div>
-          <div className="flex items-center gap-1 text-[6px] text-slate-500 mb-1.5"><Clock className="w-2 h-2 text-slate-400"/> Just Now (Only 2 Seats)</div>
-          <Link href="/leads" className="mt-auto bg-orange-500 hover:bg-orange-600 text-white text-[7px] font-bold text-center py-1 rounded-md block transition-colors">
-            View Details
-          </Link>
-        </div>
-      </div>
-    )
-  },
-  {
-    num: 3,
-    title: "Check & Choose Leads",
-    desc: "Browse the latest leads on your dashboard or Lead Board. Check all details and select the leads you want to purchase.",
-    mockup: (
-      <div className="bg-white border-2 border-slate-700 rounded-lg overflow-hidden h-full flex flex-col shadow-sm text-left relative">
-         <div className="bg-slate-700 h-2 w-full flex items-center px-1 space-x-1">
-          <div className="w-1 h-1 rounded-full bg-red-400"></div><div className="w-1 h-1 rounded-full bg-yellow-400"></div><div className="w-1 h-1 rounded-full bg-green-400"></div>
-        </div>
-        <div className="flex flex-grow overflow-hidden">
-          <div className="w-[30%] bg-slate-800 p-1 flex flex-col gap-1">
-            <div className="flex items-center gap-1 mb-1 border-b border-slate-600 pb-1">
-               <div className="w-2 h-2 bg-orange-500 rounded-sm"></div><span className="text-[4px] text-white font-bold">HousePlanFiles</span>
-            </div>
-            <div className="text-[5px] text-slate-300 flex items-center gap-1"><Grid className="w-2 h-2"/> Dashboard</div>
-            <Link href="/leads" className="text-[5px] text-white bg-orange-500 rounded-sm px-1 py-0.5 flex items-center gap-1">
-              <Users className="w-2 h-2"/> Lead Board
-            </Link>
-            <div className="text-[5px] text-slate-300 flex items-center gap-1"><User className="w-2 h-2"/> My Profile</div>
-          </div>
-          <div className="w-[70%] bg-gray-50 p-1.5 flex flex-col">
-            <div className="flex text-[5px] font-bold text-slate-700 border-b border-gray-200 pb-0.5 mb-1">
-              <span className="w-2/3">Customer Details</span>
-              <span className="w-1/3 text-right">Location</span>
-            </div>
-            <Link href="/leads" className="flex text-[5px] text-slate-600 mb-1 bg-white p-0.5 rounded shadow-sm border border-gray-100 hover:border-orange-300 transition-colors">
-              <span className="w-2/3 flex flex-col"><span className="font-bold text-slate-800">1. House Construction</span><span className="text-[4px] text-slate-400">Budget: ₹50 Lacs</span></span>
-              <span className="w-1/3 text-right">Bhopal</span>
-            </Link>
-            <Link href="/leads" className="flex text-[5px] text-slate-600 mb-1 bg-white p-0.5 rounded shadow-sm border border-gray-100 hover:border-orange-300 transition-colors">
-               <span className="w-2/3 flex flex-col"><span className="font-bold text-slate-800">2. Interior Design</span><span className="text-[4px] text-slate-400">Budget: ₹20-30 Lakh</span></span>
-              <span className="w-1/3 text-right">Indore</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
-  },
-  {
-    num: 4,
-    title: "Purchase Leads",
-    desc: "Buy verified leads at nominal rates (₹99 - ₹499). Each lead is strictly shared with only 2 professionals.",
-    mockup: (
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-full flex flex-col shadow-sm text-left p-2">
-        <div className="flex items-center justify-between mb-1.5">
-          <h4 className="text-[8px] font-bold text-slate-800">Choose Lead</h4>
-          <span className="text-[5px] bg-orange-100 text-orange-700 font-bold px-1 py-0.5 rounded">Max 2 Pros</span>
-        </div>
-        <div className="flex-grow flex flex-col gap-1">
-          <div className="flex items-center justify-between border border-orange-400 bg-orange-50 rounded-md p-1 relative overflow-hidden">
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full border-2 border-orange-500 flex items-center justify-center"><div className="w-1 h-1 rounded-full bg-orange-500"></div></div>
-              <span className="text-[6.5px] font-bold text-slate-800">Standard Lead</span>
-            </div>
-            <span className="text-[7px] font-bold text-orange-600">₹99 / ₹149</span>
-          </div>
-          <div className="flex items-center justify-between border border-gray-200 rounded-md p-1">
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full border border-gray-300"></div>
-              <span className="text-[6.5px] text-slate-600">High Budget Lead</span>
-            </div>
-            <span className="text-[7px] font-bold text-slate-800">₹199 / ₹499</span>
-          </div>
-          <div className="bg-slate-50 border border-slate-200 rounded p-1 text-[5px] text-slate-500 text-center font-medium">
-            🔒 Only available for 2 professionals
-          </div>
-        </div>
-        <Link href="/leads" className="mt-1.5 bg-orange-500 hover:bg-orange-600 text-white text-[7px] font-bold flex items-center justify-center gap-1 py-1 rounded-md transition-colors block text-center">
-          <Lock className="w-2 h-2 inline" /> Unlock Lead
-        </Link>
-      </div>
-    )
-  },
-  {
-    num: 5,
-    title: "Contact Customers",
-    desc: "Get direct contact details (WhatsApp / Call) and connect with the customer to discuss their requirements and convert the lead.",
-    mockup: (
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-full flex flex-col shadow-sm text-left p-2">
-        <div className="flex flex-col gap-1.5 mb-2">
-          <Link 
-            href="/leads"
-            className="bg-green-500 hover:bg-green-600 active:scale-95 text-white text-[8px] font-bold flex items-center justify-center gap-1 py-1.5 rounded-md shadow-sm transition-all cursor-pointer"
-          >
-            <MessageCircle className="w-2.5 h-2.5" /> Chat on WhatsApp
-          </Link>
-          <Link 
-            href="/leads"
-            className="border border-slate-300 hover:bg-slate-100 active:scale-95 text-slate-700 text-[8px] font-bold flex items-center justify-center gap-1 py-1.5 rounded-md transition-all cursor-pointer"
-          >
-            <Phone className="w-2.5 h-2.5" /> Call Now
-          </Link>
-        </div>
-        <div className="border-t border-gray-100 pt-1.5 flex flex-col gap-1 mt-auto">
-          <div className="flex items-center gap-1 text-[7px]"><User className="w-2 h-2 text-slate-500"/><span className="text-slate-500">Requirement:</span> <span className="font-bold text-slate-800 line-clamp-1">House Construction</span></div>
-          <div className="flex items-center gap-1 text-[7px]"><MapPin className="w-2 h-2 text-slate-500"/><span className="text-slate-500">City:</span> <span className="font-bold text-slate-800">Bhopal</span></div>
-          <div className="flex items-center gap-1 text-[7px]"><IndianRupee className="w-2 h-2 text-slate-500"/><span className="text-slate-500">Budget:</span> <span className="font-bold text-slate-800">₹50 Lacs</span></div>
-          <div className="flex items-center gap-1 text-[7px]"><Phone className="w-2 h-2 text-slate-500"/><span className="text-slate-500">Contact:</span> <span className="font-bold text-slate-800">88XXXXXX90</span></div>
-        </div>
-      </div>
-    )
-  },
-  {
-    num: 6,
-    title: "Get More Business",
-    desc: "Turn enquiries into projects and grow your business with regular leads from HousePlanFiles.com.",
-    mockup: (
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-full flex flex-col shadow-sm text-left relative">
-        <div className="absolute inset-0 bg-blue-50/50">
-          <Image src="/b11.webp" alt="More Business" fill sizes="20vw" className="object-cover opacity-80" />
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <TrendingUp className="w-12 h-12 text-green-500 drop-shadow-md transform -rotate-12 translate-x-4 -translate-y-4" strokeWidth={3} />
-        </div>
-        <Link href="/leads" className="mt-auto relative z-10 bg-orange-500 hover:bg-orange-600 text-white text-center py-1.5 px-2 rounded-t-xl block transition-colors">
-          <div className="text-[8px] font-bold leading-tight">More Leads<br/>More Projects<br/>More Growth</div>
-        </Link>
-      </div>
-    )
-  }
-];
+import { MapPin, ArrowRight, IndianRupee, Sparkles, Building2, PhoneCall, CheckCircle2 } from 'lucide-react';
 
 interface LeadItem {
   _id: string;
@@ -188,64 +9,82 @@ interface LeadItem {
   category: string;
   city: string;
   budget: string;
+  postedAgo?: string;
+  verified?: boolean;
 }
 
 const DEFAULT_REAL_LEADS: LeadItem[] = [
   {
     _id: "lead_1",
-    title: "Modern 3BHK Duplex Elevation & Floor Plan",
+    title: "Looking for Home Designing & 3D Front Elevation",
     category: "Architect",
-    city: "Bhopal, MP",
-    budget: "₹35,000 - ₹50,000",
+    city: "Pune, Maharashtra",
+    budget: "₹45,000 - ₹60,000",
+    postedAgo: "5 mins ago",
+    verified: true,
   },
   {
     _id: "lead_2",
-    title: "Full Turnkey Villa Construction (2400 sq.ft)",
-    category: "Builder / Contractor",
-    city: "Indore, MP",
-    budget: "₹45L - ₹60L",
+    title: "Full Turnkey Villa Construction (30x50 G+1 RCC)",
+    category: "Contractor / Builder",
+    city: "Bhopal, MP",
+    budget: "₹48 Lakhs - ₹55 Lakhs",
+    postedAgo: "12 mins ago",
+    verified: true,
   },
   {
     _id: "lead_3",
-    title: "Luxury Living Room & Modular Kitchen Interior",
+    title: "Modular Kitchen & Complete Living Room Interior Work",
     category: "Interior Designer",
-    city: "Delhi NCR",
-    budget: "₹8L - ₹12L",
+    city: "Kolkata, WB",
+    budget: "₹6.5 Lakhs - ₹9 Lakhs",
+    postedAgo: "22 mins ago",
+    verified: true,
   },
   {
     _id: "lead_4",
-    title: "Vastu Compliant 30x50 Ground+1 Floor Plan Design",
-    category: "Architect",
-    city: "Jaipur, RJ",
-    budget: "₹25,000 - ₹35,000",
+    title: "Modern Duplex House Planning & Structural Drawing",
+    category: "Architect & Engineer",
+    city: "Faridabad, NCR",
+    budget: "₹30,000 - ₹45,000",
+    postedAgo: "35 mins ago",
+    verified: true,
   },
   {
     _id: "lead_5",
-    title: "Commercial Showroom Interior & False Ceiling Work",
-    category: "Contractor",
-    city: "Pune, MH",
-    budget: "₹14L - ₹20L",
+    title: "House Construction Requirement (20x50 East Facing)",
+    category: "House Construction",
+    city: "Kanpur, UP",
+    budget: "₹50 Lakhs+",
+    postedAgo: "40 mins ago",
+    verified: true,
   },
   {
     _id: "lead_6",
-    title: "Farmhouse Landscape & 3D Walkthrough Animation",
-    category: "3D Visualizer",
-    city: "Ahmedabad, GJ",
-    budget: "₹40,000 - ₹70,000",
+    title: "Looking for Site Engineer / Supervisor for Commercial Site",
+    category: "Site Engineer",
+    city: "Bangalore, Karnataka",
+    budget: "₹35,000 / month",
+    postedAgo: "1 hr ago",
+    verified: true,
   },
   {
     _id: "lead_7",
-    title: "Residential Renovation & Structural Strengthening",
-    category: "Structural Engineer",
-    city: "Lucknow, UP",
-    budget: "₹5L - ₹8L",
+    title: "Vastu Compliant 4BHK Luxury Villa Architectural Plan",
+    category: "Architect",
+    city: "Indore, MP",
+    budget: "₹55,000 - ₹75,000",
+    postedAgo: "1 hr ago",
+    verified: true,
   },
   {
     _id: "lead_8",
-    title: "Contemporary 4BHK Villa Elevation & MEP Drawings",
-    category: "Architect",
-    city: "Bengaluru, KA",
-    budget: "₹50,000 - ₹80,000",
+    title: "Boundary Wall, PEB Shed & Flooring Contractor Required",
+    category: "Contractor",
+    city: "Jaipur, Rajasthan",
+    budget: "₹18 Lakhs - ₹25 Lakhs",
+    postedAgo: "2 hrs ago",
+    verified: true,
   },
 ];
 
@@ -260,156 +99,133 @@ export default function LeadSteps() {
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
-            const mapped = data.slice(0, 12).map((l: any) => ({
-              _id: l._id || Math.random().toString(),
-              title: l.title || l.requirements || "Residential Project Lead",
-              category: l.category || "Lead",
+            const mapped = data.slice(0, 15).map((l: any, i: number) => ({
+              _id: l._id || `lead_${i}`,
+              title: l.title || l.requirements || "Residential House Planning & Construction Lead",
+              category: l.category || "House Construction",
               city: l.city || "India",
-              budget: l.budget ? (String(l.budget).startsWith("₹") ? l.budget : `₹${l.budget}`) : "Best Price",
+              budget: l.budget ? (String(l.budget).startsWith("₹") ? l.budget : `₹${l.budget}`) : "₹25L - ₹50L",
+              postedAgo: "Active Now",
+              verified: true,
             }));
             setRealLeads(mapped);
           }
         }
       } catch {
-        // keep fallback
+        // fallback to default
       }
     };
     fetchLeads();
   }, []);
 
   return (
-    <div className="w-full bg-white pb-14 pt-8">
-      {/* Banner */}
-      <div className="bg-gradient-to-r from-orange-500 to-orange-400 py-3 px-6 shadow-md border-y-4 border-orange-600 relative overflow-hidden flex justify-center">
+    <div className="w-full bg-[#FAF9F6] pb-16 pt-8 border-t border-gray-100">
+      {/* Header Banner */}
+      <div className="bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 py-4 px-6 shadow-md border-y-4 border-orange-600 relative overflow-hidden flex justify-center">
         <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-center z-10">
-          <h2 className="text-white text-2xl md:text-3xl font-black whitespace-nowrap drop-shadow-md uppercase tracking-wider">Lead Board</h2>
+          <h2 className="text-white text-2xl md:text-3xl font-black whitespace-nowrap drop-shadow-md uppercase tracking-wider">
+            PROJECT LEAD BOARD
+          </h2>
           <div className="w-0.5 h-6 md:h-8 bg-orange-200/50 hidden md:block"></div>
-          <p className="text-white text-lg md:text-2xl font-bold tracking-wide drop-shadow-md italic">How It Works</p>
+          <p className="text-white text-lg md:text-2xl font-bold tracking-wide drop-shadow-md italic">
+            Direct Homeowner Requirements For Architects &amp; Contractors
+          </p>
         </div>
       </div>
 
-      {/* Steps Grid */}
-      <div className="max-w-[1600px] mx-auto px-2 md:px-4 mt-12 md:mt-16">
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2 md:gap-4 relative">
-          
-          {steps.map((step, index) => (
-            <div key={step.num} className="flex flex-col bg-[#F8F9FA] rounded-[16px] md:rounded-[20px] p-2 md:p-4 relative group hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-orange-200">
-              
-              {/* Number Badge */}
-              <div className="absolute -top-5 md:-top-6 left-1/2 -translate-x-1/2 w-10 h-10 md:w-12 md:h-12 bg-orange-500 rounded-full flex items-center justify-center text-white text-xl md:text-2xl font-black shadow-lg border-4 border-white z-10 group-hover:scale-110 transition-transform">
-                {step.num}
-              </div>
-
-              {/* Title */}
-              <div className="text-center mt-5 md:mt-6 mb-3 md:mb-4 flex-grow">
-                <h3 className="font-extrabold text-slate-800 text-[12px] md:text-[15px] leading-tight min-h-[34px] md:min-h-[38px] flex items-center justify-center group-hover:text-orange-600 transition-colors">{step.title}</h3>
-              </div>
-
-              {/* Mockup Container */}
-              <div className="h-[180px] w-full rounded-lg md:rounded-xl overflow-hidden mt-auto mx-auto border border-gray-200/50 bg-white p-1">
-                {step.mockup}
-              </div>
-
-              {/* Arrows between steps (hidden on small screens, shown only if not last) */}
-              {index < steps.length - 1 && (
-                <div className="hidden xl:flex absolute top-[40%] -right-3 z-20 text-orange-500 bg-white rounded-full p-1 shadow-sm">
-                  <ArrowRight className="w-5 h-5 stroke-[3]" />
-                </div>
-              )}
-            </div>
-          ))}
-          
-        </div>
-
-        {/* Real Leads Auto-Scrolling Reel (Directly beneath How It Works cards) */}
-        <div className="mt-10 pt-8 border-t border-slate-200/80">
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-3.5 px-2">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+        {/* Live Indicator Row */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <div className="flex items-center gap-3">
+            <span className="relative flex h-3.5 w-3.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
+            </span>
             <div className="flex items-center gap-2">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              <h3 className="text-lg md:text-2xl font-black uppercase tracking-tight text-slate-900">
+                REAL LIVE PROJECT LEADS
+              </h3>
+              <span className="text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1 rounded-full uppercase tracking-wider">
+                Live &amp; Verified
               </span>
-              <h4 className="text-xs md:text-sm font-black uppercase tracking-wider text-slate-800 flex items-center gap-2">
-                <span>Real Live Project Leads</span>
-                <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full capitalize">
-                  Active Now
-                </span>
-              </h4>
-            </div>
-            <Link
-              href="/leads"
-              className="text-[11px] md:text-xs font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1 group"
-            >
-              <span>Explore all leads</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          </div>
-
-          {/* Marquee Track Container */}
-          <div className="relative w-full overflow-hidden py-1">
-            {/* Fade Overlays */}
-            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-r from-white to-transparent z-10"></div>
-            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-l from-white to-transparent z-10"></div>
-
-            <style>{`
-              @keyframes leadMarqueeScroll {
-                0% { transform: translateX(0); }
-                100% { transform: translateX(-50%); }
-              }
-              .animate-lead-track {
-                animation: leadMarqueeScroll 30s linear infinite;
-              }
-              .animate-lead-track:hover {
-                animation-play-state: paused;
-              }
-            `}</style>
-
-            <div className="flex gap-3 w-max animate-lead-track hover:[animation-play-state:paused]">
-              {[...realLeads, ...realLeads].map((lead, idx) => (
-                <Link
-                  key={`${lead._id}-${idx}`}
-                  href="/leads"
-                  className="w-[230px] md:w-[265px] shrink-0 bg-white hover:bg-orange-50/20 border border-gray-200 hover:border-orange-400 rounded-xl p-3 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer text-left"
-                >
-                  {/* Category & City */}
-                  <div className="flex items-center justify-between gap-1 mb-1.5">
-                    <span className="text-[10px] font-bold text-orange-700 bg-orange-50 border border-orange-200/60 px-2 py-0.5 rounded truncate max-w-[130px]">
-                      {lead.category}
-                    </span>
-                    <span className="text-[10px] text-gray-500 font-medium flex items-center gap-0.5 truncate max-w-[105px]">
-                      <MapPin className="w-2.5 h-2.5 text-gray-400 shrink-0" />
-                      <span className="truncate">{lead.city}</span>
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h5 className="text-[11px] md:text-[12px] font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-orange-600 transition-colors mb-2 min-h-[32px] flex items-center">
-                    {lead.title}
-                  </h5>
-
-                  {/* Budget & Action */}
-                  <div className="flex items-center justify-between pt-1.5 border-t border-gray-100 text-[10px]">
-                    <div className="font-extrabold text-emerald-600 truncate max-w-[130px]">
-                      {lead.budget}
-                    </div>
-                    <span className="font-bold text-orange-600 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
-                      <span>View Lead</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
             </div>
           </div>
+          <Link
+            href="/leads"
+            className="text-sm md:text-base font-extrabold text-orange-600 hover:text-orange-700 flex items-center gap-1.5 group transition-colors"
+          >
+            <span>Explore all leads</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
 
-        {/* Action Button */}
+        {/* Big Premium Live Leads Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          {realLeads.slice(0, 8).map((lead) => (
+            <Link
+              key={lead._id}
+              href="/leads"
+              className="bg-white rounded-2xl md:rounded-3xl p-5 md:p-6 border border-gray-200/90 hover:border-orange-500 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 relative overflow-hidden"
+            >
+              {/* Top Accent Strip */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+              <div>
+                {/* Badge & City Row */}
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <span className="text-xs font-black text-orange-700 bg-orange-50 border border-orange-200 px-2.5 py-1 rounded-lg uppercase tracking-wide">
+                    {lead.category}
+                  </span>
+                  <span className="text-xs text-slate-500 font-semibold flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-orange-500 shrink-0" />
+                    <span>{lead.city}</span>
+                  </span>
+                </div>
+
+                {/* Lead Title */}
+                <h4 className="text-base md:text-lg font-bold text-slate-900 group-hover:text-orange-600 transition-colors leading-snug line-clamp-2 mb-4">
+                  {lead.title}
+                </h4>
+
+                {/* Verified Tag & Posting Status */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Verified Homeowner</span>
+                  </div>
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    {lead.postedAgo || "Just now"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Bottom Row: Budget & Unlock Button */}
+              <div className="pt-4 border-t border-gray-100 flex items-center justify-between gap-2 mt-2">
+                <div>
+                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    Client Budget
+                  </div>
+                  <div className="text-base md:text-lg font-black text-slate-900 flex items-center gap-0.5 text-emerald-600">
+                    {lead.budget}
+                  </div>
+                </div>
+
+                <div className="bg-orange-50 group-hover:bg-orange-500 text-orange-600 group-hover:text-white px-3.5 py-2 rounded-xl text-xs md:text-sm font-extrabold flex items-center gap-1.5 transition-all shadow-sm">
+                  <span>Unlock Lead</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Bottom Wide CTA Button */}
         <div className="mt-10 text-center">
           <Link
             href="/leads"
-            className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 px-8 rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all hover:scale-105 text-sm md:text-base cursor-pointer"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black py-4 px-10 rounded-2xl shadow-xl shadow-orange-500/25 hover:shadow-orange-500/40 transition-all hover:scale-105 text-base md:text-lg cursor-pointer"
           >
-            <span>Explore Lead Board &amp; Get Leads</span>
+            <span>Explore All Live Project Leads &amp; Connect With Clients</span>
             <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
