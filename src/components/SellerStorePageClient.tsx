@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
 
@@ -25,6 +26,7 @@ import {
   Check,
   Trash2,
   Plus,
+  ClipboardList,
 } from "lucide-react";
 
 
@@ -525,6 +527,12 @@ const SellerStorePage: FC<SellerStorePageClientProps> = ({ sellerId: sellerIdPro
                     >
                       <Send size={16} className="mr-1.5 text-gray-600" /> Share Profile
                     </Button>
+                    <Link
+                      href="/leads"
+                      className="inline-flex items-center gap-1.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold h-9 px-4 rounded-md shadow-sm text-sm transition-all"
+                    >
+                      <ClipboardList size={16} /> Lead Board
+                    </Link>
                   </div>
                 )}
               </div>

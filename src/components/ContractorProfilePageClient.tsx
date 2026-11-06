@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { trackAnalytics } from "@/lib/analytics";
 import React, { useEffect, useState, useMemo } from "react";
