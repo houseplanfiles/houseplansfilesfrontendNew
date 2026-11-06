@@ -51,7 +51,11 @@ import {
   ExternalLink,
   ClipboardList,
   Zap,
-  Lock
+  Lock,
+  HardHat,
+  Store,
+  Factory,
+  Wrench
 } from "lucide-react";
 import { toast } from "sonner";
 import ActivatePremiumModal from "@/components/ActivatePremiumModal";
@@ -635,12 +639,12 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
       <nav className="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-6 sm:gap-8 overflow-x-auto no-scrollbar py-3 text-xs sm:text-sm font-semibold">
-            {["Overview", "Portfolio", "Services", "About", "Contact"].map((tab) => (
+            {["Overview", "Portfolio", "Services", "About", "City Professionals", "Contact"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => {
                   setActiveTab(tab);
-                  const el = document.getElementById(tab.toLowerCase());
+                  const el = document.getElementById(tab.toLowerCase().replace(/\s+/g, "-"));
                   if (el) el.scrollIntoView({ behavior: "smooth" });
                 }}
                 className={`flex items-center gap-1.5 whitespace-nowrap pb-1 border-b-2 transition-all ${
@@ -884,6 +888,57 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
               )}
             </section>
 
+            {/* --- 5. CITY PROFESSIONALS SECTION --- */}
+            <section id="city-professionals" className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#ff6b00] flex items-center justify-center">
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
+                      City Professionals in {architect.city || "Your City"}
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Find verified local experts, shops and services</p>
+                  </div>
+                </div>
+                <Link
+                  href="/architects"
+                  className="text-xs font-bold text-[#ff6b00] hover:underline"
+                >
+                  View All &rarr;
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                {[
+                  { name: "Contractors", href: "/contractors", icon: HardHat, tag: "125+ Experts" },
+                  { name: "Building Materials", href: "/building-material-marketplace", icon: Store, tag: "98+ Shops" },
+                  { name: "Interior Designers", href: "/interior-designs", icon: Home, tag: "64+ Designers" },
+                  { name: "Civil Engineers", href: "/architects", icon: Building, tag: "52+ Engineers" },
+                  { name: "Vastu Consultants", href: "/architects", icon: Compass, tag: "18+ Experts" },
+                  { name: "Other Services", href: "/other-services", icon: Wrench, tag: "87+ Services" },
+                  { name: "Industrial Solutions", href: "/industrial-services", icon: Factory, tag: "Heavy Infra" },
+                  { name: "Project Lead Board", href: "/leads", icon: ClipboardList, tag: "Live Leads" },
+                ].map((cat, idx) => {
+                  const CatIcon = cat.icon;
+                  return (
+                    <Link
+                      key={idx}
+                      href={cat.href}
+                      className="p-3.5 rounded-xl border border-slate-100 hover:border-orange-200 bg-slate-50/60 hover:bg-orange-50/20 transition-all flex flex-col items-center text-center group"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 group-hover:border-orange-300 text-[#ff6b00] flex items-center justify-center mb-2 shadow-xs group-hover:scale-105 transition-transform">
+                        <CatIcon className="w-5 h-5" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-800 group-hover:text-orange-600 line-clamp-1">{cat.name}</span>
+                      <span className="text-[10px] text-slate-400 font-semibold mt-0.5">{cat.tag}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+
             {/* Design Packages (If available in DB) */}
             {architect.packages && architect.packages.length > 0 && (
               <section className="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm">
@@ -1107,6 +1162,63 @@ const ArchitectProfilePage = ({ initialArchitect }: ArchitectProfilePageClientPr
                   </button>
                 </div>
               )}
+            </div>
+
+            {/* --- OTHER PROFESSIONALS IN CITY WIDGET --- */}
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3.5">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#ff6b00]" />
+                <div>
+                  <h3 className="text-sm font-extrabold text-slate-900 leading-tight">
+                    Other Professionals in {architect.city || "City"}
+                  </h3>
+                  <p className="text-[11px] text-slate-400">Connect with verified local experts near you</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                {[
+                  { title: "Contractors", count: "125+ Professionals", href: "/contractors", icon: HardHat, color: "text-amber-500 bg-amber-50" },
+                  { title: "Building Material Shops", count: "98+ Shops", href: "/building-material-marketplace", icon: Store, color: "text-red-500 bg-red-50" },
+                  { title: "Interior Designers", count: "64+ Professionals", href: "/interior-designs", icon: Home, color: "text-emerald-500 bg-emerald-50" },
+                  { title: "Civil Engineers", count: "52+ Professionals", href: "/architects", icon: Building, color: "text-blue-500 bg-blue-50" },
+                  { title: "Vastu Consultants", count: "18+ Professionals", href: "/architects", icon: Compass, color: "text-orange-500 bg-orange-50" },
+                  { title: "Other Services", count: "87+ Services", href: "/other-services", icon: Wrench, color: "text-purple-500 bg-purple-50" },
+                ].map((item, idx) => {
+                  const ItemIcon = item.icon;
+                  return (
+                    <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl border border-slate-100 hover:border-slate-200 hover:bg-slate-50/70 transition-all">
+                      <div className="flex items-center gap-2.5">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${item.color}`}>
+                          <ItemIcon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-slate-900">{item.title}</p>
+                          <p className="text-[10px] text-slate-400 font-medium">{item.count}</p>
+                        </div>
+                      </div>
+                      <Link
+                        href={item.href}
+                        className="text-[11px] font-bold text-[#ff6b00] hover:bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200 transition-all"
+                      >
+                        View All
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Quick City Links */}
+              <div className="pt-2 border-t border-slate-100 text-[11px]">
+                <span className="font-bold text-slate-700 block mb-1">Search professionals in your city:</span>
+                <div className="flex flex-wrap gap-1.5 text-slate-500">
+                  {["Bhopal", "Indore", "Jaipur", "Lucknow", "Pune", "Mumbai", "Delhi"].map((c) => (
+                    <Link key={c} href={`/architects?city=${encodeURIComponent(c)}`} className="hover:text-orange-600 hover:underline">
+                      {c} •
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* --- PROJECT LEAD BOARD CARD --- */}

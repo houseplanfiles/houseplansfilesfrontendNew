@@ -47,6 +47,7 @@ interface LeadType {
   budget: string;
   requirements: string;
   price: number;
+  qualityTier?: "low" | "medium" | "high";
   clientName: string;
   clientPhone: string;
   clientEmail?: string;
@@ -64,6 +65,12 @@ const categoryColors: Record<string, string> = {
   "Swimming Pool Contractor": "bg-cyan-100 text-cyan-700",
   Corporate: "bg-indigo-100 text-indigo-700",
   "Building Material": "bg-amber-100 text-amber-700",
+};
+
+const qualityBadges: Record<string, { label: string; class: string; dot: string }> = {
+  low: { label: "Standard Lead", class: "bg-emerald-50 text-emerald-700 border-emerald-200", dot: "bg-emerald-500" },
+  medium: { label: "Verified Lead", class: "bg-amber-50 text-amber-700 border-amber-200", dot: "bg-amber-500" },
+  high: { label: "High Value Lead", class: "bg-purple-50 text-purple-700 border-purple-200", dot: "bg-purple-500" },
 };
 
 const downloadLead = (lead: LeadType) => {
@@ -113,6 +120,7 @@ export default function LeadsPageClient() {
 
   const [cityFilter, setCityFilter] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedQuality, setSelectedQuality] = useState<string>("all");
 
   // Load Razorpay SDK manually
   useEffect(() => {
@@ -224,21 +232,54 @@ export default function LeadsPageClient() {
             <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-4">
               Project <span className="text-orange-600">Leads Board</span>
             </h1>
-            <p className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto mb-6">
               Real customer inquiries from across the platform. Pay to unlock contact details and win projects instantly.
             </p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Button
+                onClick={() => setIsRequirementModalOpen(true)}
+                className="bg-[#25D366] hover:bg-[#1ebd5a] text-white font-extrabold px-6 py-2.5 h-11 rounded-full shadow-md text-sm gap-2"
+              >
+                <Sparkles className="w-4 h-4" /> Post Your Requirement (Get Quotes)
+              </Button>
+            </div>
           </div>
 
           {/* Filters */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-10 flex flex-col gap-6">
-            <div className="relative w-full sm:w-1/2">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search by City..."
-                value={cityFilter}
-                onChange={(e) => setCityFilter(e.target.value)}
-                className="pl-10 h-12 bg-gray-50 border-gray-200 focus:bg-white transition-all w-full rounded-xl"
-              />
+            <div className="flex flex-col sm:flex-row items-center gap-4 justify-between w-full">
+              <div className="relative w-full sm:w-1/2">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Search by City..."
+                  value={cityFilter}
+                  onChange={(e) => setCityFilter(e.target.value)}
+                  className="pl-10 h-12 bg-gray-50 border-gray-200 focus:bg-white transition-all w-full rounded-xl"
+                />
+              </div>
+
+              {/* Quality Filter Tabs */}
+              <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+                <span className="text-xs font-bold text-gray-500 whitespace-nowrap">Lead Quality:</span>
+                {[
+                  { id: "all", label: "All Leads" },
+                  { id: "high", label: "🔥 High Value", activeClass: "bg-purple-600 text-white border-purple-600" },
+                  { id: "medium", label: "🟡 Medium", activeClass: "bg-amber-600 text-white border-amber-600" },
+                  { id: "low", label: "🟢 Standard", activeClass: "bg-emerald-600 text-white border-emerald-600" },
+                ].map((tier) => (
+                  <button
+                    key={tier.id}
+                    onClick={() => setSelectedQuality(tier.id)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all whitespace-nowrap ${
+                      selectedQuality === tier.id
+                        ? (tier.activeClass || "bg-orange-500 text-white border-orange-500")
+                        : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                    }`}
+                  >
+                    {tier.label}
+                  </button>
+                ))}
+              </div>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
@@ -408,7 +449,8 @@ export default function LeadsPageClient() {
                     lead.requirements?.toLowerCase().includes(searchStr)
                   );
                 });
-                return matchesCity && matchesCategory;
+                const matchesQuality = selectedQuality === "all" || (lead.qualityTier || "medium") === selectedQuality;
+                return matchesCity && matchesCategory && matchesQuality;
               }).map((lead, idx) => {
                 // ✅ Use ONLY the explicit boolean from backend — zero string matching
                 const revealed: boolean = lead.contactRevealed === true;
@@ -437,9 +479,21 @@ export default function LeadsPageClient() {
                       
                       {/* Badges on Top Left & Top Right of Image */}
                       <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-                        <span className={`px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide bg-white/95 backdrop-blur-sm shadow-sm border border-white/50 ${catColor}`}>
-                          {lead.category}
-                        </span>
+                        <div className="flex flex-col gap-1.5 items-start">
+                          <span className={`px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide bg-white/95 backdrop-blur-sm shadow-sm border border-white/50 ${catColor}`}>
+                            {lead.category}
+                          </span>
+                          {/* Quality Tier Badge */}
+                          {(() => {
+                            const q = qualityBadges[lead.qualityTier || "medium"] || qualityBadges.medium;
+                            return (
+                              <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wide flex items-center gap-1.5 backdrop-blur-sm border shadow-xs ${q.class}`}>
+                                <span className={`w-1.5 h-1.5 rounded-full ${q.dot}`} />
+                                {q.label}
+                              </span>
+                            );
+                          })()}
+                        </div>
                         <div className="flex flex-col gap-2 items-end">
                           {/* Status Badges */}
                           {revealed && <span className="bg-green-100/95 backdrop-blur-sm text-green-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm border border-green-200"><Unlock className="w-3.5 h-3.5" /> Unlocked</span>}

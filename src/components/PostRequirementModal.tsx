@@ -64,6 +64,7 @@ export const PostRequirementModal: React.FC<PostRequirementModalProps> = ({ isOp
       city: formData.get("city"),
       category: formData.get("category"),
       budget: formData.get("budget"),
+      qualityTier: formData.get("qualityTier") || "medium",
       requirements: formData.get("requirements")
     };
 
@@ -139,6 +140,25 @@ export const PostRequirementModal: React.FC<PostRequirementModalProps> = ({ isOp
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="qualityTier">Lead Quality / Priority</Label>
+            <div className="grid grid-cols-3 gap-2">
+              <label className="flex items-center justify-center gap-1.5 p-2 rounded-lg border border-slate-200 cursor-pointer text-xs font-semibold hover:border-blue-400 has-checked:border-blue-500 has-checked:bg-blue-50/50 has-checked:text-blue-700">
+                <input type="radio" name="qualityTier" value="low" className="sr-only" />
+                <span>🟢 Low (Standard)</span>
+              </label>
+              <label className="flex items-center justify-center gap-1.5 p-2 rounded-lg border border-slate-200 cursor-pointer text-xs font-semibold hover:border-amber-400 has-checked:border-amber-500 has-checked:bg-amber-50/50 has-checked:text-amber-700">
+                <input type="radio" name="qualityTier" value="medium" defaultChecked className="sr-only" />
+                <span>🟡 Medium</span>
+              </label>
+              <label className="flex items-center justify-center gap-1.5 p-2 rounded-lg border border-slate-200 cursor-pointer text-xs font-semibold hover:border-purple-400 has-checked:border-purple-500 has-checked:bg-purple-50/50 has-checked:text-purple-700">
+                <input type="radio" name="qualityTier" value="high" className="sr-only" />
+                <span>🔥 High (Premium)</span>
+              </label>
+            </div>
+            <p className="text-[11px] text-gray-400">Select urgency & project scope so the best suited professionals connect.</p>
           </div>
 
           <div className="space-y-2">
