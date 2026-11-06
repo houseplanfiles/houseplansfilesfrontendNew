@@ -15,34 +15,70 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-const CATEGORIES_28 = [
-  "Architecture",
-  "Interior Design",
-  "Civil Engineering",
-  "Structural Design",
-  "MEP Consulting",
-  "Vastu Consulting",
-  "Landscape Design",
-  "3D Elevation / Rendering",
-  "House Construction",
-  "Renovation & Remodeling",
-  "Painting Services",
-  "Plumbing Services",
-  "Electrical Services",
-  "Carpentry",
-  "Flooring & Tiling",
-  "False Ceiling",
-  "Modular Kitchen",
-  "Furniture & Woodwork",
-  "Roofing Services",
-  "Waterproofing",
-  "Pest Control",
-  "HVAC",
-  "Solar Panel Installation",
-  "Smart Home Automation",
-  "Security Systems (CCTV)",
-  "Glass & Aluminium Works",
-  "Fabrication & Welding"
+const ORGANIZED_CATEGORIES = [
+  {
+    group: "Architects & Engineers",
+    items: [
+      "Architecture",
+      "Interior Design",
+      "Civil Engineering",
+      "Structural Design",
+      "MEP Consulting",
+      "Vastu Consulting",
+      "Landscape Design",
+      "3D Elevation / Rendering",
+    ],
+  },
+  {
+    group: "Construction & Contractors",
+    items: [
+      "House Construction",
+      "Renovation & Remodeling",
+      "Painting Services",
+      "Plumbing Services",
+      "Electrical Services",
+      "Carpentry",
+      "Flooring & Tiling",
+      "False Ceiling",
+      "Modular Kitchen",
+      "Furniture & Woodwork",
+      "Roofing Services",
+      "Waterproofing",
+    ],
+  },
+  {
+    group: "Home & Specialty Services",
+    items: [
+      "Pest Control",
+      "HVAC",
+      "Solar Panel Installation",
+      "Smart Home Automation",
+      "Security Systems (CCTV)",
+      "Glass & Aluminium Works",
+      "Fabrication & Welding",
+    ],
+  },
+  {
+    group: "Building Materials & Shops",
+    items: [
+      "Building Material Shop",
+      "Cement & Concrete",
+      "Steel & Iron Supplier",
+      "Bricks & Blocks",
+      "Tiles & Sanitaryware",
+      "Hardware Store",
+    ],
+  },
+  {
+    group: "Industrial Solutions",
+    items: [
+      "Pre-Engineered Buildings (PEB)",
+      "Precast Concrete Materials",
+      "Prefab Modular Cabins",
+      "Heavy Machinery Rental",
+      "Industrial Roofing & Flooring",
+    ],
+  },
 ];
 
 interface PostRequirementModalProps {
@@ -136,8 +172,14 @@ export const PostRequirementModal: React.FC<PostRequirementModalProps> = ({ isOp
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="" disabled>Select a category...</option>
-              {CATEGORIES_28.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
+              {ORGANIZED_CATEGORIES.map((grp) => (
+                <optgroup key={grp.group} label={grp.group} className="font-bold text-gray-900 bg-gray-50">
+                  {grp.items.map((cat) => (
+                    <option key={cat} value={cat} className="font-normal text-gray-700 bg-white">
+                      {cat}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </div>
