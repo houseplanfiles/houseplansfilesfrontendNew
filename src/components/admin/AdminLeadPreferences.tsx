@@ -123,6 +123,7 @@ const AdminLeadPreferences = () => {
                 <th className="text-left px-3 py-2">Contact</th>
                 <th className="text-left px-3 py-2">City</th>
                 <th className="text-left px-3 py-2">Plan</th>
+                <th className="text-left px-3 py-2">Quality</th>
                 <th className="text-left px-3 py-2">Leads</th>
                 <th className="text-left px-3 py-2">Budget</th>
                 <th className="text-left px-3 py-2">Notes</th>
@@ -145,6 +146,11 @@ const AdminLeadPreferences = () => {
                   <td className="px-3 py-2">{p.phone || p.user?.phone || "-"}</td>
                   <td className="px-3 py-2">{p.city || "-"}</td>
                   <td className="px-3 py-2 capitalize">{p.frequency}</td>
+                  <td className="px-3 py-2">
+                    <span className="capitalize text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-800">
+                      {p.qualityPreference || "All"}
+                    </span>
+                  </td>
                   <td className="px-3 py-2 font-bold text-orange-600">
                     {p.leadCount}
                   </td>

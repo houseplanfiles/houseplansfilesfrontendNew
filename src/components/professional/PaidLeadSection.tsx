@@ -25,6 +25,7 @@ const PaidLeadSection = () => {
   const [form, setForm] = useState({
     frequency: "monthly",
     leadCount: "10",
+    qualityPreference: "all",
     city: "",
     serviceType: "",
     budget: "",
@@ -110,6 +111,7 @@ const PaidLeadSection = () => {
               <tr>
                 <th className="text-left px-4 py-2">Date</th>
                 <th className="text-left px-4 py-2">Plan</th>
+                <th className="text-left px-4 py-2">Quality</th>
                 <th className="text-left px-4 py-2">Leads</th>
                 <th className="text-left px-4 py-2">City</th>
                 <th className="text-left px-4 py-2">Status</th>
@@ -122,6 +124,11 @@ const PaidLeadSection = () => {
                     {new Date(h.createdAt).toLocaleDateString("en-IN")}
                   </td>
                   <td className="px-4 py-2 capitalize">{h.frequency}</td>
+                  <td className="px-4 py-2">
+                    <span className="capitalize text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                      {h.qualityPreference || "All"}
+                    </span>
+                  </td>
                   <td className="px-4 py-2 font-semibold">{h.leadCount}</td>
                   <td className="px-4 py-2">{h.city || "-"}</td>
                   <td className="px-4 py-2">
@@ -185,6 +192,32 @@ const PaidLeadSection = () => {
                 onChange={(e) => setForm({ ...form, leadCount: e.target.value })}
                 className={input}
               />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium">Lead Quality Preference</label>
+              <div className="grid grid-cols-4 gap-2 mt-1">
+                {[
+                  { id: "all", label: "All Tiers", color: "border-gray-300" },
+                  { id: "low", label: "🟢 Low", color: "border-blue-300" },
+                  { id: "medium", label: "🟡 Medium", color: "border-amber-300" },
+                  { id: "high", label: "🔥 High", color: "border-purple-300" },
+                ].map((q) => (
+                  <button
+                    key={q.id}
+                    type="button"
+                    onClick={() => setForm({ ...form, qualityPreference: q.id })}
+                    className={`py-2 px-2 text-xs font-bold rounded-lg border text-center transition-all ${
+                      form.qualityPreference === q.id
+                        ? "bg-orange-500 text-white border-orange-500 shadow-sm"
+                        : "bg-white text-gray-700 hover:bg-gray-50 border-gray-200"
+                    }`}
+                  >
+                    {q.label}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[11px] text-gray-500 mt-1">Choose desired lead quality based on your client criteria.</p>
             </div>
 
             <div className="grid grid-cols-2 gap-3">

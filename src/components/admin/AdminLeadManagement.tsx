@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RootState } from "@/lib/store";
+import AdminLeadPreferences from "@/components/admin/AdminLeadPreferences";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type SourceType = "admin_lead" | "contractor_inquiry" | "seller_inquiry" | "corporate_inquiry";
@@ -26,6 +27,7 @@ interface UnifiedLead {
   budget: string;
   requirements: string;
   price: number;
+  qualityTier?: "low" | "medium" | "high";
   clientName: string;
   clientPhone: string;
   clientEmail?: string;
@@ -63,6 +65,7 @@ const SetPriceModal = ({
     budget: lead.budget,
     requirements: lead.requirements,
     price: lead.price > 0 ? lead.price.toString() : "",
+    qualityTier: lead.qualityTier || "medium",
     clientName: lead.clientName,
     clientPhone: lead.clientPhone,
     clientEmail: lead.clientEmail || "",
@@ -232,6 +235,29 @@ const SetPriceModal = ({
                 placeholder="e.g. 299"
                 className="border-orange-300 focus:border-orange-500"
               />
+            </div>
+            <div className="col-span-2 space-y-1">
+              <label className="text-xs font-bold text-gray-600">Lead Quality / Tier</label>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { id: "low", label: "🟢 Low (Standard)" },
+                  { id: "medium", label: "🟡 Medium (Verified)" },
+                  { id: "high", label: "🔥 High (Premium)" },
+                ].map((tier) => (
+                  <button
+                    key={tier.id}
+                    type="button"
+                    onClick={() => setForm({ ...form, qualityTier: tier.id as any })}
+                    className={`py-1.5 px-2 rounded-lg text-xs font-bold border text-center transition-all ${
+                      form.qualityTier === tier.id
+                        ? "bg-orange-500 text-white border-orange-500"
+                        : "bg-white text-gray-700 hover:bg-gray-50 border-gray-200"
+                    }`}
+                  >
+                    {tier.label}
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="col-span-2 space-y-1">
               <label className="text-xs font-bold text-gray-600">Requirements</label>
@@ -434,6 +460,9 @@ const AdminLeadManagement: React.FC = () => {
           </div>
         </div>
 
+        {/* Lead Preferences from Professionals (Low/Med/High Quality Requests) */}
+        <AdminLeadPreferences />
+
         {/* Table */}
         <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
           {loading ? (
@@ -453,6 +482,7 @@ const AdminLeadManagement: React.FC = () => {
                   <tr>
                     <th className="p-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Source</th>
                     <th className="p-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Title / Category</th>
+                    <th className="p-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Quality</th>
                     <th className="p-4 font-bold text-gray-600 text-xs uppercase tracking-wider">City</th>
                     <th className="p-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Client</th>
                     <th className="p-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Price</th>
@@ -476,6 +506,20 @@ const AdminLeadManagement: React.FC = () => {
                         <td className="p-4">
                           <p className="font-semibold text-gray-800 max-w-[220px] truncate">{lead.title}</p>
                           <p className="text-xs text-gray-400">{lead.category}</p>
+                        </td>
+                        <td className="p-4">
+                          {(() => {
+                            const q = lead.qualityTier || "medium";
+                            const color = q === "high" ? "bg-purple-100 text-purple-700 border-purple-200" :
+                                          q === "low" ? "bg-emerald-100 text-emerald-700 border-emerald-200" :
+                                          "bg-amber-100 text-amber-700 border-amber-200";
+                            const label = q === "high" ? "🔥 High" : q === "low" ? "🟢 Low" : "🟡 Medium";
+                            return (
+                              <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold border ${color}`}>
+                                {label}
+                              </span>
+                            );
+                          })()}
                         </td>
                         <td className="p-4 text-gray-600">
                           <div className="flex items-center gap-1">
