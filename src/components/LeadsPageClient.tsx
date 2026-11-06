@@ -474,32 +474,51 @@ export default function LeadsPageClient() {
                     }`}
                   >
                     {/* Image Header with badges OVERLAY */}
-                    <div className="relative h-48 sm:h-56 bg-gray-200">
+                    <div className="relative h-48 sm:h-56 bg-gray-900 overflow-hidden">
                       <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800" alt="Lead Property" className="w-full h-full object-cover" />
                       
+                      {/* Dark Gradient Overlay for Maximum Text & Badge Visibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/30 to-slate-950/60 pointer-events-none" />
+
                       {/* Badges on Top Left & Top Right of Image */}
-                      <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+                      <div className="absolute top-3.5 left-3.5 right-3.5 flex justify-between items-start z-10">
                         <div className="flex flex-col gap-1.5 items-start">
-                          <span className={`px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide bg-white/95 backdrop-blur-sm shadow-sm border border-white/50 ${catColor}`}>
+                          <span className="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-white text-slate-900 shadow-md border border-white">
                             {lead.category}
                           </span>
                           {/* Quality Tier Badge */}
                           {(() => {
                             const q = qualityBadges[lead.qualityTier || "medium"] || qualityBadges.medium;
                             return (
-                              <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wide flex items-center gap-1.5 backdrop-blur-sm border shadow-xs ${q.class}`}>
-                                <span className={`w-1.5 h-1.5 rounded-full ${q.dot}`} />
+                              <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md border ${q.class}`}>
+                                <span className={`w-2 h-2 rounded-full ${q.dot}`} />
                                 {q.label}
                               </span>
                             );
                           })()}
                         </div>
-                        <div className="flex flex-col gap-2 items-end">
-                          {/* Status Badges */}
-                          {revealed && <span className="bg-green-100/95 backdrop-blur-sm text-green-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm border border-green-200"><Unlock className="w-3.5 h-3.5" /> Unlocked</span>}
-                          {soldToOthers && <span className="bg-red-100/95 backdrop-blur-sm text-red-600 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm border border-red-200"><AlertCircle className="w-3.5 h-3.5" /> Sold</span>}
-                          {canBuy && <span className="bg-blue-100/95 backdrop-blur-sm text-blue-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm border border-blue-200">Available</span>}
-                          {!isAdminLead && <span className="bg-gray-100/95 backdrop-blur-sm text-gray-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm border border-gray-200">New Inquiry</span>}
+                        <div className="flex flex-col gap-1.5 items-end">
+                          {/* Prominent Lead Availability / Sold Status Badges */}
+                          {revealed && (
+                            <span className="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-black flex items-center gap-1 shadow-lg border border-white/50 tracking-wide">
+                              <Unlock className="w-3.5 h-3.5" /> Unlocked
+                            </span>
+                          )}
+                          {soldToOthers && (
+                            <span className="bg-rose-600 text-white px-3.5 py-1.5 rounded-full text-xs font-black flex items-center gap-1.5 shadow-xl border border-white/80 tracking-wider uppercase ring-2 ring-rose-300/50">
+                              <AlertCircle className="w-4 h-4" /> Lead Sold
+                            </span>
+                          )}
+                          {canBuy && (
+                            <span className="bg-emerald-600 text-white px-3.5 py-1.5 rounded-full text-xs font-black flex items-center gap-1.5 shadow-xl border border-white/80 tracking-wider uppercase ring-2 ring-emerald-300/50">
+                              <span className="w-2 h-2 rounded-full bg-white animate-pulse" /> Lead Available
+                            </span>
+                          )}
+                          {!isAdminLead && !isSold && (
+                            <span className="bg-sky-600 text-white px-3 py-1 rounded-full text-xs font-black shadow-md border border-white/50">
+                              New Inquiry
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
