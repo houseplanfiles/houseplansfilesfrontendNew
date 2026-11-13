@@ -310,6 +310,29 @@ const FilterSidebar = ({
           </div>
         </div>
         <div>
+          <Label htmlFor="planType" className="font-semibold text-gray-600">
+            Design Type
+          </Label>
+          <Select
+            value={filters.planType || "all"}
+            onValueChange={(value) =>
+              setFilters((prev: any) => ({ ...prev, planType: value }))
+            }
+          >
+            <SelectTrigger
+              id="planType"
+              className="mt-2 bg-gray-100 border-transparent h-12"
+            >
+              <SelectValue placeholder="All Designs" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Designs (Floor Plan + 3D)</SelectItem>
+              <SelectItem value="Floor Plans">Only 2D Floor Plans</SelectItem>
+              <SelectItem value="Floor Plan + 3D Elevations">Floor Plan + 3D Elevation</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
           <Label htmlFor="category" className="font-semibold text-gray-600">
             Category
           </Label>
@@ -476,6 +499,7 @@ const FilterSidebar = ({
         <Button
           onClick={() => {
             setFilters({
+              planType: "all",
               category: "all",
               searchTerm: "",
               plotSize: "all",
@@ -1010,6 +1034,7 @@ const Products = ({
   const plotSizeQuery = searchParams?.get("plotSize");
 
   const [filters, setFilters] = useState({
+    planType: "all",
     category: categoryQuery || "all",
     searchTerm: searchQuery || "",
     plotSize: plotSizeQuery || "all",
@@ -1048,6 +1073,8 @@ const Products = ({
     // If a specific category filter is chosen, use it. Otherwise, use baseCategory if provided.
     if (filters.category !== "all") {
       params.category = filters.category;
+    } else if (filters.planType && filters.planType !== "all") {
+      params.planType = filters.planType;
     } else if (baseCategory) {
       params.planCategory = baseCategory;
     }

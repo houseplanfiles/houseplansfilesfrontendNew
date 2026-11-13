@@ -89,8 +89,7 @@ const Navbar = () => {
       name: "Readymade Designs",
       path: "/house-plans",
       submenu: [
-        { name: "Floor Plan", path: "/house-plans" },
-        { name: "Floor plan + 3D Elevation", path: "/3d-plans" },
+        { name: "Readymade House Plans", path: "/house-plans" },
         { name: "Readymade Interior Designs", path: "/interior-designs" },
         { name: "Digital Products (Download)", path: "/download" },
       ],
