@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import {
   Loader2, Trash2, IndianRupee, Inbox, CheckCircle2,
   Tag, Globe, Users, Building2, ShoppingBag, X, Plus,
-  PencilLine, ExternalLink,
+  PencilLine, ExternalLink, Send, ArrowRightLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -295,6 +295,232 @@ const SetPriceModal = ({
   );
 };
 
+// ─── Direct Transfer Modal ──────────────────────────────────────────────────
+const TransferLeadModal = ({
+  lead,
+  onClose,
+  onTransferred,
+}: {
+  lead: UnifiedLead;
+  onClose: () => void;
+  onTransferred: () => void;
+}) => {
+  const { userInfo } = useSelector((state: RootState) => state.user);
+  const token = userInfo?.token || "";
+  const [searchTerm, setSearchTerm] = useState("");
+  const [usersList, setUsersList] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [transferring, setTransferring] = useState(false);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoadingUsers(true);
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        // Exclude normal customer if preferred, or list all professionals
+        const list = Array.isArray(data) ? data : data?.users || [];
+        setUsersList(list);
+      } catch (err: any) {
+        console.error("Failed to load users for transfer", err);
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+    if (token) fetchUsers();
+  }, [token]);
+
+  const filteredUsers = useMemo(() => {
+    if (!searchTerm.trim()) return usersList.slice(0, 15);
+    const term = searchTerm.toLowerCase();
+    return usersList.filter(
+      (u) =>
+        (u.name && u.name.toLowerCase().includes(term)) ||
+        (u.businessName && u.businessName.toLowerCase().includes(term)) ||
+        (u.email && u.email.toLowerCase().includes(term)) ||
+        (u.phone && u.phone.includes(term)) ||
+        (u.role && u.role.toLowerCase().includes(term))
+    ).slice(0, 20);
+  }, [usersList, searchTerm]);
+
+  const handleTransfer = async () => {
+    if (!selectedUser) {
+      toast.error("Please select a professional user to transfer this lead to.");
+      return;
+    }
+
+    setTransferring(true);
+    try {
+      let targetLeadId = lead._id;
+
+      // If inquiry, convert to admin lead first
+      if (lead.sourceType !== "admin_lead") {
+        const { data: newLead } = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads`,
+          {
+            title: lead.title,
+            category: lead.category,
+            city: lead.city,
+            budget: lead.budget,
+            requirements: lead.requirements,
+            price: lead.price || 0,
+            clientName: lead.clientName,
+            clientPhone: lead.clientPhone,
+            clientEmail: lead.clientEmail,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        targetLeadId = newLead._id;
+      }
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads/${targetLeadId}/transfer`,
+        { targetUserId: selectedUser._id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      toast.success(
+        `Lead successfully assigned to ${selectedUser.name || selectedUser.businessName || selectedUser.email}!`
+      );
+      onTransferred();
+      onClose();
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to transfer lead.");
+    } finally {
+      setTransferring(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden z-10 flex flex-col max-h-[85vh]">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-orange-600 to-amber-600 px-6 py-4 flex items-center justify-between text-white">
+          <div>
+            <h2 className="text-lg font-bold flex items-center gap-2">
+              <ArrowRightLeft className="w-5 h-5 text-white" />
+              Transfer Lead to Professional ID
+            </h2>
+            <p className="text-orange-100 text-xs mt-0.5">
+              Directly assign this lead into the user&apos;s &quot;My Unlocked Leads&quot; dashboard
+            </p>
+          </div>
+          <button onClick={onClose} className="text-orange-200 hover:text-white">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Lead Preview Box */}
+        <div className="p-4 bg-orange-50/50 border-b border-orange-100 flex items-start justify-between text-xs">
+          <div>
+            <span className="font-extrabold text-gray-900 block text-sm">{lead.title}</span>
+            <span className="text-gray-500 mt-0.5 block">{lead.category} • {lead.city}</span>
+            <span className="text-gray-700 font-semibold mt-1 block">
+              Client: {lead.clientName} ({lead.clientPhone})
+            </span>
+          </div>
+          <span className="bg-orange-100 text-orange-800 font-bold px-2.5 py-1 rounded-md text-[11px]">
+            {lead.qualityTier ? `${lead.qualityTier.toUpperCase()} Priority` : "Standard"}
+          </span>
+        </div>
+
+        {/* User Search & Selection */}
+        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+          <div>
+            <label className="text-xs font-bold text-gray-700 block mb-1">
+              Search Professional (by Name, Email, Phone or Role)
+            </label>
+            <Input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="e.g. Rahul Architect, 9876543210, rahul@gmail.com..."
+              className="h-10 text-sm"
+              autoFocus
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">
+              Select User to Assign ({filteredUsers.length} shown)
+            </label>
+            {loadingUsers ? (
+              <div className="flex items-center justify-center py-8 text-gray-400">
+                <Loader2 className="w-6 h-6 animate-spin mr-2 text-orange-500" />
+                <span className="text-xs">Loading professionals...</span>
+              </div>
+            ) : filteredUsers.length === 0 ? (
+              <div className="text-center py-8 text-gray-400 text-xs">
+                No matching users found.
+              </div>
+            ) : (
+              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                {filteredUsers.map((u) => {
+                  const isSelected = selectedUser?._id === u._id;
+                  const name = u.businessName || u.name || "Unnamed User";
+                  return (
+                    <div
+                      key={u._id}
+                      onClick={() => setSelectedUser(u)}
+                      className={`p-3 rounded-xl border text-xs cursor-pointer transition-all flex items-center justify-between ${
+                        isSelected
+                          ? "border-orange-500 bg-orange-50/70 shadow-sm"
+                          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                      }`}
+                    >
+                      <div className="flex-1 pr-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-gray-900 text-sm">{name}</span>
+                          <span className="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+                            {u.role || "User"}
+                          </span>
+                        </div>
+                        <p className="text-gray-500 mt-0.5">
+                          {u.email} {u.phone ? `• ${u.phone}` : ""} {u.city ? `• ${u.city}` : ""}
+                        </p>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                        isSelected ? "border-orange-500 bg-orange-500 text-white" : "border-gray-300"
+                      }`}>
+                        {isSelected && <CheckCircle2 className="w-4 h-4 text-white" />}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-100">
+          <Button variant="ghost" onClick={onClose} disabled={transferring}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleTransfer}
+            disabled={!selectedUser || transferring}
+            className="bg-orange-600 hover:bg-orange-700 text-white font-bold h-10 px-6 shadow-md"
+          >
+            {transferring ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" /> Assigning...
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4 mr-2" /> Assign Lead Now
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ─── Main Admin Lead Management Page ─────────────────────────────────────────
 const AdminLeadManagement: React.FC = () => {
   const { userInfo } = useSelector((state: RootState) => state.user);
@@ -303,6 +529,7 @@ const AdminLeadManagement: React.FC = () => {
   const [leads, setLeads] = useState<UnifiedLead[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<UnifiedLead | null>(null);
+  const [transferLeadTarget, setTransferLeadTarget] = useState<UnifiedLead | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [filterSource, setFilterSource] = useState<string>("all");
   const [search, setSearch] = useState("");
@@ -565,6 +792,15 @@ const AdminLeadManagement: React.FC = () => {
                           <div className="flex items-center justify-center gap-2">
                             <Button
                               size="sm"
+                              variant="outline"
+                              onClick={() => setTransferLeadTarget(lead)}
+                              title="Transfer / Assign directly to user"
+                              className="text-xs font-bold h-8 px-2.5 border-orange-300 text-orange-700 bg-orange-50 hover:bg-orange-100 hover:border-orange-400"
+                            >
+                              <ArrowRightLeft className="w-3.5 h-3.5 mr-1" /> Transfer
+                            </Button>
+                            <Button
+                              size="sm"
                               onClick={() => setSelectedLead(lead)}
                               className={`text-xs font-bold h-8 px-3 ${
                                 isAdminLead
@@ -612,6 +848,15 @@ const AdminLeadManagement: React.FC = () => {
           onClose={() => setSelectedLead(null)}
           onSaved={fetchLeads}
           token={token}
+        />
+      )}
+
+      {/* Direct Transfer Modal */}
+      {transferLeadTarget && (
+        <TransferLeadModal
+          lead={transferLeadTarget}
+          onClose={() => setTransferLeadTarget(null)}
+          onTransferred={fetchLeads}
         />
       )}
     </>

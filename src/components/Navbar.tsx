@@ -106,7 +106,6 @@ const Navbar = () => {
         { name: "Interior Designers", path: "/architects?profession=Interior+Designer" },
       ],
     },
-    { name: "Lead Board", path: "/leads" },
     {
       name: "Contractors",
       path: "/city-partners",
@@ -150,6 +149,7 @@ const Navbar = () => {
         { name: "Home Decor & Furniture", path: "/building-material-marketplace?category=Home+Decor" },
       ],
     },
+    { name: "Lead Board", path: "/leads" },
     { name: "Tutorials", path: "/tutorials" },
   ];
 
