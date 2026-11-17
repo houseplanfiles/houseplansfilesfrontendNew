@@ -38,8 +38,15 @@ export default function TutorialsPageClient() {
 
   const filteredVideos = useMemo(() => {
     return (videos || []).filter((v: any) => {
-      const matchesTopic =
-        selectedTopic === "All" || v.topic === selectedTopic;
+      let matchesTopic = selectedTopic === "All" || v.topic === selectedTopic;
+      if (selectedTopic === "Education") {
+        matchesTopic = (v.topic || "").toLowerCase().includes("educat") || (v.title || "").toLowerCase().includes("educat") || (v.topic || "").toLowerCase().includes("what is") || (v.topic || "").toLowerCase().includes("learn");
+      } else if (selectedTopic === "Home designs") {
+        matchesTopic = (v.topic || "").toLowerCase().includes("home") || (v.topic || "").toLowerCase().includes("design") || (v.topic || "").toLowerCase().includes("house") || (v.topic || "").toLowerCase().includes("floor plan");
+      } else if (selectedTopic === "3D walkthrough") {
+        matchesTopic = (v.topic || "").toLowerCase().includes("3d") || (v.topic || "").toLowerCase().includes("walkthrough") || (v.topic || "").toLowerCase().includes("elevation");
+      }
+
       const matchesSearch =
         (v.title || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         (v.description || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -97,6 +104,19 @@ export default function TutorialsPageClient() {
             >
               All Topics ({videos.length})
             </button>
+            {["Education", "Home designs", "3D walkthrough"].map((t) => (
+              <button
+                key={t}
+                onClick={() => setSelectedTopic(t)}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer ${
+                  selectedTopic === t
+                    ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                {t}
+              </button>
+            ))}
             {topics.map((t: string) => {
               const count = (videos || []).filter((v: any) => v.topic === t).length;
               return (

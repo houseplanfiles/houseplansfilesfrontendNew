@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { handleCallClick } from "@/utils/callHelper";
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
@@ -25,6 +26,7 @@ import {
   Search,
   X,
   Share2,
+  Users,
 } from "lucide-react";
 import SocialShare from "@/components/SocialShare";
 import { RootState } from "@/lib/store";
@@ -242,6 +244,14 @@ export default function LeadsPageClient() {
               >
                 <Sparkles className="w-4 h-4" /> Post Your Requirement (Get Quotes)
               </Button>
+              <Link href="/register">
+                <Button
+                  variant="outline"
+                  className="border-2 border-orange-500 text-orange-600 hover:bg-orange-50 font-extrabold px-6 py-2.5 h-11 rounded-full shadow-sm text-sm gap-2"
+                >
+                  <Users className="w-4 h-4" /> Register as Service Provider
+                </Button>
+              </Link>
             </div>
           </div>
 

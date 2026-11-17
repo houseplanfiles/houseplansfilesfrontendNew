@@ -94,7 +94,18 @@ const Navbar = () => {
         { name: "Digital Products (Download)", path: "/download" },
       ],
     },
-    { name: "Architects & Engineers", path: "/architects" },
+    {
+      name: "Architects & Engineers",
+      path: "/architects",
+      submenu: [
+        { name: "All Architects & Engineers", path: "/architects" },
+        { name: "Architects", path: "/architects?profession=Architect" },
+        { name: "Civil Engineers", path: "/architects?profession=Civil+Engineer" },
+        { name: "Structural Engineers", path: "/architects?profession=Structural+Engineer" },
+        { name: "Vastu Consultants", path: "/architects?profession=Vastu+Consultant" },
+        { name: "Interior Designers", path: "/architects?profession=Interior+Designer" },
+      ],
+    },
     { name: "Lead Board", path: "/leads" },
     {
       name: "Contractors",
@@ -107,7 +118,16 @@ const Navbar = () => {
         { name: "Plumbing Contractor", path: "/city-partners?profession=Plumbing" },
         { name: "Tiles & Marble", path: "/city-partners?profession=Tiles+%26+Marble" },
         { name: "Painting Contractor", path: "/city-partners?profession=Painting" },
-        { name: "Other Services", path: "/city-partners?profession=Other+Services" },
+      ],
+    },
+    {
+      name: "Other Services",
+      path: "/other-services",
+      submenu: [
+        { name: "All Other Services", path: "/other-services" },
+        { name: "Home Services", path: "/other-services?category=Home+Services" },
+        { name: "Industrial Services", path: "/industrial-services" },
+        { name: "Contractor Services", path: "/city-partners?profession=Other+Services" },
       ],
     },
     {
