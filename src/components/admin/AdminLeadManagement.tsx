@@ -295,13 +295,13 @@ const SetPriceModal = ({
   );
 };
 
-// ─── Direct Transfer Modal ──────────────────────────────────────────────────
+// ─── Direct Transfer Modal (Single or Bulk) ─────────────────────────────────
 const TransferLeadModal = ({
-  lead,
+  leadsToTransfer,
   onClose,
   onTransferred,
 }: {
-  lead: UnifiedLead;
+  leadsToTransfer: UnifiedLead[];
   onClose: () => void;
   onTransferred: () => void;
 }) => {
@@ -321,7 +321,6 @@ const TransferLeadModal = ({
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        // Exclude normal customer if preferred, or list all professionals
         const list = Array.isArray(data) ? data : data?.users || [];
         setUsersList(list);
       } catch (err: any) {
@@ -354,41 +353,56 @@ const TransferLeadModal = ({
 
     setTransferring(true);
     try {
-      let targetLeadId = lead._id;
+      const validLeadIds: string[] = [];
 
-      // If inquiry, convert to admin lead first
-      if (lead.sourceType !== "admin_lead") {
-        const { data: newLead } = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads`,
+      // Convert any inquiries to admin leads first
+      for (const item of leadsToTransfer) {
+        if (item.sourceType !== "admin_lead") {
+          const { data: newLead } = await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads`,
+            {
+              title: item.title,
+              category: item.category,
+              city: item.city,
+              budget: item.budget,
+              requirements: item.requirements,
+              price: item.price || 0,
+              clientName: item.clientName,
+              clientPhone: item.clientPhone,
+              clientEmail: item.clientEmail,
+            },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          validLeadIds.push(newLead._id);
+        } else {
+          validLeadIds.push(item._id);
+        }
+      }
+
+      if (validLeadIds.length === 1) {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads/${validLeadIds[0]}/transfer`,
+          { targetUserId: selectedUser._id },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } else {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads/bulk-transfer`,
           {
-            title: lead.title,
-            category: lead.category,
-            city: lead.city,
-            budget: lead.budget,
-            requirements: lead.requirements,
-            price: lead.price || 0,
-            clientName: lead.clientName,
-            clientPhone: lead.clientPhone,
-            clientEmail: lead.clientEmail,
+            leadIds: validLeadIds,
+            targetUserId: selectedUser._id,
           },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        targetLeadId = newLead._id;
       }
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads/${targetLeadId}/transfer`,
-        { targetUserId: selectedUser._id },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
       toast.success(
-        `Lead successfully assigned to ${selectedUser.name || selectedUser.businessName || selectedUser.email}!`
+        `${validLeadIds.length} lead(s) successfully assigned to ${selectedUser.name || selectedUser.businessName || selectedUser.email}!`
       );
       onTransferred();
       onClose();
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to transfer lead.");
+      toast.error(err.response?.data?.message || "Failed to transfer leads.");
     } finally {
       setTransferring(false);
     }
@@ -403,10 +417,10 @@ const TransferLeadModal = ({
           <div>
             <h2 className="text-lg font-bold flex items-center gap-2">
               <ArrowRightLeft className="w-5 h-5 text-white" />
-              Transfer Lead to Professional ID
+              Transfer {leadsToTransfer.length > 1 ? `${leadsToTransfer.length} Selected Leads` : "Lead"} to Professional ID
             </h2>
             <p className="text-orange-100 text-xs mt-0.5">
-              Directly assign this lead into the user&apos;s &quot;My Unlocked Leads&quot; dashboard
+              Directly assign {leadsToTransfer.length > 1 ? "these leads" : "this lead"} into the user&apos;s &quot;My Unlocked Leads&quot; dashboard
             </p>
           </div>
           <button onClick={onClose} className="text-orange-200 hover:text-white">
@@ -415,17 +429,31 @@ const TransferLeadModal = ({
         </div>
 
         {/* Lead Preview Box */}
-        <div className="p-4 bg-orange-50/50 border-b border-orange-100 flex items-start justify-between text-xs">
-          <div>
-            <span className="font-extrabold text-gray-900 block text-sm">{lead.title}</span>
-            <span className="text-gray-500 mt-0.5 block">{lead.category} • {lead.city}</span>
-            <span className="text-gray-700 font-semibold mt-1 block">
-              Client: {lead.clientName} ({lead.clientPhone})
-            </span>
-          </div>
-          <span className="bg-orange-100 text-orange-800 font-bold px-2.5 py-1 rounded-md text-[11px]">
-            {lead.qualityTier ? `${lead.qualityTier.toUpperCase()} Priority` : "Standard"}
-          </span>
+        <div className="p-4 bg-orange-50/50 border-b border-orange-100 text-xs">
+          {leadsToTransfer.length === 1 ? (
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="font-extrabold text-gray-900 block text-sm">{leadsToTransfer[0].title}</span>
+                <span className="text-gray-500 mt-0.5 block">{leadsToTransfer[0].category} • {leadsToTransfer[0].city}</span>
+                <span className="text-gray-700 font-semibold mt-1 block">
+                  Client: {leadsToTransfer[0].clientName} ({leadsToTransfer[0].clientPhone})
+                </span>
+              </div>
+              <span className="bg-orange-100 text-orange-800 font-bold px-2.5 py-1 rounded-md text-[11px]">
+                {leadsToTransfer[0].qualityTier ? `${leadsToTransfer[0].qualityTier.toUpperCase()} Priority` : "Standard"}
+              </span>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              <span className="font-extrabold text-gray-900 block text-sm">
+                {leadsToTransfer.length} Leads Selected for Bulk Transfer:
+              </span>
+              <p className="text-gray-600 truncate">
+                {leadsToTransfer.map((l) => l.clientName || l.title).slice(0, 5).join(", ")}
+                {leadsToTransfer.length > 5 ? ` + ${leadsToTransfer.length - 5} more` : ""}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* User Search & Selection */}
@@ -511,7 +539,7 @@ const TransferLeadModal = ({
               </>
             ) : (
               <>
-                <Send className="w-4 h-4 mr-2" /> Assign Lead Now
+                <Send className="w-4 h-4 mr-2" /> Assign {leadsToTransfer.length > 1 ? `${leadsToTransfer.length} Leads` : "Lead"} Now
               </>
             )}
           </Button>
@@ -530,6 +558,8 @@ const AdminLeadManagement: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<UnifiedLead | null>(null);
   const [transferLeadTarget, setTransferLeadTarget] = useState<UnifiedLead | null>(null);
+  const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
+  const [isBulkTransferOpen, setIsBulkTransferOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [filterSource, setFilterSource] = useState<string>("all");
   const [search, setSearch] = useState("");
@@ -652,39 +682,65 @@ const AdminLeadManagement: React.FC = () => {
           ))}
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3 items-center">
-          <Input
-            placeholder="Search by title, city, category..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="max-w-xs h-9"
-          />
-          <div className="flex gap-2 flex-wrap">
-            {["all", "admin_lead", "contractor_inquiry", "seller_inquiry", "corporate_inquiry"].map(
-              (src) => (
-                <button
-                  key={src}
-                  onClick={() => setFilterSource(src)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${
-                    filterSource === src
-                      ? "bg-slate-800 text-white border-slate-800"
-                      : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
-                  }`}
-                >
-                  {src === "all"
-                    ? "All Sources"
-                    : src === "admin_lead"
-                    ? "Admin Leads"
-                    : src === "contractor_inquiry"
-                    ? "Contractor"
-                    : src === "seller_inquiry"
-                    ? "Seller"
-                    : "Corporate"}
-                </button>
-              )
-            )}
+        {/* Filters & Bulk Action Bar */}
+        <div className="flex flex-wrap gap-3 items-center justify-between">
+          <div className="flex flex-wrap gap-3 items-center flex-1">
+            <Input
+              placeholder="Search by title, city, category..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="max-w-xs h-9"
+            />
+            <div className="flex gap-2 flex-wrap">
+              {["all", "admin_lead", "contractor_inquiry", "seller_inquiry", "corporate_inquiry"].map(
+                (src) => (
+                  <button
+                    key={src}
+                    onClick={() => setFilterSource(src)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${
+                      filterSource === src
+                        ? "bg-slate-800 text-white border-slate-800"
+                        : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
+                    }`}
+                  >
+                    {src === "all"
+                      ? "All Sources"
+                      : src === "admin_lead"
+                      ? "Admin Leads"
+                      : src === "contractor_inquiry"
+                      ? "Contractor"
+                      : src === "seller_inquiry"
+                      ? "Seller"
+                      : "Corporate"}
+                  </button>
+                )
+              )}
+            </div>
           </div>
+
+          {/* Bulk Transfer Button when leads selected */}
+          {selectedLeadIds.length > 0 && (
+            <div className="flex items-center gap-3 bg-orange-50 border border-orange-200 px-4 py-2 rounded-xl">
+              <span className="text-xs font-bold text-orange-900">
+                {selectedLeadIds.length} lead(s) selected
+              </span>
+              <Button
+                size="sm"
+                onClick={() => setIsBulkTransferOpen(true)}
+                className="bg-orange-600 hover:bg-orange-700 text-white font-bold h-8 text-xs shadow-sm gap-1.5"
+              >
+                <ArrowRightLeft className="w-3.5 h-3.5" /> Transfer Selected Leads
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setSelectedLeadIds([])}
+                className="h-8 text-xs text-gray-500 hover:text-gray-800"
+              >
+                Clear
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Lead Preferences from Professionals (Low/Med/High Quality Requests) */}
@@ -707,6 +763,21 @@ const AdminLeadManagement: React.FC = () => {
               <table className="w-full text-left text-sm">
                 <thead className="bg-gray-50 border-b">
                   <tr>
+                    <th className="p-4 w-10 text-center">
+                      <input
+                        type="checkbox"
+                        checked={filtered.length > 0 && selectedLeadIds.length === filtered.length}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedLeadIds(filtered.map((l) => l._id));
+                          } else {
+                            setSelectedLeadIds([]);
+                          }
+                        }}
+                        className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                        title="Select All Leads"
+                      />
+                    </th>
                     <th className="p-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Source</th>
                     <th className="p-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Title / Category</th>
                     <th className="p-4 font-bold text-gray-600 text-xs uppercase tracking-wider">Quality</th>
@@ -722,8 +793,28 @@ const AdminLeadManagement: React.FC = () => {
                   {filtered.map((lead) => {
                     const src = sourceBadge[lead.sourceType] || sourceBadge.admin_lead;
                     const isAdminLead = lead.sourceType === "admin_lead";
+                    const isSelected = selectedLeadIds.includes(lead._id);
                     return (
-                      <tr key={lead._id.toString()} className="border-t hover:bg-orange-50/20 transition-colors">
+                      <tr
+                        key={lead._id.toString()}
+                        className={`border-t transition-colors ${
+                          isSelected ? "bg-orange-50/60" : "hover:bg-orange-50/20"
+                        }`}
+                      >
+                        <td className="p-4 w-10 text-center">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedLeadIds([...selectedLeadIds, lead._id]);
+                              } else {
+                                setSelectedLeadIds(selectedLeadIds.filter((id) => id !== lead._id));
+                              }
+                            }}
+                            className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                          />
+                        </td>
                         <td className="p-4">
                           <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${src.class}`}>
                             <src.Icon className="w-3 h-3" />
@@ -851,12 +942,23 @@ const AdminLeadManagement: React.FC = () => {
         />
       )}
 
-      {/* Direct Transfer Modal */}
+      {/* Direct Transfer Modal (Single or Bulk) */}
       {transferLeadTarget && (
         <TransferLeadModal
-          lead={transferLeadTarget}
+          leadsToTransfer={[transferLeadTarget]}
           onClose={() => setTransferLeadTarget(null)}
           onTransferred={fetchLeads}
+        />
+      )}
+
+      {isBulkTransferOpen && selectedLeadIds.length > 0 && (
+        <TransferLeadModal
+          leadsToTransfer={leads.filter((l) => selectedLeadIds.includes(l._id))}
+          onClose={() => setIsBulkTransferOpen(false)}
+          onTransferred={() => {
+            setSelectedLeadIds([]);
+            fetchLeads();
+          }}
         />
       )}
     </>
