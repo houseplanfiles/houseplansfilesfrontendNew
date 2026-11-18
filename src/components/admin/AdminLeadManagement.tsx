@@ -318,7 +318,7 @@ const TransferLeadModal = ({
       setLoadingUsers(true);
       try {
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users?limit=5000`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const list = Array.isArray(data) ? data : data?.users || [];
@@ -333,16 +333,19 @@ const TransferLeadModal = ({
   }, [token]);
 
   const filteredUsers = useMemo(() => {
-    if (!searchTerm.trim()) return usersList.slice(0, 15);
+    if (!searchTerm.trim()) return usersList.slice(0, 50);
     const term = searchTerm.toLowerCase();
     return usersList.filter(
       (u) =>
         (u.name && u.name.toLowerCase().includes(term)) ||
         (u.businessName && u.businessName.toLowerCase().includes(term)) ||
+        (u.companyName && u.companyName.toLowerCase().includes(term)) ||
         (u.email && u.email.toLowerCase().includes(term)) ||
-        (u.phone && u.phone.includes(term)) ||
-        (u.role && u.role.toLowerCase().includes(term))
-    ).slice(0, 20);
+        (u.phone && String(u.phone).includes(term)) ||
+        (u.city && (Array.isArray(u.city) ? u.city.join(" ") : String(u.city)).toLowerCase().includes(term)) ||
+        (u.role && u.role.toLowerCase().includes(term)) ||
+        (u.profession && u.profession.toLowerCase().includes(term))
+    );
   }, [usersList, searchTerm]);
 
   const handleTransfer = async () => {
@@ -488,7 +491,8 @@ const TransferLeadModal = ({
               <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                 {filteredUsers.map((u) => {
                   const isSelected = selectedUser?._id === u._id;
-                  const name = u.businessName || u.name || "Unnamed User";
+                  const name = u.businessName || u.name || u.companyName || "Unnamed User";
+                  const displayCity = Array.isArray(u.city) ? u.city.join(", ") : u.city;
                   return (
                     <div
                       key={u._id}
@@ -500,14 +504,19 @@ const TransferLeadModal = ({
                       }`}
                     >
                       <div className="flex-1 pr-2">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-bold text-gray-900 text-sm">{name}</span>
                           <span className="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
-                            {u.role || "User"}
+                            {u.profession || u.role || "User"}
                           </span>
+                          {u.isPanIndia && (
+                            <span className="bg-purple-100 text-purple-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase">
+                              PAN India
+                            </span>
+                          )}
                         </div>
                         <p className="text-gray-500 mt-0.5">
-                          {u.email} {u.phone ? `• ${u.phone}` : ""} {u.city ? `• ${u.city}` : ""}
+                          {u.email} {u.phone ? `• ${u.phone}` : ""} {displayCity ? `• ${displayCity}` : ""}
                         </p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
