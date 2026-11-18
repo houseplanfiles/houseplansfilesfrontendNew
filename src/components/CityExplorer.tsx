@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MapPin, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, ArrowRight, ChevronLeft, ChevronRight, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const ALL_CITIES_DATA = [
@@ -163,11 +163,21 @@ const CityExplorer = () => {
               </div>
               <Button 
                 onClick={handleExplore}
-                className="bg-[#FF6B00] hover:bg-[#e66000] text-white rounded-xl h-14 px-8 text-base font-bold flex items-center gap-2 transition-all w-full sm:w-auto shrink-0 shadow-md shadow-orange-500/20"
+                className="bg-[#FF6B00] hover:bg-[#e66000] text-white rounded-xl h-14 px-6 text-base font-bold flex items-center justify-center gap-2 transition-all w-full sm:w-auto shrink-0 shadow-md shadow-orange-500/20"
               >
                 Explore City
                 <ArrowRight className="w-5 h-5" />
               </Button>
+              <Link href="/register" className="w-full sm:w-auto">
+                <Button 
+                  type="button"
+                  variant="outline"
+                  className="border-2 border-[#FF6B00] text-[#FF6B00] hover:bg-orange-50 rounded-xl h-14 px-5 text-sm font-bold flex items-center justify-center gap-2 transition-all w-full shrink-0 shadow-sm"
+                >
+                  <Users className="w-4 h-4" />
+                  Register as Service Provider
+                </Button>
+              </Link>
             </div>
           </div>
 
