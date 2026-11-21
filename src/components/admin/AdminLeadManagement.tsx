@@ -869,6 +869,7 @@ const AdminLeadManagement: React.FC = () => {
   const [isBulkTransferOpen, setIsBulkTransferOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [filterSource, setFilterSource] = useState<string>("all");
+  const [filterCity, setFilterCity] = useState<string>("all");
   const [search, setSearch] = useState("");
 
   const fetchLeads = async () => {
@@ -909,17 +910,30 @@ const AdminLeadManagement: React.FC = () => {
     }
   };
 
+  const allCities = useMemo(() => {
+    const set = new Set<string>();
+    leads.forEach((l) => {
+      if (l.city && l.city.trim()) set.add(l.city.trim());
+    });
+    return Array.from(set).sort();
+  }, [leads]);
+
   const filtered = useMemo(() => {
     return leads.filter((l) => {
       const matchSource = filterSource === "all" || l.sourceType === filterSource;
+      const matchCity =
+        filterCity === "all" ||
+        l.city.toLowerCase().includes(filterCity.toLowerCase().trim());
       const matchSearch =
         search === "" ||
         l.title.toLowerCase().includes(search.toLowerCase()) ||
         l.city.toLowerCase().includes(search.toLowerCase()) ||
-        l.category.toLowerCase().includes(search.toLowerCase());
-      return matchSource && matchSearch;
+        l.category.toLowerCase().includes(search.toLowerCase()) ||
+        l.clientName.toLowerCase().includes(search.toLowerCase()) ||
+        (l.clientPhone && l.clientPhone.includes(search));
+      return matchSource && matchCity && matchSearch;
     });
-  }, [leads, filterSource, search]);
+  }, [leads, filterSource, filterCity, search]);
 
   const stats = useMemo(() => ({
     total: leads.length,
@@ -993,11 +1007,24 @@ const AdminLeadManagement: React.FC = () => {
         <div className="flex flex-wrap gap-3 items-center justify-between">
           <div className="flex flex-wrap gap-3 items-center flex-1">
             <Input
-              placeholder="Search by title, city, category..."
+              placeholder="Search title, city, category, client, phone..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="max-w-xs h-9"
             />
+            {/* City Filter Dropdown */}
+            <select
+              value={filterCity}
+              onChange={(e) => setFilterCity(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold bg-white text-gray-700 h-9 focus:outline-none cursor-pointer"
+            >
+              <option value="all">📍 All Cities ({allCities.length})</option>
+              {allCities.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
             <div className="flex gap-2 flex-wrap">
               {["all", "admin_lead", "contractor_inquiry", "seller_inquiry", "corporate_inquiry"].map(
                 (src) => (

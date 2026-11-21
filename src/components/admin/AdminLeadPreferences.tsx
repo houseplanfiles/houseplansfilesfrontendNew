@@ -22,6 +22,7 @@ const AdminLeadPreferences = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("all");
   const [frequency, setFrequency] = useState("all");
+  const [cityFilter, setCityFilter] = useState("all");
 
   const headers = { Authorization: `Bearer ${userInfo?.token}` };
 
@@ -30,14 +31,14 @@ const AdminLeadPreferences = () => {
     setLoading(true);
     axios
       .get(`${API}/api/lead-preferences`, {
-        params: { status, frequency },
+        params: { status, frequency, city: cityFilter !== "all" ? cityFilter : undefined },
         headers,
       })
       .then((r) => setItems(r.data))
       .catch(() => setItems([]))
       .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo?.token, status, frequency]);
+  }, [userInfo?.token, status, frequency, cityFilter]);
 
   const updateStatus = async (id: string, newStatus: string) => {
     try {
@@ -57,6 +58,15 @@ const AdminLeadPreferences = () => {
     pending: items.filter((i) => i.status === "pending").length,
     leads: items.reduce((s, i) => s + (i.leadCount || 0), 0),
   };
+
+  // Distinct cities list from all requests for dropdown filter
+  const uniqueCities = Array.from(
+    new Set(
+      items
+        .map((i) => (i.city || i.user?.city || "").trim())
+        .filter((c) => c && c.length > 0)
+    )
+  ).sort();
 
   const sel =
     "border border-gray-300 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none";
@@ -78,7 +88,14 @@ const AdminLeadPreferences = () => {
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap items-center">
+          <input
+            type="text"
+            placeholder="Filter by city..."
+            value={cityFilter === "all" ? "" : cityFilter}
+            onChange={(e) => setCityFilter(e.target.value.trim() ? e.target.value : "all")}
+            className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none w-36 placeholder:text-gray-400"
+          />
           <select
             id="lead-pref-status-filter"
             value={status}
