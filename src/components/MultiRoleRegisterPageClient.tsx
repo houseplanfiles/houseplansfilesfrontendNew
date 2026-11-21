@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -45,7 +45,10 @@ const userRoles = [
       "Interior Designers",
       "Civil Engineers",
       "Structural Engineers",
-      "Vastu Consultants"
+      "Vastu Consultants",
+      "Landscape Designers",
+      "3D Elevation / Rendering",
+      "MEP Consultants"
     ],
     theme: "blue",
     icon: <Building2 className="w-5 h-5" />
@@ -54,11 +57,18 @@ const userRoles = [
     id: "Contractor", 
     label: "Contractors",
     subItems: [
-      "Civil Contractors",
-      "Turnkey Contractors",
-      "Painting Contractors",
-      "Electrical Contractors",
-      "Plumbing Contractors"
+      "Building Contractor",
+      "Interior Contractor",
+      "Electrical Contractor",
+      "Plumbing Contractor",
+      "Carpenter",
+      "Painting Contractor",
+      "Tiles Contractor",
+      "Civil Contractor",
+      "Turnkey Contractor",
+      "Waterproofing Contractor",
+      "Roofing Contractor",
+      "Swimming Pool Contractor"
     ],
     theme: "orange",
     icon: <HardHat className="w-5 h-5" />
@@ -67,6 +77,9 @@ const userRoles = [
     id: "seller", 
     label: "Manufacturers & Suppliers",
     subItems: [
+      "Manufacturer",
+      "Supplier",
+      "Retail Shop",
       "Building Material Shops",
       "Hardware Stores",
       "Cement & Steel",
@@ -80,11 +93,16 @@ const userRoles = [
     id: "other_services", 
     label: "Other Services",
     subItems: [
-      "Pest Control Services",
+      "Modular Kitchen Services",
+      "Pest Control",
       "Landscaping Services",
+      "Manpower Supply",
+      "Lift Installation Services",
+      "Building Inspection Services",
       "HVAC Technicians",
-      "Lift Installation",
-      "Solar Installation"
+      "Solar Installation Services",
+      "Security Systems (CCTV)",
+      "False Ceiling Contractor"
     ],
     theme: "purple",
     icon: <Wrench className="w-5 h-5" />
@@ -93,11 +111,15 @@ const userRoles = [
     id: "industrial", 
     label: "Industrial Services",
     subItems: [
-      "Pre-Engineered Bldgs",
-      "Machinery Rental",
+      "Pre Engineered Building Contractor",
+      "Pre Fabricated Building",
+      "Pre Cast Materials",
+      "Solar Panel Contractor",
+      "Building Material Services",
+      "Heavy Machinery Rental",
+      "Road & Foundation Contractor",
       "Manpower Supply",
-      "Project Management",
-      "Heavy Infrastructure"
+      "Project Management"
     ],
     theme: "red",
     icon: <Factory className="w-5 h-5" />
@@ -248,7 +270,7 @@ const MultiRoleRegisterPage = () => {
 
       // Marketplace / Building Material (Seller)
       case "Seller_City":
-      case "Seller_Auto": {
+      case "Seller_City": {
         const cityCount = rawCCount > 0 ? rawCCount : 1;
         planPrice = 2999 * cityCount;
         planName = `Marketplace Shop Listing (${cityCount > 1 ? `${cityCount} Cities` : "Per City"} / 1 Year)`;
@@ -448,7 +470,7 @@ const MultiRoleRegisterPage = () => {
 
   const handleRoleChange = (value: string) => {
     setSelectedRole(value);
-    setSelectedPlanState(value === "seller" ? "Seller_Auto" : value === "industrial" ? "Industrial_State" : "City_1Y");
+    setSelectedPlanState(value === "seller" ? "Seller_City" : value === "industrial" ? "Industrial_State" : "City_1Y");
     setFormData({
       role: value,
       email: formData.email,
@@ -1249,11 +1271,20 @@ const MultiRoleRegisterPage = () => {
                       <div className="flex items-center justify-between">
                         <div>
                           <span className="text-xs font-bold uppercase tracking-widest text-orange-500">Paid Plan</span>
-                          <div className="text-3xl font-black text-gray-900 mt-1">₹1,499 <span className="text-sm font-medium text-gray-400">/ year+</span></div>
+                          <div className="text-3xl font-black text-gray-900 mt-1">
+                            {selectedRole === "seller" ? "₹2,999" : selectedRole === "industrial" ? "₹4,999" : "₹1,499"}{" "}
+                            <span className="text-sm font-medium text-gray-400">/ year+</span>
+                          </div>
                         </div>
                         <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1"><Zap className="w-3 h-3" />PRO</span>
                       </div>
-                      <p className="text-sm text-gray-600">Full-featured listing with premium tools to get more leads, visibility and business growth.</p>
+                      <p className="text-sm text-gray-600">
+                        {selectedRole === "seller"
+                          ? "City (₹2,999), State (₹4,999), and PAN India (₹9,999) listing plans with verified digital shop."
+                          : selectedRole === "industrial"
+                          ? "City (₹4,999), State (₹14,999), and PAN India (₹24,999) listing plans."
+                          : "City (₹1,499), State (₹4,999), and PAN India (₹9,999) listing plans with premium visibility."}
+                      </p>
                       <ul className="space-y-2.5 flex-1">
                         {[
                           "WhatsApp button",
