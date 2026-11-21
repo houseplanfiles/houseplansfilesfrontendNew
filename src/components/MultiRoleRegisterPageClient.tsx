@@ -178,8 +178,6 @@ const MultiRoleRegisterPage = () => {
   const [selectedPlan, setSelectedPlanState] = useState<string>("Basic");
   const [profileCreation, setProfileCreation] = useState<boolean>(false);
   const [profileStoreManagement, setProfileStoreManagement] = useState<string>("None");
-  // Free vs Paid toggle: null = not yet chosen, 'free' | 'paid'
-  const [accountType, setAccountType] = useState<"free" | "paid" | null>(null);
   const dispatch = useDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -436,21 +434,12 @@ const MultiRoleRegisterPage = () => {
       } else if (userInfo.role === "user") {
         toast.success("Registration successful! Welcome to HousePlanFiles!");
         setTimeout(() => router.push("/dashboard"), 1000);
-      } else if (accountType === "free") {
-        // Free plan: no payment, go directly to profile
-        toast.success("Free account created! Your profile is now live.");
-        const role = userInfo.role?.toLowerCase();
-        if (role === "seller") {
-          setTimeout(() => router.push("/seller/profile"), 1000);
-        } else {
-          setTimeout(() => router.push("/professional/profile"), 1000);
-        }
       } else {
         toast.info("Please complete the payment to activate your account...");
         initiatePayment(userInfo);
       }
     }
-  }, [actionStatus, userInfo, error, router, dispatch, isRazorpayLoaded, selectedPlan, profileCreation, profileStoreManagement, accountType]);
+  }, [actionStatus, userInfo, error, router, dispatch, isRazorpayLoaded, selectedPlan, profileCreation, profileStoreManagement]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -538,25 +527,16 @@ const MultiRoleRegisterPage = () => {
       }
     }
     if (selectedRole !== "user") {
-      if (accountType === "free") {
-        // Free plan — no location required, mark as free
-        dataToSubmit.set("selectedPlan", "Free");
-        dataToSubmit.set("paymentStatus", "Free");
-        dataToSubmit.set("isPanIndia", "false");
-        // If city was not filled, set a placeholder so validation passes
-        if (!dataToSubmit.get("city")) dataToSubmit.set("city", "N/A");
-      } else {
-        const isPan = Boolean(formData.isPanIndia || selectedPlan.toLowerCase().includes("pan_india"));
-        dataToSubmit.set("isPanIndia", String(isPan));
-        dataToSubmit.append("selectedPlan", selectedPlan);
-        dataToSubmit.append("profileCreation", String(profileCreation));
-        dataToSubmit.append("profileStoreManagement", profileStoreManagement);
-        if (formData.selectedStates && formData.selectedStates.length > 0) {
-          dataToSubmit.set("state", formData.selectedStates[0]);
-        }
-        if (formData.pincode) {
-          dataToSubmit.set("pincode", formData.pincode);
-        }
+      const isPan = Boolean(formData.isPanIndia || selectedPlan.toLowerCase().includes("pan_india"));
+      dataToSubmit.set("isPanIndia", String(isPan));
+      dataToSubmit.append("selectedPlan", selectedPlan);
+      dataToSubmit.append("profileCreation", String(profileCreation));
+      dataToSubmit.append("profileStoreManagement", profileStoreManagement);
+      if (formData.selectedStates && formData.selectedStates.length > 0) {
+        dataToSubmit.set("state", formData.selectedStates[0]);
+      }
+      if (formData.pincode) {
+        dataToSubmit.set("pincode", formData.pincode);
       }
     }
     (dispatch as AppDispatch)(registerUser(dataToSubmit));
@@ -1210,129 +1190,17 @@ const MultiRoleRegisterPage = () => {
           {selectedRole && (
             <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 my-12 relative z-10 flex-grow">
 
-              {/* ===== FREE vs PAID COMPARISON ===== */}
-              {accountType === null && (
-                <div className="bg-white p-6 sm:p-10 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500 mb-8">
-                  <div className="flex items-start justify-between mb-6">
-                    <div>
-                      <h2 className="text-2xl font-black text-gray-900">Choose Your Plan</h2>
-                      <p className="text-sm text-gray-500 mt-1">Select the plan that's right for you to continue registration</p>
-                    </div>
-                    <Button type="button" variant="outline" onClick={() => { setSelectedRole(""); setAccountType(null); }} className="h-9 px-4 text-sm">Change Type</Button>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    {/* FREE PLAN CARD */}
-                    <div className="relative border-2 border-gray-200 rounded-2xl p-6 flex flex-col gap-4 hover:border-gray-400 transition-all bg-gray-50/40">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Free Plan</span>
-                          <div className="text-3xl font-black text-gray-800 mt-1">₹0 <span className="text-sm font-medium text-gray-400">/ forever</span></div>
-                        </div>
-                        <span className="bg-amber-100 text-amber-800 border border-amber-300 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">DEMO</span>
-                      </div>
-                      <p className="text-sm text-gray-500">Basic demo listing to showcase your profile. Direct WhatsApp, Call, and Leads are locked.</p>
-                      <ul className="space-y-2.5 flex-1">
-                        {[
-                          "WhatsApp button",
-                          "Call Button",
-                          "Social media integration",
-                          "Do follow backlink for site owners",
-                          "Profile promotion",
-                          "Lead update sharing",
-                          "Profile setup",
-                          "Verified Golden Badge",
-                          "Support available",
-                          "Complimentary free leads",
-                        ].map((f) => (
-                          <li key={f} className="flex items-center gap-2.5 text-sm text-gray-400">
-                            <span className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                              <X className="w-3.5 h-3.5 text-red-600 stroke-[3]" />
-                            </span>
-                            <span className="text-gray-500 font-medium">{f}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <button
-                        type="button"
-                        id="choose-free-plan"
-                        onClick={() => setAccountType("free")}
-                        className="mt-2 w-full border-2 border-gray-300 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-100 transition-all text-sm shadow-xs"
-                      >
-                        Continue with Free (Demo)
-                      </button>
-                    </div>
-
-                    {/* PAID PLAN CARD */}
-                    <div className="relative border-2 border-orange-400 rounded-2xl p-6 flex flex-col gap-4 bg-orange-50/30 shadow-lg shadow-orange-100">
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <span className="bg-orange-500 text-white text-xs font-black px-4 py-1 rounded-full uppercase tracking-wider shadow">Recommended</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-xs font-bold uppercase tracking-widest text-orange-500">Paid Plan</span>
-                          <div className="text-3xl font-black text-gray-900 mt-1">
-                            {selectedRole === "seller" ? "₹2,999" : selectedRole === "industrial" ? "₹4,999" : "₹1,499"}{" "}
-                            <span className="text-sm font-medium text-gray-400">/ year+</span>
-                          </div>
-                        </div>
-                        <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1"><Zap className="w-3 h-3" />PRO</span>
-                      </div>
-                      <p className="text-sm text-gray-600">
-                        {selectedRole === "seller"
-                          ? "City (₹2,999), State (₹4,999), and PAN India (₹9,999) listing plans with verified digital shop."
-                          : selectedRole === "industrial"
-                          ? "City (₹4,999), State (₹14,999), and PAN India (₹24,999) listing plans."
-                          : "City (₹1,499), State (₹4,999), and PAN India (₹9,999) listing plans with premium visibility."}
-                      </p>
-                      <ul className="space-y-2.5 flex-1">
-                        {[
-                          "WhatsApp button",
-                          "Call Button",
-                          "Social media integration",
-                          "Do follow backlink for site owners",
-                          "Profile promotion",
-                          "Lead update sharing",
-                          "Profile setup",
-                          "Verified Golden Badge",
-                          "Support available",
-                          "Complimentary free leads",
-                        ].map((f) => (
-                          <li key={f} className="flex items-center gap-2.5 text-sm text-gray-700 font-medium">
-                            <span className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                              <CheckCircle className="w-3.5 h-3.5 text-green-600" />
-                            </span>
-                            <span className="font-semibold text-gray-900">{f}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <button
-                        type="button"
-                        id="choose-paid-plan"
-                        onClick={() => setAccountType("paid")}
-                        className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl transition-all text-sm shadow-md"
-                      >
-                        Get Started — Choose Paid Plan
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* ===== MAIN FORM (after plan chosen) ===== */}
-              {accountType !== null && (
               <div className="bg-white p-6 sm:p-10 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                {/* Plan badge + back */}
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-3">
-                    <span className={`text-xs font-bold px-3 py-1 rounded-full ${accountType === "free" ? "bg-gray-100 text-gray-600" : "bg-orange-100 text-orange-700"}`}>
-                      {accountType === "free" ? "Free Plan" : "Paid Plan"}
-                    </span>
-                    <button type="button" onClick={() => setAccountType(null)} className="text-xs text-gray-400 underline hover:text-gray-600">Change plan</button>
+                <div className="flex items-center justify-between pb-4 border-b border-border">
+                  <div>
+                    <h2 className="text-xl font-bold text-foreground">
+                      {userRoles.find(r => r.id === selectedRole)?.label || "Registration"}
+                    </h2>
+                    <p className="text-sm text-muted-foreground">Please fill in your details to continue</p>
                   </div>
-                  <Button type="button" variant="outline" onClick={() => { setSelectedRole(""); setAccountType(null); }} className="h-9 px-4 text-sm">Change Type</Button>
+                  <Button type="button" variant="outline" onClick={() => setSelectedRole("")} className="h-9 px-4 text-sm">Change Type</Button>
                 </div>
-                <div className="pb-4 border-b border-border">
+                <div className="hidden">
                   <h2 className="text-xl font-bold text-foreground">
                     {userRoles.find(r => r.id === selectedRole)?.label || "Registration"}
                   </h2>
@@ -1376,7 +1244,7 @@ const MultiRoleRegisterPage = () => {
                 </div>
 
                 {/* Subscription & Addons Panel — only for Paid plan */}
-                {selectedRole !== "user" && accountType === "paid" && (
+                {selectedRole !== "user" && (
                   <div className="space-y-6 pt-4 border-t border-border mt-4">
                     {/* Unified Location Selector */}
                     <div className="bg-orange-50/50 p-6 rounded-xl border border-orange-100">
@@ -1602,16 +1470,15 @@ const MultiRoleRegisterPage = () => {
                 </p>
                 <Button
                   type="submit"
-                  className={`w-full text-base font-bold py-3 h-12 ${accountType === "free" ? "bg-gray-700 hover:bg-gray-900" : "btn-primary"}`}
+                  className="w-full text-base font-bold py-3 h-12 btn-primary"
                   disabled={isLoading}
                 >
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {isLoading ? "Registering..." : accountType === "free" ? "Create Free Account" : "Register & Pay"}
+                  {isLoading ? "Registering..." : "Register & Pay"}
                 </Button>
               </div>
-                            )}
             </div>
-                        )}
+          )}
           </form>
         </div>
         <Footer />
