@@ -45,7 +45,10 @@ const userRoles = [
       "Interior Designers",
       "Civil Engineers",
       "Structural Engineers",
-      "Vastu Consultants"
+      "Vastu Consultants",
+      "Landscape Designers",
+      "3D Elevation / Rendering",
+      "MEP Consultants"
     ],
     theme: "blue",
     icon: <Building2 className="w-5 h-5" />
@@ -54,11 +57,18 @@ const userRoles = [
     id: "Contractor", 
     label: "Contractors",
     subItems: [
-      "Civil Contractors",
-      "Turnkey Contractors",
-      "Painting Contractors",
-      "Electrical Contractors",
-      "Plumbing Contractors"
+      "Building Contractor",
+      "Interior Contractor",
+      "Electrical Contractor",
+      "Plumbing Contractor",
+      "Carpenter",
+      "Painting Contractor",
+      "Tiles Contractor",
+      "Civil Contractor",
+      "Turnkey Contractor",
+      "Waterproofing Contractor",
+      "Roofing Contractor",
+      "Swimming Pool Contractor"
     ],
     theme: "orange",
     icon: <HardHat className="w-5 h-5" />
@@ -67,6 +77,9 @@ const userRoles = [
     id: "seller", 
     label: "Manufacturers & Suppliers",
     subItems: [
+      "Manufacturer",
+      "Supplier",
+      "Retail Shop",
       "Building Material Shops",
       "Hardware Stores",
       "Cement & Steel",
@@ -80,11 +93,16 @@ const userRoles = [
     id: "other_services", 
     label: "Other Services",
     subItems: [
-      "Pest Control Services",
+      "Modular Kitchen Services",
+      "Pest Control",
       "Landscaping Services",
+      "Manpower Supply",
+      "Lift Installation Services",
+      "Building Inspection Services",
       "HVAC Technicians",
-      "Lift Installation",
-      "Solar Installation"
+      "Solar Installation Services",
+      "Security Systems (CCTV)",
+      "False Ceiling Contractor"
     ],
     theme: "purple",
     icon: <Wrench className="w-5 h-5" />
@@ -93,11 +111,15 @@ const userRoles = [
     id: "industrial", 
     label: "Industrial Services",
     subItems: [
-      "Pre-Engineered Bldgs",
-      "Machinery Rental",
+      "Pre Engineered Building Contractor",
+      "Pre Fabricated Building",
+      "Pre Cast Materials",
+      "Solar Panel Contractor",
+      "Building Material Services",
+      "Heavy Machinery Rental",
+      "Road & Foundation Contractor",
       "Manpower Supply",
-      "Project Management",
-      "Heavy Infrastructure"
+      "Project Management"
     ],
     theme: "red",
     icon: <Factory className="w-5 h-5" />
