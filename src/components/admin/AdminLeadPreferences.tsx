@@ -12,6 +12,7 @@ const statusStyles: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-700",
   contacted: "bg-blue-100 text-blue-700",
   approved: "bg-green-100 text-green-700",
+  completed: "bg-emerald-100 text-emerald-800 border border-emerald-300",
   rejected: "bg-red-100 text-red-700",
 };
 
@@ -88,6 +89,7 @@ const AdminLeadPreferences = () => {
             <option value="pending">Pending</option>
             <option value="contacted">Contacted</option>
             <option value="approved">Approved</option>
+            <option value="completed">Completed</option>
             <option value="rejected">Rejected</option>
           </select>
           <select
@@ -124,7 +126,7 @@ const AdminLeadPreferences = () => {
                 <th className="text-left px-3 py-2">City</th>
                 <th className="text-left px-3 py-2">Plan</th>
                 <th className="text-left px-3 py-2">Quality</th>
-                <th className="text-left px-3 py-2">Leads</th>
+                <th className="text-left px-3 py-2">Lead Quota / Delivered</th>
                 <th className="text-left px-3 py-2">Budget</th>
                 <th className="text-left px-3 py-2">Notes</th>
                 <th className="text-left px-3 py-2">Status</th>
@@ -151,8 +153,32 @@ const AdminLeadPreferences = () => {
                       {p.qualityPreference || "All"}
                     </span>
                   </td>
-                  <td className="px-3 py-2 font-bold text-orange-600">
-                    {p.leadCount}
+                  <td className="px-3 py-2">
+                    <div className="flex flex-col gap-1 min-w-[120px]">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-extrabold text-orange-600">
+                          {p.deliveredCount || 0} / {p.leadCount}
+                        </span>
+                        <span className="text-[10px] text-gray-400">
+                          {Math.max(0, (p.leadCount || 0) - (p.deliveredCount || 0))} left
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                        <div
+                          className={`h-1.5 rounded-full ${
+                            (p.deliveredCount || 0) >= (p.leadCount || 1)
+                              ? "bg-green-500"
+                              : "bg-orange-500"
+                          }`}
+                          style={{
+                            width: `${Math.min(
+                              100,
+                              Math.round(((p.deliveredCount || 0) / (p.leadCount || 1)) * 100)
+                            )}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
                   </td>
                   <td className="px-3 py-2">{p.budget || "-"}</td>
                   <td className="px-3 py-2 max-w-[200px] truncate" title={p.notes}>
@@ -167,6 +193,7 @@ const AdminLeadPreferences = () => {
                       <option value="pending">Pending</option>
                       <option value="contacted">Contacted</option>
                       <option value="approved">Approved</option>
+                      <option value="completed">Completed</option>
                       <option value="rejected">Rejected</option>
                     </select>
                   </td>
