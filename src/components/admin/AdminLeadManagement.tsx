@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import {
   Loader2, Trash2, IndianRupee, Inbox, CheckCircle2,
   Tag, Globe, Users, Building2, ShoppingBag, X, Plus,
-  PencilLine, ExternalLink, Send, ArrowRightLeft,
+  PencilLine, ExternalLink, Send, ArrowRightLeft, Radio, Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +33,8 @@ interface UnifiedLead {
   clientEmail?: string;
   status: "Available" | "Sold";
   buyer: string | null;
+  allowedUsers?: string[] | any[];
+  isBroadcasted?: boolean;
   createdAt: string;
 }
 
@@ -558,7 +560,302 @@ const TransferLeadModal = ({
   );
 };
 
-// ─── Main Admin Lead Management Page ─────────────────────────────────────────
+// ─── Target / Offer Lead to Specific Contractors Modal ─────────────────────────
+interface TargetContractorsModalProps {
+  lead: UnifiedLead;
+  onClose: () => void;
+  onTargeted: () => void;
+}
+
+const TargetContractorsModal: React.FC<TargetContractorsModalProps> = ({
+  lead,
+  onClose,
+  onTargeted,
+}) => {
+  const { userInfo } = useSelector((state: RootState) => state.user);
+  const token = userInfo?.token || "";
+
+  const [allUsers, setAllUsers] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [searchTerm, setSearchTerm] = useState(lead.city || "");
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>(
+    Array.isArray(lead.allowedUsers)
+      ? lead.allowedUsers.map((u: any) => (typeof u === "string" ? u : u._id))
+      : []
+  );
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoadingUsers(true);
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users?limit=5000`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const userList = Array.isArray(res.data) ? res.data : res.data.users || [];
+        setAllUsers(userList);
+      } catch (err) {
+        console.error("Failed to load users:", err);
+        toast.error("Could not load users list.");
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+    if (token) fetchUsers();
+  }, [token]);
+
+  const filteredUsers = useMemo(() => {
+    if (!searchTerm.trim()) return allUsers.slice(0, 50);
+    const q = searchTerm.toLowerCase().trim();
+    return allUsers.filter((u) => {
+      const name = (u.name || "").toLowerCase();
+      const bName = (u.businessName || "").toLowerCase();
+      const comp = (u.companyName || "").toLowerCase();
+      const email = (u.email || "").toLowerCase();
+      const phone = (u.phone || "").toLowerCase();
+      const role = (u.role || "").toLowerCase();
+      const prof = (u.profession || "").toLowerCase();
+      const city = Array.isArray(u.city)
+        ? u.city.join(" ").toLowerCase()
+        : (u.city || "").toLowerCase();
+
+      return (
+        name.includes(q) ||
+        bName.includes(q) ||
+        comp.includes(q) ||
+        email.includes(q) ||
+        phone.includes(q) ||
+        role.includes(q) ||
+        prof.includes(q) ||
+        city.includes(q)
+      );
+    });
+  }, [allUsers, searchTerm]);
+
+  const toggleUser = (userId: string) => {
+    if (selectedUserIds.includes(userId)) {
+      setSelectedUserIds(selectedUserIds.filter((id) => id !== userId));
+    } else {
+      setSelectedUserIds([...selectedUserIds, userId]);
+    }
+  };
+
+  const selectAllFiltered = () => {
+    const newIds = new Set([...selectedUserIds, ...filteredUsers.map((u) => u._id)]);
+    setSelectedUserIds(Array.from(newIds));
+  };
+
+  const handleSaveTargeting = async (isBroadcast: boolean = false) => {
+    try {
+      setSaving(true);
+      let targetLeadId = lead._id;
+
+      // If inquiry, convert to admin lead first
+      if (lead.sourceType !== "admin_lead") {
+        const createRes = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads`,
+          {
+            title: lead.title,
+            category: lead.category,
+            city: lead.city,
+            budget: lead.budget,
+            requirements: lead.requirements,
+            price: lead.price || 99,
+            clientName: lead.clientName,
+            clientPhone: lead.clientPhone,
+            clientEmail: lead.clientEmail,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        targetLeadId = createRes.data._id;
+      }
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leads/${targetLeadId}/target-contractors`,
+        {
+          contractorIds: isBroadcast ? [] : selectedUserIds,
+          isBroadcasted: isBroadcast,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      toast.success(
+        isBroadcast
+          ? "Lead published openly for all contractors!"
+          : `Lead targeted to ${selectedUserIds.length} contractor(s) successfully!`
+      );
+      onTargeted();
+      onClose();
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to target contractors.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden z-10 flex flex-col max-h-[88vh]">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-700 to-indigo-700 px-6 py-4 flex items-center justify-between text-white">
+          <div>
+            <h2 className="text-lg font-bold flex items-center gap-2">
+              <Radio className="w-5 h-5 text-blue-200 animate-pulse" />
+              Target / Offer Lead to Specific Contractors
+            </h2>
+            <p className="text-blue-100 text-xs mt-0.5">
+              Only chosen contractors will see this lead in their dashboard to unlock it first.
+            </p>
+          </div>
+          <button onClick={onClose} className="text-blue-200 hover:text-white">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Lead Details */}
+        <div className="p-4 bg-blue-50/60 border-b border-blue-100 flex items-start justify-between text-xs">
+          <div>
+            <span className="font-extrabold text-gray-900 block text-sm">{lead.title}</span>
+            <span className="text-gray-500 mt-0.5 block">{lead.category} • Location: <strong className="text-blue-700">{lead.city}</strong></span>
+            <span className="text-gray-700 mt-0.5 block">Price to unlock: <strong>₹{lead.price || 99}</strong></span>
+          </div>
+          <span className="bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-md text-[11px]">
+            {selectedUserIds.length} Contractors Selected
+          </span>
+        </div>
+
+        {/* Search & Contractors List */}
+        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <label className="text-xs font-bold text-gray-700 block mb-1">
+                Filter by City, Role or Name (e.g. &quot;Bihar&quot;, &quot;Patna&quot;, &quot;Contractor&quot;)
+              </label>
+              <Input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Type city or name to find local contractors..."
+                className="h-10 text-sm"
+              />
+            </div>
+            {filteredUsers.length > 0 && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={selectAllFiltered}
+                className="mt-5 text-xs h-10 border-blue-300 text-blue-700 hover:bg-blue-50"
+              >
+                Select All ({filteredUsers.length})
+              </Button>
+            )}
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                Select Contractors to Receive this Lead
+              </label>
+              {selectedUserIds.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedUserIds([])}
+                  className="text-xs text-red-500 hover:underline"
+                >
+                  Clear Selection
+                </button>
+              )}
+            </div>
+
+            {loadingUsers ? (
+              <div className="flex items-center justify-center py-8 text-gray-400">
+                <Loader2 className="w-6 h-6 animate-spin mr-2 text-blue-600" />
+                <span className="text-xs">Loading contractors...</span>
+              </div>
+            ) : filteredUsers.length === 0 ? (
+              <div className="text-center py-8 text-gray-400 text-xs">
+                No contractors found for &quot;{searchTerm}&quot;.
+              </div>
+            ) : (
+              <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                {filteredUsers.map((u) => {
+                  const isChecked = selectedUserIds.includes(u._id);
+                  const name = u.businessName || u.name || u.companyName || "Unnamed Professional";
+                  const displayCity = Array.isArray(u.city) ? u.city.join(", ") : u.city;
+                  return (
+                    <div
+                      key={u._id}
+                      onClick={() => toggleUser(u._id)}
+                      className={`p-3 rounded-xl border text-xs cursor-pointer transition-all flex items-center justify-between ${
+                        isChecked
+                          ? "border-blue-500 bg-blue-50/70 shadow-sm"
+                          : "border-gray-200 hover:border-blue-300 hover:bg-gray-50"
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-gray-900 text-sm">{name}</span>
+                          <span className="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded capitalize">
+                            {u.role || u.profession || "Contractor"}
+                          </span>
+                        </div>
+                        <p className="text-gray-500 mt-0.5 text-xs">
+                          {displayCity ? `📍 ${displayCity} • ` : ""}📞 {u.phone || "No phone"} • ✉️ {u.email}
+                        </p>
+                      </div>
+                      <div
+                        className={`w-5 h-5 rounded border flex items-center justify-center ${
+                          isChecked ? "border-blue-600 bg-blue-600 text-white" : "border-gray-300"
+                        }`}
+                      >
+                        {isChecked && <CheckCircle2 className="w-4 h-4 text-white" />}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-100">
+          <Button variant="ghost" onClick={onClose} disabled={saving}>
+            Cancel
+          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => handleSaveTargeting(true)}
+              disabled={saving}
+              className="text-xs text-gray-700 hover:bg-gray-100"
+              title="Remove restriction and allow all contractors to view"
+            >
+              Open to All Contractors
+            </Button>
+            <Button
+              onClick={() => handleSaveTargeting(false)}
+              disabled={selectedUserIds.length === 0 || saving}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold h-10 px-5 shadow-md"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" /> Saving...
+                </>
+              ) : (
+                <>
+                  <Bell className="w-4 h-4 mr-2" /> Offer to {selectedUserIds.length} Selected
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 const AdminLeadManagement: React.FC = () => {
   const { userInfo } = useSelector((state: RootState) => state.user);
   const token = userInfo?.token || "";
@@ -567,6 +864,7 @@ const AdminLeadManagement: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<UnifiedLead | null>(null);
   const [transferLeadTarget, setTransferLeadTarget] = useState<UnifiedLead | null>(null);
+  const [targetLeadTarget, setTargetLeadTarget] = useState<UnifiedLead | null>(null);
   const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
   const [isBulkTransferOpen, setIsBulkTransferOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -872,13 +1170,22 @@ const AdminLeadManagement: React.FC = () => {
                         </td>
                         <td className="p-4">
                           {isAdminLead ? (
-                            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                              lead.status === "Sold"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-orange-100 text-orange-700"
-                            }`}>
-                              {lead.status}
-                            </span>
+                            <div className="flex flex-col gap-1">
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-bold text-center ${
+                                lead.status === "Sold"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-orange-100 text-orange-700"
+                              }`}>
+                                {lead.status}
+                              </span>
+                              {lead.status === "Available" && (
+                                <span className="text-[10px] text-gray-500 text-center whitespace-nowrap">
+                                  {Array.isArray(lead.allowedUsers) && lead.allowedUsers.length > 0
+                                    ? `🎯 ${lead.allowedUsers.length} Targets`
+                                    : "🌐 Open"}
+                                </span>
+                              )}
+                            </div>
                           ) : (
                             <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-500">
                               Not Published
@@ -890,6 +1197,17 @@ const AdminLeadManagement: React.FC = () => {
                         </td>
                         <td className="p-4">
                           <div className="flex items-center justify-center gap-2">
+                            {lead.status !== "Sold" && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setTargetLeadTarget(lead)}
+                                title="Target/Notify specific contractors (e.g. Bihar only)"
+                                className="text-xs font-bold h-8 px-2.5 border-blue-300 text-blue-700 bg-blue-50 hover:bg-blue-100 hover:border-blue-400"
+                              >
+                                <Radio className="w-3.5 h-3.5 mr-1" /> Target
+                              </Button>
+                            )}
                             <Button
                               size="sm"
                               variant="outline"
@@ -948,6 +1266,15 @@ const AdminLeadManagement: React.FC = () => {
           onClose={() => setSelectedLead(null)}
           onSaved={fetchLeads}
           token={token}
+        />
+      )}
+
+      {/* Target Contractors Modal */}
+      {targetLeadTarget && (
+        <TargetContractorsModal
+          lead={targetLeadTarget}
+          onClose={() => setTargetLeadTarget(null)}
+          onTargeted={fetchLeads}
         />
       )}
 
