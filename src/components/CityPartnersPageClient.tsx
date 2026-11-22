@@ -530,9 +530,12 @@ const PartnersPage: FC = () => {
               ? "Find verified building and interior contractors in your city. Select a category below to get started."
               : activeCategory?.desc || "Verified professionals ready for your dream construction project."}
           </p>
-          <div className="flex justify-center px-4">
-            <Button onClick={() => router.push("/register?role=Contractor")} className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 py-4 px-6 sm:py-6 sm:px-8 rounded-full shadow-lg transition-transform hover:scale-105 font-bold">
-              <UserPlus className="w-5 h-5 mr-2" /> Register With Us
+          <div className="flex flex-wrap justify-center gap-3 px-4">
+            <Button onClick={() => router.push("/register")} className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 py-4 px-6 sm:py-6 sm:px-8 rounded-full shadow-lg transition-transform hover:scale-105 font-bold">
+              <UserPlus className="w-5 h-5 mr-2" /> Register as Service Provider
+            </Button>
+            <Button onClick={() => router.push("/other-services")} variant="outline" className="w-full sm:w-auto border-2 border-white/80 text-white bg-white/10 hover:bg-white hover:text-slate-900 py-4 px-6 sm:py-6 sm:px-8 rounded-full shadow-lg transition-all font-bold">
+              Other Services
             </Button>
           </div>
         </div>
