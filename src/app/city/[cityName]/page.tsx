@@ -242,9 +242,17 @@ export default async function CityPage({ params }: { params: Promise<{ cityName:
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-gray-200 text-gray-500 bg-white text-sm font-bold hover:bg-gray-50 transition-all duration-300 shadow-sm">
               Building Material
             </Link>
+            <Link href={`/other-services?city=${displayCity}`}
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-gray-200 text-gray-500 bg-white text-sm font-bold hover:bg-gray-50 transition-all duration-300 shadow-sm">
+              Other Services in {displayCity}
+            </Link>
             <Link href="/leads"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border border-gray-200 text-gray-500 bg-white text-sm font-bold hover:bg-gray-50 transition-all duration-300 shadow-sm">
               Lead Board
+            </Link>
+            <Link href="/register"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border-2 border-[#ff6b00] text-[#ff6b00] bg-orange-50/50 text-sm font-bold hover:bg-[#ff6b00] hover:text-white transition-all duration-300 shadow-sm">
+              Register as Service Provider
             </Link>
           </div>
         </div>
