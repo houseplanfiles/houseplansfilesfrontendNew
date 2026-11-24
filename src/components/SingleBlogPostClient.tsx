@@ -48,7 +48,7 @@ export default function SingleBlogPostClient({ slug, initialPost }: Props) {
     );
   }
 
-  const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
   const imageUrl = displayPost.mainImage?.startsWith("http")
     ? displayPost.mainImage
     : displayPost.mainImage ? `${backendApiUrl}${displayPost.mainImage}` : "/logo1.png";

@@ -371,14 +371,14 @@ const ProductDetailContent = ({ product }: { product: any }) => {
 
   const displayData = product;
   const backendApiUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+    process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
 
   // Use production backend URL for share links so social media bots can access them.
   // Localhost can NEVER be reached by Facebook/WhatsApp/LinkedIn crawlers.
   const shareBackendUrl =
     process.env.NEXT_PUBLIC_SHARE_BACKEND_URL ||
     (backendApiUrl.includes("localhost")
-      ? process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app"
+      ? process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app"
       : backendApiUrl);
 
   // Static cache key based on product ID so bots can reliably crawl the same URL.

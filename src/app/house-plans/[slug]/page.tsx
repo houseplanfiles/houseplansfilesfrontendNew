@@ -3,18 +3,33 @@ import { notFound } from "next/navigation";
 import ProductDetailClient from "@/components/ProductDetailClient";
 
 const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
 
 async function getProduct(slug: string) {
   try {
     const res = await fetch(`${BACKEND_URL}/api/products/slug/${slug}`, {
       next: { revalidate: 10 },
     });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
+    if (res.ok) {
+      const data = await res.json();
+      if (data) return data;
+    }
+  } catch {}
+
+  // Fallback: try fetching by ID or search term if slug contains product ID or format
+  try {
+    const searchRes = await fetch(`${BACKEND_URL}/api/products?searchTerm=${encodeURIComponent(slug.replace(/-/g, ' '))}&limit=1`, {
+      next: { revalidate: 10 },
+    });
+    if (searchRes.ok) {
+      const searchData = await searchRes.json();
+      if (searchData?.products?.length > 0) {
+        return searchData.products[0];
+      }
+    }
+  } catch {}
+
+  return null;
 }
 
 export async function generateMetadata({

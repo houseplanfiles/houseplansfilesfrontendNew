@@ -1429,30 +1429,43 @@ const Products = ({
             )}
 
             {!isLoading && !isError && (!products || products.length === 0) && (
-              <div className="text-center py-20">
-                <h3 className="text-xl font-semibold">No Plans Found</h3>
-                <p className="mt-2 text-gray-500">
-                  Try adjusting your filters.
+              <div className="text-center py-16 px-4 bg-orange-50/40 rounded-2xl border border-orange-100 my-6">
+                <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Home className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">No Matching Plans For This Filter</h3>
+                <p className="mt-2 text-gray-600 max-w-md mx-auto text-sm">
+                  Aapke select kiye gaye filter ke anusaar plan nahi mila. Kripya filter clear karein ya niche diye gaye popular plans explore karein.
                 </p>
-                <Button
-                  onClick={() =>
-                    setFilters({
-                      category: "all",
-                      searchTerm: "",
-                      plotSize: "all",
-                      plotArea: "all",
-                      direction: "all",
-                      floors: "all",
-                      propertyType: "all",
-                      budget: [0, 50000],
-                      sortBy: "newest",
-                    })
-                  }
-                  variant="outline"
-                  className="mt-4"
-                >
-                  Clear All Filters
-                </Button>
+                <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+                  <Button
+                    onClick={() =>
+                      setFilters({
+                        planType: "all",
+                        category: "all",
+                        searchTerm: "",
+                        plotSize: "all",
+                        plotArea: "all",
+                        direction: "all",
+                        floors: "all",
+                        propertyType: "all",
+                        budget: [0, 50000],
+                        sortBy: "newest",
+                      })
+                    }
+                    className="bg-[#ff6b00] hover:bg-[#e66000] text-white font-bold px-6 h-11 rounded-xl shadow-md"
+                  >
+                    View All Popular House Plans
+                  </Button>
+                  <Link href="/leads">
+                    <Button
+                      variant="outline"
+                      className="border-2 border-orange-500 text-orange-600 hover:bg-orange-50 font-bold px-6 h-11 rounded-xl"
+                    >
+                      Post Custom Requirement
+                    </Button>
+                  </Link>
+                </div>
               </div>
             )}
 
