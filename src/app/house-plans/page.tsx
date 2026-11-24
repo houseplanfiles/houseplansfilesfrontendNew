@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 async function getInitialHousePlans(pageNumber: number = 1) {
   try {
-    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
     const res = await fetch(
       `${BACKEND_URL}/api/products?pageNumber=${pageNumber}&limit=12&planCategory=readymade-house-plans`,
       { next: { revalidate: 3600 } }

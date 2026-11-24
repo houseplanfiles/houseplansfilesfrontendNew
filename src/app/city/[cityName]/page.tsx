@@ -149,12 +149,11 @@ export async function generateMetadata({ params }: { params: Promise<{ cityName:
   const { cityName } = await params;
   const data = CITY_DATA[cityName];
   const displayCity = data?.display ?? cityName.charAt(0).toUpperCase() + cityName.slice(1);
-  const state = data?.state ?? "India";
-  const title = `House Plans in ${displayCity} | Architects & Floor Plans | HousePlanFiles`;
-  const description = data?.description ?? `Browse readymade house plans and connect with verified architects in ${displayCity}, ${state}.`;
+  const title = `Architectural, Construction, Interior & Material Services in ${displayCity}.`;
+  const description = `Discover architects, contractors, interior designers, construction services and building material suppliers in ${displayCity} on HousePlanFiles.com`;
   return {
     title, description,
-    keywords: [`house plans in ${displayCity}`, `architects in ${displayCity}`, `contractors in ${displayCity}`, `house design ${displayCity}`, `construction cost ${displayCity}`, "readymade house plans india"],
+    keywords: [`house plans in ${displayCity}`, `architects in ${displayCity}`, `contractors in ${displayCity}`, `construction services ${displayCity}`, `interior designers ${displayCity}`, `building material suppliers ${displayCity}`, "HousePlanFiles"],
     openGraph: { title, description, url: `https://www.houseplanfiles.com/city/${cityName}`, images: [{ url: "/floorplan.jpg", width: 1200, height: 630, alt: `House Plans in ${displayCity}` }] },
     alternates: { canonical: `https://www.houseplanfiles.com/city/${cityName}` },
   };

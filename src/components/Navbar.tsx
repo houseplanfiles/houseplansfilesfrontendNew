@@ -102,6 +102,8 @@ const Navbar = () => {
         { name: "Architects", path: "/architects?profession=Architect" },
         { name: "Civil Engineers", path: "/architects?profession=Civil+Engineer" },
         { name: "Structural Engineers", path: "/architects?profession=Structural+Engineer" },
+        { name: "Site Engineers", path: "/architects?profession=Site+Engineers" },
+        { name: "BIM Consultants", path: "/architects?profession=BIM+Consultant" },
         { name: "Vastu Consultants", path: "/architects?profession=Vastu+Consultant" },
         { name: "Interior Designers", path: "/architects?profession=Interior+Designer" },
       ],

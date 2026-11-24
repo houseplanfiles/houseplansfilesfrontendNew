@@ -16,7 +16,7 @@ const InteriorDesignsPageClient = dynamic(
 
 async function getInitialInteriorProducts(pageNumber: number = 1) {
   try {
-    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
     const res = await fetch(
       `${BACKEND_URL}/api/products?pageNumber=${pageNumber}&limit=12&category=Interior Design`,
       { next: { revalidate: 3600 } }

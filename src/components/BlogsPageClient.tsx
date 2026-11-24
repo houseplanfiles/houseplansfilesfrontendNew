@@ -20,7 +20,7 @@ const BlogsPage = () => {
     }
   }, [dispatch, status]);
 
-  const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+  const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
 
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;

@@ -89,13 +89,13 @@ const SingleBlogPostPage: React.FC = () => {
 
   // Backend URL for share functionality
   const backendApiUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app";
+    process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app";
 
   // Use production backend URL for social media bots — localhost is unreachable by crawlers.
   const shareBackendUrl =
     process.env.NEXT_PUBLIC_SHARE_BACKEND_URL ||
     (backendApiUrl.includes("localhost")
-      ? process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfiles-backend.vercel.app"
+      ? process.env.NEXT_PUBLIC_BACKEND_URL || "https://houseplansfilesbackend-new.vercel.app"
       : backendApiUrl);
 
   // Create Absolute Image URL for Sharing (must be full https URL)
