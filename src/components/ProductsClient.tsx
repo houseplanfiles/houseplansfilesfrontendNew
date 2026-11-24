@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, usePathname, useSearchParams} from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +23,7 @@ import {
   List,
   Search,
   Lock,
+  Home,
 } from "lucide-react";
 import { fetchProducts } from "@/lib/features/products/productSlice";
 import { fetchMyOrders } from "@/lib/features/orders/orderSlice";
@@ -842,8 +843,7 @@ const CountryCustomizationForm = ({ countryName }: any) => {
     try {
       await dispatch(submitCustomizationRequest(submitData)).unwrap();
       toast.success(
-        `Customization request for ${
-          countryName || "your location"
+        `Customization request for ${countryName || "your location"
         } sent successfully!`
       );
       setFormData({
@@ -1069,7 +1069,7 @@ const Products = ({
 
     if (debouncedSearchTerm) params.searchTerm = debouncedSearchTerm;
     if (countryQuery) params.country = countryQuery;
-    
+
     // If a specific category filter is chosen, use it. Otherwise, use baseCategory if provided.
     if (filters.category !== "all") {
       params.category = filters.category;
@@ -1267,8 +1267,8 @@ const Products = ({
               {filters.searchTerm
                 ? `Results for "${filters.searchTerm}"`
                 : filters.category && filters.category !== "all"
-                ? `${filters.category}`
-                : pageTitle}
+                  ? `${filters.category}`
+                  : pageTitle}
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground mt-1">
               {pageDescription} • Showing {products.length} of {count} plans
@@ -1429,105 +1429,105 @@ const Products = ({
             )}
 
             {!isLoading && !isError && (!products || products.length === 0) && (
-              <div className="text-center py-16 px-4 bg-orange-50/40 rounded-2xl border border-orange-100 my-6">
-                <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Home className="w-8 h-8" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">No Matching Plans For This Filter</h3>
-                <p className="mt-2 text-gray-600 max-w-md mx-auto text-sm">
-                  Aapke select kiye gaye filter ke anusaar plan nahi mila. Kripya filter clear karein ya niche diye gaye popular plans explore karein.
-                </p>
-                <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
-                  <Button
-                    onClick={() =>
-                      setFilters({
-                        planType: "all",
-                        category: "all",
-                        searchTerm: "",
-                        plotSize: "all",
-                        plotArea: "all",
-                        direction: "all",
-                        floors: "all",
-                        propertyType: "all",
-                        budget: [0, 50000],
-                        sortBy: "newest",
-                      })
-                    }
-                    className="bg-[#ff6b00] hover:bg-[#e66000] text-white font-bold px-6 h-11 rounded-xl shadow-md"
-                  >
-                    View All Popular House Plans
-                  </Button>
-                  <Link href="/leads">
-                    <Button
-                      variant="outline"
-                      className="border-2 border-orange-500 text-orange-600 hover:bg-orange-50 font-bold px-6 h-11 rounded-xl"
+                  <div className="text-center py-16 px-4 bg-orange-50/40 rounded-2xl border border-orange-100 my-6">
+                    <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Home className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900">No Matching Plans For This Filter</h3>
+                    <p className="mt-2 text-gray-600 max-w-md mx-auto text-sm">
+                      Aapke select kiye gaye filter ke anusaar plan nahi mila. Kripya filter clear karein ya niche diye gaye popular plans explore karein.
+                    </p>
+                    <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+                      <Button
+                        onClick={() =>
+                          setFilters({
+                            planType: "all",
+                            category: "all",
+                            searchTerm: "",
+                            plotSize: "all",
+                            plotArea: "all",
+                            direction: "all",
+                            floors: "all",
+                            propertyType: "all",
+                            budget: [0, 50000],
+                            sortBy: "newest",
+                          })
+                        }
+                        className="bg-[#ff6b00] hover:bg-[#e66000] text-white font-bold px-6 h-11 rounded-xl shadow-md"
+                      >
+                        View All Popular House Plans
+                      </Button>
+                      <Link href="/leads">
+                        <Button
+                          variant="outline"
+                          className="border-2 border-orange-500 text-orange-600 hover:bg-orange-50 font-bold px-6 h-11 rounded-xl"
+                        >
+                          Post Custom Requirement
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+            )}
+
+                  {!isLoading && !isError && products && products.length > 0 && (
+                    <div
+                      className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}
                     >
-                      Post Custom Requirement
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
+                      {products.map((product: any, index: number) => (
+                        <ProductCard
+                          key={product._id}
+                          product={product}
+                          userOrders={userOrders}
+                          onPlayVideo={handlePlayVideo}
+                          index={index}
+                        />
+                      ))}
+                    </div>
+                  )}
 
-            {!isLoading && !isError && products && products.length > 0 && (
-              <div
-                className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}
-              >
-                {products.map((product: any, index: number) => (
-                  <ProductCard
-                    key={product._id}
-                    product={product}
-                    userOrders={userOrders}
-                    onPlayVideo={handlePlayVideo}
-                    index={index}
-                  />
-                ))}
+                  {totalPages > 1 && (
+                    <div className="mt-12 flex flex-wrap justify-center items-center gap-4">
+                      <Button
+                        variant="outline"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                      >
+                        <ChevronLeft className="w-4 h-4 mr-2" />
+                        Previous
+                      </Button>
+                      <span className="font-medium text-gray-700">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <Button
+                        variant="outline"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                      >
+                        Next
+                        <ChevronRight className="w-4 h-4 ml-2" />
+                      </Button>
+                      <form
+                        onSubmit={handleJumpToPage}
+                        className="flex items-center gap-2"
+                      >
+                        <Input
+                          type="number"
+                          value={jumpToPage}
+                          onChange={(e) => setJumpToPage(e.target.value)}
+                          placeholder="Go to..."
+                          className="w-24 h-10"
+                          min="1"
+                          max={totalPages}
+                        />
+                        <Button type="submit">Go</Button>
+                      </form>
+                    </div>
+                  )}
               </div>
-            )}
-
-            {totalPages > 1 && (
-              <div className="mt-12 flex flex-wrap justify-center items-center gap-4">
-                <Button
-                  variant="outline"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="w-4 h-4 mr-2" />
-                  Previous
-                </Button>
-                <span className="font-medium text-gray-700">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                  <ChevronRight className="w-4 h-4 ml-2" />
-                </Button>
-                <form
-                  onSubmit={handleJumpToPage}
-                  className="flex items-center gap-2"
-                >
-                  <Input
-                    type="number"
-                    value={jumpToPage}
-                    onChange={(e) => setJumpToPage(e.target.value)}
-                    placeholder="Go to..."
-                    className="w-24 h-10"
-                    min="1"
-                    max={totalPages}
-                  />
-                  <Button type="submit">Go</Button>
-                </form>
-              </div>
-            )}
-          </div>
         </div>
+        </div>
+        {showFooter && <Footer />}
       </div>
-{showFooter && <Footer />}
-    </div>
-  );
+      );
 };
-export default Products;
+      export default Products;
