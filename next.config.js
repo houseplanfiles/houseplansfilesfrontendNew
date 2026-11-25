@@ -1,6 +1,19 @@
+const stripTrailingSlash = (url, fallback) =>
+  (url || fallback).replace(/\/+$/, "");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  env: {
+    NEXT_PUBLIC_BACKEND_URL: stripTrailingSlash(
+      process.env.NEXT_PUBLIC_BACKEND_URL,
+      "https://houseplansfilesbackend-new.vercel.app"
+    ),
+    NEXT_PUBLIC_SHARE_BACKEND_URL: stripTrailingSlash(
+      process.env.NEXT_PUBLIC_SHARE_BACKEND_URL,
+      "https://houseplansfilesbackend-new.vercel.app"
+    ),
+  },
   transpilePackages: ["framer-motion"],
   experimental: {
     optimizePackageImports: ["lucide-react"],
